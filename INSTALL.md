@@ -1,4 +1,4 @@
 # Developer setup
 
-More info to come.
+See CONTRIBUTING.md
 

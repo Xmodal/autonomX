@@ -21,7 +21,7 @@ ListModel {
     }
 
     ListElement {
-        identifier: "game_of_life"
+        name: "game_of_life"
         description_fr: "Description en français"
         description_en: "Description in English"
     }

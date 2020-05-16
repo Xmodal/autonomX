@@ -1,4 +1,5 @@
-name: Build a Qt project on Ubuntu
+# Build a Qt project on Ubuntu
+name: Build on Ubuntu
 
 on:
   push:
@@ -24,9 +25,8 @@ jobs:
       run: qmake .
     - name: make
       run: make
+    - name: make check
+      run: make check
 
-# TODO:
-#    - name: make check
-#      run: make check
 #    - name: make distcheck
 #      run: make distcheck

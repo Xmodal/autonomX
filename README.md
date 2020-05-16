@@ -1,5 +1,11 @@
 # Dynamic Lights
 
+![Build on Ubuntu](https://github.com/Xmodal/dynamiclight/workflows/Build%20on%20Ubuntu/badge.svg)
+
+![Build on macOS](https://github.com/Xmodal/dynamiclight/workflows/Build%20on%20macOS/badge.svg)
+
+![Build on Windows](https://github.com/Xmodal/dynamiclight/workflows/Build%20on%20Windows/badge.svg)
+
 Our open source desktop application allows multimedia artists
 and students to easily and quickly experiment with life-like processes
 via a graphical interface to generate dynamic, emergent

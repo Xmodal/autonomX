@@ -20,7 +20,7 @@ jobs:
         version: '5.12.8'
         host: 'windows'
         target: 'desktop'
-        arch: 'win64_msvc2017_64'
+        arch: 'win64_mingw73'
         modules: 'quick core'
     - name: qmake
       run: qmake .

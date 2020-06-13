@@ -1,8 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>qtquickcontrols2.conf</file>
         <file>GeneratorWidget.qml</file>
         <file>GeneratorsModel.qml</file>
+        <file>Style/Stylesheet.qml</file>
+        <file>Style/qmldir</file>
     </qresource>
 </RCC>

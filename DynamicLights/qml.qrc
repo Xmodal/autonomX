@@ -8,5 +8,6 @@
         <file>assets/fonts/Overpass-Bold.ttf</file>
         <file>assets/fonts/Overpass-Regular.ttf</file>
         <file>assets/fonts/Questrial-Regular.ttf</file>
+        <file>DebugStack.qml</file>
     </qresource>
 </RCC>

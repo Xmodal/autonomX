@@ -12,5 +12,7 @@
         <file>Racks/GenRack.qml</file>
         <file>Racks/qmldir</file>
         <file>Racks/Rack.qml</file>
+        <file>Fields/qmldir</file>
+        <file>Fields/TextField.qml</file>
     </qresource>
 </RCC>

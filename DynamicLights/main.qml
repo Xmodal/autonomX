@@ -3,6 +3,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.11
 
+// application modules
 import DynamicLights.Style 1.0
 import DynamicLights.Racks 1.0
 
@@ -87,10 +88,10 @@ ApplicationWindow {
 
         // List of generators
         ListView {
-            Layout.margins: 0
-            Layout.fillHeight: true
             orientation: Qt.Vertical
-            width: window.width * (3 / 12)
+            Layout.preferredWidth: parent.width * 0.25
+            Layout.minimumWidth: 200
+            Layout.fillHeight: true
             model: generatorsModel
 
             delegate: GeneratorWidget {

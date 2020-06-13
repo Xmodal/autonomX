@@ -18,7 +18,6 @@ ColumnLayout {
     // -1: no assigned generator ID
     property int genID: -1
 
-    // layout
     Layout.fillWidth: true
 
     // top label

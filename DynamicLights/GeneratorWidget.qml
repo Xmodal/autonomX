@@ -11,6 +11,7 @@ Button {
     property int generatorIndex: 1
     property string generatorName: "Generator X"
     property bool selected: false
+    property bool hovering: false
 
     width: parent.width
     height: 55
@@ -36,7 +37,7 @@ Button {
             color: Stylesheet.colors.white
             font.family: Stylesheet.fonts.mainBold
             font.pointSize: 11
-            opacity: selected ? 1 : 0.5
+            opacity: selected ? 1 : (hovering ? 1 : 0.5)
         }
 
         // generator name
@@ -46,12 +47,17 @@ Button {
             color: Stylesheet.colors.white
             font.family: selected ? Stylesheet.fonts.mainBold : Stylesheet.fonts.main
             font.pointSize: 18
-            opacity: selected ? 1 : 0.5
+            opacity: selected ? 1 : (hovering ? 1 : 0.5)
         }
     }
 
     // event management
-    onClicked: {
-        selected = !selected
+    MouseArea {
+        id: mouseArea
+        anchors.fill: parent
+        hoverEnabled: true
+        onClicked: selected = !selected
+        onEntered: hovering = true
+        onExited: hovering = false
     }
 }

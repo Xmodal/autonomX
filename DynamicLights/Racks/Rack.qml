@@ -25,10 +25,12 @@ ColumnLayout {
         Label {
             id: rackTitle
             text: rackName
+
             leftPadding: 20
             bottomPadding: 10
             topPadding: 10
             Layout.fillWidth: true
+
             color: Stylesheet.colors.white
             font {
                 family: Stylesheet.fonts.sub
@@ -46,8 +48,6 @@ ColumnLayout {
         //Button { id: btnCollapse }
     }
 
-    // content
-    RowLayout {
-
-    }
+    // content (todo)
+    RowLayout {}
 }

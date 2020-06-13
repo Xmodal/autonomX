@@ -20,29 +20,12 @@ ApplicationWindow {
     height: 720
     title: qsTr("Dynamic Lights")
 
-    // background
-    background: Rectangle {
-        color: Stylesheet.colors.darkGrey
-    }
-
-    // OSC delegate
     // TODO: move into appropriate Rack component
     function handleMessageReceived(oscPath, oscArguments) {
         console.log("QML-Received OSC: " + oscPath + " " + oscArguments);
         lastMessageReceived = oscPath + " " + oscArguments;
     }
 
-    Connections {
-        target: oscReceiver
-
-        onMessageReceived: {
-            handleMessageReceived(oscAddress, message);
-        }
-    }
-
-    /**
-     * Toggles the fullscreen state of the main window.
-     */
     function toggleFullscreen() {
         if (visibility === Window.FullScreen) {
             visibility = Window.AutomaticVisibility;
@@ -58,7 +41,21 @@ ApplicationWindow {
     // this function could be useful in the future
     // so i'll keep it defined
     function toggleDebugView() {
-//        stackLayout0.currentIndex = (stackLayout0.currentIndex + 1) % 2;
+        //stackLayout0.currentIndex = (stackLayout0.currentIndex + 1) % 2;
+    }
+
+    // background
+    background: Rectangle {
+        color: Stylesheet.colors.darkGrey
+    }
+
+    // TODO: move this in OSC rack
+    Connections {
+        target: oscReceiver
+
+        onMessageReceived: {
+            handleMessageReceived(oscAddress, message);
+        }
     }
 
     // Models:
@@ -101,6 +98,8 @@ ApplicationWindow {
         }
 
         // List of racks for currently selected generator
-        RackView {}
+        RackView {
+            id: rackView
+        }
     }
 }

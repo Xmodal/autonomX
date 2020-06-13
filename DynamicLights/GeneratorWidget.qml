@@ -10,6 +10,7 @@ import DynamicLights.Style 1.0
 Button {
     property int generatorIndex: 1
     property string generatorName: "Generator X"
+    // state props
     property bool selected: false
     property bool hovering: false
 
@@ -33,29 +34,39 @@ Button {
 
         // index
         Label {
+            id: labelIndex
+
             text: generatorIndex
             color: Stylesheet.colors.white
-            font.family: Stylesheet.fonts.mainBold
-            font.pointSize: 11
+            font {
+                family: Stylesheet.fonts.mainBold
+                pointSize: 11
+            }
             opacity: selected ? 1 : (hovering ? 1 : 0.5)
         }
 
         // generator name
         Label {
-            text: generatorName
+            id: labelName
+
             Layout.leftMargin: 30
+            text: generatorName
             color: Stylesheet.colors.white
-            font.family: selected ? Stylesheet.fonts.mainBold : Stylesheet.fonts.main
-            font.pointSize: 18
+            font {
+                family: selected ? Stylesheet.fonts.mainBold : Stylesheet.fonts.main
+                pointSize: 18
+            }
             opacity: selected ? 1 : (hovering ? 1 : 0.5)
         }
     }
 
     // event management
     MouseArea {
-        id: mouseArea
+        id: btnMouseArea
+
         anchors.fill: parent
         hoverEnabled: true
+
         onClicked: selected = !selected
         onEntered: hovering = true
         onExited: hovering = false

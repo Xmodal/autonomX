@@ -14,5 +14,6 @@
         <file>Racks/Rack.qml</file>
         <file>Fields/qmldir</file>
         <file>Fields/TextField.qml</file>
+        <file>Racks/RackView.qml</file>
     </qresource>
 </RCC>

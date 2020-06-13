@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.3
 import QtQuick.Window 2.11
 
 import DynamicLights.Style 1.0
+import DynamicLights.Racks 1.0
 
 /**
  * Main window of this application
@@ -97,5 +98,8 @@ ApplicationWindow {
                 generatorIndex: index + 1
             }
         }
+
+        // List of racks for currently selected generator
+        RackView {}
     }
 }

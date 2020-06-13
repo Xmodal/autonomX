@@ -9,7 +9,9 @@ import QtQuick.Layouts 1.12
 import DynamicLights.Style 1.0
 
 ColumnLayout {
+    // metadata
     property string rackName: "Rack"
+    // state flags
     property bool collapsed: false
     property bool removable: true
 
@@ -20,23 +22,33 @@ ColumnLayout {
     Layout.fillWidth: true
 
     // top label
-    Label {
-        id: rackTitle
-        text: rackName
-        leftPadding: 20
-        bottomPadding: 10
-        topPadding: 10
-        Layout.fillWidth: true
-        color: Stylesheet.colors.white
-        font: {
-            family: Stylesheet.fonts.sub
-            pointSize: 16
-            letterSpacing: 0.8
-            capitalization: Font.Capitalize
+    RowLayout {
+        Label {
+            id: rackTitle
+            text: rackName
+            leftPadding: 20
+            bottomPadding: 10
+            topPadding: 10
+            Layout.fillWidth: true
+            color: Stylesheet.colors.white
+            font {
+                family: Stylesheet.fonts.sub
+                pointSize: 16
+                letterSpacing: 0.8
+                capitalization: Font.Capitalize
+            }
+
+            background: Rectangle {
+                color: "#717171"
+            }
         }
 
-        background: Rectangle {
-            color: "#717171"
-        }
+        //TODO: collapse rack button + state logic
+        //Button { id: btnCollapse }
+    }
+
+    // content
+    RowLayout {
+
     }
 }

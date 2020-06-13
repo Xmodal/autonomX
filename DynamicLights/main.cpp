@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 
     // add parent directory as import path
     // CUSTOM_IMPORT variable is set in DynamicLights.pro
-    QDir dir = QDir(QString(CUSTOM_IMPORT));
+    QDir dir(QString(CUSTOM_IMPORT));
     dir.cd("../");
     engine.addImportPath(dir.path());
 

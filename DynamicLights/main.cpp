@@ -1,7 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlContext>
 #include <QQmlApplicationEngine>
-#include <QFontDatabase>
 #include "oscreceiver.h"
 #include "oscsender.h"
 
@@ -37,9 +36,11 @@ int main(int argc, char *argv[])
     standardOutput << QObject::tr("Send OSC to %1:%2").arg(sendOscHost).arg(sendOscPort) << endl;
 
     QQmlApplicationEngine engine;
+
+    // add parent directory as import path
+    // CUSTOM_IMPORT variable is set in DynamicLights.pro
     QDir dir = QDir(QString(CUSTOM_IMPORT));
     dir.cd("../");
-//    standardOutput << dir.path() << endl;
     engine.addImportPath(dir.path());
 
     OscReceiver oscReceiver(receiveOscPort);

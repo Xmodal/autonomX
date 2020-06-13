@@ -3,6 +3,8 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.11
 
+import DynamicLights.Style 1.0
+
 /**
  * Main window of this application
  */
@@ -16,6 +18,13 @@ ApplicationWindow {
     height: 720
     title: qsTr("Dynamic Lights")
 
+    // background
+    background: Rectangle {
+        color: Stylesheet.colors.darkGrey
+    }
+
+    // OSC delegate
+    // TODO: move into appropriate Rack component
     function handleMessageReceived(oscPath, oscArguments) {
         console.log("QML-Received OSC: " + oscPath + " " + oscArguments);
         lastMessageReceived = oscPath + " " + oscArguments;
@@ -44,8 +53,10 @@ ApplicationWindow {
         Qt.quit();
     }
 
+    // this function could be useful in the future
+    // so i'll keep it defined
     function toggleDebugView() {
-        stackLayout0.currentIndex = (stackLayout0.currentIndex + 1) % 2;
+//        stackLayout0.currentIndex = (stackLayout0.currentIndex + 1) % 2;
     }
 
     // Models:
@@ -71,99 +82,20 @@ ApplicationWindow {
     // Main two-column layout
     RowLayout {
         anchors.fill: parent
-        spacing: 6
+        spacing: 0
 
         // List of generators
         ListView {
             Layout.margins: 0
-            Layout.fillWidth: false
             Layout.fillHeight: true
             orientation: Qt.Vertical
-            width: currentItem.width
+            width: window.width * (3 / 12)
             model: generatorsModel
 
             delegate: GeneratorWidget {
                 generatorName: name
                 generatorIndex: index + 1
-                height: parent.height / parent.count
-                spacing: 0
-            }
-        }
-
-        // Contents
-        StackLayout {
-            id: stackLayout0
-            currentIndex: 0
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-
-            ColumnLayout {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.margins: 0
-
-                StackLayout {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    Layout.margins: 0
-
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-
-                        RowLayout {
-                            Layout.alignment: Qt.AlignRight
-                            Layout.fillWidth: false
-                            Layout.fillHeight: false
-
-                            Button {
-                                text: "Click Me"
-                            }
-                            Button {
-                                text: "Click Me Too"
-                            }
-                        }
-                    }
-                }
-            }
-
-            // OSC debug layout:
-            ColumnLayout {
-                RowLayout {
-                    SpinBox {
-                        id: someInt
-                        value: 2
-                    }
-                    Slider {
-                        id: someDouble
-                        value: 3.14159
-                        from: 0.0
-                        to: 5.0
-                    }
-                    TextField {
-                        id: someText
-                        text: "hello"
-                    }
-                }
-
-                Button {
-                    text: "Send OSC"
-                    onClicked: {
-                        oscSender.send("/hello", [someInt.value, someDouble.value, someText.text]);
-                    }
-                }
-
-                RowLayout {
-                    Label {
-                        text: "Received:"
-                    }
-                    Label {
-                        text: lastMessageReceived
-                    }
-                }
             }
         }
     }
-
-
 }

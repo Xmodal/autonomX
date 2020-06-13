@@ -5,5 +5,8 @@
         <file>GeneratorsModel.qml</file>
         <file>Style/Stylesheet.qml</file>
         <file>Style/qmldir</file>
+        <file>assets/fonts/Overpass-Bold.ttf</file>
+        <file>assets/fonts/Overpass-Regular.ttf</file>
+        <file>assets/fonts/Questrial-Regular.ttf</file>
     </qresource>
 </RCC>

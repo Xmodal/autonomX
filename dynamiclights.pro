@@ -13,4 +13,3 @@ sub_test_DynamicLights.subdir = test_DynamicLights
 sub_test_DynamicLights.target = sub_test_DynamicLights
 sub_test_DynamicLights.depends += sub_DynamicLights
 SUBDIRS += test_DynamicLights
-

@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlContext>
 #include <QQmlApplicationEngine>
+#include <QDebug>
 #include "oscreceiver.h"
 #include "oscsender.h"
 
@@ -31,6 +32,9 @@ int main(int argc, char *argv[])
         standardOutput << QObject::tr("To specify an OSC send host and port: %1 <sendHost> <sendPort> <receivePort").arg(
                               argumentList.first()) << endl;
     }
+
+    qDebug() << "Built against Qt" << QT_VERSION_STR;
+    qDebug() << "Using Qt" << QLibraryInfo::version() << "at runtime";
 
     standardOutput << QObject::tr("Receive OSC on port %1").arg(receiveOscPort) << endl;
     standardOutput << QObject::tr("Send OSC to %1:%2").arg(sendOscHost).arg(sendOscPort) << endl;

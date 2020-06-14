@@ -11,7 +11,6 @@ CONFIG += sdk_no_version_check
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
-DEFINES += CUSTOM_IMPORT=\\\"$$PWD\\\"
 # DEFINES += QOSC_LIBRARY
 
 # You can also make your code fail to compile if you use deprecated APIs.
@@ -31,7 +30,7 @@ SOURCES += \
 RESOURCES += qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH = ../
+QML_IMPORT_PATH =
 
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 QML_DESIGNER_IMPORT_PATH =

@@ -1,7 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 
-import DynamicLights.Style 1.0
+import "qrc:/Style"
 
 Label {
     font.family: Stylesheet.fonts.main

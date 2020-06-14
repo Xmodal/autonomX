@@ -37,12 +37,6 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    // add parent directory as import path
-    // CUSTOM_IMPORT variable is set in DynamicLights.pro
-    QDir dir(QString(CUSTOM_IMPORT));
-    dir.cd("../");
-    engine.addImportPath(dir.path());
-
     OscReceiver oscReceiver(receiveOscPort);
     OscSender oscSender(sendOscHost, sendOscPort);
 

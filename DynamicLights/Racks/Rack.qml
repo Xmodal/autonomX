@@ -5,8 +5,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
-// import stylesheet
-import DynamicLights.Style 1.0
+import "qrc:/Style"
 
 ColumnLayout {
     // metadata

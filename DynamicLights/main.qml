@@ -3,9 +3,8 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.11
 
-// application modules
-import DynamicLights.Style 1.0
-import DynamicLights.Racks 1.0
+import "qrc:/Style"
+import "qrc:/Racks"
 
 /**
  * Main window of this application

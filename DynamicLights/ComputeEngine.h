@@ -3,6 +3,7 @@
 
 #include <QThread>
 #include <QTimer>
+#include <QElapsedTimer>
 #include "Generator.h"
 
 

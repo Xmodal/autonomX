@@ -4,6 +4,9 @@
 #include <QDebug>
 #include "oscreceiver.h"
 #include "oscsender.h"
+#include "computeengine.h"
+#include "Generator.h"
+#include "SpikingNet.h"
 
 int main(int argc, char *argv[])
 {
@@ -50,6 +53,12 @@ int main(int argc, char *argv[])
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;
+
+    Generator* spikingNet = new SpikingNet();
+    std::vector<Generator*> generators = {spikingNet};
+
+    ComputeEngine computeEngine(generators);
+    computeEngine.start(QThread::TimeCriticalPriority);
 
     return app.exec();
 }

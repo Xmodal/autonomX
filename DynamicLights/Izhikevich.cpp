@@ -19,6 +19,8 @@
 
 #include "Izhikevich.h"
 
+#include <random>
+
 Izhikevich::Izhikevich() {
     
     firing = false;
@@ -55,11 +57,13 @@ void Izhikevich::setNeuronType(NeuronType _type) {
             break;
         }
         case spikingNeuronRandomized: {
-            double re = drand48();
+            std::mt19937 randomGenerator;
+            std::uniform_real_distribution<> randomUniform(0.0, 1.0);
+            double random = randomUniform(randomGenerator);
             a = 0.02;
             b = 0.2;
-            c = -65. + 15. * re * re;
-            d = 8. - 6.* re * re;
+            c = -65. + 15. * random * random;
+            d = 8. - 6.* random * random;
             break;
         }
         case resonatorNeuron: {
@@ -70,9 +74,11 @@ void Izhikevich::setNeuronType(NeuronType _type) {
             break;
         }
         case resonatorNeuronRandomized: {
-            double ri = drand48();
-            a = 0.02 + 0.08 * ri;
-            b = 0.25 - 0.05 * ri;
+            std::mt19937 randomGenerator;
+            std::uniform_real_distribution<> randomUniform(0.0, 1.0);
+            double random = randomUniform(randomGenerator);
+            a = 0.02 + 0.08 * random;
+            b = 0.25 - 0.05 * random;
             c = -65.;
             d = 2.;
             break;
@@ -92,9 +98,11 @@ void Izhikevich::setNeuronType(NeuronType _type) {
             break;
         }
         case inhibitoryNeuronRandomized: {
-            double ri = drand48();
+            std::mt19937 randomGenerator;
+            std::uniform_real_distribution<> randomUniform(0.0, 1.0);
+            double random = randomUniform(randomGenerator);
             a = 0.1;
-            b = 0.25 - 0.05 * ri;
+            b = 0.25 - 0.05 * random;
             c = -65.;
             d = 2.;
             break;
@@ -107,11 +115,13 @@ void Izhikevich::setNeuronType(NeuronType _type) {
             break;
         }
         case excitatoryNeuronRandomized : {
-            double re = drand48();
+            std::mt19937 randomGenerator;
+            std::uniform_real_distribution<> randomUniform(0.0, 1.0);
+            double random = randomUniform(randomGenerator);
             a = 0.02;
             b = 0.2;
-            c = -65. + 15. * re * re;
-            d = 8. - 6. * re * re;
+            c = -65. + 15. * random * random;
+            d = 8. - 6. * random * random;
             break;
         }
     }

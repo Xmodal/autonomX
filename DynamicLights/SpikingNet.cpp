@@ -19,7 +19,7 @@
 
 #include "SpikingNet.h"
 
-// this is probably a bad include to have here. is there a better way to setup debug output that plays well with Qt? qDebug doesn't work for some reason
+// this is probably a bad include to have here. is there a better way to setup debug output that plays well with Qt? qDebug doesn't work here for some reason
 #include <iostream>
 
 // ############################### initialization routines ###############################

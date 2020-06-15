@@ -4,7 +4,7 @@
 #include <QDebug>
 #include "oscreceiver.h"
 #include "oscsender.h"
-#include "computeengine.h"
+#include "ComputeEngine.h"
 #include "Generator.h"
 #include "SpikingNet.h"
 

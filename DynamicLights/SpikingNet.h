@@ -1,8 +1,4 @@
-//
-//  SpikingNet.h
-//  SpikingNeuronSimulator
-//
-// Copyright 2020, Atsushi Masumori, Alexandre Saunier, Simon Demeule
+// Copyright 2020, Atsushi Masumori & Xmodal
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -63,14 +59,16 @@ private:
     double      weightMin = 0.0;
 
     double      stimStrength = 6.0;
-    double      decayConstant = 0.9999995;
+    double      decayConstant = 0.9995;
+
+    double      timeScale = 30.0 / 1000.0;
 
     bool        flagSTP                 = false;
     bool        flagSTDP                = true;
     bool        flagDecay               = true;
     bool        flagDirectConnection    = true;
     bool        flagRandomDevice        = true;
-    bool        flagDebug               = false;
+    bool        flagDebug               = true;
 
     // the neurons
     std::vector<Izhikevich> neurons;
@@ -81,7 +79,7 @@ private:
 
     // STDP
     std::vector<int> STDPTimes;
-    int STDPTau;
+    double STDPWindow = 20.0 / 1000.0;
 
     // STP
     double* STPu;
@@ -95,14 +93,14 @@ private:
     inline int indexInputNeuron(int i);
     inline int indexOutputNeuron(int i);
     
-    inline void updateNeurons();
+    inline void updateNeurons(double deltaTime);
     inline void updateInput();
     inline void updateInputDebug();
     inline void checkFiring();
-    inline void computeSTDP();
-    inline void computeSTP();
-    inline double getSTPValue(int index, bool isFiring);
-    inline void decay();
+    inline void computeSTDP(double deltaTime);
+    inline void computeSTP(double deltaTime);
+    inline double getSTPValue(int index, bool isFiring, double deltaTime);
+    inline void decay(double deltaTime);
 
     void setRandomNetwork();
     void setSparseGraph();
@@ -112,7 +110,7 @@ private:
     void setGridNetwork();
 
     void init();
-    void update();
+    void update(double deltaTime);
     void stimulation();
     void stimulation(double strength);
     void stimulation(int inputGroupIndex, double strength);

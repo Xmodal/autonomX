@@ -1,8 +1,4 @@
-//
-//  SpikingNet.cpp
-//  SpikingNeuronSimulator
-//
-// Copyright 2020, Atsushi Masumori, Alexandre Saunier, Simon Demeule
+// Copyright 2020, Atsushi Masumori & Xmodal
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -26,7 +22,7 @@
 
 SpikingNet::SpikingNet() {
 
-    STDPTau = 20;
+    STDPWindow = 20;
 
     // set random seed
     if(flagRandomDevice)
@@ -327,8 +323,8 @@ void SpikingNet::computeOutput(double deltaTime) {
         stimulation(i, input[i]);
     }
 
-    // update
-    update();
+    // update, applying time scale
+    update(deltaTime * timeScale);
 
     // write output
     for(int i = 0; i < outputGroupSize; i++) {
@@ -337,14 +333,14 @@ void SpikingNet::computeOutput(double deltaTime) {
 
 }
 
-void SpikingNet::update() {
+void SpikingNet::update(double deltaTime) {
 
-    if(flagDecay) decay();
-    if(flagSTDP)  computeSTDP();
-    if(flagSTP)   computeSTP();
+    if(flagDecay) decay(deltaTime);
+    if(flagSTDP)  computeSTDP(deltaTime);
+    if(flagSTP)   computeSTP(deltaTime);
 
     updateInput();
-    updateNeurons();
+    updateNeurons(deltaTime);
 
     checkFiring();
 }
@@ -410,18 +406,18 @@ void SpikingNet::updateInput() {
 
 }
 
-void SpikingNet::updateNeurons() {
+void SpikingNet::updateNeurons(double deltaTime) {
 
     // update differential equation
     for(int i = 0; i < neuronSize; ++i) {
-        neurons[i].update();
+        neurons[i].update(deltaTime);
         neurons[i].setI(0.0);
     }
 
 }
 
 
-void SpikingNet::computeSTDP() {
+void SpikingNet::computeSTDP(double deltaTime) {
 
     // read http://www.scholarpedia.org/article/Spike-timing_dependent_plasticity for more info on the maths behind this
 
@@ -454,39 +450,42 @@ void SpikingNet::computeSTDP() {
 
     // TODO: this is not framerate invariant, as it measures timings by counting frames. this needs to be fixed. this is also really backwards and weird.
 
-    for(int i = inhibitorySize; i < neuronSize; ++i) {
-        // decrease the STDPTimes for all neurons. this keeps track of how far away in time the neuron has fired.
-        // when it reaches 0, it won't be considered when changing weights according to spike time changes.
-        if(STDPTimes[i] > 0) STDPTimes[i] = STDPTimes[i] - 1;
+    // new timing scheme:
+    // start at zero
+    // increase at every frame
+    // update weight if time is smaller than tau param
 
-        // if the neuron is currently firing, set its STDPTimes to STDPTau.
-        if(neurons[i].isFiring()) STDPTimes[i] = STDPTau;
+    for(int i = inhibitorySize; i < neuronSize; ++i) {
+        if(neurons[i].isFiring()) {
+            // if the neuron is currently firing, set its STDPTimes to 0.
+            STDPTimes[i] = 0;
+        } else {
+            // else, increase it by deltaTime
+            STDPTimes[i] += deltaTime;
+        }
+
     }
 
     double d;
     for(int i = inhibitorySize; i < neuronSize; i++) {
-
         if(neurons[i].isFiring()) {
-
             for(int j = inhibitorySize; j < neuronSize; j++) {
 
-                if(STDPTimes[j] > 0 && STDPTimes[j] != STDPTau && i != j) {
+                if(STDPTimes[j] < STDPWindow && STDPTimes[j] != 0 && i != j) {
                     // another (uniquely different) neuron has fired in the last STDPTau frames (excluding the current frame)
-                    //
 
                     // this is part of the exponential function described above
-                    d = (0.1 * pow(0.95, (STDPTau-STDPTimes[j])));
+                    d = (0.1 *
+                         (0.95, (1000.0 * STDPTimes[j])));
 
-                    // check that neuron linked to i fired less than tau_ms before (but is not firing right now)
-                    // if j fired before i, then weight j->i ++
+                    // update the weight from j to i, should be increased since j fired before i.
                     if(weights[j][i] != 0.0) {
                         weights[j][i] += d;
                         if (weights[j][i] > weightMax) weights[j][i] = weightMax;
 
                     }
 
-                    // now weight from i to j, should be lowered if i fired before j. careful! only the indexing changes.
-                    // if j fired after i, then weight j->i --
+                    // update the weight from i to j, should be lowered since i fired before j. careful! only the indexing changes.
                     if(weights[i][j] != 0.0) {
                         weights[i][j] -= d;
                         if(weights[i][j] < weightMin) weights[i][j] = weightMin;
@@ -498,20 +497,15 @@ void SpikingNet::computeSTDP() {
     }
 }
 
-void SpikingNet::computeSTP() {
+void SpikingNet::computeSTP(double deltaTime) {
 
     for(int i = inhibitorySize; i < neuronSize; ++i) {
-
-        if(neurons[i].isFiring()) {
-            STPw[i] = getSTPValue(i,1);
-        }else{
-            STPw[i] = getSTPValue(i,0);
-        }
+        STPw[i] = getSTPValue(i, neurons[i].isFiring(), deltaTime);
     }
 }
 
-double SpikingNet::getSTPValue(int index, bool isFiring) {
-
+double SpikingNet::getSTPValue(int index, bool isFiring, double deltaTime) {
+    double deltaTimeMillis = deltaTime * 1000.0;
 
     // see http://www.rmki.kfki.hu/~banmi/elte/synaptic.pdf for paper describing the mechanics of this
 
@@ -532,8 +526,8 @@ double SpikingNet::getSTPValue(int index, bool isFiring) {
     // when tau_d > tau_f, the neural activity is depressed
     // when tau_d < tau_f, the neural activity is facilitated
 
-    double dx = (1.0 - x) / tau_d - u * x * s;       // change for x
-    double du = (U - u) / tau_f + U * (1.0 - u) * s; // change for u
+    double dx = deltaTimeMillis * ((1.0 - x) / tau_d - u * x * s);       // change for x
+    double du = deltaTimeMillis * ((U - u) / tau_f + U * (1.0 - u) * s); // change for u
 
     double nu = u + du; // new value for u
     double nx = x + dx; // new value for x
@@ -547,13 +541,12 @@ double SpikingNet::getSTPValue(int index, bool isFiring) {
     return w;
 }
 
-void SpikingNet::decay() {
-
-    // TODO: this is not framerate invariant. add a time parameter with the usual equation for exponential decay
+void SpikingNet::decay(double deltaTime) {
+    double decayConstantTimeCompensated = pow(decayConstant, deltaTime);
 
     for(int i = inhibitorySize; i < neuronSize; i++) {
         for(int j = inhibitorySize; j < neuronSize; j++) {
-            weights[i][j] = weights[i][j] * decayConstant;
+            weights[i][j] = weights[i][j] * decayConstantTimeCompensated;
         }
     }
 

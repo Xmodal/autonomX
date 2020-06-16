@@ -1,8 +1,4 @@
-//
-//  Izhikevich.h
-//  
-//
-// Copyright 2020, Atsushi Masumori, Alexandre Saunier, Simon Demeule
+// Copyright 2020, Atsushi Masumori & Xmodal
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -50,7 +46,7 @@ public:
     Izhikevich();
     ~Izhikevich();
 
-    void update();
+    void update(double deltaTime);
     void setParam(NeuronType type, double a, double b, double c, double d, double _u, double _v, double _I);
     void setNeuronType(NeuronType type);
     bool applyFiring(); // checks if the neuron is firing and updates the differential equationa accordingly

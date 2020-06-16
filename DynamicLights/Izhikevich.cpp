@@ -1,8 +1,4 @@
-//
-//  Izhikevich.cpp
-//
-//
-// Copyright 2020, Atsushi Masumori, Alexandre Saunier, Simon Demeule
+// Copyright 2020, Atsushi Masumori & Xmodal
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -131,11 +127,11 @@ void Izhikevich::setNeuronType(NeuronType _type) {
 }
 
 
-void Izhikevich::update() {
-    // TODO: this is not framerate invariant. add a time parameter that affects the differential equations. these assume a 1ms timestep
-    v = v + 0.5*(0.04*v*v + 5*v +140 - u + I);
-    v = v + 0.5*(0.04*v*v + 5*v +140 - u + I);
-    u = u + a*(b*v-u);
+void Izhikevich::update(double deltaTime) {
+    double deltaTimeMillis = deltaTime * 1000.0;
+    v += deltaTimeMillis * 0.5 * (0.04 * v * v + 5 * v + 140 - u + I);
+    v += deltaTimeMillis * 0.5 * (0.04 * v * v + 5 * v + 140 - u + I);
+    u += deltaTimeMillis * a * (b * v - u);
 }
 
 bool Izhikevich::applyFiring() {

@@ -25,6 +25,10 @@ SOURCES += \
     ../qosc/contrib/oscpack/OscTypes.cpp \
     ../qosc/oscreceiver.cpp \
     ../qosc/oscsender.cpp \
+    ComputeEngine.cpp \
+    Generator.cpp \
+    Izhikevich.cpp \
+    SpikingNet.cpp \
     main.cpp
 
 RESOURCES += qml.qrc
@@ -50,7 +54,11 @@ HEADERS += \
     ../qosc/contrib/oscpack/OscReceivedElements.h \
     ../qosc/contrib/oscpack/OscTypes.h \
     ../qosc/oscreceiver.h \
-    ../qosc/oscsender.h
+    ../qosc/oscsender.h \
+    ComputeEngine.h \
+    Generator.h \
+    Izhikevich.h \
+    SpikingNet.h
 
 INCLUDEPATH += $$PWD/../qosc
 INCLUDEPATH += $$PWD/../qosc/contrib/packosc

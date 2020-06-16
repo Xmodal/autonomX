@@ -443,17 +443,8 @@ void SpikingNet::computeSTDP(double deltaTime) {
     //              A -> B becomes    A -> B becomes
     //                 stronger           weaker
 
-    // in this code, STDPTimes[i] stores a number that allows calculating how many frames ago the neuron i fired.
-    // when STDPTimes[i] = STDPTau (in this case it is hard-coded to 20), the neuron fired in the current frame.
-    // at every subsequent frame it is decremented.
-    // the way we compute how many frames ago the neuron fired is by evaluating STDPTau - STDPTimes[i]
-
-    // TODO: this is not framerate invariant, as it measures timings by counting frames. this needs to be fixed. this is also really backwards and weird.
-
-    // new timing scheme:
-    // start at zero
-    // increase at every frame
-    // update weight if time is smaller than tau param
+    // each neuron has a STDPTimes[i] value that store how long ago it fired
+    // the weight change is applied using the above function if the time difference between two neurons firing is smaller or equal to STDPWindow
 
     for(int i = inhibitorySize; i < neuronSize; ++i) {
         if(neurons[i].isFiring()) {
@@ -466,17 +457,17 @@ void SpikingNet::computeSTDP(double deltaTime) {
 
     }
 
+    double deltaTimeMillis = deltaTime * 1000.0;
     double d;
     for(int i = inhibitorySize; i < neuronSize; i++) {
         if(neurons[i].isFiring()) {
             for(int j = inhibitorySize; j < neuronSize; j++) {
 
-                if(STDPTimes[j] < STDPWindow && STDPTimes[j] != 0 && i != j) {
+                if(STDPTimes[j] <= STDPWindow && STDPTimes[j] != 0 && i != j) {
                     // another (uniquely different) neuron has fired in the last STDPTau frames (excluding the current frame)
 
                     // this is part of the exponential function described above
-                    d = (0.1 *
-                         (0.95, (1000.0 * STDPTimes[j])));
+                    d = deltaTimeMillis * (0.1 * pow(0.95, (1000.0 * STDPTimes[j])));
 
                     // update the weight from j to i, should be increased since j fired before i.
                     if(weights[j][i] != 0.0) {
@@ -498,7 +489,6 @@ void SpikingNet::computeSTDP(double deltaTime) {
 }
 
 void SpikingNet::computeSTP(double deltaTime) {
-
     for(int i = inhibitorySize; i < neuronSize; ++i) {
         STPw[i] = getSTPValue(i, neurons[i].isFiring(), deltaTime);
     }

@@ -65,7 +65,7 @@ private:
 
     bool        flagSTP                 = false;
     bool        flagSTDP                = true;
-    bool        flagDecay               = true;
+    bool        flagDecay               = false;
     bool        flagDirectConnection    = true;
     bool        flagRandomDevice        = true;
     bool        flagDebug               = true;

@@ -35,3 +35,40 @@ int Generator::getInputSize() {
 int Generator::getOutputSize() {
     return output.size();
 }
+
+QString Generator::getName() {
+    return name;
+}
+
+QString Generator::getType() {
+    return type;
+}
+
+QString Generator::getDescription() {
+    return description;
+}
+
+double Generator::getOutputMonitor() {
+    return outputMonitor;
+}
+
+void Generator::writeName(QString string) {
+    name = string;
+    emit nameChanged(name);
+}
+
+void Generator::writeType(QString string) {
+    type = string;
+    emit typeChanged(type);
+}
+
+void Generator::writeDescription(QString string) {
+    description = string;
+    emit descriptionChanged(string);
+}
+
+void Generator::writeOutputMonitor(double value) {
+    outputMonitor = value;
+    emit outputMonitorChanged(outputMonitor);
+}
+

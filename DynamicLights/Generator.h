@@ -17,15 +17,26 @@
 #define GENERATOR_H
 
 #include <QObject>
+#include <QString>
 #include <vector>
 
 class Generator : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString name READ getName WRITE writeName NOTIFY nameChanged)
+    Q_PROPERTY(QString type READ getType NOTIFY typeChanged)
+    Q_PROPERTY(QString description READ getDescription NOTIFY descriptionChanged)
+    Q_PROPERTY(double outputMonitor READ getOutputMonitor NOTIFY outputMonitorChanged)
 protected:
     // the generator class provides input and output buffers
     std::vector<double> input;
     std::vector<double> output;
+
+    // descriptive properties seen in the generators list panel
+    QString name;           // generator name, assigned by user
+    QString type;           // generator type, fixed
+    QString description;    // generator description, fixed
+    double outputMonitor;   // output monitor / indicator light, generated from output array automatically by ComputeEngine
 public:
     explicit Generator(QObject *parent = nullptr);
 
@@ -37,6 +48,22 @@ public:
     double readOutput(int index);
     int getInputSize();
     int getOutputSize();
+
+    // methods to read, write to descriptive properties seen in the generators list panel
+    QString getName();
+    QString getType();
+    QString getDescription();
+    double getOutputMonitor();
+
+    void writeName(QString string);
+    void writeType(QString string);
+    void writeDescription(QString string);
+    void writeOutputMonitor(double value);
+signals:
+    void nameChanged(QString);
+    void typeChanged(QString);
+    void descriptionChanged(QString);
+    void outputMonitorChanged(double);
 };
 
 #endif // GENERATOR_H

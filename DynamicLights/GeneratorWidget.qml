@@ -44,7 +44,7 @@ Button {
             color: Stylesheet.colors.white
             font {
                 family: Stylesheet.fonts.mainBold
-                pointSize: 11
+                pointSize: 12
             }
             opacity: selected ? 1 : (hovering ? 1 : 0.5)
         }
@@ -59,6 +59,19 @@ Button {
             font {
                 family: selected ? Stylesheet.fonts.mainBold : Stylesheet.fonts.main
                 pointSize: 18
+            }
+            opacity: selected ? 1 : (hovering ? 1 : 0.5)
+        }
+
+        Label {
+            id: labelType
+
+            Layout.leftMargin: 30
+            text: generatorType
+            color: Stylesheet.colors.white
+            font {
+                family: selected ? Stylesheet.fonts.mainBold : Stylesheet.fonts.main
+                pointSize: 12
             }
             opacity: selected ? 1 : (hovering ? 1 : 0.5)
         }

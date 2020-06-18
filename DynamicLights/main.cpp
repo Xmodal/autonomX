@@ -23,6 +23,7 @@
 #include "oscsender.h"
 #include "ComputeEngine.h"
 #include "Generator.h"
+#include "GeneratorModel.h"
 #include "SpikingNet.h"
 
 int main(int argc, char *argv[])
@@ -71,8 +72,12 @@ int main(int argc, char *argv[])
     if (engine.rootObjects().isEmpty())
         return -1;
 
+
     QSharedPointer<Generator> spikingNet = QSharedPointer<Generator>(new SpikingNet());
     QList<QSharedPointer<Generator>> generators = {spikingNet};
+
+    GeneratorModel generatorModel(generators);
+    // next: make a view and get the two connected
 
     ComputeEngine computeEngine(generators);
     computeEngine.start(QThread::TimeCriticalPriority);

@@ -13,8 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef GENERATOR_H
-#define GENERATOR_H
+#pragma once
 
 #include <QObject>
 #include <QString>
@@ -65,5 +64,3 @@ signals:
     void descriptionChanged(QString);
     void outputMonitorChanged(double);
 };
-
-#endif // GENERATOR_H

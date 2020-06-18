@@ -15,22 +15,27 @@
 
 #pragma once
 
-#include <QThread>
-#include <QTimer>
-#include <QElapsedTimer>
-#include <QList>
+#include <QObject>
+#include <QAbstractListModel>
+#include <QModelIndex>
 #include <QSharedPointer>
-#include "Generator.h"
+#include <QList>
+#include <Generator.h>
 
+class GeneratorModel : public QAbstractListModel {
+    Q_OBJECT
+public:
+    GeneratorModel(QList<QSharedPointer<Generator>> generators);
 
-class ComputeEngine : public QThread
-{
+    int rowCount(const QModelIndex& parent = QModelIndex()) const;
+    int columnCount(const QModelIndex& parent = QModelIndex()) const;
+    QVariant data(const QModelIndex &index, int role) const;
+    void populate();
+
+    static const int roleName = 0;
+    static const int roleType = 1;
+    static const int roleDescription = 2;
+    static const int roleOutputMonitor = 3;
 private:
     QList<QSharedPointer<Generator>> generators;
-    QElapsedTimer elapsedTimer;
-    double frequency = 30;
-    bool firstFrame = true;
-public:
-    ComputeEngine(QList<QSharedPointer<Generator>> generators);
-    void run() override;
 };

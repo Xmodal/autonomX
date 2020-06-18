@@ -27,6 +27,7 @@ SOURCES += \
     ../qosc/oscsender.cpp \
     ComputeEngine.cpp \
     Generator.cpp \
+    GeneratorModel.cpp \
     Izhikevich.cpp \
     SpikingNet.cpp \
     main.cpp
@@ -57,6 +58,7 @@ HEADERS += \
     ../qosc/oscsender.h \
     ComputeEngine.h \
     Generator.h \
+    GeneratorModel.h \
     Izhikevich.h \
     SpikingNet.h
 

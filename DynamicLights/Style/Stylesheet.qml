@@ -1,6 +1,6 @@
 pragma Singleton
 
-import QtQuick 2.12
+import QtQuick 2.11
 
 // NICE TO HAVE: separate singletons for colors/fonts/components/etc
 QtObject {

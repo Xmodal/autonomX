@@ -30,11 +30,11 @@ Field {
             pointSize: 14
         }
         color: Stylesheet.colors.white
-        placeholderTextColor: Stylesheet.setAlpha(Stylesheet.colors.white, 0.4)
+        // placeholderTextColor: Stylesheet.setAlpha(Stylesheet.colors.white, 0.4)
 
         // background
         background: FieldFrame {
-            frameWidth: fieldWidth
+            // frameWidth: fieldWidth
             isHovered: hovered
             isFocused: fieldInput.activeFocus
         }

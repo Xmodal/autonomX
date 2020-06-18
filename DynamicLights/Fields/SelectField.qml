@@ -23,7 +23,7 @@ Field {
 
         // background
         background: FieldFrame {
-            frameWidth: fieldWidth
+            // frameWidth: fieldWidth
             isHovered: comboBox.hovered
         }
 

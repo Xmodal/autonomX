@@ -21,6 +21,11 @@
 // ############################### initialization routines ###############################
 
 SpikingNet::SpikingNet() {
+    // default values for descriptive properties
+    name = "Spiking Neural Network";
+    type = "SNN";
+    description = "An interconnected network of biologically-modeled neurons.";
+    outputMonitor = 0;
 
     STDPWindow = 20;
 

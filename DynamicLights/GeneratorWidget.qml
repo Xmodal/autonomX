@@ -2,14 +2,18 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 
-import "qrc:/Style"
+import "./Style"
 
 /**
  * Widget to control a generator.
  */
 Button {
     property int generatorIndex: 1
-    property string generatorName: "Generator X"
+    property string generatorName: "Default Name"
+    property string generatorType: "Default Type"
+    property string generatorDescription: "Default description"
+    property double generatorOutputMonitor: 0.0
+
     // state props
     property bool selected: false
     property bool hovering: false
@@ -40,7 +44,7 @@ Button {
             color: Stylesheet.colors.white
             font {
                 family: Stylesheet.fonts.mainBold
-                pointSize: 11
+                pointSize: 12
             }
             opacity: selected ? 1 : (hovering ? 1 : 0.5)
         }
@@ -55,6 +59,19 @@ Button {
             font {
                 family: selected ? Stylesheet.fonts.mainBold : Stylesheet.fonts.main
                 pointSize: 18
+            }
+            opacity: selected ? 1 : (hovering ? 1 : 0.5)
+        }
+
+        Label {
+            id: labelType
+
+            Layout.leftMargin: 30
+            text: generatorType
+            color: Stylesheet.colors.white
+            font {
+                family: selected ? Stylesheet.fonts.mainBold : Stylesheet.fonts.main
+                pointSize: 12
             }
             opacity: selected ? 1 : (hovering ? 1 : 0.5)
         }

@@ -3,8 +3,8 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.11
 
-import "qrc:/Style"
-import "qrc:/Racks"
+import "./Style"
+import "./Racks"
 
 /**
  * Main window of this application
@@ -57,11 +57,6 @@ ApplicationWindow {
         }
     }
 
-    // Models:
-    GeneratorsModel {
-        id: generatorsModel
-    }
-
     // Shortcuts:
     Shortcut {
         sequence: "Esc"
@@ -77,6 +72,12 @@ ApplicationWindow {
         onActivated: toggleDebugView()
     }
 
+    // auto input blur
+    MouseArea {
+        anchors.fill: parent
+        onClicked: forceActiveFocus()
+    }
+
     // Main two-column layout
     RowLayout {
         anchors.fill: parent
@@ -88,10 +89,13 @@ ApplicationWindow {
             Layout.preferredWidth: parent.width * 0.25
             Layout.minimumWidth: 200
             Layout.fillHeight: true
-            model: generatorsModel
+            model: generatorModel
 
             delegate: GeneratorWidget {
                 generatorName: name
+                generatorType: type
+                generatorDescription: description
+                generatorOutputMonitor: outputMonitor
                 generatorIndex: index + 1
             }
         }

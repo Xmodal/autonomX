@@ -9,6 +9,7 @@ ColumnLayout {
     id: field
 
     property string labelText: "Label"
+    property int fieldWidth: 200
     property alias fieldContent: fieldLoader.sourceComponent
 
     spacing: 5

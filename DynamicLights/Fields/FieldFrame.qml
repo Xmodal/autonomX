@@ -14,8 +14,8 @@ Item {
         Rectangle {
             width: parent.width
             height: 1
-            anchors.top: modelData == "top" ? parent.top : null
-            anchors.bottom: modelData == "bottom" ? parent.bottom : null
+            anchors.top: modelData == "top" ? parent.top : undefined
+            anchors.bottom: modelData == "bottom" ? parent.bottom : undefined
             color: Stylesheet.colors.white
             opacity: isHovered ? 1 : (isFocused ? 1 : 0.5)
         }

@@ -60,8 +60,10 @@ void ComputeEngine::run() {
     // measure the time used to do the computation
     millisCompute = elapsedTimer.nsecsElapsed() / 1000000.0;
 
-    qDebug() << "refresh interval: " << millisLastFrame;
-    qDebug() << "compute time:     " << millisCompute;
+    if(flagDebug) {
+        qDebug() << "refresh interval: " << millisLastFrame;
+        qDebug() << "compute time:     " << millisCompute;
+    }
 
     // schedule a new function call at the appropriate time
     // this bit maybe could be improved?

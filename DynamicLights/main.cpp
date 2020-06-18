@@ -60,18 +60,8 @@ int main(int argc, char *argv[])
     standardOutput << QObject::tr("Receive OSC on port %1").arg(receiveOscPort) << endl;
     standardOutput << QObject::tr("Send OSC to %1:%2").arg(sendOscHost).arg(sendOscPort) << endl;
 
-    QQmlApplicationEngine engine;
-
     OscReceiver oscReceiver(receiveOscPort);
     OscSender oscSender(sendOscHost, sendOscPort);
-
-    // Pass C++ objects to QML.
-    engine.rootContext()->setContextProperty("oscSender", &oscSender);
-    engine.rootContext()->setContextProperty("oscReceiver", &oscReceiver);
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-    if (engine.rootObjects().isEmpty())
-        return -1;
-
 
     QSharedPointer<Generator> spikingNet = QSharedPointer<Generator>(new SpikingNet());
     QList<QSharedPointer<Generator>> generators = {spikingNet};
@@ -81,6 +71,17 @@ int main(int argc, char *argv[])
 
     ComputeEngine computeEngine(generators);
     computeEngine.start(QThread::TimeCriticalPriority);
+
+    QQmlApplicationEngine engine;
+
+    // Pass C++ objects to QML.
+    engine.rootContext()->setContextProperty("generatorModel", &generatorModel);
+    engine.rootContext()->setContextProperty("oscSender", &oscSender);
+    engine.rootContext()->setContextProperty("oscReceiver", &oscReceiver);
+    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    if (engine.rootObjects().isEmpty())
+        return -1;
+
 
     return app.exec();
 }

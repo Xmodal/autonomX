@@ -9,7 +9,11 @@ import "./Style"
  */
 Button {
     property int generatorIndex: 1
-    property string generatorName: "Generator X"
+    property string generatorName: "Default Name"
+    property string generatorType: "Default Type"
+    property string generatorDescription: "Default description"
+    property double generatorOutputMonitor: 0.0
+
     // state props
     property bool selected: false
     property bool hovering: false

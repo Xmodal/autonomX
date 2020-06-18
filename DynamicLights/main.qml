@@ -57,11 +57,6 @@ ApplicationWindow {
         }
     }
 
-    // Models:
-    GeneratorsModel {
-        id: generatorsModel
-    }
-
     // Shortcuts:
     Shortcut {
         sequence: "Esc"
@@ -94,10 +89,13 @@ ApplicationWindow {
             Layout.preferredWidth: parent.width * 0.25
             Layout.minimumWidth: 200
             Layout.fillHeight: true
-            model: generatorsModel
+            model: generatorModel
 
             delegate: GeneratorWidget {
                 generatorName: name
+                generatorType: type
+                generatorDescription: description
+                generatorOutputMonitor: outputMonitor
                 generatorIndex: index + 1
             }
         }

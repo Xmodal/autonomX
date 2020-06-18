@@ -25,17 +25,21 @@
 class GeneratorModel : public QAbstractListModel {
     Q_OBJECT
 public:
+    enum GeneratorRoles {
+        NameRole = Qt::UserRole + 1,
+        TypeRole,
+        DescriptionRole,
+        OutputMonitorRole
+    };
+
     GeneratorModel(QList<QSharedPointer<Generator>> generators);
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
     void populate();
+    QHash<int, QByteArray> roleNames() const;
 
-    static const int roleName = 0;
-    static const int roleType = 1;
-    static const int roleDescription = 2;
-    static const int roleOutputMonitor = 3;
 private:
     QList<QSharedPointer<Generator>> generators;
 };

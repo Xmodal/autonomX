@@ -3,8 +3,8 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.11
 
-import "qrc:/Style"
-import "qrc:/Racks"
+import "./Style"
+import "./Racks"
 
 /**
  * Main window of this application
@@ -75,6 +75,12 @@ ApplicationWindow {
     Shortcut {
         sequence: "Tab"
         onActivated: toggleDebugView()
+    }
+
+    // auto input blur
+    MouseArea {
+        anchors.fill: parent
+        onClicked: forceActiveFocus()
     }
 
     // Main two-column layout

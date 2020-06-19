@@ -63,17 +63,14 @@ Button {
             opacity: selected ? 1 : (hovering ? 1 : 0.5)
         }
 
-        Label {
-            id: labelType
+        // output indicator
+        OutputIndicator {
+            id: outputIndicator
 
-            Layout.leftMargin: 30
-            text: generatorType
-            color: Stylesheet.colors.white
-            font {
-                family: selected ? Stylesheet.fonts.mainBold : Stylesheet.fonts.main
-                pointSize: 12
-            }
-            opacity: selected ? 1 : (hovering ? 1 : 0.5)
+            luminosity: generatorOutputMonitor
+
+            Layout.rightMargin: 10
+            Layout.alignment: Qt.AlignRight
         }
     }
 

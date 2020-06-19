@@ -3,11 +3,16 @@
         <file>DebugStack.qml</file>
         <file>GeneratorWidget.qml</file>
         <file>main.qml</file>
+        <file>OutputIndicator.qml</file>
         <file>qtquickcontrols2.conf</file>
         <file>assets/fonts/Overpass-Bold.ttf</file>
         <file>assets/fonts/Overpass-Regular.ttf</file>
         <file>assets/fonts/Questrial-Regular.ttf</file>
         <file>assets/images/down-caret.svg</file>
+        <file>assets/images/index-bg.png</file>
+        <file>assets/images/index-bg@2x.png</file>
+        <file>assets/images/light-cue.png</file>
+        <file>assets/images/light-cue@2x.png</file>
         <file>Fields/Field.qml</file>
         <file>Fields/FieldFrame.qml</file>
         <file>Fields/SelectField.qml</file>

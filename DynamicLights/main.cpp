@@ -19,6 +19,8 @@
 #include <QDebug>
 #include <QList>
 #include <QSharedPointer>
+#include <QFontDatabase>
+
 #include "oscreceiver.h"
 #include "oscsender.h"
 #include "ComputeEngine.h"
@@ -36,9 +38,17 @@ int main(int argc, char *argv[])
     QStringList argumentList = QCoreApplication::arguments();
     QTextStream standardOutput(stdout);
 
+    // set OSC paraemters
     QString sendOscHost = "127.0.0.1";
     quint16 sendOscPort = 14444;
     quint16 receiveOscPort = 14444;
+
+    // load fonts in the project database
+    QDir fontDir{":/assets/fonts"};
+    for (auto file : fontDir.entryList(QDir::Files)) {
+        if (QFontDatabase::addApplicationFont(":/assets/fonts/" + file))
+            standardOutput << "Failed to load font " << file << endl;
+    }
 
     if (argumentCount > 1) {
         sendOscHost = argumentList.at(1);
@@ -60,15 +70,19 @@ int main(int argc, char *argv[])
     standardOutput << QObject::tr("Receive OSC on port %1").arg(receiveOscPort) << endl;
     standardOutput << QObject::tr("Send OSC to %1:%2").arg(sendOscHost).arg(sendOscPort) << endl;
 
+    // create OSC sender and receiver
     OscReceiver oscReceiver(receiveOscPort);
     OscSender oscSender(sendOscHost, sendOscPort);
 
+    // create generator list
     QSharedPointer<Generator> spikingNet = QSharedPointer<Generator>(new SpikingNet());
     QList<QSharedPointer<Generator>> generators = {spikingNet};
 
+    // create generator model
     GeneratorModel generatorModel(generators);
     // next: make a view and get the two connected
 
+    // create compute engine
     ComputeEngine computeEngine(generators);
     computeEngine.start(QThread::TimeCriticalPriority);
 

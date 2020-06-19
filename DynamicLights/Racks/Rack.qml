@@ -38,7 +38,7 @@ ColumnLayout {
             color: Stylesheet.colors.white
             font {
                 family: Stylesheet.fonts.sub
-                pointSize: 16
+                pixelSize: 16
                 letterSpacing: 0.8
                 capitalization: Font.Capitalize
             }

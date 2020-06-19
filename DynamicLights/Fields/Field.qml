@@ -22,7 +22,7 @@ ColumnLayout {
         color: Stylesheet.colors.white
         font {
             family: Stylesheet.fonts.sub
-            pointSize: 11
+            pixelSize: 14
             capitalization: Font.AllUppercase
         }
     }

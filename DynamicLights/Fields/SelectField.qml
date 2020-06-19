@@ -18,7 +18,7 @@ Field {
         model: options
         font {
             family: Stylesheet.fonts.main
-            pointSize: 14
+            pixelSize: 18
         }
 
         // background
@@ -39,9 +39,9 @@ Field {
                 color: Stylesheet.colors.white
                 opacity: hovered ? 1 : 0.5
                 font.family: comboBox.font.family
-                font.pointSize: 12
-                leftPadding: Stylesheet.field.padding_LR
-                rightPadding: Stylesheet.field.padding_LR
+                font.pixelSize: 14
+                leftPadding: 8
+                rightPadding: 8
                 topPadding: Stylesheet.field.padding_TB
                 bottomPadding: Stylesheet.field.padding_TB
             }
@@ -60,8 +60,6 @@ Field {
         contentItem: Label {
             text: comboBox.displayText
 
-            leftPadding: Stylesheet.field.padding_LR
-            rightPadding: Stylesheet.field.padding_LR
             topPadding: Stylesheet.field.padding_TB
             bottomPadding: Stylesheet.field.padding_TB
 

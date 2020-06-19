@@ -43,8 +43,9 @@ Button {
             text: generatorIndex
             color: Stylesheet.colors.white
             font {
-                family: Stylesheet.fonts.mainBold
-                pointSize: 12
+                family: Stylesheet.fonts.main
+                weight: Font.Bold
+                pixelSize: 11
             }
             opacity: selected ? 1 : (hovering ? 1 : 0.5)
         }
@@ -57,8 +58,9 @@ Button {
             text: generatorName
             color: Stylesheet.colors.white
             font {
-                family: selected ? Stylesheet.fonts.mainBold : Stylesheet.fonts.main
-                pointSize: 18
+                family: Stylesheet.fonts.main
+                weight: selected ? Font.Bold : Font.Normal
+                pixelSize: 18
             }
             opacity: selected ? 1 : (hovering ? 1 : 0.5)
         }

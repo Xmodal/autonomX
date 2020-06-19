@@ -14,13 +14,12 @@ QtObject {
     // FONTS
     property QtObject fonts: QtObject {
         readonly property string main: "Overpass"
-        readonly property string mainBold: "Overpass Bold"
         readonly property string sub: "Questrial"
     }
 
     // SPACINGS
     property QtObject field: QtObject {
-        readonly property int padding_LR: 15
+        //readonly property int padding_LR: 0
         readonly property int padding_TB: 8
     }
 

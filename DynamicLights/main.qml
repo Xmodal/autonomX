@@ -96,7 +96,7 @@ ApplicationWindow {
                 generatorType: type
                 generatorDescription: description
                 generatorOutputMonitor: outputMonitor
-                generatorIndex: index + 1
+                generatorIndex: index
             }
         }
 

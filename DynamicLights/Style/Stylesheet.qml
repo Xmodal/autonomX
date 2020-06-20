@@ -9,6 +9,15 @@ QtObject {
         readonly property color white: "#ECECEC"
         readonly property color black: "#151515"
         readonly property color darkGrey: "#212121"
+
+        readonly property variant outputs: [
+            "#E44646",      // red
+            "#F18D30",      // orange
+            "#ECDA3E",      // yellow
+            "#76EC3E",      // lime
+            "#3EECAD",      // teal
+            "#3E98EC"       // blue
+        ]
     }
 
     // FONTS

@@ -8,7 +8,7 @@ import "./Style"
  * Widget to control a generator.
  */
 Button {
-    property int generatorIndex: 1
+    property int generatorIndex: 0
     property string generatorName: "Default Name"
     property string generatorType: "Default Type"
     property string generatorDescription: "Default description"
@@ -54,7 +54,7 @@ Button {
         Label {
             id: labelIndex
 
-            text: generatorIndex
+            text: generatorIndex + 1
             color: Stylesheet.colors.white
             font {
                 family: Stylesheet.fonts.main
@@ -84,6 +84,7 @@ Button {
             id: outputIndicator
 
             luminosity: generatorOutputMonitor
+            lightColor: Stylesheet.colors.outputs[generatorIndex % Stylesheet.colors.outputs.length]
 
             Layout.rightMargin: 10
             Layout.alignment: Qt.AlignRight

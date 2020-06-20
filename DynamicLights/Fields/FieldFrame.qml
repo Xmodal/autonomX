@@ -11,6 +11,7 @@ Item {
 
     Repeater {
         model: ["top", "bottom"]
+
         Rectangle {
             width: parent.width
             height: 1

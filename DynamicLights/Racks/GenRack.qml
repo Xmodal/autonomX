@@ -10,7 +10,7 @@ Rack {
 
     content: RowLayout {
         Layout.fillWidth: true
-        spacing: 20
+        spacing: 30
 
         ColumnLayout {
             spacing: 30;
@@ -25,6 +25,15 @@ Rack {
                 labelText: "Type"
                 options: ["SNN"]
             }
+        }
+
+        AreaField {
+            labelText: "Description"
+            placeholder: "Enter description here"
+            defaultText: "This is a description for the Spiking Neural Network (SNN) generator. This algorithm creates short peaks generatively over time."
+
+            fieldWidth: 400
+            height: parent.height
         }
     }
 }

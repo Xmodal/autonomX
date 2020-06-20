@@ -1,7 +1,6 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
-import QtQuick.Controls.Styles 1.4
 
 import "../Style"
 
@@ -10,8 +9,9 @@ ColumnLayout {
 
     property string labelText: "Label"
     property int fieldWidth: 200
-    property alias fieldContent: fieldLoader.sourceComponent
 
+    width: fieldWidth
+    implicitHeight: fieldLabel.height + 45
     spacing: 5
 
     // top label
@@ -26,7 +26,4 @@ ColumnLayout {
             capitalization: Font.AllUppercase
         }
     }
-
-    // field
-    Loader { id: fieldLoader }
 }

@@ -10,7 +10,7 @@ Field {
     property string placeholder: ""
     property string defaultText: "Text Field"
 
-    fieldContent: TextField {
+    TextField {
         id: fieldInput
 
         // alignment
@@ -34,8 +34,8 @@ Field {
 
         // background
         background: FieldFrame {
-            // frameWidth: fieldWidth
-            isHovered: hovered
+            frameWidth: fieldWidth
+            isHovered: fieldInput.hovered
             isFocused: fieldInput.activeFocus
         }
 

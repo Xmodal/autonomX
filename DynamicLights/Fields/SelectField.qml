@@ -10,7 +10,7 @@ Field {
     property int index: 0
     property variant options: ["A", "B", "C"]
 
-    fieldContent: ComboBox {
+    ComboBox {
         id: comboBox
 
         // root settings
@@ -23,7 +23,7 @@ Field {
 
         // background
         background: FieldFrame {
-            // frameWidth: fieldWidth
+            frameWidth: fieldWidth
             isHovered: comboBox.hovered
         }
 

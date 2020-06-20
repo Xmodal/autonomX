@@ -16,7 +16,6 @@ Button {
 
     // state props
     property bool selected: false
-    property bool hovering: false
 
     width: parent.width
     height: 55
@@ -41,14 +40,14 @@ Button {
     }
 
 
-
     // TODO: graph
 
     // text content
-    contentItem: RowLayout {
+    RowLayout {
         spacing: 0
         anchors.leftMargin: 10
         anchors.fill: parent
+        Layout.alignment: Qt.AlignVCenter
 
         // index
         Label {
@@ -61,7 +60,7 @@ Button {
                 weight: Font.Bold
                 pixelSize: 11
             }
-            opacity: selected ? 1 : (hovering ? 1 : 0.5)
+            opacity: selected ? 1 : (hovered ? 1 : 0.5)
         }
 
         // generator name
@@ -76,7 +75,7 @@ Button {
                 weight: Font.Normal
                 pixelSize: 18
             }
-            opacity: selected ? 1 : (hovering ? 1 : 0.5)
+            opacity: selected ? 1 : (hovered ? 1 : 0.5)
         }
 
         // output indicator
@@ -91,15 +90,5 @@ Button {
         }
     }
 
-    // event management
-    MouseArea {
-        id: btnMouseArea
-
-        anchors.fill: parent
-        hoverEnabled: true
-
-        onClicked: selected = !selected
-        onEntered: hovering = true
-        onExited: hovering = false
-    }
+    onClicked: selected = !selected
 }

@@ -8,7 +8,7 @@ import "./Style"
  * Widget to control a generator.
  */
 Button {
-    property int generatorIndex: 1
+    property int generatorIndex: 0
     property string generatorName: "Default Name"
     property string generatorType: "Default Type"
     property string generatorDescription: "Default description"
@@ -23,10 +23,24 @@ Button {
     layer.enabled: false
 
     // background
-    background: Rectangle {
-        color: Stylesheet.colors.black
+    background: Item {
         anchors.fill: parent
+
+        Rectangle {
+            color: selected ? Stylesheet.colors.white : Stylesheet.colors.black
+            anchors.fill: parent
+        }
+
+        // index background
+        Image {
+            source: "assets/images/index-bg.svg"
+            height: parent.height
+            anchors.left: parent.left
+            opacity: selected ? 1 : 0
+        }
     }
+
+
 
     // TODO: graph
 
@@ -40,11 +54,12 @@ Button {
         Label {
             id: labelIndex
 
-            text: generatorIndex
+            text: generatorIndex + 1
             color: Stylesheet.colors.white
             font {
-                family: Stylesheet.fonts.mainBold
-                pointSize: 12
+                family: Stylesheet.fonts.main
+                weight: Font.Bold
+                pixelSize: 11
             }
             opacity: selected ? 1 : (hovering ? 1 : 0.5)
         }
@@ -55,25 +70,24 @@ Button {
 
             Layout.leftMargin: 30
             text: generatorName
-            color: Stylesheet.colors.white
+            color: selected ? Stylesheet.colors.black : Stylesheet.colors.white
             font {
-                family: selected ? Stylesheet.fonts.mainBold : Stylesheet.fonts.main
-                pointSize: 18
+                family: Stylesheet.fonts.main
+                weight: Font.Normal
+                pixelSize: 18
             }
             opacity: selected ? 1 : (hovering ? 1 : 0.5)
         }
 
-        Label {
-            id: labelType
+        // output indicator
+        OutputIndicator {
+            id: outputIndicator
 
-            Layout.leftMargin: 30
-            text: generatorType
-            color: Stylesheet.colors.white
-            font {
-                family: selected ? Stylesheet.fonts.mainBold : Stylesheet.fonts.main
-                pointSize: 12
-            }
-            opacity: selected ? 1 : (hovering ? 1 : 0.5)
+            luminosity: generatorOutputMonitor
+            lightColor: Stylesheet.colors.outputs[generatorIndex % Stylesheet.colors.outputs.length]
+
+            Layout.rightMargin: 10
+            Layout.alignment: Qt.AlignRight
         }
     }
 

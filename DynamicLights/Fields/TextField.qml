@@ -7,16 +7,16 @@ import "../Style"
 Field {
     id: textField
 
-    property string placeholder: "Placeholder"
-    property string defaultText: ""
+    property string placeholder: ""
+    property string defaultText: "Text Field"
 
     fieldContent: TextField {
         id: fieldInput
 
         // alignment
         Layout.fillWidth: true
-        leftPadding: Stylesheet.field.padding_LR
-        rightPadding: Stylesheet.field.padding_LR
+        leftPadding: 0
+        rightPadding: 0
         topPadding: Stylesheet.field.padding_TB
         bottomPadding: Stylesheet.field.padding_TB
 
@@ -27,7 +27,7 @@ Field {
         // font + color
         font {
             family: Stylesheet.fonts.main
-            pointSize: 14
+            pixelSize: 18
         }
         color: Stylesheet.colors.white
         // placeholderTextColor: Stylesheet.setAlpha(Stylesheet.colors.white, 0.4)
@@ -38,6 +38,9 @@ Field {
             isHovered: hovered
             isFocused: fieldInput.activeFocus
         }
+
+        // TODO: add validator
+        // eg. no empty values allowed flag as widget property
 
         // interactivity
         selectByMouse: true

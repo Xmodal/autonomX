@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     // load fonts in the project database
     QDir fontDir{":/assets/fonts"};
     for (auto file : fontDir.entryList(QDir::Files)) {
-        if (QFontDatabase::addApplicationFont(":/assets/fonts/" + file))
+        if (QFontDatabase::addApplicationFont(":/assets/fonts/" + file) == -1)
             standardOutput << "Failed to load font " << file << endl;
     }
 

@@ -14,6 +14,7 @@
         <file>assets/images/light-cue@2x.png</file>
         <file>assets/images/light-cue@3x.png</file>
         <file>assets/images/light-cue@4x.png</file>
+        <file>Fields/AreaField.qml</file>
         <file>Fields/Field.qml</file>
         <file>Fields/FieldFrame.qml</file>
         <file>Fields/SelectField.qml</file>

@@ -23,10 +23,24 @@ Button {
     layer.enabled: false
 
     // background
-    background: Rectangle {
-        color: Stylesheet.colors.black
+    background: Item {
         anchors.fill: parent
+
+        Rectangle {
+            color: selected ? Stylesheet.colors.white : Stylesheet.colors.black
+            anchors.fill: parent
+        }
+
+        // index background
+        Image {
+            source: "assets/images/index-bg.svg"
+            height: parent.height
+            anchors.left: parent.left
+            opacity: selected ? 1 : 0
+        }
     }
+
+
 
     // TODO: graph
 
@@ -56,10 +70,10 @@ Button {
 
             Layout.leftMargin: 30
             text: generatorName
-            color: Stylesheet.colors.white
+            color: selected ? Stylesheet.colors.black : Stylesheet.colors.white
             font {
                 family: Stylesheet.fonts.main
-                weight: selected ? Font.Bold : Font.Normal
+                weight: Font.Normal
                 pixelSize: 18
             }
             opacity: selected ? 1 : (hovering ? 1 : 0.5)

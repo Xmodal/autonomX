@@ -9,8 +9,6 @@
         <file>assets/fonts/Overpass-Regular.ttf</file>
         <file>assets/fonts/Questrial-Regular.ttf</file>
         <file>assets/images/down-caret.svg</file>
-        <file>assets/images/index-bg.png</file>
-        <file>assets/images/index-bg@2x.png</file>
         <file>assets/images/light-cue.png</file>
         <file>assets/images/light-cue@2x.png</file>
         <file>Fields/Field.qml</file>
@@ -22,5 +20,6 @@
         <file>Racks/GenRack.qml</file>
         <file>Racks/Rack.qml</file>
         <file>Racks/RackView.qml</file>
+        <file>assets/images/index-bg.svg</file>
     </qresource>
 </RCC>

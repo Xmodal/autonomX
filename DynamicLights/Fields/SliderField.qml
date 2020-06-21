@@ -13,12 +13,11 @@ Field {
     property real step: 0.0
 
     Item {
-        width: parent.width
+        Layout.fillWidth: true
         height: 40
 
         // background
         FieldFrame {
-            anchors.fill: parent
             isHovered: fieldSlider.hovered
             isFocused: fieldSlider.pressed
         }

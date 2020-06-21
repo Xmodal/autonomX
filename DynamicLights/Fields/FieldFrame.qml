@@ -9,6 +9,7 @@ Item {
 
     implicitWidth: frameWidth
     implicitHeight: 40
+    anchors.fill: parent
 
     Repeater {
         model: ["top", "bottom"]

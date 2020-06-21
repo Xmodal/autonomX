@@ -8,6 +8,7 @@ Item {
     property bool isFocused: false
 
     implicitWidth: frameWidth
+    implicitHeight: 40
 
     Repeater {
         model: ["top", "bottom"]

@@ -40,10 +40,7 @@ Field {
                 opacity: hovered ? 1 : 0.5
                 font.family: comboBox.font.family
                 font.pixelSize: 14
-                leftPadding: 8
-                rightPadding: 8
-                topPadding: Stylesheet.field.padding_TB
-                bottomPadding: Stylesheet.field.padding_TB
+                padding: Stylesheet.field.padding
             }
 
             // item background
@@ -59,9 +56,8 @@ Field {
         // selected item contents
         contentItem: Label {
             text: comboBox.displayText
-
-            topPadding: Stylesheet.field.padding_TB
-            bottomPadding: Stylesheet.field.padding_TB
+            verticalAlignment: Text.AlignVCenter
+            height: 40
 
             color: Stylesheet.colors.white
         }
@@ -90,7 +86,6 @@ Field {
         indicator: Image {
             anchors.right: parent.right
             anchors.verticalCenter: parent.verticalCenter
-            anchors.rightMargin: Stylesheet.field.padding_LR
             id: indicator
             source: "qrc:/assets/images/down-caret.svg"
 

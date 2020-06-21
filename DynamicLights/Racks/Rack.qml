@@ -70,6 +70,8 @@ ColumnLayout {
             anchors.fill: parent
             spacing: 0
 
+            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+
             // field content
             Loader { id: contentLoader }
         }

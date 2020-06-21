@@ -10,10 +10,11 @@ Rack {
 
     content: RowLayout {
         Layout.fillWidth: true
+
         spacing: 30
 
         ColumnLayout {
-            spacing: 30;
+            spacing: 30
 
             TextField {
                 labelText: "Name"
@@ -35,5 +36,24 @@ Rack {
             fieldWidth: 400
             height: parent.height
         }
+
+        ColumnLayout {
+            spacing: 30
+
+            SliderField {
+                labelText: "Ratio"
+                step: 0.05
+            }
+
+            SliderField {
+                labelText: "Ratio 2"
+                minVal: 10
+                maxVal: 110
+                currVal: 20
+                step: 1
+            }
+        }
+
+
     }
 }

@@ -45,11 +45,10 @@ Field {
 
             // item background
             background: Rectangle {
+                anchors.fill: parent
                 color: Stylesheet.colors.white
                 opacity: hovered ? 0.1 : 0
                 border.width: 0
-                width: parent.width
-                height: parent.height
             }
         }
 

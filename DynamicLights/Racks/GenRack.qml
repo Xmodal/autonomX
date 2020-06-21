@@ -34,7 +34,6 @@ Rack {
             defaultText: "This is a description for the Spiking Neural Network (SNN) generator. This algorithm creates short peaks generatively over time."
 
             fieldWidth: 400
-            height: parent.height
         }
 
         ColumnLayout {

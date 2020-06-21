@@ -32,7 +32,6 @@ Field {
 
         // background
         background: FieldFrame {
-            frameWidth: fieldWidth
             isHovered: fieldInput.hovered
             isFocused: fieldInput.activeFocus
         }

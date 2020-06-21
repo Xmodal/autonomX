@@ -10,10 +10,11 @@ ColumnLayout {
     property string labelText: "Label"
     property int fieldWidth: 200
 
-    implicitWidth: fieldWidth
-    implicitHeight: fieldLabel.height + 45
-    spacing: 5
     Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+    Layout.preferredWidth: fieldWidth
+    Layout.preferredHeight: fieldLabel.height + 45
+
+    spacing: 5
 
     // top label
     Label {

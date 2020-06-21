@@ -15,7 +15,6 @@ Field {
         Layout.fillHeight: true
 
         FieldFrame {
-            anchors.fill: parent
             isHovered: textArea.hovered
             isFocused: textArea.activeFocus
         }

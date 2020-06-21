@@ -28,8 +28,7 @@ QtObject {
 
     // SPACINGS
     property QtObject field: QtObject {
-        //readonly property int padding_LR: 0
-        readonly property int padding_TB: 8
+        readonly property int padding: 8
     }
 
     // TOOLS

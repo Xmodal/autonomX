@@ -16,12 +16,11 @@ Field {
         // alignment
         Layout.fillWidth: true
         leftPadding: 0
-        rightPadding: 0
-        topPadding: Stylesheet.field.padding_TB
-        bottomPadding: Stylesheet.field.padding_TB
+        height: 40
 
         // text
         text: defaultText
+
         placeholderText: placeholder
 
         // font + color
@@ -30,7 +29,6 @@ Field {
             pixelSize: 18
         }
         color: Stylesheet.colors.white
-        // placeholderTextColor: Stylesheet.setAlpha(Stylesheet.colors.white, 0.4)
 
         // background
         background: FieldFrame {

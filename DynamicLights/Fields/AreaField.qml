@@ -23,8 +23,8 @@ Field {
         Layout.fillHeight: true
         leftPadding: 0
         rightPadding: 0
-        topPadding: Stylesheet.field.padding_TB
-        bottomPadding: Stylesheet.field.padding_TB
+        topPadding: Stylesheet.field.padding
+        bottomPadding: Stylesheet.field.padding
 
         // background
         background: FieldFrame {

@@ -10,7 +10,12 @@ Field {
     property real minVal: 0.0
     property real maxVal: 1.0
     property real currVal: 0.5
+    property real exponent: 1.0
     property real step: 0.0
+
+    function parseValue(v) {
+        return v.toFixed(2 - Math.floor(Math.log10(v < 1 ? 1 : v)))
+    }
 
     Item {
         Layout.fillWidth: true
@@ -18,12 +23,13 @@ Field {
 
         // background
         FieldFrame {
-            isHovered: fieldSlider.hovered
-            isFocused: fieldSlider.pressed
+            isHovered: fieldSlider.hovered || sliderValue.hovered
+            isFocused: fieldSlider.pressed || sliderValue.activeFocus
         }
 
         // main slider area
         RowLayout {
+            id: sliderContainer
             anchors.fill: parent
 
             // slider
@@ -60,22 +66,20 @@ Field {
                 onValueChanged: currVal = value;
             }
 
-            // slider value indicator
-            Text {
+            TextField {
                 id: sliderValue
 
                 // alignment
+                padding: 0
                 Layout.leftMargin: 0
                 Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                Layout.preferredWidth: 40
+                Layout.preferredWidth: 50
 
                 // text
-                text: {
-                    if (currVal < 10) return currVal.toFixed(2)
-                    if (currVal >= 10 && currVal < 100) return currVal.toFixed(1)
-                    if (currVal >= 100) return currVal
-                }
+                text: parseValue(currVal)
                 horizontalAlignment: Text.AlignRight
+                validator: RegExpValidator { regExp: /\d*.*\d*/ }
+                selectByMouse: true
 
                 // font and color
                 font {
@@ -83,7 +87,16 @@ Field {
                     weight: Font.Bold
                     pixelSize: 16
                 }
+                background: Rectangle { opacity: 0 }
                 color: Stylesheet.colors.white
+
+                // signals
+                onEditingFinished: {
+                    if (displayText === "") currVal = (minVal + maxVal) / 2;
+                    else if (displayText > maxVal) currVal = maxVal;
+                    else if (displayText < minVal) currVal = minVal;
+                    else currVal = displayText;
+                }
             }
         }
     }

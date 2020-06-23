@@ -42,6 +42,7 @@ Rack {
             SliderField {
                 labelText: "Ratio"
                 step: 0.05
+                exponent: 2.0
             }
 
             SliderField {

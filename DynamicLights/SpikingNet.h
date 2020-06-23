@@ -68,14 +68,16 @@ private:
     bool        flagDecay               = false;
     bool        flagDirectConnection    = true;
     bool        flagRandomDevice        = true;
-    bool        flagDebug               = false;
+    bool        flagDebug               = true;
 
     // the neurons
     std::vector<Izhikevich> neurons;
     // the weights
     double** weights;
     // the per-output group spiking average
-    std::vector<double> outputSpiking;
+    std::vector<double> outputGroupSpiking;
+    // the per-output group activation average
+    std::vector<double> outputGroupActivation;
 
     // STDP
     std::vector<int> STDPTimes;
@@ -96,7 +98,7 @@ private:
     inline void updateNeurons(double deltaTime);
     inline void updateInput();
     inline void updateInputDebug();
-    inline void checkFiring();
+    inline void applyFiring();
     inline void computeSTDP(double deltaTime);
     inline void computeSTP(double deltaTime);
     inline double getSTPValue(int index, bool isFiring, double deltaTime);
@@ -118,7 +120,8 @@ private:
     void wholeStimulation(double strength);
     void wholeNetworkStimulation();
     void wholeNetworkStimulation(double strength);
-    int  getSpikedOutput(int outputGroupIndex);
+    double getOutputGroupSpiking(int outputGroupIndex);
+    double getOutputGroupActivation(int outputGroupIndex);
     
 public:
     SpikingNet();

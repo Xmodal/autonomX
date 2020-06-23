@@ -43,7 +43,8 @@ SpikingNet::SpikingNet() {
 
     neurons.resize(neuronSize);
 
-    outputSpiking.resize(outputGroupSize, 0);
+    outputGroupSpiking.resize(outputGroupSize, 0);
+    outputGroupActivation.resize(outputGroupSize, 0);
 
     STDPTimes.resize(neuronSize, 0);
 
@@ -94,7 +95,8 @@ void SpikingNet::init() {
 
     neurons.resize(neuronSize);
 
-    outputSpiking.resize(outputGroupSize, 0);
+    outputGroupSpiking.resize(outputGroupSize, 0);
+    outputGroupActivation.resize(outputGroupSize, 0);
 
     STDPTimes.resize(neuronSize, 0);
 
@@ -333,7 +335,7 @@ void SpikingNet::computeOutput(double deltaTime) {
 
     // write output
     for(int i = 0; i < outputGroupSize; i++) {
-        output[i] = getSpikedOutput(i);
+        output[i] = getOutputGroupActivation(i);
     }
 
 }
@@ -347,39 +349,65 @@ void SpikingNet::update(double deltaTime) {
     updateInput();
     updateNeurons(deltaTime);
 
-    checkFiring();
+    applyFiring();
 }
 
-void SpikingNet::checkFiring() {
-    // reset spiking output
+double sigmoidPositiveUnityClamp(double value) {
+    // https://www.desmos.com/calculator/ikdusaa9yh
+    // sigmoid function centered at 0
+    // df/dx = 1 at x = 0
+    // f(0) = 0
+    // f(infinity) = 1
+    // f(-infinity) = -1
+    return 2.0 / (1.0 + exp(- 2.0 * value)) - 1.0;
+}
+
+void SpikingNet::applyFiring() {
+    // apply firing status to neurons
+    for(int i = 0; i < neuronSize; i++) {
+        neurons[i].applyFiring();
+    }
+    // reset group output variables
     for(int i = 0; i < outputGroupSize; i++) {
-        outputSpiking[i] = 0;
+        outputGroupSpiking[i] = 0;
+        outputGroupActivation[i] = 0;
     }
     int sizePerGroup = (outputSize / outputGroupSize);
+    double averagingConstant = 1.0 / (double) sizePerGroup;
     int total = 0;
     for(int i = 0; i < outputSize; i++) {
         // get the index of the output neuron
         int index = indexOutputNeuron(i);
+        // get the index of the group this neuron belongs to. min is there to prevent an edge case where the number of group doesn't perfectly divide the number of output neurons.
+        int indexGroup = std::min<int>(i / sizePerGroup, outputGroupSize - 1);
         // check to see if the neuron is firing
-        if(neurons[index].applyFiring()) {
+        if(neurons[index].isFiring()) {
             total++;
-            // get the index of the group this neuron belongs to. min is there to prevent an edge case where the number of group doesn't perfectly divide the number of output neurons.
-            int indexGroup = std::min<int>(i / sizePerGroup, outputGroupSize - 1);
             // apply increment with averaging. this isn't perfect if the last group size isn't exactly the same as the other ones, but probably shouldn't be a big problem.
-            outputSpiking[indexGroup] += 1.0 / sizePerGroup;
+            outputGroupSpiking[indexGroup] += 1.0 * averagingConstant;
         }
+        // update output group activation data
+        outputGroupActivation[indexGroup] += 100.0 * std::max<double>(0.0, (neurons[index].getV() - neurons[index].getC()) / (neurons[index].getPotentialThreshold() - neurons[index].getC())) * averagingConstant;
+    }
+    // apply sigmoid on output group activation
+    for(int i = 0; i < outputGroupSize; i++) {
+        outputGroupActivation[i] = sigmoidPositiveUnityClamp(outputGroupActivation[i]);
     }
     if(flagDebug) {
-        std::cout << "number of neurons firing: " << total << endl;
+        //std::cout << "number of neurons firing: " << total << endl;
+        std::cout << "activation of group 0: " << outputGroupActivation[0] << endl;
     }
 }
 
-
 // returns the per-output group spiking average
-int SpikingNet::getSpikedOutput(int index) {
-    return outputSpiking[index];
+double SpikingNet::getOutputGroupSpiking(int outputGroupIndex) {
+    return outputGroupSpiking[outputGroupIndex];
 }
 
+// returns the per-output group activation average
+double SpikingNet::getOutputGroupActivation(int outputGroupIndex) {
+    return outputGroupActivation[outputGroupIndex];
+}
 
 void SpikingNet::updateInput() {
 

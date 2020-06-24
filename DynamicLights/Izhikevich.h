@@ -30,9 +30,6 @@ enum NeuronType {
     excitatoryNeuronRandomized
 };
 
-// TODO: REMOVE THIS
-using namespace std;
-
 class Izhikevich {
 private:
     double potentialThreshold;

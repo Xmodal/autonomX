@@ -15,10 +15,13 @@ ColumnLayout {
     property int genID: -1
 
     Layout.fillWidth: true
-    Layout.fillHeight: true
     Layout.alignment: Qt.AlignTop | Qt.AlignLeft
 
     GenRack {
+        genID: genID
+    }
+
+    ParamsRack {
         genID: genID
     }
 }

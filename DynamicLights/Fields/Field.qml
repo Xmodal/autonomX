@@ -8,11 +8,11 @@ ColumnLayout {
     id: field
 
     property string labelText: "Label"
-    property int fieldWidth: 200
+    property int fieldWidth: Stylesheet.field.initialWidth
 
     Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-    Layout.preferredWidth: fieldWidth
-    Layout.preferredHeight: fieldLabel.height + 45
+    Layout.maximumWidth: fieldWidth
+    Layout.fillWidth: true
 
     spacing: 5
 

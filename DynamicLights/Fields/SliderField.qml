@@ -19,7 +19,7 @@ Field {
 
     Item {
         Layout.fillWidth: true
-        height: 40
+        Layout.preferredHeight: 40
 
         // background
         FieldFrame {

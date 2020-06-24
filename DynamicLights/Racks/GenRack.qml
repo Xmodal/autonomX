@@ -1,6 +1,8 @@
 import QtQuick 2.9
 import QtQuick.Layouts 1.3
+
 import "../Fields"
+import "../Style"
 
 Rack {
     id: genRack
@@ -8,13 +10,14 @@ Rack {
     rackName: "GEN"
     removable: false
 
-    content: RowLayout {
+    RowLayout {
         Layout.fillWidth: true
-
-        spacing: 30
+        Layout.margins: Stylesheet.field.spacing
+        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+        spacing: Stylesheet.field.spacing
 
         ColumnLayout {
-            spacing: 30
+            spacing: parent.spacing
 
             TextField {
                 labelText: "Name"
@@ -29,15 +32,16 @@ Rack {
         }
 
         AreaField {
+            Layout.fillHeight: true
             labelText: "Description"
             placeholder: "Enter description here"
             defaultText: "This is a description for the Spiking Neural Network (SNN) generator. This algorithm creates short peaks generatively over time."
 
-            fieldWidth: 400
+            fieldWidth: (Stylesheet.field.initialWidth * 2) + Stylesheet.field.spacing
         }
 
         ColumnLayout {
-            spacing: 30
+            spacing: parent.spacing
 
             SliderField {
                 labelText: "Ratio"
@@ -53,7 +57,11 @@ Rack {
                 step: 1
             }
         }
-
-
     }
 }
+
+/*##^##
+Designer {
+    D{i:0;autoSize:true;height:480;width:640}
+}
+##^##*/

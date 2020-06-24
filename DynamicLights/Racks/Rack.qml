@@ -16,10 +16,8 @@ ColumnLayout {
     property bool collapsed: false
     property bool removable: true
 
-    // components
-    property alias content: contentLoader.sourceComponent
-
     Layout.fillWidth: true
+    Layout.maximumHeight: 245
     spacing: 0
 
     // top label
@@ -52,29 +50,5 @@ ColumnLayout {
         //Button { id: btnCollapse }
     }
 
-    // content (todo)
-    Item {
-        Layout.fillWidth: true
-
-        Rectangle {
-            anchors.fill: parent
-            color: "#212121"
-            border.width: 0
-        }
-
-        RowLayout {
-            anchors.leftMargin: 20
-            anchors.bottomMargin: 40
-            anchors.rightMargin: 20
-            anchors.topMargin: 40
-            anchors.fill: parent
-            spacing: 0
-
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-
-            // field content
-            Loader { id: contentLoader }
-        }
-    }
-
+    // content (extended)
 }

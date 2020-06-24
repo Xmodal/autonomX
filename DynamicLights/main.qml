@@ -84,20 +84,25 @@ ApplicationWindow {
         spacing: 0
 
         // List of generators
-        ListView {
-            orientation: Qt.Vertical
+        Item {
             Layout.preferredWidth: parent.width * 0.25
             Layout.minimumWidth: 200
+            Layout.maximumWidth: 400
             Layout.fillHeight: true
-            model: generatorModel
 
-            delegate: GeneratorWidget {
-                generatorName: name
-                generatorType: type
-                generatorDescription: description
-                generatorOutputMonitor: outputMonitor
-                generatorIndex: index
+            Rectangle {
+                color: Stylesheet.colors.black
+                anchors.fill: parent
             }
+
+            ListView {
+                anchors.fill: parent
+                orientation: Qt.Vertical
+                model: generatorModel
+                delegate: GeneratorWidget {}
+            }
+
+            // TODO: new generator button here
         }
 
         // List of racks for currently selected generator

@@ -23,6 +23,7 @@
         <file>Style/qmldir</file>
         <file>Style/Stylesheet.qml</file>
         <file>Racks/GenRack.qml</file>
+        <file>Racks/ParamsRack.qml</file>
         <file>Racks/Rack.qml</file>
         <file>Racks/RackView.qml</file>
     </qresource>

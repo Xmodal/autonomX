@@ -395,7 +395,7 @@ void SpikingNet::applyFiring() {
     }
     if(flagDebug) {
         //std::cout << "number of neurons firing: " << total << endl;
-        std::cout << "activation of group 0: " << outputGroupActivation[0] << endl;
+        //std::cout << "activation of group 0: " << outputGroupActivation[0] << endl;
     }
 }
 

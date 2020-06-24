@@ -39,24 +39,6 @@ Rack {
 
             fieldWidth: (Stylesheet.field.initialWidth * 2) + Stylesheet.field.spacing
         }
-
-        ColumnLayout {
-            spacing: parent.spacing
-
-            SliderField {
-                labelText: "Ratio"
-                step: 0.05
-                exponent: 2.0
-            }
-
-            SliderField {
-                labelText: "Ratio 2"
-                minVal: 10
-                maxVal: 110
-                currVal: 20
-                step: 1
-            }
-        }
     }
 }
 

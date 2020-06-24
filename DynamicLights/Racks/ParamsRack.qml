@@ -11,31 +11,53 @@ Rack {
     rackName: "PARAMS"
     removable: false
 
-    RowLayout {
+    ColumnLayout {
         Layout.fillWidth: true
         Layout.margins: Stylesheet.field.spacing
         Layout.alignment: Qt.AlignLeft | Qt.AlignTop
         spacing: Stylesheet.field.spacing
 
-        TextField {
-            validateInt: true
-            labelText: "Neurons"
-            defaultText: "300"
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: Stylesheet.field.spacing
+
+            TextField {
+                validateInt: true
+                labelText: "Neurons"
+                defaultText: "300"
+            }
+
+            SelectField {
+                labelText: "Network type"
+                options: ["Random", "Sparse", "Grid", "Uniform"]
+            }
+
+            SelectField {
+                labelText: "Inh. neuron type"
+                options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
+            }
+
+            SelectField {
+                labelText: "Exc. neuron type"
+                options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
+            }
         }
 
-        SelectField {
-            labelText: "Network type"
-            options: ["Random", "Sparse", "Grid", "Uniform"]
-        }
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: Stylesheet.field.spacing
 
-        SelectField {
-            labelText: "Inh. neuron type"
-            options: ["Spiking", "Spiking (rand)", "Resonator", "Resonator (rand)", "Chattering"]
-        }
+            SliderField {
+                labelText: "Inh. portion"
+            }
 
-        SelectField {
-            labelText: "Exc. neuron type"
-            options: ["Spiking", "Spiking (rand)", "Resonator", "Resonator (rand)", "Chattering"]
+            SliderField {
+                labelText: "Input portion"
+            }
+
+            SliderField {
+                labelText: "Output portion"
+            }
         }
     }
 }

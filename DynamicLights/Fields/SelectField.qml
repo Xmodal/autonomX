@@ -13,6 +13,8 @@ Field {
     ComboBox {
         id: comboBox
 
+        Layout.fillWidth: true
+
         // root settings
         currentIndex: index
         model: options

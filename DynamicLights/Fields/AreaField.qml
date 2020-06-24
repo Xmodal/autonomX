@@ -10,6 +10,8 @@ Field {
     property string placeholder: "Area Field"
     property string defaultText: "Area Field"
 
+    Layout.fillHeight: true
+
     Item {
         Layout.fillWidth: true
         Layout.fillHeight: true

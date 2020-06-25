@@ -39,6 +39,7 @@ void SpikingNet::initialize() {
 
     // set random seed
     if(flagRandomDevice) {
+        std::random_device random;
         randomGenerator.seed(random());
     } else {
         randomGenerator.seed(randomSeed);

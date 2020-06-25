@@ -40,6 +40,11 @@ class SpikingNet : public Generator {
     Q_PROPERTY(NeuronType excitatoryNeuronType READ getExcitatoryNeuronType WRITE writeExcitatoryNeuronType NOTIFY excitatoryNeuronTypeChanged)
     Q_PROPERTY(double inhibitoryNoise READ getInhibitoryNoise WRITE writeInhibitoryNoise NOTIFY inhibitoryNoiseChanged)
     Q_PROPERTY(double excitatoryNoise READ getExcitatoryNoise WRITE writeExcitatoryNoise NOTIFY excitatoryNoiseChanged)
+
+    Q_PROPERTY(double STPStrength READ getSTPStrength WRITE writeSTDPStrength NOTIFY STPStrengthChanged)
+    Q_PROPERTY(double STDPStrength READ getSTDPStrength WRITE writeSTDPStrength NOTIFY STDPStrengthChanged)
+    Q_PROPERTY(double decayConstant READ getDecayConstant WRITE writeDecayConstant NOTIFY decayConstantChanged)
+
     Q_PROPERTY(bool flagSTP READ getFlagSTP WRITE writeFlagSTP NOTIFY flagSTPChanged)
     Q_PROPERTY(bool flagSTDP READ getFlagSTDP WRITE writeFlagSTDP NOTIFY flagSTDPChanged)
     Q_PROPERTY(bool flagDecay READ getFlagDecay WRITE writeFlagDecay NOTIFY flagDecayChanged)
@@ -77,6 +82,9 @@ private:
     double      decayConstant = 0.9995;
 
     double      timeScale = 30.0 / 1000.0;
+
+    double STDPStrength = 1.0;
+    double STPStrength = 1.0;
 
     bool        flagSTP                 = false;
     bool        flagSTDP                = true;
@@ -154,6 +162,9 @@ public:
     NeuronType getExcitatoryNeuronType() const;
     double getInhibitoryNoise() const;
     double getExcitatoryNoise() const;
+    double getSTPStrength() const;
+    double getSTDPStrength() const;
+    double getDecayConstant() const;
     bool getFlagSTP() const;
     bool getFlagSTDP() const;
     bool getFlagDecay() const;
@@ -168,6 +179,9 @@ public slots:
     void writeExcitatoryNeuronType(NeuronType excitatoryNeuronType);
     void writeInhibitoryNoise(double inhibitoryNoise);
     void writeExcitatoryNoise(double excitatoryNoise);
+    void writeSTPStrength(double STPStrength);
+    void writeSTDPStrength(double STDPStrength);
+    void writeDecayConstant(double decayConstant);
     void writeFlagSTP(bool flagSTP);
     void writeFlagSTDP(bool flagSTDP);
     void writeFlagDecay(bool flagDecay);
@@ -182,6 +196,9 @@ signals:
     void excitatoryNeuronTypeChanged(NeuronType excitatoryNeuronType);
     void inhibitoryNoiseChanged(double inhibitoryNoise);
     void excitatoryNoiseChanged(double excitatoryNoise);
+    void STPStrengthChanged(double STPStrength);
+    void STDPStrengthChanged(double STDPStrength);
+    void decayConstantChanged(double decayConstant);
     void flagSTPChanged(bool flagSTP);
     void flagSTDPChanged(bool flagSTDP);
     void flagDecayChanged(bool flagDecay);

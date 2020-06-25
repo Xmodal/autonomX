@@ -516,7 +516,7 @@ void SpikingNet::computeSTDP(double deltaTime) {
                     // another (uniquely different) neuron has fired in the last STDPTau frames (excluding the current frame)
 
                     // this is part of the exponential function described above
-                    d = deltaTimeMillis * (0.1 * pow(0.95, (1000.0 * STDPTimes[j])));
+                    d = deltaTimeMillis * (0.1 * STDPStrength * pow(0.95, (1000.0 * STDPTimes[j])));
 
                     // update the weight from j to i, should be increased since j fired before i.
                     if(weights[j][i] != 0.0) {
@@ -539,7 +539,7 @@ void SpikingNet::computeSTDP(double deltaTime) {
 
 void SpikingNet::computeSTP(double deltaTime) {
     for(int i = inhibitorySize; i < neuronSize; ++i) {
-        STPw[i] = getSTPValue(i, neurons[i].isFiring(), deltaTime);
+        STPw[i] = STPStrength * getSTPValue(i, neurons[i].isFiring(), deltaTime);
     }
 }
 
@@ -689,6 +689,18 @@ double SpikingNet::getExcitatoryNoise() const {
     return this->excitatoryNoise;
 }
 
+double SpikingNet::getSTPStrength() const {
+    return this->STPStrength;
+}
+
+double SpikingNet::getSTDPStrength() const {
+    return this->STDPStrength;
+}
+
+double SpikingNet::getDecayConstant() const {
+    return this->decayConstant;
+}
+
 bool SpikingNet::getFlagSTP() const {
     return this->flagSTP;
 }
@@ -796,6 +808,30 @@ void SpikingNet::writeExcitatoryNoise(double excitatoryNoise) {
 
     this->excitatoryNoise = excitatoryNoise;
     emit excitatoryNoiseChanged(excitatoryNoise);
+}
+
+void SpikingNet::writeSTPStrength(double STPStrength) {
+    if(this->STPStrength == STPStrength)
+        return;
+
+    this->STPStrength = STPStrength;
+    emit STPStrengthChanged(STPStrength);
+}
+
+void SpikingNet::writeSTDPStrength(double STDPStrength) {
+    if(this->STDPStrength == STDPStrength)
+        return;
+
+    this->STDPStrength = STDPStrength;
+    emit STDPStrengthChanged(STDPStrength);
+}
+
+void SpikingNet::writeDecayConstant(double decayConstant) {
+    if(this->decayConstant == decayConstant)
+        return;
+
+    this->decayConstant = decayConstant;
+    emit decayConstantChanged(decayConstant);
 }
 
 void SpikingNet::writeFlagSTP(bool flagSTP) {

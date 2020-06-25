@@ -27,20 +27,25 @@ SpikingNet::SpikingNet() {
     description = "An interconnected network of biologically-modeled neurons.";
     outputMonitor = 0;
 
-    STDPWindow = 20;
+    initialize();
+}
+
+SpikingNet::~SpikingNet() {
+    reset();
+}
+
+
+void SpikingNet::initialize() {
 
     // set random seed
-    if(flagRandomDevice)
-    {
+    if(flagRandomDevice) {
         std::random_device random;
         randomGenerator.seed(random());
-    }
-    else
-    {
+    } else {
         randomGenerator.seed(randomSeed);
     }
 
-
+    // setup vectors
     neurons.resize(neuronSize);
 
     outputGroupSpiking.resize(outputGroupSize, 0);
@@ -48,74 +53,39 @@ SpikingNet::SpikingNet() {
 
     STDPTimes.resize(neuronSize, 0);
 
-    // STP (according to Science paper)
+    input.resize(inputGroupSize, 0);
+    output.resize(outputGroupSize, 0);
+
+    // allocate memory for STP variables
     STPu = new double[neuronSize];
     STPx = new double[neuronSize];
     STPw = new double[neuronSize];
 
+    // initialize STP variables
+    for(int i = 0; i < neuronSize; ++i) {
+        STPw[i] = 1.0;
+        STPx[i] = 1.0;
+        STPu[i] = 0.0;
+    }
+
+    // allocate memory for weights
     weights = new double*[neuronSize];
     for(int i = 0; i < neuronSize; ++i) {
         weights[i] = new double[neuronSize];
     }
 
-    // setup generator inputs and outputs
-    input.resize(inputGroupSize, 0.0);
-    output.resize(outputGroupSize, 0.0);
-}
-
-SpikingNet::~SpikingNet() {
-
-    // delete STP variables
-    delete[] STPu;
-    delete[] STPx;
-    delete[] STPw;
-    STPu = 0;
-    STPx = 0;
-    STPw = 0;
-
-    for(int i = 0; i < neuronSize; ++i) {
-        delete[] weights[i];
-        weights[i] = 0;
-    }
-    delete[] weights;
-    weights = 0;
-}
-
-
-void SpikingNet::init() {
-
+    // initialize weights
     for(int i = 0; i < neuronSize; ++i) {
         for(int j = 0; j < neuronSize; ++j) {
             weights[i][j] = 0.;
         }
     }
 
-    neurons.clear();
-    STDPTimes.clear();
-
-    neurons.resize(neuronSize);
-
-    outputGroupSpiking.resize(outputGroupSize, 0);
-    outputGroupActivation.resize(outputGroupSize, 0);
-
-    STDPTimes.resize(neuronSize, 0);
-
-    // initialization of some variables
-    for(int i = 0; i < neuronSize; ++i) {
-        // initialize STDP variables
-        STDPTimes[i] = 0;
-
-        // initialize STP variables
-        STPw[i] = 1.0;
-        STPx[i] = 1.0;
-        STPu[i] = 0.0;
-    }
-
     // set neuron types
     for(int i = 0; i < neuronSize; ++i) {
         if(i < inhibitorySize) {
             neurons[i].setNeuronType(inhibitoryNeuronType);
-        }else{
+        } else{
             neurons[i].setNeuronType(excitatoryNeuronType);
         }
     }
@@ -128,13 +98,31 @@ void SpikingNet::init() {
         case randomNetwork:
             setRandomNetwork();
             break;
-        case uniformNetwork: // for debug
+        case uniformNetwork:
             setUniformNetwork();
             break;
         case gridNetwork:
             setGridNetwork();
             break;
     }
+}
+
+void SpikingNet::reset() {
+    // delete STP variables
+    delete[] STPu;
+    delete[] STPx;
+    delete[] STPw;
+    STPu = 0;
+    STPx = 0;
+    STPw = 0;
+
+    // delete weights
+    for(int i = 0; i < neuronSize; ++i) {
+        delete[] weights[i];
+        weights[i] = 0;
+    }
+    delete[] weights;
+    weights = 0;
 }
 
 // inhibitory neurons are first, the rest is excitatory neurons
@@ -352,14 +340,42 @@ void SpikingNet::update(double deltaTime) {
     applyFiring();
 }
 
-double sigmoidPositiveUnityClamp(double value) {
+double sigmoid(double value) {
     // https://www.desmos.com/calculator/ikdusaa9yh
     // sigmoid function centered at 0
     // df/dx = 1 at x = 0
     // f(0) = 0
     // f(infinity) = 1
     // f(-infinity) = -1
+
     return 2.0 / (1.0 + exp(- 2.0 * value)) - 1.0;
+}
+
+double softKnee(double value, double window) {
+    // https://www.desmos.com/calculator/34ccgcquj3
+    // soft clip function
+    // is linear in the range [-window, window]
+    // converges towards 1 at infinity
+    // converges towards -1 at -infinity
+    // second derivative is smooth at all points
+
+    if(- window < value && value < window)
+        return value;
+
+    double scalingFactor = 1.0 / (1.0 - window);
+
+    if(value > 0) {
+        return sigmoid(scalingFactor * (value - window)) / scalingFactor + window;
+    } else {
+        return sigmoid(scalingFactor * (value + window)) / scalingFactor - window;
+    }
+}
+
+double softKneePositive(double value, double window) {
+    // indentical to function above except it uses the range [0, 1] instead
+    // the window parameter also behaves diferently: it defines the total size of the linear region
+    // the region [1/2 - window/2, 1/2 + window/2] is linear
+    return (softKnee(2.0 * value - 1.0, window) + 1.0) * 0.5;
 }
 
 void SpikingNet::applyFiring() {
@@ -387,11 +403,11 @@ void SpikingNet::applyFiring() {
             outputGroupSpiking[indexGroup] += 1.0 * averagingConstant;
         }
         // update output group activation data
-        outputGroupActivation[indexGroup] += 100.0 * std::max<double>(0.0, (neurons[index].getV() - neurons[index].getC()) / (neurons[index].getPotentialThreshold() - neurons[index].getC())) * averagingConstant;
+        outputGroupActivation[indexGroup] += (neurons[index].getV() - neurons[index].getC()) / (neurons[index].getPotentialThreshold() - neurons[index].getC()) * averagingConstant;
     }
-    // apply sigmoid on output group activation
+    // apply soft-clamp on output group activation
     for(int i = 0; i < outputGroupSize; i++) {
-        outputGroupActivation[i] = sigmoidPositiveUnityClamp(outputGroupActivation[i]);
+        outputGroupActivation[i] = softKneePositive(outputGroupActivation[i], 0.8);
     }
     if(flagDebug) {
         //std::cout << "number of neurons firing: " << total << endl;
@@ -633,4 +649,175 @@ void SpikingNet::wholeNetworkStimulation(double strength) {
     for(int i = 0; i < neuronSize; ++i) {
             neurons[i].addToI(strength);
     }
+}
+
+// ############################### Qt read / write ###############################
+
+int SpikingNet::getNeuronSize() const {
+    return neuronSize;
+}
+
+double SpikingNet::getTimeScale() const {
+    return this->timeScale;
+}
+
+double SpikingNet::getInhibitoryPortion() const {
+    return this->inhibitoryPortion;
+}
+
+double SpikingNet::getInputPortion() const {
+    return this->inputPortion;
+}
+
+double SpikingNet::getOutputPortion() const {
+    return this->outputPortion;
+}
+
+NeuronType SpikingNet::getInhibitoryNeuronType() const {
+    return this->inhibitoryNeuronType;
+}
+
+NeuronType SpikingNet::getExcitatoryNeuronType() const {
+    return this->excitatoryNeuronType;
+}
+
+double SpikingNet::getInhibitoryNoise() const {
+    return this->inhibitoryNoise;
+}
+
+double SpikingNet::getExcitatoryNoise() const {
+    return this->excitatoryNoise;
+}
+
+bool SpikingNet::getFlagSTP() const {
+    return this->flagSTP;
+}
+
+bool SpikingNet::getFlagSTDP() const {
+    return this->flagSTDP;
+}
+
+bool SpikingNet::getFlagDecay() const {
+    return this->flagDecay;
+}
+
+void SpikingNet::writeNeuronSize(int neuronSize) {
+    if(this->neuronSize == neuronSize)
+        return;
+
+    // reset network, since these parameters only take effect when the network is created anew
+    reset();
+    initialize();
+
+    this->neuronSize = neuronSize;
+    emit neuronSizeChanged(neuronSize);
+}
+
+void SpikingNet::writeTimeScale(double timeScale) {
+    if(this->timeScale == timeScale)
+        return;
+
+    this->timeScale = timeScale;
+    emit timeScaleChanged(timeScale);
+}
+
+void SpikingNet::writeInhibitoryPortion(double inhibitoryPortion) {
+    if(this->inhibitoryPortion == inhibitoryPortion)
+        return;
+
+    // reset network, since these parameters only take effect when the network is created anew
+    // TODO: this isn't as efficient as it could be since it's not necessary to deallocate and reallocate memory for weights / STP
+    reset();
+    initialize();
+
+    this->inhibitoryPortion = inhibitoryPortion;
+    emit inhibitoryPortionChanged(inhibitoryPortion);
+}
+
+void SpikingNet::writeInputPortion(double inputPortion) {
+    if(this->inputPortion == inputPortion)
+        return;
+
+    // update input size
+    inputSize = (neuronSize - inhibitorySize) * inputPortion;
+
+    this->inputPortion = inputPortion;
+    emit inputPortionChanged(inputPortion);
+}
+
+void SpikingNet::writeOutputPortion(double outputPortion) {
+    if(this->outputPortion == outputPortion)
+        return;
+
+    // update output size
+    outputSize = (neuronSize - inhibitorySize) * outputPortion;
+
+    this->outputPortion = outputPortion;
+    emit outputPortionChanged(outputPortion);
+}
+
+void SpikingNet::writeInhibitoryNeuronType(NeuronType inhibitoryNeuronType) {
+    if(this->inhibitoryNeuronType == inhibitoryNeuronType)
+        return;
+
+    // reset network, since these parameters only take effect when the network is created anew
+    // TODO: this isn't as efficient as it could be since it's not necessary to deallocate and reallocate memory for weights / STP
+    reset();
+    initialize();
+
+    this->inhibitoryNeuronType = inhibitoryNeuronType;
+    emit inhibitoryNeuronTypeChanged(inhibitoryNeuronType);
+}
+
+void SpikingNet::writeExcitatoryNeuronType(NeuronType excitatoryNeuronType) {
+    if(this->excitatoryNeuronType == excitatoryNeuronType)
+        return;
+
+    // reset network, since these parameters only take effect when the network is created anew
+    // TODO: this isn't as efficient as it could be since it's not necessary to deallocate and reallocate memory for weights / STP
+    reset();
+    initialize();
+
+    this->excitatoryNeuronType = excitatoryNeuronType;
+    emit excitatoryNeuronTypeChanged(excitatoryNeuronType);
+}
+
+void SpikingNet::writeInhibitoryNoise(double inhibitoryNoise) {
+    if(this->inhibitoryNoise == inhibitoryNoise)
+        return;
+
+    this->inhibitoryNoise = inhibitoryNoise;
+    emit inhibitoryNoiseChanged(inhibitoryNoise);
+}
+
+void SpikingNet::writeExcitatoryNoise(double excitatoryNoise) {
+    if(this->excitatoryNoise == excitatoryNoise)
+        return;
+
+    this->excitatoryNoise = excitatoryNoise;
+    emit excitatoryNoiseChanged(excitatoryNoise);
+}
+
+void SpikingNet::writeFlagSTP(bool flagSTP) {
+    if(this->flagSTP == flagSTP)
+        return;
+
+    this->flagSTP = flagSTP;
+    emit flagSTPChanged(flagSTP);
+}
+
+void SpikingNet::writeFlagSTDP(bool flagSTDP) {
+    if(this->flagSTDP == flagSTDP)
+        return;
+
+    this->flagSTDP = flagSTDP;
+    emit flagSTDPChanged(flagSTDP);
+}
+
+void SpikingNet::writeFlagDecay(bool flagDecay) {
+    if(this->flagDecay == flagDecay)
+        return;
+
+    this->flagDecay = flagDecay;
+    emit flagDecayChanged(flagDecay);
 }

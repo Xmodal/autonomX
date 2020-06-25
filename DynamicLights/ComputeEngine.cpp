@@ -45,7 +45,7 @@ void ComputeEngine::run() {
     // do the computation
     for(QList<QSharedPointer<Generator>>::iterator it = generators.begin(); it != generators.end(); it++) {
         // do the actual computation
-        (*it)->computeOutput(millisLastFrame / 1000.0);
+        (*it)->computeOutput(1.0 / frequency);
         // update the value of the output monitor
         double outputMonitor = 0;
         for(int i = 0; i < (*it)->getOutputSize(); i++) {

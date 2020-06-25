@@ -23,7 +23,7 @@ Izhikevich::Izhikevich() {
     
     //set param as default Ne.
     setNeuronType(spikingNeuronRandomized);
-    u = b*v;
+    u = b * v;
     I = 0.;
     potentialThreshold = 20.;
 }
@@ -31,19 +31,19 @@ Izhikevich::Izhikevich() {
 Izhikevich::~Izhikevich() {
 }
 
-void Izhikevich::setParam(NeuronType _type, double _a, double _b, double _c, double _d, double _u, double _v, double _I) {
-    this->type = _type;
-    this->a = _a;
-    this->b = _b;
-    this->c = _c;
-    this->d = _d;
-    this->v = _u;
-    this->d = _v;
-    this->I = _I;
+void Izhikevich::setParam(NeuronType type, double a, double b, double c, double d, double u, double v, double I) {
+    this->type = type;
+    this->a = a;
+    this->b = b;
+    this->c = c;
+    this->d = d;
+    this->u = u;
+    this->v = v;
+    this->I = I;
 }
 
-void Izhikevich::setNeuronType(NeuronType _type) {
-    type = _type;
+void Izhikevich::setNeuronType(NeuronType type) {
+    this->type = type;
     switch(type) {
         case spikingNeuron: {
             a = 0.02;
@@ -127,7 +127,7 @@ void Izhikevich::setNeuronType(NeuronType _type) {
 }
 
 
-void Izhikevich::update(double deltaTime) {
+void Izhikevich::update(double deltaTime) { 
     double deltaTimeMillis = deltaTime * 1000.0;
     v += deltaTimeMillis * 0.5 * (0.04 * v * v + 5 * v + 140 - u + I);
     v += deltaTimeMillis * 0.5 * (0.04 * v * v + 5 * v + 140 - u + I);
@@ -182,10 +182,14 @@ double Izhikevich::getI() {
     return(this->I);
 }
 
-void Izhikevich::setI(double i) {
-    this->I = i;
+double Izhikevich::getPotentialThreshold() {
+    return(this->potentialThreshold);
 }
 
-void Izhikevich::addToI(double a) {
-    this->I = this->I + a;
+void Izhikevich::setI(double I) {
+    this->I = I;
+}
+
+void Izhikevich::addToI(double deltaI) {
+    this->I = this->I + deltaI;
 }

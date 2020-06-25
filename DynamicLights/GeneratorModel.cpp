@@ -6,7 +6,7 @@ GeneratorModel::GeneratorModel(QList<QSharedPointer<Generator>> generators) {
 
     for(int i = 0; i < generators.count(); i++) {
         connect(generators[i].get(), &Generator::outputMonitorChanged, this, [=]() {
-            emit dataChanged(index(i), index(0), { OutputMonitorRole });
+            emit dataChanged(index(i), index(i), { OutputMonitorRole });
         });
     }
 }

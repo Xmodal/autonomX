@@ -30,9 +30,6 @@ enum NeuronType {
     excitatoryNeuronRandomized
 };
 
-// TODO: REMOVE THIS
-using namespace std;
-
 class Izhikevich {
 private:
     double potentialThreshold;
@@ -47,7 +44,7 @@ public:
     ~Izhikevich();
 
     void update(double deltaTime);
-    void setParam(NeuronType type, double a, double b, double c, double d, double _u, double _v, double _I);
+    void setParam(NeuronType type, double a, double b, double c, double d, double u, double v, double I);
     void setNeuronType(NeuronType type);
     bool applyFiring(); // checks if the neuron is firing and updates the differential equationa accordingly
     NeuronType getNeuronType();
@@ -65,8 +62,9 @@ public:
     double getU();
     double getV();
     double getI();
-    void setI(double i);
-    void addToI(double a);
+    double getPotentialThreshold();
+    void setI(double I);
+    void addToI(double deltaI);
     
     bool firing;
 

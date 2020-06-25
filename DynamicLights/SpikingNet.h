@@ -29,13 +29,33 @@ enum NetworkType {
 };
 
 class SpikingNet : public Generator {
+    // TODO: figure out how we decide to add / remove inputs. this should probably be a property that belongs to the Generator abstract class, rather than this.
+    Q_OBJECT
+    Q_PROPERTY(int neuronSize READ getNeuronSize WRITE writeNeuronSize NOTIFY neuronSizeChanged)
+    Q_PROPERTY(double timeScale READ getTimeScale WRITE writeTimeScale NOTIFY timeScaleChanged)
+    Q_PROPERTY(double inhibitoryPortion READ getInhibitoryPortion WRITE writeInhibitoryPortion NOTIFY inhibitoryPortionChanged)
+    Q_PROPERTY(double inputPortion READ getInputPortion WRITE writeInputPortion NOTIFY inputPortionChanged)
+    Q_PROPERTY(double outputPortion READ getOutputPortion WRITE writeOutputPortion NOTIFY outputPortionChanged)
+    Q_PROPERTY(NeuronType inhibitoryNeuronType READ getInhibitoryNeuronType WRITE writeInhibitoryNeuronType NOTIFY inhibitoryNeuronTypeChanged)
+    Q_PROPERTY(NeuronType excitatoryNeuronType READ getExcitatoryNeuronType WRITE writeExcitatoryNeuronType NOTIFY excitatoryNeuronTypeChanged)
+    Q_PROPERTY(double inhibitoryNoise READ getInhibitoryNoise WRITE writeInhibitoryNoise NOTIFY inhibitoryNoiseChanged)
+    Q_PROPERTY(double excitatoryNoise READ getExcitatoryNoise WRITE writeExcitatoryNoise NOTIFY excitatoryNoiseChanged)
+
+    Q_PROPERTY(double STPStrength READ getSTPStrength WRITE writeSTDPStrength NOTIFY STPStrengthChanged)
+    Q_PROPERTY(double STDPStrength READ getSTDPStrength WRITE writeSTDPStrength NOTIFY STDPStrengthChanged)
+    Q_PROPERTY(double decayConstant READ getDecayConstant WRITE writeDecayConstant NOTIFY decayConstantChanged)
+
+    Q_PROPERTY(bool flagSTP READ getFlagSTP WRITE writeFlagSTP NOTIFY flagSTPChanged)
+    Q_PROPERTY(bool flagSTDP READ getFlagSTDP WRITE writeFlagSTDP NOTIFY flagSTDPChanged)
+    Q_PROPERTY(bool flagDecay READ getFlagDecay WRITE writeFlagDecay NOTIFY flagDecayChanged)
+
 private:
     NetworkType networkType = gridNetwork;
     int         neuronSize = 1000;
-    int         connectionsPerNeuron = 20;
+    int         connectionsPerNeuron = 20; // this is used in any non-grid network
     int         randomSeed = 0;
     int         gridNetworkWidth = 20;
-    double      gridNetworkConnectionRate = 0.01;
+    double      gridNetworkConnectionRate = 0.01; // this is used in the grid network
 
     double      inhibitoryPortion = 0.2;
     int         inhibitorySize = neuronSize * inhibitoryPortion;
@@ -63,6 +83,9 @@ private:
 
     double      timeScale = 30.0 / 1000.0;
 
+    double STDPStrength = 1.0;
+    double STPStrength = 1.0;
+
     bool        flagSTP                 = false;
     bool        flagSTDP                = true;
     bool        flagDecay               = false;
@@ -74,8 +97,9 @@ private:
     std::vector<Izhikevich> neurons;
     // the weights
     double** weights;
-    // the per-output group spiking average
-    std::vector<double> outputSpiking;
+    std::vector<double> outputGroupSpiking;
+    // the per-output group activation average
+    std::vector<double> outputGroupActivation;
 
     // STDP
     std::vector<int> STDPTimes;
@@ -92,11 +116,11 @@ private:
     inline int indexExcitatoryNeuron(int i);
     inline int indexInputNeuron(int i);
     inline int indexOutputNeuron(int i);
-    
+
     inline void updateNeurons(double deltaTime);
     inline void updateInput();
     inline void updateInputDebug();
-    inline void checkFiring();
+    inline void applyFiring();
     inline void computeSTDP(double deltaTime);
     inline void computeSTP(double deltaTime);
     inline double getSTPValue(int index, bool isFiring, double deltaTime);
@@ -109,7 +133,8 @@ private:
     void setChainNetwork();
     void setGridNetwork();
 
-    void init();
+    void initialize();
+    void reset();
     void update(double deltaTime);
     void stimulation();
     void stimulation(double strength);
@@ -118,11 +143,63 @@ private:
     void wholeStimulation(double strength);
     void wholeNetworkStimulation();
     void wholeNetworkStimulation(double strength);
-    int  getSpikedOutput(int outputGroupIndex);
-    
+
+    double getOutputGroupSpiking(int outputGroupIndex);
+    double getOutputGroupActivation(int outputGroupIndex);
+
 public:
     SpikingNet();
     ~SpikingNet();
 
     void computeOutput(double deltaTime);
+
+    int getNeuronSize() const;
+    double getTimeScale() const;
+    double getInhibitoryPortion() const;
+    double getInputPortion() const;
+    double getOutputPortion() const;
+    NeuronType getInhibitoryNeuronType() const;
+    NeuronType getExcitatoryNeuronType() const;
+    double getInhibitoryNoise() const;
+    double getExcitatoryNoise() const;
+    double getSTPStrength() const;
+    double getSTDPStrength() const;
+    double getDecayConstant() const;
+    bool getFlagSTP() const;
+    bool getFlagSTDP() const;
+    bool getFlagDecay() const;
+
+public slots:
+    void writeNeuronSize(int neuronSize);
+    void writeTimeScale(double timeScale);
+    void writeInhibitoryPortion(double inhibitoryPortion);
+    void writeInputPortion(double inputPortion);
+    void writeOutputPortion(double outputPortion);
+    void writeInhibitoryNeuronType(NeuronType inhibitoryNeuronType);
+    void writeExcitatoryNeuronType(NeuronType excitatoryNeuronType);
+    void writeInhibitoryNoise(double inhibitoryNoise);
+    void writeExcitatoryNoise(double excitatoryNoise);
+    void writeSTPStrength(double STPStrength);
+    void writeSTDPStrength(double STDPStrength);
+    void writeDecayConstant(double decayConstant);
+    void writeFlagSTP(bool flagSTP);
+    void writeFlagSTDP(bool flagSTDP);
+    void writeFlagDecay(bool flagDecay);
+
+signals:
+    void neuronSizeChanged(int neuronSize);
+    void timeScaleChanged(double timeScale);
+    void inhibitoryPortionChanged(double inhibitoryPortion);
+    void inputPortionChanged(double inputPortion);
+    void outputPortionChanged(double outputPortion);
+    void inhibitoryNeuronTypeChanged(NeuronType inhibitoryNeuronType);
+    void excitatoryNeuronTypeChanged(NeuronType excitatoryNeuronType);
+    void inhibitoryNoiseChanged(double inhibitoryNoise);
+    void excitatoryNoiseChanged(double excitatoryNoise);
+    void STPStrengthChanged(double STPStrength);
+    void STDPStrengthChanged(double STDPStrength);
+    void decayConstantChanged(double decayConstant);
+    void flagSTPChanged(bool flagSTP);
+    void flagSTDPChanged(bool flagSTDP);
+    void flagDecayChanged(bool flagDecay);
 };

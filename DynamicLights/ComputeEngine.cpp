@@ -45,7 +45,9 @@ void ComputeEngine::run() {
     // do the computation
     for(QList<QSharedPointer<Generator>>::iterator it = generators.begin(); it != generators.end(); it++) {
         // do the actual computation
-        (*it)->computeOutput(millisLastFrame / 1000.0);
+        //(*it)->computeOutput(millisLastFrame / 1000.0);
+        // deterministic patch
+        (*it)->computeOutput(1.0 / frequency);
         // update the value of the output monitor
         double outputMonitor = 0;
         for(int i = 0; i < (*it)->getOutputSize(); i++) {
@@ -55,6 +57,7 @@ void ComputeEngine::run() {
         outputMonitor /= (*it)->getOutputSize();
         // maybe doing this here is bad? does the overhead of the signaling slow down the loop?
         (*it)->writeOutputMonitor(outputMonitor);
+        qDebug() << outputMonitor;
     }
 
     // measure the time used to do the computation

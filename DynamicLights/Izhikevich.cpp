@@ -129,45 +129,40 @@ void Izhikevich::setNeuronType(NeuronType type) {
 
 
 void Izhikevich::update(double deltaTime) { 
-
+    /*
     double deltaTimeMillis = deltaTime * 1000.0;
     v += deltaTimeMillis * 0.5 * (0.04 * v * v + 5 * v + 140 - u + I);
     v += deltaTimeMillis * 0.5 * (0.04 * v * v + 5 * v + 140 - u + I);
     u += deltaTimeMillis * a * (b * v - u);
+    */
 
     // TODO: investigate NaN popping up here
-    /*
     bool broken = false;
     if(std::isnan(v)) {
-        std::cout << "v / nan / upper block / update " << updateCounter << std::endl;
+        std::cout << "v / upper block / update " << updateCounter << std::endl;
         broken = true;
     }
     if(std::isnan(u)) {
-        std::cout << "u / nan / upper block / update " << updateCounter << std::endl;
+        std::cout << "u / upper block / update " << updateCounter << std::endl;
         broken = true;
     }
     if(std::isnan(I)) {
-        std::cout << "I / nan / upper block / update " << updateCounter << std::endl;
+        std::cout << "I / upper block / update " << updateCounter << std::endl;
         broken = true;
     }
 
     double deltaTimeMillis = deltaTime * 1000.0;
-
-    if(deltaTimeMillis < deltaTime) {
-        std::cout << "deltaTimeMillis / logical failure / upper block / update " << updateCounter << std::endl;
-        broken = true;
-    }
 
     double deltaV;
     deltaV = deltaTimeMillis * 0.5 * (0.04 * v * v + 5.0 * v + 140.0 - u + I);
     v += deltaV;
 
     if(std::isnan(deltaV)) {
-        std::cout << "deltaV / nan / mid block / update " << updateCounter << std::endl;
+        std::cout << "deltaV / mid block / update " << updateCounter << std::endl;
         broken = true;
     }
     if(std::isnan(v)) {
-        std::cout << "v / nan / mid block / update " << updateCounter << std::endl;
+        std::cout << "v / mid block / update " << updateCounter << std::endl;
         broken = true;
     }
 
@@ -175,11 +170,11 @@ void Izhikevich::update(double deltaTime) {
     v += deltaV;
 
     if(std::isnan(deltaV)) {
-        std::cout << "deltaV / nan / lower block / update " << updateCounter << std::endl;
+        std::cout << "deltaV / lower block / update " << updateCounter << std::endl;
         broken = true;
     }
     if(std::isnan(v)) {
-        std::cout << "v / nan / lower block / update " << updateCounter << std::endl;
+        std::cout << "v / lower block / update " << updateCounter << std::endl;
         broken = true;
     }
 
@@ -188,20 +183,19 @@ void Izhikevich::update(double deltaTime) {
     u += deltaU;
 
     if(std::isnan(deltaU)) {
-        std::cout << "deltaU / nan / lower block / update " << updateCounter << std::endl;
+        std::cout << "deltaU / lower block / update " << updateCounter << std::endl;
         broken = true;
     }
     if(std::isnan(u)) {
-        std::cout << "u / nan / lower block / update " << updateCounter << std::endl;
+        std::cout << "u / lower block / update " << updateCounter << std::endl;
         broken = true;
     }
 
     if(broken) {
-
+        // put a breakpoint here
     }
 
     updateCounter++;
-    */
 }
 
 bool Izhikevich::applyFiring() {

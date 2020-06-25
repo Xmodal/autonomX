@@ -26,7 +26,6 @@ Izhikevich::Izhikevich() {
     u = b * v;
     I = 0.;
     potentialThreshold = 20.;
-    updateCounter = 0;
 }
 
 Izhikevich::~Izhikevich() {
@@ -129,73 +128,10 @@ void Izhikevich::setNeuronType(NeuronType type) {
 
 
 void Izhikevich::update(double deltaTime) { 
-    /*
     double deltaTimeMillis = deltaTime * 1000.0;
     v += deltaTimeMillis * 0.5 * (0.04 * v * v + 5 * v + 140 - u + I);
     v += deltaTimeMillis * 0.5 * (0.04 * v * v + 5 * v + 140 - u + I);
     u += deltaTimeMillis * a * (b * v - u);
-    */
-
-    // TODO: investigate NaN popping up here
-    bool broken = false;
-    if(std::isnan(v)) {
-        std::cout << "v / upper block / update " << updateCounter << std::endl;
-        broken = true;
-    }
-    if(std::isnan(u)) {
-        std::cout << "u / upper block / update " << updateCounter << std::endl;
-        broken = true;
-    }
-    if(std::isnan(I)) {
-        std::cout << "I / upper block / update " << updateCounter << std::endl;
-        broken = true;
-    }
-
-    double deltaTimeMillis = deltaTime * 1000.0;
-
-    double deltaV;
-    deltaV = deltaTimeMillis * 0.5 * (0.04 * v * v + 5.0 * v + 140.0 - u + I);
-    v += deltaV;
-
-    if(std::isnan(deltaV)) {
-        std::cout << "deltaV / mid block / update " << updateCounter << std::endl;
-        broken = true;
-    }
-    if(std::isnan(v)) {
-        std::cout << "v / mid block / update " << updateCounter << std::endl;
-        broken = true;
-    }
-
-    deltaV = deltaTimeMillis * 0.5 * (0.04 * v * v + 5.0 * v + 140.0 - u + I);
-    v += deltaV;
-
-    if(std::isnan(deltaV)) {
-        std::cout << "deltaV / lower block / update " << updateCounter << std::endl;
-        broken = true;
-    }
-    if(std::isnan(v)) {
-        std::cout << "v / lower block / update " << updateCounter << std::endl;
-        broken = true;
-    }
-
-    double deltaU;
-    deltaU = deltaTimeMillis * a * (b * v - u);
-    u += deltaU;
-
-    if(std::isnan(deltaU)) {
-        std::cout << "deltaU / lower block / update " << updateCounter << std::endl;
-        broken = true;
-    }
-    if(std::isnan(u)) {
-        std::cout << "u / lower block / update " << updateCounter << std::endl;
-        broken = true;
-    }
-
-    if(broken) {
-        // put a breakpoint here
-    }
-
-    updateCounter++;
 }
 
 bool Izhikevich::applyFiring() {

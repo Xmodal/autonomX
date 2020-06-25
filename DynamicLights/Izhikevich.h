@@ -38,7 +38,6 @@ private:
     NeuronType type;
     double I;
     double a, b, c, d;
-    int updateCounter;
 
 public:
     Izhikevich();

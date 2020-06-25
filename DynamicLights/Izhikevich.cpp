@@ -129,11 +129,13 @@ void Izhikevich::setNeuronType(NeuronType type) {
 
 
 void Izhikevich::update(double deltaTime) { 
+
     double deltaTimeMillis = deltaTime * 1000.0;
     v += deltaTimeMillis * 0.5 * (0.04 * v * v + 5 * v + 140 - u + I);
     v += deltaTimeMillis * 0.5 * (0.04 * v * v + 5 * v + 140 - u + I);
     u += deltaTimeMillis * a * (b * v - u);
 
+    // TODO: investigate NaN popping up here
     /*
     bool broken = false;
     if(std::isnan(v)) {

@@ -55,7 +55,6 @@ void ComputeEngine::run() {
         outputMonitor /= (*it)->getOutputSize();
         // maybe doing this here is bad? does the overhead of the signaling slow down the loop?
         (*it)->writeOutputMonitor(outputMonitor);
-        qDebug() << outputMonitor;
     }
 
     // measure the time used to do the computation

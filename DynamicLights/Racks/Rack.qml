@@ -18,9 +18,8 @@ ColumnLayout {
 
     Layout.fillWidth: true
     Layout.maximumHeight: 245
+    Layout.alignment: Qt.AlignLeft | Qt.AlignTop
     spacing: 0
-
-    visible: genID > -1
 
     // top label
     RowLayout {

@@ -14,10 +14,11 @@ import "../"
 ColumnLayout {
     id: rackView
 
-    property int genID: -1
+    property int genID: item.genID
 
     Layout.fillWidth: true
     Layout.alignment: Qt.AlignTop | Qt.AlignLeft
+    spacing: 0
 
     GenRack { genID: rackView.genID; }
     ParamsRack { genID: rackView.genID; }

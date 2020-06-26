@@ -108,10 +108,15 @@ ApplicationWindow {
             // TODO: new generator button here
         }
 
-        // List of racks for currently selected generator
-        RackView {
-            id: rackView
-            genID: activeGeneratorIndex
+        // list of racks for currently selected generator
+        Loader {
+            id: rackViewLoader
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+
+            property int genID: activeGeneratorIndex
+
+            source: genID < 0 ? "" : "Racks/RackView.qml"
         }
     }
 }

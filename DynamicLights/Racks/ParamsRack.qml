@@ -24,22 +24,30 @@ Rack {
             TextField {
                 validateInt: true
                 labelText: "Neurons"
-                defaultText: "300"
+
+                defaultText: genID < 0 ? "" : generatorModel.at(genID).neuronSize
+                onValueChanged: generatorModel.at(genID).neuronSize = newValue
             }
 
             SelectField {
                 labelText: "Network type"
+
                 options: ["Random", "Sparse", "Grid", "Uniform"]
+                index: 2
             }
 
             SelectField {
                 labelText: "Inh. neuron type"
+
                 options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
+                // index: genID < 0 ? 0 : generatorModel.at(genID).inhibitoryNeuronType
             }
 
             SelectField {
                 labelText: "Exc. neuron type"
+
                 options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
+                // index: genID < 0 ? 0 : generatorModel.at(genID).excitatoryNeuronType
             }
         }
 
@@ -49,14 +57,23 @@ Rack {
 
             SliderField {
                 labelText: "Inh. portion"
+
+                currVal: genID < 0 ? 0 : generatorModel.at(genID).inhibitoryPortion
+                onValueChanged: generatorModel.at(genID).inhibitoryPortion = newValue
             }
 
             SliderField {
                 labelText: "Input portion"
+
+                currVal: genID < 0 ? 0 : generatorModel.at(genID).inputPortion
+                onValueChanged: generatorModel.at(genID).inputPortion = newValue
             }
 
             SliderField {
                 labelText: "Output portion"
+
+                currVal: genID < 0 ? 0 : generatorModel.at(genID).outputPortion
+                onValueChanged: generatorModel.at(genID).outputPortion = newValue
             }
         }
     }

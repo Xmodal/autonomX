@@ -22,12 +22,17 @@ Rack {
             TextField {
                 labelText: "Name"
                 placeholder: "Name"
-                defaultText: "Spiking Neural Network"
+
+                // TODO: softcode this
+                // ("softcode" loosely defined here as the opposite of "hardcode")
+                defaultText: genID < 0 ? "" : generatorModel.at(genID).name
+                onValueChanged: generatorModel.at(genID).name = newValue
             }
 
             SelectField {
                 labelText: "Type"
                 options: ["SNN"]
+                // TODO: link Generator property
             }
         }
 
@@ -35,7 +40,9 @@ Rack {
             Layout.fillHeight: true
             labelText: "Description"
             placeholder: "Enter description here"
-            defaultText: "This is a description for the Spiking Neural Network (SNN) generator. This algorithm creates short peaks generatively over time."
+
+            defaultText: genID < 0 ? "" : generatorModel.at(genID).description
+            onValueChanged: generatorModel.at(genID).description = newValue
 
             fieldWidth: (Stylesheet.field.initialWidth * 2) + Stylesheet.field.spacing
         }

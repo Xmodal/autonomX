@@ -5,9 +5,18 @@ GeneratorModel::GeneratorModel(QList<QSharedPointer<Generator>> generators) {
     this->generators = generators;
 
     for(int i = 0; i < generators.count(); i++) {
+        // update model every time the output monitor is computed
         connect(generators[i].get(), &Generator::outputMonitorChanged, this, [=]() {
             emit dataChanged(index(i), index(i), { OutputMonitorRole });
         });
+
+        // update model when name is changed in GenRack (per-generator action)
+        connect(generators[i].get(), &Generator::nameChanged, this, [=]() {
+            emit dataChanged(index(i), index(i), { NameRole });
+        });
+
+        // these are the only two properties that need to force update the model's data
+        // since they are always relayed to a ListView
     }
 }
 
@@ -55,4 +64,10 @@ QHash<int, QByteArray> GeneratorModel::roleNames() const {
         roles[DescriptionRole] = "description";
         roles[OutputMonitorRole] = "outputMonitor";
         return roles;
-};
+}
+
+Generator * GeneratorModel::at(int index)
+{
+    if (index < 0) return nullptr;
+    return generators[index].get();
+}

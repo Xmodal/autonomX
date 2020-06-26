@@ -725,8 +725,6 @@ void SpikingNet::writeNeuronSize(int neuronSize) {
     initialize();
     // signal
     emit neuronSizeChanged(neuronSize);
-
-    std::cout << "writeNeuronSize" << std::endl;
 }
 
 void SpikingNet::writeTimeScale(double timeScale) {
@@ -735,8 +733,6 @@ void SpikingNet::writeTimeScale(double timeScale) {
 
     this->timeScale = timeScale;
     emit timeScaleChanged(timeScale);
-
-    std::cout << "writeTimeScale" << std::endl;
 }
 
 void SpikingNet::writeInhibitoryPortion(double inhibitoryPortion) {
@@ -752,8 +748,6 @@ void SpikingNet::writeInhibitoryPortion(double inhibitoryPortion) {
     initialize();
     // signal
     emit inhibitoryPortionChanged(inhibitoryPortion);
-
-    std::cout << "writeInhibitoryPortion" << std::endl;
 }
 
 void SpikingNet::writeInputPortion(double inputPortion) {
@@ -765,8 +759,6 @@ void SpikingNet::writeInputPortion(double inputPortion) {
 
     this->inputPortion = inputPortion;
     emit inputPortionChanged(inputPortion);
-
-    std::cout << "writeInputPortion" << std::endl;
 }
 
 void SpikingNet::writeOutputPortion(double outputPortion) {
@@ -778,8 +770,6 @@ void SpikingNet::writeOutputPortion(double outputPortion) {
 
     this->outputPortion = outputPortion;
     emit outputPortionChanged(outputPortion);
-
-    std::cout << "writeOutputPortion" << std::endl;
 }
 
 void SpikingNet::writeInhibitoryNeuronType(NeuronType inhibitoryNeuronType) {
@@ -795,8 +785,6 @@ void SpikingNet::writeInhibitoryNeuronType(NeuronType inhibitoryNeuronType) {
     initialize();
     // signal
     emit inhibitoryNeuronTypeChanged(inhibitoryNeuronType);
-
-    std::cout << "writeInhibitoryNeuronType" << std::endl;
 }
 
 void SpikingNet::writeExcitatoryNeuronType(NeuronType excitatoryNeuronType) {
@@ -812,8 +800,6 @@ void SpikingNet::writeExcitatoryNeuronType(NeuronType excitatoryNeuronType) {
     initialize();
     // signal
     emit excitatoryNeuronTypeChanged(excitatoryNeuronType);
-
-    std::cout << "writeExcitatoryNeuronType" << std::endl;
 }
 
 void SpikingNet::writeInhibitoryNoise(double inhibitoryNoise) {
@@ -822,8 +808,6 @@ void SpikingNet::writeInhibitoryNoise(double inhibitoryNoise) {
 
     this->inhibitoryNoise = inhibitoryNoise;
     emit inhibitoryNoiseChanged(inhibitoryNoise);
-
-    std::cout << "writeInhibitoryNoise" << std::endl;
 }
 
 void SpikingNet::writeExcitatoryNoise(double excitatoryNoise) {
@@ -832,8 +816,6 @@ void SpikingNet::writeExcitatoryNoise(double excitatoryNoise) {
 
     this->excitatoryNoise = excitatoryNoise;
     emit excitatoryNoiseChanged(excitatoryNoise);
-
-    std::cout << "writeExcitatoryNoise" << std::endl;
 }
 
 void SpikingNet::writeSTPStrength(double STPStrength) {
@@ -842,8 +824,6 @@ void SpikingNet::writeSTPStrength(double STPStrength) {
 
     this->STPStrength = STPStrength;
     emit STPStrengthChanged(STPStrength);
-
-    std::cout << "writeSTPStrength" << std::endl;
 }
 
 void SpikingNet::writeSTDPStrength(double STDPStrength) {
@@ -852,8 +832,6 @@ void SpikingNet::writeSTDPStrength(double STDPStrength) {
 
     this->STDPStrength = STDPStrength;
     emit STDPStrengthChanged(STDPStrength);
-
-    std::cout << "writeSTDPStrength" << std::endl;
 }
 
 void SpikingNet::writeDecayConstant(double decayConstant) {
@@ -862,8 +840,6 @@ void SpikingNet::writeDecayConstant(double decayConstant) {
 
     this->decayConstant = decayConstant;
     emit decayConstantChanged(decayConstant);
-
-    std::cout << "writeDecayConstant" << std::endl;
 }
 
 void SpikingNet::writeFlagSTP(bool flagSTP) {
@@ -872,8 +848,6 @@ void SpikingNet::writeFlagSTP(bool flagSTP) {
 
     this->flagSTP = flagSTP;
     emit flagSTPChanged(flagSTP);
-
-    std::cout << "writeFlagSTP" << std::endl;
 }
 
 void SpikingNet::writeFlagSTDP(bool flagSTDP) {
@@ -882,8 +856,6 @@ void SpikingNet::writeFlagSTDP(bool flagSTDP) {
 
     this->flagSTDP = flagSTDP;
     emit flagSTDPChanged(flagSTDP);
-
-    std::cout << "writeFlagSTDP" << std::endl;
 }
 
 void SpikingNet::writeFlagDecay(bool flagDecay) {
@@ -892,6 +864,4 @@ void SpikingNet::writeFlagDecay(bool flagDecay) {
 
     this->flagDecay = flagDecay;
     emit flagDecayChanged(flagDecay);
-
-    std::cout << "writeFlagDecay" << std::endl;
 }

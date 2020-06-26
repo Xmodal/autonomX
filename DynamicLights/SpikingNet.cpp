@@ -92,16 +92,16 @@ void SpikingNet::initialize() {
 
     // set network type
     switch(networkType) {
-        case sparseNetwork:
+        case NetworkType::SparseNetwork:
             setSparseNetwork();
             break;
-        case randomNetwork:
+        case NetworkType::RandomNetwork:
             setRandomNetwork();
             break;
-        case uniformNetwork:
+        case NetworkType::UniformNetwork:
             setUniformNetwork();
             break;
-        case gridNetwork:
+        case NetworkType::GridNetwork:
             setGridNetwork();
             break;
     }
@@ -653,6 +653,10 @@ void SpikingNet::wholeNetworkStimulation(double strength) {
 
 // ############################### Qt read / write ###############################
 
+SpikingNet::NetworkType SpikingNet::getNetworkType() const {
+    return networkType;
+}
+
 int SpikingNet::getNeuronSize() const {
     return neuronSize;
 }
@@ -711,6 +715,19 @@ bool SpikingNet::getFlagSTDP() const {
 
 bool SpikingNet::getFlagDecay() const {
     return this->flagDecay;
+}
+
+void SpikingNet::writeNetworkType(SpikingNet::NetworkType networkType) {
+    if (this->networkType == networkType)
+        return;
+
+    // reset network, since these parameters only take effect when the network is created anew
+    // note from Julien: shouldn't the network be reinitialized AFTER changing the values?
+    reset();
+    initialize();
+
+    this->networkType = networkType;
+    emit networkTypeChanged(networkType);
 }
 
 void SpikingNet::writeNeuronSize(int neuronSize) {

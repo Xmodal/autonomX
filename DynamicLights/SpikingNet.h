@@ -21,16 +21,10 @@
 #include <random>
 #include <vector>
 
-enum NetworkType {
-    randomNetwork,
-    sparseNetwork,
-    uniformNetwork,
-    gridNetwork
-};
-
 class SpikingNet : public Generator {
     // TODO: figure out how we decide to add / remove inputs. this should probably be a property that belongs to the Generator abstract class, rather than this.
     Q_OBJECT
+    Q_PROPERTY(NetworkType networkType READ getNetworkType WRITE writeNetworkType NOTIFY networkTypeChanged)
     Q_PROPERTY(int neuronSize READ getNeuronSize WRITE writeNeuronSize NOTIFY neuronSizeChanged)
     Q_PROPERTY(double timeScale READ getTimeScale WRITE writeTimeScale NOTIFY timeScaleChanged)
     Q_PROPERTY(double inhibitoryPortion READ getInhibitoryPortion WRITE writeInhibitoryPortion NOTIFY inhibitoryPortionChanged)
@@ -49,8 +43,18 @@ class SpikingNet : public Generator {
     Q_PROPERTY(bool flagSTDP READ getFlagSTDP WRITE writeFlagSTDP NOTIFY flagSTDPChanged)
     Q_PROPERTY(bool flagDecay READ getFlagDecay WRITE writeFlagDecay NOTIFY flagDecayChanged)
 
+// enum
+public:
+    enum class NetworkType {
+        RandomNetwork,
+        SparseNetwork,
+        UniformNetwork,
+        GridNetwork
+    };
+    Q_ENUM(NetworkType)
+
 private:
-    NetworkType networkType = gridNetwork;
+    NetworkType networkType = NetworkType::GridNetwork;
     int         neuronSize = 1000;
     int         connectionsPerNeuron = 20; // this is used in any non-grid network
     int         randomSeed = 0;
@@ -153,6 +157,7 @@ public:
 
     void computeOutput(double deltaTime);
 
+    NetworkType getNetworkType() const;
     int getNeuronSize() const;
     double getTimeScale() const;
     double getInhibitoryPortion() const;
@@ -170,6 +175,7 @@ public:
     bool getFlagDecay() const;
 
 public slots:
+    void writeNetworkType(NetworkType networkType);
     void writeNeuronSize(int neuronSize);
     void writeTimeScale(double timeScale);
     void writeInhibitoryPortion(double inhibitoryPortion);
@@ -187,6 +193,7 @@ public slots:
     void writeFlagDecay(bool flagDecay);
 
 signals:
+    void networkTypeChanged(NetworkType networkType);
     void neuronSizeChanged(int neuronSize);
     void timeScaleChanged(double timeScale);
     void inhibitoryPortionChanged(double inhibitoryPortion);

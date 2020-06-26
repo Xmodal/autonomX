@@ -5,6 +5,8 @@ import QtQuick.Layouts 1.3
 import "../Fields"
 import "../Style"
 
+import com.dynamiclights 1.0
+
 Rack {
     id: paramsRack
 
@@ -25,29 +27,35 @@ Rack {
                 validateInt: true
                 labelText: "Neurons"
 
-                defaultText: genID < 0 ? "" : generatorModel.at(genID).neuronSize
+                defaultText: generatorModel.at(genID).neuronSize
                 onValueChanged: generatorModel.at(genID).neuronSize = newValue
             }
 
             SelectField {
                 labelText: "Network type"
 
-                options: ["Random", "Sparse", "Grid", "Uniform"]
-                index: 2
+                options: ["Random", "Sparse", "Uniform", "Grid"]
+                // TODO: make singletons for these
+                enumOptions: [
+                    SpikingNet.RandomNetwork,
+                    SpikingNet.SparseNetwork,
+                    SpikingNet.UniformNetwork,
+                    SpikingNet.GridNetwork
+                ]
+                index: generatorModel.at(genID).networkType
+                onValueChanged: generatorModel.at(genID).networkType = enumOptions[newValue]
             }
 
             SelectField {
                 labelText: "Inh. neuron type"
 
                 options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
-                // index: genID < 0 ? 0 : generatorModel.at(genID).inhibitoryNeuronType
             }
 
             SelectField {
                 labelText: "Exc. neuron type"
 
                 options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
-                // index: genID < 0 ? 0 : generatorModel.at(genID).excitatoryNeuronType
             }
         }
 

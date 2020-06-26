@@ -10,6 +10,8 @@ Field {
     property string placeholder: "Area Field"
     property string defaultText: "Area Field"
 
+    Layout.fillHeight: true
+
     Item {
         Layout.fillWidth: true
         Layout.fillHeight: true
@@ -51,6 +53,9 @@ Field {
 
                 // mouse interaction
                 selectByMouse: true
+
+                // signal hooks
+                onEditingFinished: valueChanged(text)
             }
 
             ScrollBar.vertical: ScrollBar {}

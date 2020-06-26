@@ -21,13 +21,6 @@
 #include <random>
 #include <vector>
 
-enum NetworkType {
-    randomNetwork,
-    sparseNetwork,
-    uniformNetwork,
-    gridNetwork
-};
-
 class SpikingNet : public Generator {
     // TODO: figure out how we decide to add / remove inputs. this should probably be a property that belongs to the Generator abstract class, rather than this.
     Q_OBJECT
@@ -49,8 +42,18 @@ class SpikingNet : public Generator {
     Q_PROPERTY(bool flagSTDP READ getFlagSTDP WRITE writeFlagSTDP NOTIFY flagSTDPChanged)
     Q_PROPERTY(bool flagDecay READ getFlagDecay WRITE writeFlagDecay NOTIFY flagDecayChanged)
 
+// enum
+public:
+    enum class NetworkType {
+        RandomNetwork,
+        SparseNetwork,
+        UniformNetwork,
+        GridNetwork
+    };
+    Q_ENUM(NetworkType)
+
 private:
-    NetworkType networkType = gridNetwork;
+    NetworkType networkType = NetworkType::GridNetwork;
     int         neuronSize = 1000;
     int         connectionsPerNeuron = 20; // this is used in any non-grid network
     int         randomSeed = 0;

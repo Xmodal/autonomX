@@ -7,18 +7,27 @@ import "../Style"
 Field {
     id: selectField
 
-    property int index: 0
-    property variant options: ["A", "B", "C"]
+    property int index
+    property variant options
+    property variant enumOptions
+    property bool initialized: false
 
     ComboBox {
         id: comboBox
 
+        Layout.fillWidth: true
+
         // root settings
-        currentIndex: index
+        currentIndex: selectField.index
         model: options
         font {
             family: Stylesheet.fonts.main
             pixelSize: 18
+        }
+
+        onCurrentIndexChanged: {
+            if (!initialized) return initialized = true;
+            selectField.valueChanged(currentIndex);
         }
 
         // background

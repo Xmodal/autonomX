@@ -29,6 +29,8 @@ QtObject {
     // SPACINGS
     property QtObject field: QtObject {
         readonly property int padding: 8
+        readonly property int initialWidth: 180
+        readonly property int spacing: 30
     }
 
     // TOOLS

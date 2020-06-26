@@ -19,7 +19,7 @@ Field {
 
     Item {
         Layout.fillWidth: true
-        height: 40
+        Layout.preferredHeight: 40
 
         // background
         FieldFrame {
@@ -63,7 +63,7 @@ Field {
                 handle: Rectangle {}
 
                 // signals
-                onValueChanged: currVal = value;
+                onValueChanged: sliderField.valueChanged(value)
             }
 
             TextField {

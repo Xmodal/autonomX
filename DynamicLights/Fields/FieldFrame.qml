@@ -3,7 +3,7 @@ import QtQuick 2.9
 import "../Style"
 
 Item {
-    property int frameWidth: 200
+    property int frameWidth: Stylesheet.field.initialWidth
     property bool isHovered: false
     property bool isFocused: false
 

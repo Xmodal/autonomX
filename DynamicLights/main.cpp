@@ -74,6 +74,12 @@ int main(int argc, char *argv[])
     OscReceiver oscReceiver(receiveOscPort);
     OscSender oscSender(sendOscHost, sendOscPort);
 
+    // make Generator virtual class recognizable to QML
+    // this line is apparently necessary for the QML engine to receive Generator pointers
+    // and retrieve a class instance's exposed properties by model index through said pointer
+    qmlRegisterUncreatableType<Generator>("com.dynamiclights", 1, 0, "Generator", "Cannot instanciate Generator.");
+    qmlRegisterUncreatableType<SpikingNet>("com.dynamiclights", 1, 0, "SpikingNet", "Cannot instanciate SpikingNet.");
+
     // create generator list
     QSharedPointer<Generator> spikingNet = QSharedPointer<Generator>(new SpikingNet());
     QList<QSharedPointer<Generator>> generators = {spikingNet};

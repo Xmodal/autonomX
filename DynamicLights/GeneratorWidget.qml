@@ -8,12 +8,6 @@ import "./Style"
  * Widget to control a generator.
  */
 Button {
-    property int generatorIndex: 0
-    property string generatorName: "Default Name"
-    property string generatorType: "Default Type"
-    property string generatorDescription: "Default description"
-    property double generatorOutputMonitor: 0.0
-
     // state props
     property bool selected: false
 
@@ -53,7 +47,7 @@ Button {
         Label {
             id: labelIndex
 
-            text: generatorIndex + 1
+            text: model.index + 1
             color: Stylesheet.colors.white
             font {
                 family: Stylesheet.fonts.main
@@ -68,7 +62,7 @@ Button {
             id: labelName
 
             Layout.leftMargin: 30
-            text: generatorName
+            text: model.name
             color: selected ? Stylesheet.colors.black : Stylesheet.colors.white
             font {
                 family: Stylesheet.fonts.main
@@ -82,12 +76,22 @@ Button {
         OutputIndicator {
             id: outputIndicator
 
-            luminosity: generatorOutputMonitor
-            lightColor: Stylesheet.colors.outputs[generatorIndex % Stylesheet.colors.outputs.length]
+            luminosity: model.outputMonitor
+            lightColor: Stylesheet.colors.outputs[model.index % Stylesheet.colors.outputs.length]
 
             Layout.rightMargin: 10
             Layout.alignment: Qt.AlignRight
         }
+    }
+
+    // inferior border
+    Rectangle {
+        id: borderBottom
+        width: parent.width
+        height: 1
+        anchors.bottom: parent.bottom
+        color: Stylesheet.colors.white
+        opacity: 0.1
     }
 
     onClicked: selected = !selected

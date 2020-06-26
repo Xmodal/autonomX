@@ -24,7 +24,7 @@ class Generator : public QObject
     Q_OBJECT
     Q_PROPERTY(QString name READ getName WRITE writeName NOTIFY nameChanged)
     Q_PROPERTY(QString type READ getType NOTIFY typeChanged)
-    Q_PROPERTY(QString description READ getDescription NOTIFY descriptionChanged)
+    Q_PROPERTY(QString description READ getDescription WRITE writeDescription NOTIFY descriptionChanged)
     Q_PROPERTY(double outputMonitor READ getOutputMonitor NOTIFY outputMonitorChanged)
 protected:
     // the generator class provides input and output buffers

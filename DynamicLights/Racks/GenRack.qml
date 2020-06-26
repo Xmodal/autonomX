@@ -1,6 +1,8 @@
 import QtQuick 2.9
 import QtQuick.Layouts 1.3
+
 import "../Fields"
+import "../Style"
 
 Rack {
     id: genRack
@@ -8,52 +10,47 @@ Rack {
     rackName: "GEN"
     removable: false
 
-    content: RowLayout {
+    RowLayout {
         Layout.fillWidth: true
-
-        spacing: 30
+        Layout.margins: Stylesheet.field.spacing
+        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+        spacing: Stylesheet.field.spacing
 
         ColumnLayout {
-            spacing: 30
+            spacing: parent.spacing
 
             TextField {
                 labelText: "Name"
                 placeholder: "Name"
-                defaultText: "Spiking Neural Network"
+
+                // TODO: softcode this
+                // ("softcode" loosely defined here as the opposite of "hardcode")
+                defaultText: genID < 0 ? "" : generatorModel.at(genID).name
+                onValueChanged: generatorModel.at(genID).name = newValue
             }
 
             SelectField {
                 labelText: "Type"
                 options: ["SNN"]
+                // TODO: link Generator property
             }
         }
 
         AreaField {
+            Layout.fillHeight: true
             labelText: "Description"
             placeholder: "Enter description here"
-            defaultText: "This is a description for the Spiking Neural Network (SNN) generator. This algorithm creates short peaks generatively over time."
 
-            fieldWidth: 400
+            defaultText: genID < 0 ? "" : generatorModel.at(genID).description
+            onValueChanged: generatorModel.at(genID).description = newValue
+
+            fieldWidth: (Stylesheet.field.initialWidth * 2) + Stylesheet.field.spacing
         }
-
-        ColumnLayout {
-            spacing: 30
-
-            SliderField {
-                labelText: "Ratio"
-                step: 0.05
-                exponent: 2.0
-            }
-
-            SliderField {
-                labelText: "Ratio 2"
-                minVal: 10
-                maxVal: 110
-                currVal: 20
-                step: 1
-            }
-        }
-
-
     }
 }
+
+/*##^##
+Designer {
+    D{i:0;autoSize:true;height:480;width:640}
+}
+##^##*/

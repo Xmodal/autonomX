@@ -40,6 +40,8 @@ public:
     void populate();
     QHash<int, QByteArray> roleNames() const;
 
+    Q_INVOKABLE Generator * at(int index);
+
 private:
     QList<QSharedPointer<Generator>> generators;
 };

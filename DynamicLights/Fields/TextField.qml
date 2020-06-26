@@ -9,6 +9,9 @@ Field {
 
     property string placeholder: ""
     property string defaultText: "Text Field"
+    property bool validateInt: false
+
+    IntValidator { id: validator }
 
     TextField {
         id: fieldInput
@@ -19,8 +22,7 @@ Field {
         height: 40
 
         // text
-        text: defaultText
-
+        text: activeFocus ? defaultText : metrics.elidedText
         placeholderText: placeholder
 
         // font + color
@@ -30,6 +32,15 @@ Field {
         }
         color: Stylesheet.colors.white
 
+        // text metrics (used to elide text)
+        TextMetrics {
+            id: metrics
+            font: fieldInput.font
+            text: textField.defaultText
+            elide: Text.ElideRight
+            elideWidth: fieldInput.width
+        }
+
         // background
         background: FieldFrame {
             isHovered: fieldInput.hovered
@@ -38,8 +49,12 @@ Field {
 
         // TODO: add validator
         // eg. no empty values allowed flag as widget property
+        validator: validateInt ? validator : null
 
         // interactivity
         selectByMouse: true
+
+        // signal hooks
+        onEditingFinished: textField.valueChanged(text)
     }
 }

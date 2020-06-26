@@ -13,6 +13,7 @@ ApplicationWindow {
     id: window
 
     property string lastMessageReceived: ""
+    property int activeGeneratorIndex: -1
 
     visible: true
     width: 1280
@@ -84,25 +85,38 @@ ApplicationWindow {
         spacing: 0
 
         // List of generators
-        ListView {
-            orientation: Qt.Vertical
+        Item {
             Layout.preferredWidth: parent.width * 0.25
             Layout.minimumWidth: 200
+            Layout.maximumWidth: 400
             Layout.fillHeight: true
-            model: generatorModel
 
-            delegate: GeneratorWidget {
-                generatorName: name
-                generatorType: type
-                generatorDescription: description
-                generatorOutputMonitor: outputMonitor
-                generatorIndex: index
+            Rectangle {
+                color: Stylesheet.colors.black
+                anchors.fill: parent
             }
+
+            ListView {
+                anchors.fill: parent
+                orientation: Qt.Vertical
+                model: generatorModel
+                delegate: GeneratorWidget {
+                    onClicked: window.activeGeneratorIndex = model.index
+                }
+            }
+
+            // TODO: new generator button here
         }
 
-        // List of racks for currently selected generator
-        RackView {
-            id: rackView
+        // list of racks for currently selected generator
+        Loader {
+            id: rackViewLoader
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+
+            property int genID: activeGeneratorIndex
+
+            source: genID < 0 ? "" : "Racks/RackView.qml"
         }
     }
 }

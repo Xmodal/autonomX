@@ -10,6 +10,8 @@ ColumnLayout {
     property string labelText: "Label"
     property int fieldWidth: Stylesheet.field.initialWidth
 
+    signal valueChanged(variant newValue)
+
     Layout.alignment: Qt.AlignLeft | Qt.AlignTop
     Layout.maximumWidth: fieldWidth
     Layout.fillWidth: true

@@ -63,7 +63,7 @@ Field {
                 handle: Rectangle {}
 
                 // signals
-                onValueChanged: currVal = value;
+                onValueChanged: sliderField.valueChanged(value)
             }
 
             TextField {

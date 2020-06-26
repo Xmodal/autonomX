@@ -54,7 +54,7 @@ Field {
         // interactivity
         selectByMouse: true
 
-        // signals
-        onEditingFinished: defaultText = text
+        // signal hooks
+        onEditingFinished: textField.valueChanged(text)
     }
 }

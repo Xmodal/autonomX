@@ -53,6 +53,9 @@ Field {
 
                 // mouse interaction
                 selectByMouse: true
+
+                // signal hooks
+                onEditingFinished: valueChanged(text)
             }
 
             ScrollBar.vertical: ScrollBar {}

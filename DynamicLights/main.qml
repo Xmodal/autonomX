@@ -13,6 +13,7 @@ ApplicationWindow {
     id: window
 
     property string lastMessageReceived: ""
+    property int activeGeneratorIndex: -1
 
     visible: true
     width: 1280
@@ -99,7 +100,9 @@ ApplicationWindow {
                 anchors.fill: parent
                 orientation: Qt.Vertical
                 model: generatorModel
-                delegate: GeneratorWidget {}
+                delegate: GeneratorWidget {
+                    onClicked: window.activeGeneratorIndex = model.index
+                }
             }
 
             // TODO: new generator button here
@@ -108,6 +111,7 @@ ApplicationWindow {
         // List of racks for currently selected generator
         RackView {
             id: rackView
+            genID: activeGeneratorIndex
         }
     }
 }

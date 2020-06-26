@@ -8,12 +8,6 @@ import "./Style"
  * Widget to control a generator.
  */
 Button {
-    property int generatorIndex: 0
-    property string generatorName: "Default Name"
-    property string generatorType: "Default Type"
-    property string generatorDescription: "Default description"
-    property double generatorOutputMonitor: 0.0
-
     // state props
     property bool selected: false
 
@@ -83,7 +77,7 @@ Button {
             id: outputIndicator
 
             luminosity: model.outputMonitor
-            lightColor: Stylesheet.colors.outputs[generatorIndex % Stylesheet.colors.outputs.length]
+            lightColor: Stylesheet.colors.outputs[model.index % Stylesheet.colors.outputs.length]
 
             Layout.rightMargin: 10
             Layout.alignment: Qt.AlignRight

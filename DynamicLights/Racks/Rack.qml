@@ -20,6 +20,8 @@ ColumnLayout {
     Layout.maximumHeight: 245
     spacing: 0
 
+    visible: genID > -1
+
     // top label
     RowLayout {
         Layout.fillWidth: true

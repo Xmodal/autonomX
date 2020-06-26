@@ -12,16 +12,13 @@ import QtQuick.Layouts 1.0
 import "../"
 
 ColumnLayout {
+    id: rackView
+
     property int genID: -1
 
     Layout.fillWidth: true
     Layout.alignment: Qt.AlignTop | Qt.AlignLeft
 
-    GenRack {
-        genID: genID
-    }
-
-    ParamsRack {
-        genID: genID
-    }
+    GenRack { genID: rackView.genID; }
+    ParamsRack { genID: rackView.genID; }
 }

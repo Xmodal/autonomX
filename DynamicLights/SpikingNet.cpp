@@ -722,11 +722,12 @@ void SpikingNet::writeNetworkType(SpikingNet::NetworkType networkType) {
         return;
 
     // reset network, since these parameters only take effect when the network is created anew
-    // note from Julien: shouldn't the network be reinitialized AFTER changing the values?
     reset();
-    initialize();
-
+    // do the change
     this->networkType = networkType;
+    // re-initialize
+    initialize();
+    // signal
     emit networkTypeChanged(networkType);
 }
 
@@ -736,9 +737,11 @@ void SpikingNet::writeNeuronSize(int neuronSize) {
 
     // reset network, since these parameters only take effect when the network is created anew
     reset();
-    initialize();
-
+    // do the change
     this->neuronSize = neuronSize;
+    // re-initialize
+    initialize();
+    // signal
     emit neuronSizeChanged(neuronSize);
 }
 
@@ -757,9 +760,11 @@ void SpikingNet::writeInhibitoryPortion(double inhibitoryPortion) {
     // reset network, since these parameters only take effect when the network is created anew
     // TODO: this isn't as efficient as it could be since it's not necessary to deallocate and reallocate memory for weights / STP
     reset();
-    initialize();
-
+    // do the change
     this->inhibitoryPortion = inhibitoryPortion;
+    // re-initialize
+    initialize();
+    // signal
     emit inhibitoryPortionChanged(inhibitoryPortion);
 }
 
@@ -792,9 +797,11 @@ void SpikingNet::writeInhibitoryNeuronType(NeuronType inhibitoryNeuronType) {
     // reset network, since these parameters only take effect when the network is created anew
     // TODO: this isn't as efficient as it could be since it's not necessary to deallocate and reallocate memory for weights / STP
     reset();
-    initialize();
-
+    // do the change
     this->inhibitoryNeuronType = inhibitoryNeuronType;
+    // re-initialize
+    initialize();
+    // signal
     emit inhibitoryNeuronTypeChanged(inhibitoryNeuronType);
 }
 
@@ -805,9 +812,11 @@ void SpikingNet::writeExcitatoryNeuronType(NeuronType excitatoryNeuronType) {
     // reset network, since these parameters only take effect when the network is created anew
     // TODO: this isn't as efficient as it could be since it's not necessary to deallocate and reallocate memory for weights / STP
     reset();
-    initialize();
-
+    // do the change
     this->excitatoryNeuronType = excitatoryNeuronType;
+    // re-initialize
+    initialize();
+    // signal
     emit excitatoryNeuronTypeChanged(excitatoryNeuronType);
 }
 

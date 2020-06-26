@@ -653,10 +653,6 @@ void SpikingNet::wholeNetworkStimulation(double strength) {
 
 // ############################### Qt read / write ###############################
 
-SpikingNet::NetworkType SpikingNet::getNetworkType() const {
-    return networkType;
-}
-
 int SpikingNet::getNeuronSize() const {
     return neuronSize;
 }
@@ -715,22 +711,6 @@ bool SpikingNet::getFlagSTDP() const {
 
 bool SpikingNet::getFlagDecay() const {
     return this->flagDecay;
-}
-
-void SpikingNet::writeNetworkType(SpikingNet::NetworkType networkType) {
-    if (this->networkType == networkType)
-        return;
-
-    // reset network, since these parameters only take effect when the network is created anew
-    reset();
-    // do the change
-    this->networkType = networkType;
-    // re-initialize
-    initialize();
-    // signal
-    emit networkTypeChanged(networkType);
-
-    std::cout << "writeNetworkType" << std::endl;
 }
 
 void SpikingNet::writeNeuronSize(int neuronSize) {

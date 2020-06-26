@@ -24,7 +24,6 @@
 class SpikingNet : public Generator {
     // TODO: figure out how we decide to add / remove inputs. this should probably be a property that belongs to the Generator abstract class, rather than this.
     Q_OBJECT
-    Q_PROPERTY(NetworkType networkType READ getNetworkType WRITE writeNetworkType NOTIFY networkTypeChanged)
     Q_PROPERTY(int neuronSize READ getNeuronSize WRITE writeNeuronSize NOTIFY neuronSizeChanged)
     Q_PROPERTY(double timeScale READ getTimeScale WRITE writeTimeScale NOTIFY timeScaleChanged)
     Q_PROPERTY(double inhibitoryPortion READ getInhibitoryPortion WRITE writeInhibitoryPortion NOTIFY inhibitoryPortionChanged)
@@ -157,7 +156,6 @@ public:
 
     void computeOutput(double deltaTime);
 
-    NetworkType getNetworkType() const;
     int getNeuronSize() const;
     double getTimeScale() const;
     double getInhibitoryPortion() const;
@@ -175,7 +173,6 @@ public:
     bool getFlagDecay() const;
 
 public slots:
-    void writeNetworkType(NetworkType networkType);
     void writeNeuronSize(int neuronSize);
     void writeTimeScale(double timeScale);
     void writeInhibitoryPortion(double inhibitoryPortion);
@@ -193,7 +190,6 @@ public slots:
     void writeFlagDecay(bool flagDecay);
 
 signals:
-    void networkTypeChanged(NetworkType networkType);
     void neuronSizeChanged(int neuronSize);
     void timeScaleChanged(double timeScale);
     void inhibitoryPortionChanged(double inhibitoryPortion);

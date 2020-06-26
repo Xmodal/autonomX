@@ -31,20 +31,20 @@ Rack {
                 onValueChanged: generatorModel.at(genID).neuronSize = newValue
             }
 
-            SelectField {
-                labelText: "Network type"
+//            SelectField {
+//                labelText: "Network type"
 
-                options: ["Random", "Sparse", "Uniform", "Grid"]
-                // TODO: make singletons for these
-                enumOptions: [
-                    SpikingNet.RandomNetwork,
-                    SpikingNet.SparseNetwork,
-                    SpikingNet.UniformNetwork,
-                    SpikingNet.GridNetwork
-                ]
-                index: generatorModel.at(genID).networkType
-                onValueChanged: generatorModel.at(genID).networkType = enumOptions[newValue]
-            }
+//                options: ["Random", "Sparse", "Uniform", "Grid"]
+//                // TODO: make singletons for these
+//                enumOptions: [
+//                    SpikingNet.RandomNetwork,
+//                    SpikingNet.SparseNetwork,
+//                    SpikingNet.UniformNetwork,
+//                    SpikingNet.GridNetwork
+//                ]
+//                index: generatorModel.at(genID).networkType
+//                onValueChanged: generatorModel.at(genID).networkType = enumOptions[newValue]
+//            }
 
             SelectField {
                 labelText: "Inh. neuron type"

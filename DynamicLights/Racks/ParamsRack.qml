@@ -66,6 +66,8 @@ Rack {
             SliderField {
                 labelText: "Inh. portion"
 
+                updateLag: 70
+
                 currVal: genID < 0 ? 0 : generatorModel.at(genID).inhibitoryPortion
                 onValueChanged: generatorModel.at(genID).inhibitoryPortion = newValue
             }
@@ -73,12 +75,16 @@ Rack {
             SliderField {
                 labelText: "Input portion"
 
+                updateLag: 70
+
                 currVal: genID < 0 ? 0 : generatorModel.at(genID).inputPortion
                 onValueChanged: generatorModel.at(genID).inputPortion = newValue
             }
 
             SliderField {
                 labelText: "Output portion"
+
+                updateLag: 70
 
                 currVal: genID < 0 ? 0 : generatorModel.at(genID).outputPortion
                 onValueChanged: generatorModel.at(genID).outputPortion = newValue

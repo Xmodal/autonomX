@@ -12,6 +12,7 @@ Field {
     property real currVal: 0.5
     property real exponent: 1.0
     property real step: 0.0
+    property real updateLag: 0.0
 
     function parseValue(v) {
         return v.toFixed(2 - Math.floor(Math.log10(v < 1 ? 1 : v)))
@@ -21,10 +22,19 @@ Field {
         Layout.fillWidth: true
         Layout.preferredHeight: 40
 
+        // value update lag timer
+        Timer {
+            id: sliderLagTimer
+            interval: updateLag; repeat: false; running: false
+            triggeredOnStart: false
+
+            onTriggered: sliderField.valueChanged(slider.value)
+        }
+
         // background
         FieldFrame {
-            isHovered: fieldSlider.hovered || sliderValue.hovered
-            isFocused: fieldSlider.pressed || sliderValue.activeFocus
+            isHovered: slider.hovered || sliderValue.hovered
+            isFocused: slider.pressed || sliderValue.activeFocus
         }
 
         // main slider area
@@ -34,7 +44,7 @@ Field {
 
             // slider
             Slider {
-                id: fieldSlider
+                id: slider
 
                 // alignment
                 Layout.fillWidth: true
@@ -52,7 +62,7 @@ Field {
                     color: "#4D4D4D"
 
                     Rectangle {
-                        width: parent.width * fieldSlider.visualPosition
+                        width: parent.width * slider.visualPosition
                         anchors.left: parent.left
                         height: parent.height
                         color: Stylesheet.colors.outputs[0]
@@ -63,7 +73,10 @@ Field {
                 handle: Rectangle {}
 
                 // signals
-                onValueChanged: sliderField.valueChanged(value)
+                onValueChanged: {
+                    if (updateLag > 0) sliderLagTimer.restart();
+                    else sliderField.valueChanged(value)
+                }
             }
 
             TextField {
@@ -76,7 +89,7 @@ Field {
                 Layout.preferredWidth: 50
 
                 // text
-                text: parseValue(currVal)
+                text: parseValue(slider.value)
                 horizontalAlignment: Text.AlignRight
                 validator: RegExpValidator { regExp: /\d*.*\d*/ }
                 selectByMouse: true

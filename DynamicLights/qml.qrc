@@ -19,6 +19,7 @@
         <file>Fields/FieldFrame.qml</file>
         <file>Fields/SelectField.qml</file>
         <file>Fields/SliderField.qml</file>
+        <file>Fields/SwitchField.qml</file>
         <file>Fields/TextField.qml</file>
         <file>Style/qmldir</file>
         <file>Style/Stylesheet.qml</file>

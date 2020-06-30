@@ -5,8 +5,6 @@ import QtQuick.Layouts 1.3
 import "../Fields"
 import "../Style"
 
-import com.dynamiclights 1.0
-
 Rack {
     id: paramsRack
 
@@ -88,6 +86,10 @@ Rack {
 
                 currVal: genID < 0 ? 0 : generatorModel.at(genID).outputPortion
                 onValueChanged: generatorModel.at(genID).outputPortion = newValue
+            }
+
+            SwitchField {
+                labelText: "STDP"
             }
         }
     }

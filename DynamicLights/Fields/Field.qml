@@ -23,7 +23,6 @@ ColumnLayout {
         id: fieldLabel
 
         text: labelText
-        color: Stylesheet.colors.white
         font {
             family: Stylesheet.fonts.sub
             pixelSize: 14

@@ -27,10 +27,8 @@ Field {
 
         // font + color
         font {
-            family: Stylesheet.fonts.main
             pixelSize: 18
         }
-        color: Stylesheet.colors.white
 
         // text metrics (used to elide text)
         TextMetrics {

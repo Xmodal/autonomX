@@ -34,7 +34,6 @@ ColumnLayout {
             topPadding: 10
             Layout.fillWidth: true
 
-            color: Stylesheet.colors.white
             font {
                 family: Stylesheet.fonts.sub
                 pixelSize: 16

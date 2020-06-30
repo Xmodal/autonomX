@@ -45,11 +45,7 @@ Field {
                 background: Rectangle { opacity: 0 }
 
                 // font & color
-                font {
-                    family: Stylesheet.fonts.main
-                    pixelSize: 14
-                }
-                color: Stylesheet.colors.white
+                font.pixelSize: 14
 
                 // mouse interaction
                 selectByMouse: true

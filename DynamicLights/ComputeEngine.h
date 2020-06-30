@@ -28,9 +28,9 @@ class ComputeEngine : public QThread
 private:
     QList<QSharedPointer<Generator>> generators;
     QElapsedTimer elapsedTimer;
-    double frequency = 30;
+    double frequency = 80;
     bool firstFrame = true;
-    bool flagDebug = false;
+    bool flagDebug = true;
 public:
     ComputeEngine(QList<QSharedPointer<Generator>> generators);
     void run() override;

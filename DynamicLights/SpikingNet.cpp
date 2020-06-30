@@ -17,10 +17,18 @@
 
 // this is probably a bad include to have here. is there a better way to setup debug output that plays well with Qt? qDebug doesn't work here for some reason
 #include <iostream>
+#include <chrono>
+#include <QThread>
 
 // ############################### initialization routines ###############################
 
 SpikingNet::SpikingNet() {
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::cout << "constructor:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+
     // default values for descriptive properties
     name = "Spiking Neural Network";
     type = "SNN";
@@ -31,11 +39,22 @@ SpikingNet::SpikingNet() {
 }
 
 SpikingNet::~SpikingNet() {
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::cout << "destructor:\t\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+
     reset();
 }
 
 
 void SpikingNet::initialize() {
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::cout << "initialize:\t\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     // set random seed
     if(flagRandomDevice) {
@@ -108,6 +127,13 @@ void SpikingNet::initialize() {
 }
 
 void SpikingNet::reset() {
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::cout << "reset:\t\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+
+
     // delete STP variables
     delete[] STPu;
     delete[] STPx;
@@ -313,6 +339,14 @@ void SpikingNet::setGridNetwork() {
 // ############################### update routines and output calculation ###############################
 
 void SpikingNet::computeOutput(double deltaTime) {
+    QMutexLocker locker(&mutex);
+
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::cout << "computeOutput:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+
     // apply input stimulation
     for(int i = 0; i < inputGroupSize; i++) {
         stimulation(i, input[i]);
@@ -717,6 +751,14 @@ void SpikingNet::writeNeuronSize(int neuronSize) {
     if(this->neuronSize == neuronSize)
         return;
 
+    QMutexLocker locker(&mutex);
+
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::cout << "writeNeuronSize:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+
     // reset network, since these parameters only take effect when the network is created anew
     reset();
     // do the change
@@ -731,6 +773,14 @@ void SpikingNet::writeTimeScale(double timeScale) {
     if(this->timeScale == timeScale)
         return;
 
+    QMutexLocker locker(&mutex);
+
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::cout << "writeTimeScale:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+
     this->timeScale = timeScale;
     emit timeScaleChanged(timeScale);
 }
@@ -738,6 +788,14 @@ void SpikingNet::writeTimeScale(double timeScale) {
 void SpikingNet::writeInhibitoryPortion(double inhibitoryPortion) {
     if(this->inhibitoryPortion == inhibitoryPortion)
         return;
+
+    QMutexLocker locker(&mutex);
+
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::cout << "writeInhibitoryPortion:\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     // reset network, since these parameters only take effect when the network is created anew
     // TODO: this isn't as efficient as it could be since it's not necessary to deallocate and reallocate memory for weights / STP
@@ -754,6 +812,14 @@ void SpikingNet::writeInputPortion(double inputPortion) {
     if(this->inputPortion == inputPortion)
         return;
 
+    QMutexLocker locker(&mutex);
+
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::cout << "writeInputPortion:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+
     // update input size
     inputSize = (neuronSize - inhibitorySize) * inputPortion;
 
@@ -765,6 +831,14 @@ void SpikingNet::writeOutputPortion(double outputPortion) {
     if(this->outputPortion == outputPortion)
         return;
 
+    QMutexLocker locker(&mutex);
+
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::cout << "writeOutputPortion:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+
     // update output size
     outputSize = (neuronSize - inhibitorySize) * outputPortion;
 
@@ -775,6 +849,14 @@ void SpikingNet::writeOutputPortion(double outputPortion) {
 void SpikingNet::writeInhibitoryNeuronType(NeuronType::Enum inhibitoryNeuronType) {
     if(this->inhibitoryNeuronType == inhibitoryNeuronType)
         return;
+
+    QMutexLocker locker(&mutex);
+
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::cout << "writeInhibitoryNeuronType:\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     // reset network, since these parameters only take effect when the network is created anew
     // TODO: this isn't as efficient as it could be since it's not necessary to deallocate and reallocate memory for weights / STP
@@ -791,6 +873,14 @@ void SpikingNet::writeExcitatoryNeuronType(NeuronType::Enum excitatoryNeuronType
     if(this->excitatoryNeuronType == excitatoryNeuronType)
         return;
 
+    QMutexLocker locker(&mutex);
+
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::cout << "writeExcitatoryNeuronType:\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+
     // reset network, since these parameters only take effect when the network is created anew
     // TODO: this isn't as efficient as it could be since it's not necessary to deallocate and reallocate memory for weights / STP
     reset();
@@ -806,6 +896,14 @@ void SpikingNet::writeInhibitoryNoise(double inhibitoryNoise) {
     if(this->inhibitoryNoise == inhibitoryNoise)
         return;
 
+    QMutexLocker locker(&mutex);
+
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::cout << "writeInhibitoryNoise:\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+
     this->inhibitoryNoise = inhibitoryNoise;
     emit inhibitoryNoiseChanged(inhibitoryNoise);
 }
@@ -813,6 +911,14 @@ void SpikingNet::writeInhibitoryNoise(double inhibitoryNoise) {
 void SpikingNet::writeExcitatoryNoise(double excitatoryNoise) {
     if(this->excitatoryNoise == excitatoryNoise)
         return;
+
+    QMutexLocker locker(&mutex);
+
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::cout << "writeExcitatoryNoise:\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     this->excitatoryNoise = excitatoryNoise;
     emit excitatoryNoiseChanged(excitatoryNoise);
@@ -822,6 +928,14 @@ void SpikingNet::writeSTPStrength(double STPStrength) {
     if(this->STPStrength == STPStrength)
         return;
 
+    QMutexLocker locker(&mutex);
+
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::cout << "writeSTPStrength:\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+
     this->STPStrength = STPStrength;
     emit STPStrengthChanged(STPStrength);
 }
@@ -829,6 +943,14 @@ void SpikingNet::writeSTPStrength(double STPStrength) {
 void SpikingNet::writeSTDPStrength(double STDPStrength) {
     if(this->STDPStrength == STDPStrength)
         return;
+
+    QMutexLocker locker(&mutex);
+
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::cout << "writeSTDPStrength:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     this->STDPStrength = STDPStrength;
     emit STDPStrengthChanged(STDPStrength);
@@ -838,6 +960,14 @@ void SpikingNet::writeDecayConstant(double decayConstant) {
     if(this->decayConstant == decayConstant)
         return;
 
+    QMutexLocker locker(&mutex);
+
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::cout << "writeDecayConstant:\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+
     this->decayConstant = decayConstant;
     emit decayConstantChanged(decayConstant);
 }
@@ -845,6 +975,14 @@ void SpikingNet::writeDecayConstant(double decayConstant) {
 void SpikingNet::writeFlagSTP(bool flagSTP) {
     if(this->flagSTP == flagSTP)
         return;
+
+    QMutexLocker locker(&mutex);
+
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::cout << "writeFlagSTP:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     this->flagSTP = flagSTP;
     emit flagSTPChanged(flagSTP);
@@ -854,6 +992,14 @@ void SpikingNet::writeFlagSTDP(bool flagSTDP) {
     if(this->flagSTDP == flagSTDP)
         return;
 
+    QMutexLocker locker(&mutex);
+
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::cout << "writeFlagSTDP:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+
     this->flagSTDP = flagSTDP;
     emit flagSTDPChanged(flagSTDP);
 }
@@ -861,6 +1007,14 @@ void SpikingNet::writeFlagSTDP(bool flagSTDP) {
 void SpikingNet::writeFlagDecay(bool flagDecay) {
     if(this->flagDecay == flagDecay)
         return;
+
+    QMutexLocker locker(&mutex);
+
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    std::cout << "writeFlagDecay:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     this->flagDecay = flagDecay;
     emit flagDecayChanged(flagDecay);

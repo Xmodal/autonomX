@@ -21,7 +21,6 @@ Field {
         currentIndex: selectField.index
         model: options
         font {
-            family: Stylesheet.fonts.main
             pixelSize: 18
         }
 
@@ -45,17 +44,16 @@ Field {
             // item contents
             contentItem: Text {
                 text: modelData
-                color: Stylesheet.colors.white
                 opacity: hovered ? 1 : 0.5
                 font.family: comboBox.font.family
                 font.pixelSize: 14
+                color: Stylesheet.colors.white
                 padding: Stylesheet.field.padding
             }
 
             // item background
             background: Rectangle {
                 anchors.fill: parent
-                color: Stylesheet.colors.white
                 opacity: hovered ? 0.1 : 0
                 border.width: 0
             }
@@ -66,8 +64,6 @@ Field {
             text: comboBox.displayText
             verticalAlignment: Text.AlignVCenter
             height: 40
-
-            color: Stylesheet.colors.white
         }
 
         // popup

@@ -65,6 +65,7 @@ Field {
                         width: parent.width * slider.visualPosition
                         anchors.left: parent.left
                         height: parent.height
+                        // TODO: change 0 to generator index
                         color: Stylesheet.colors.outputs[0]
                     }
                 }
@@ -96,12 +97,10 @@ Field {
 
                 // font and color
                 font {
-                    family: Stylesheet.fonts.main
                     weight: Font.Bold
                     pixelSize: 16
                 }
                 background: Rectangle { opacity: 0 }
-                color: Stylesheet.colors.white
 
                 // signals
                 onEditingFinished: {

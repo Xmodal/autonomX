@@ -27,7 +27,7 @@ SpikingNet::SpikingNet() {
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "constructor:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    std::cout << "constructor (SpikingNet):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     // default values for descriptive properties
     name = "Spiking Neural Network";
@@ -43,7 +43,7 @@ SpikingNet::~SpikingNet() {
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "destructor:\t\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    std::cout << "destructor (SpikingNet):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     reset();
 }

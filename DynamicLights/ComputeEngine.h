@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include <QThread>
+#include <QObject>
 #include <QTimer>
 #include <QElapsedTimer>
 #include <QList>
@@ -23,8 +23,8 @@
 #include "Generator.h"
 
 
-class ComputeEngine : public QThread
-{
+class ComputeEngine : public QObject {
+    Q_OBJECT
 private:
     QList<QSharedPointer<Generator>> generators;
     QElapsedTimer elapsedTimer;
@@ -33,5 +33,7 @@ private:
     bool flagDebug = true;
 public:
     ComputeEngine(QList<QSharedPointer<Generator>> generators);
-    void run() override;
+    ~ComputeEngine();
+public slots:
+    void run();
 };

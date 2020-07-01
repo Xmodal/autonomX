@@ -20,9 +20,6 @@ Field {
         // root settings
         currentIndex: selectField.index
         model: options
-        font {
-            pixelSize: 18
-        }
 
         onCurrentIndexChanged: {
             if (!initialized) return initialized = true;

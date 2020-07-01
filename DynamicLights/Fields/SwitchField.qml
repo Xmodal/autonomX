@@ -9,10 +9,14 @@ Field {
 
     property bool on: false
 
-    spacing: 10
+    spacing: 5
+    Layout.fillWidth: false
 
     Switch {
         id: switchObj
+
+        checked: switchField.on
+        onToggled: switchField.valueChanged(checked)
 
         indicator: Rectangle {
             id: indicatorBg

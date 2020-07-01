@@ -25,7 +25,8 @@ ColumnLayout {
         text: labelText
         font {
             family: Stylesheet.fonts.sub
-            pixelSize: 14
+            pixelSize: 13
+            letterSpacing: 13 * 0.05
             capitalization: Font.AllUppercase
         }
     }

@@ -24,6 +24,7 @@ Rack {
 
             TextField {
                 validateInt: true
+                unsigned: true
                 labelText: "Neurons"
 
                 defaultText: generatorModel.at(genID).neuronSize

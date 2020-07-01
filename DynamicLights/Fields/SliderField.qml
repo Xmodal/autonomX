@@ -119,7 +119,7 @@ Field {
             // text
             text: parseValue(slider.value)
             horizontalAlignment: Text.AlignHCenter
-            validator: RegExpValidator { regExp: /\d*.*\d*/ }
+            validator: DoubleValidator { bottom: minVal; top: maxVal }
             selectByMouse: true
 
             background: Rectangle { opacity: 0 }

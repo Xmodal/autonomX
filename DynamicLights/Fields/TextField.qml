@@ -25,11 +25,6 @@ Field {
         text: activeFocus ? defaultText : metrics.elidedText
         placeholderText: placeholder
 
-        // font + color
-        font {
-            pixelSize: 18
-        }
-
         // text metrics (used to elide text)
         TextMetrics {
             id: metrics

@@ -47,6 +47,23 @@ protected:
     int outputMonitorHistoryStartIndex = 0;                 // index of the first element in the buffer (historically the oldest element)
     int outputMonitorHistorySizeMax = 32;                   // size of the circular buffer
     int outputMonitorHistorySizeValid = 0;                  // number of valid entries in the circular buffer (initialized to 0 since the buffer will be empty)
+
+    // example for indexing outputMonitorHistory:
+
+    // indexing chronologically (oldest to newest)
+    //
+    //  for(int i = 0; i < outputMonitorHistorySizeValid; i++) {
+    //      int index = (outputMonitorHistoryStartIndex + i) % outputMonitorHistorySizeMax;
+    //  }
+    //
+
+    // indexing reverse-chronologically (newest to oldest)
+    //
+    //  for(int i = 0; i < outputMonitorHistorySizeValid; i++) {
+    //      int index = (outputMonitorHistoryStartIndex + outputMonitorHistorySizeValid - 1 - i + outputMonitorHistorySizeMax) % outputMonitorHistorySizeMax;
+    //  }
+    //
+
 public:
     explicit Generator(QObject *parent = nullptr);
     ~Generator();

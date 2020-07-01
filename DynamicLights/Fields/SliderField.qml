@@ -11,105 +11,145 @@ Field {
     property real maxVal: 1.0
     property real currVal: 0.5
     property real exponent: 1.0
+    property int precision: 5
     property real step: 0.0
     property real updateLag: 0.0
 
     function parseValue(v) {
-        return v.toFixed(2 - Math.floor(Math.log10(v < 1 ? 1 : v)))
+        return Number(v.toFixed(precision))
     }
 
-    Item {
+    // value update lag timer
+    Timer {
+        id: sliderLagTimer
+        interval: updateLag; repeat: false; running: false
+        triggeredOnStart: false
+
+        onTriggered: sliderField.valueChanged(slider.value)
+    }
+
+    // main slider area
+    ColumnLayout {
+        id: sliderContainer
         Layout.fillWidth: true
         Layout.preferredHeight: 40
+        spacing: 3
 
-        // value update lag timer
-        Timer {
-            id: sliderLagTimer
-            interval: updateLag; repeat: false; running: false
-            triggeredOnStart: false
+        // current state
+        state: slider.pressed ? "pressed" : (slider.hovered ? "hovered" : "")
 
-            onTriggered: sliderField.valueChanged(slider.value)
-        }
+        // slider
+        Slider {
+            id: slider
 
-        // background
-        FieldFrame {
-            isHovered: slider.hovered || sliderValue.hovered
-            isFocused: slider.pressed || sliderValue.activeFocus
-        }
+            // alignment
+            Layout.fillWidth: true
+            Layout.preferredHeight: 10 + trueHandle.height
+            padding: 0
 
-        // main slider area
-        RowLayout {
-            id: sliderContainer
-            anchors.fill: parent
+            // slider params
+            from: minVal
+            to: maxVal
+            value: currVal
+            stepSize: step
 
-            // slider
-            Slider {
-                id: slider
+            // value bar
+            background: Rectangle {
+                width: parent.width
+                height: 10
+                color: "#4D4D4D"
 
-                // alignment
-                Layout.fillWidth: true
-
-                // slider params
-                from: minVal
-                to: maxVal
-                value: currVal
-                stepSize: step
-
-                // value bar
-                background: Rectangle {
-                    width: parent.width
-                    height: 10
-                    color: "#4D4D4D"
-
-                    Rectangle {
-                        width: parent.width * slider.visualPosition
-                        anchors.left: parent.left
-                        height: parent.height
-                        // TODO: change 0 to generator index
-                        color: Stylesheet.colors.outputs[0]
-                    }
-                }
-
-                // no handle
-                handle: Rectangle {}
-
-                // signals
-                onValueChanged: {
-                    if (updateLag > 0) sliderLagTimer.restart();
-                    else sliderField.valueChanged(value)
+                Rectangle {
+                    width: parent.width * slider.visualPosition
+                    anchors.left: parent.left
+                    height: parent.height
+                    // TODO: change 0 to generator index
+                    color: Stylesheet.colors.outputs[0]
                 }
             }
 
-            TextField {
-                id: sliderValue
+            // no handle
+            handle: Rectangle {
+                width: 0; height: parent.height
+                x: slider.visualPosition * slider.availableWidth; y: 0
+            }
 
-                // alignment
-                padding: 0
-                Layout.leftMargin: 0
-                Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-                Layout.preferredWidth: 50
+            // actual handle
+            Canvas {
+                id: trueHandle
 
-                // text
-                text: parseValue(slider.value)
-                horizontalAlignment: Text.AlignRight
-                validator: RegExpValidator { regExp: /\d*.*\d*/ }
-                selectByMouse: true
+                property color handleColor: Stylesheet.setAlpha(Stylesheet.colors.white, 0.25)
+                onHandleColorChanged: requestPaint()
 
-                // font and color
-                font {
-                    weight: Font.Bold
-                    pixelSize: 16
-                }
-                background: Rectangle { opacity: 0 }
+                x: (slider.visualPosition * slider.availableWidth) - (width / 2)
+                y: 10
+                height: 8
+                width: 10
 
-                // signals
-                onEditingFinished: {
-                    if (displayText === "") currVal = (minVal + maxVal) / 2;
-                    else if (displayText > maxVal) currVal = maxVal;
-                    else if (displayText < minVal) currVal = minVal;
-                    else currVal = displayText;
+                onPaint: {
+                    var ctx = getContext("2d");
+                    ctx.clearRect(0, 0, width, height);
+
+                    ctx.fillStyle = handleColor;
+
+                    ctx.beginPath();
+                    ctx.moveTo(0, 8);
+                    ctx.lineTo(5, 0);
+                    ctx.lineTo(10, 8);
+                    ctx.closePath();
+                    ctx.fill();
                 }
             }
+
+            // signals
+            onValueChanged: {
+                if (updateLag > 0) sliderLagTimer.restart();
+                else sliderField.valueChanged(value)
+            }
         }
+
+        TextField {
+            id: sliderValue
+
+            // alignment
+            padding: 0
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignCenter
+
+            // text
+            text: parseValue(slider.value)
+            horizontalAlignment: Text.AlignHCenter
+            validator: RegExpValidator { regExp: /\d*.*\d*/ }
+            selectByMouse: true
+
+            background: Rectangle { opacity: 0 }
+
+            // signals
+            onEditingFinished: {
+                if (displayText === "") currVal = (minVal + maxVal) / 2;
+                else if (displayText > maxVal) currVal = maxVal;
+                else if (displayText < minVal) currVal = minVal;
+                else currVal = displayText;
+            }
+        }
+
+        // states
+        states: [
+            State {
+                name: "hovered"
+                PropertyChanges { target: trueHandle; handleColor: Stylesheet.colors.white }
+            },
+
+            State {
+                name: "pressed"
+                PropertyChanges { target: trueHandle; handleColor: Stylesheet.colors.outputs[0] }
+            }
+        ]
     }
 }
+
+/*##^##
+Designer {
+    D{i:0;formeditorZoom:1.75}
+}
+##^##*/

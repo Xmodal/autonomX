@@ -89,9 +89,27 @@ int main(int argc, char *argv[])
     GeneratorModel generatorModel(generators);
     // next: make a view and get the two connected
 
+    // create compute thread
+    QSharedPointer<QThread> computeThread = QSharedPointer<QThread>(new QThread());
+    computeThread->start();
+    computeThread->setPriority(QThread::TimeCriticalPriority);
+
     // create compute engine
     ComputeEngine computeEngine(generators);
-    computeEngine.start(QThread::TimeCriticalPriority);
+
+    // move compute engine to compute thread
+    computeEngine.moveToThread(computeThread.data());
+
+    /*
+    // this wrecks everything
+    // move generators to compute thread
+    for(QList<QSharedPointer<Generator>>::iterator it = generators.begin(); it != generators.end(); it++) {
+        (*it)->moveToThread(computeThread.data());
+    }
+    */
+
+    // start compute engine
+    computeEngine.run();
 
     QQmlApplicationEngine engine;
 

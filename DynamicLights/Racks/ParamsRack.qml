@@ -17,6 +17,7 @@ Rack {
         Layout.alignment: Qt.AlignLeft | Qt.AlignTop
         spacing: Stylesheet.field.spacing
 
+        // --= BASIC =--
         RowLayout {
             Layout.fillWidth: true
             spacing: Stylesheet.field.spacing
@@ -29,34 +30,13 @@ Rack {
                 onValueChanged: generatorModel.at(genID).neuronSize = newValue
             }
 
-//            SelectField {
-//                labelText: "Network type"
+            SliderField {
+                labelText: "Time scale"
 
-//                options: ["Random", "Sparse", "Uniform", "Grid"]
-//                // TODO: make singletons for these
-//                enumOptions: [
-//                    SpikingNet.RandomNetwork,
-//                    SpikingNet.SparseNetwork,
-//                    SpikingNet.UniformNetwork,
-//                    SpikingNet.GridNetwork
-//                ]
-//                index: generatorModel.at(genID).networkType
-//                onValueChanged: generatorModel.at(genID).networkType = enumOptions[newValue]
-//            }
-
-            SelectField {
-                labelText: "Inh. neuron type"
-
-                options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
-            }
-
-            SelectField {
-                labelText: "Exc. neuron type"
-
-                options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
+                currVal: genID < 0 ? 0 : generatorModel.at(genID).timeScale
+                onValueChanged: generatorModel.at(genID).timeScale = newValue
             }
         }
-
         RowLayout {
             Layout.fillWidth: true
             spacing: Stylesheet.field.spacing
@@ -87,9 +67,108 @@ Rack {
                 currVal: genID < 0 ? 0 : generatorModel.at(genID).outputPortion
                 onValueChanged: generatorModel.at(genID).outputPortion = newValue
             }
+        }
 
-            SwitchField {
-                labelText: "STDP"
+        // --= NEURON BEHAVIOR =--
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: Stylesheet.field.spacing
+
+            SelectField {
+                labelText: "Inh. neuron type"
+
+                options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
+            }
+
+            SliderField {
+                labelText: "Inh. neuron noise"
+
+                minVal: 1.0
+                maxVal: 20.0
+                updateLag: 70
+
+                currVal: genID < 0 ? 0 : generatorModel.at(genID).inhibitoryNoise
+                onValueChanged: generatorModel.at(genID).inhibitoryNoise = newValue
+            }
+
+            SelectField {
+                labelText: "Exc. neuron type"
+
+                options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
+            }
+
+            SliderField {
+                labelText: "Exc. neuron noise"
+
+                minVal: 1.0
+                maxVal: 20.0
+                updateLag: 70
+
+                currVal: genID < 0 ? 0 : generatorModel.at(genID).excitatoryNoise
+                onValueChanged: generatorModel.at(genID).excitatoryNoise = newValue
+            }
+        }
+
+        // --= FLAGS =--
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: Stylesheet.field.spacing
+
+            ColumnLayout {
+                spacing: 0
+
+                SwitchField {
+                    labelText: "STP"
+
+                    on: genID < 0 ? 0 : generatorModel.at(genID).flagSTP
+                    onValueChanged: generatorModel.at(genID).flagSTP = newValue
+                }
+
+                SliderField {
+                    labelText: "STP strength"
+                    updateLag: 70
+
+                    currVal: genID < 0 ? 0 : generatorModel.at(genID).STPStrength
+                    onValueChanged: generatorModel.at(genID).STPStrength = newValue
+                }
+            }
+
+            ColumnLayout {
+                spacing: 0
+
+                SwitchField {
+                    labelText: "STDP"
+
+                    on: genID < 0 ? 0 : generatorModel.at(genID).flagSTDP
+                    onValueChanged: generatorModel.at(genID).flagSTDP = newValue
+                }
+
+                SliderField {
+                    labelText: "STDP strength"
+                    updateLag: 70
+
+                    currVal: genID < 0 ? 0 : generatorModel.at(genID).STDPStrength
+                    onValueChanged: generatorModel.at(genID).STDPStrength = newValue
+                }
+            }
+
+            ColumnLayout {
+                spacing: 5
+
+                SwitchField {
+                    labelText: "Decay"
+
+                    on: genID < 0 ? 0 : generatorModel.at(genID).flagDecay
+                    onValueChanged: generatorModel.at(genID).flagDecay = newValue
+                }
+
+                SliderField {
+                    labelText: "Decay constant"
+                    updateLag: 70
+
+                    currVal: genID < 0 ? 0 : generatorModel.at(genID).decayConstant
+                    onValueChanged: generatorModel.at(genID).decayConstant = newValue
+                }
             }
         }
     }

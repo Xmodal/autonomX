@@ -9,9 +9,13 @@ Field {
 
     property string placeholder: ""
     property string defaultText: "Text Field"
-    property bool validateInt: false
 
-    IntValidator { id: validator }
+    // for number fields only
+    // TODO: NumberField with increment/decrement arrows
+    property bool validateInt: false
+    property bool unsigned: false
+
+    IntValidator { id: validator; bottom: unsigned ? 0 : -2147483647 }
 
     TextField {
         id: fieldInput

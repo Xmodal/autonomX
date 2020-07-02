@@ -35,5 +35,6 @@ public:
     ComputeEngine(QList<QSharedPointer<Generator>> generators);
     ~ComputeEngine();
 public slots:
-    void run();
+    void start();
+    void loop();
 };

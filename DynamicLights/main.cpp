@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
     */
 
     // start compute engine
-    computeEngine.run();
+    computeEngine.start();
 
     QQmlApplicationEngine engine;
 

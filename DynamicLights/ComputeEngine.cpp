@@ -31,7 +31,15 @@ ComputeEngine::~ComputeEngine() {
     std::cout << "destructor (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 }
 
-void ComputeEngine::run() {
+void ComputeEngine::start() {
+    // this is called from an external thread initially and allows this object's thread to pick up the loop statement through its event queue
+    // having a singleshot timer with time zero executes as soon as possible
+    QTimer timer;
+    timer.setTimerType(Qt::PreciseTimer);
+    timer.singleShot(0, this, &ComputeEngine::loop);
+}
+
+void ComputeEngine::loop() {
     // this solution is not very robust if CPU resources are in high demand by other programs
     // this breaks also after a while if the application isn't interacted with (ie is not the operating system's currently active app)
     // QTimer seems to have some bugs :(
@@ -102,5 +110,5 @@ void ComputeEngine::run() {
     // on my development machine (Simon), it can drop out spectacularly (going suddenly from 30FPS to 0.1FPS)
     QTimer timer;
     timer.setTimerType(Qt::PreciseTimer);
-    timer.singleShot((int) std::min<double>(1.0 / frequency * 1000.0, std::max<double>(1.0 / frequency * 1000.0 - millisCompute, 0)), this, &ComputeEngine::run);
+    timer.singleShot((int) std::min<double>(1.0 / frequency * 1000.0, std::max<double>(1.0 / frequency * 1000.0 - millisCompute, 0)), this, &ComputeEngine::loop);
 }

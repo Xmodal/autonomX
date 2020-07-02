@@ -17,6 +17,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QVariant>
 #include <vector>
 
 class Generator : public QObject
@@ -59,8 +60,9 @@ public:
     void writeDescription(QString string);
     void writeOutputMonitor(double value);
 public slots:
-    void updateValue(const QString &key, const QVariant &value); // for connection with QQmlPropertyMap's valueChanged signal
+    void updateValue(const QString &key, const QVariant &value); // for connection from QQmlPropertyMap's valueChanged signal
 signals:
+    void valueChanged(const QString &key, const QVariant &value); // for connection to QQmlPropertyMap's updateValue slot
     void nameChanged(QString);
     void typeChanged(QString);
     void descriptionChanged(QString);

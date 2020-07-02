@@ -9,8 +9,6 @@ Field {
 
     property int index
     property variant options
-    property variant enumOptions
-    property bool initialized: false
 
     ComboBox {
         id: comboBox
@@ -21,10 +19,7 @@ Field {
         currentIndex: selectField.index
         model: options
 
-        onCurrentIndexChanged: {
-            if (!initialized) return initialized = true;
-            selectField.valueChanged(currentIndex);
-        }
+        onCurrentIndexChanged: selectField.valueChanged(currentIndex)
 
         // background
         background: FieldFrame {
@@ -68,13 +63,15 @@ Field {
             id: cbPopup
             y: comboBox.height
             width: comboBox.width
-            height: contentHeight
+            height: contentItem.implicitHeight < 240 ? contentItem.implicitHeight : 240
             padding: 0
 
             contentItem: ListView {
-                id: popupList
+                clip: true
                 implicitHeight: contentHeight
                 model: comboBox.popup.visible ? comboBox.delegateModel : null
+
+                ScrollIndicator.vertical: ScrollIndicator {}
             }
 
             background: Rectangle {

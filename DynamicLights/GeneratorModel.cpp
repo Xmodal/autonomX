@@ -35,12 +35,6 @@ QVariant GeneratorModel::data(const QModelIndex &index, int role) const {
     if(!index.isValid())
         return QVariant();
 
-    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                std::chrono::system_clock::now().time_since_epoch()
-    );
-
-    std::cout << "data:\t\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
-
     if(index.column() == 0 && index.row() >= 0 && index.row() < generators.size()) {
         switch(role) {
             case NameRole : {

@@ -673,11 +673,11 @@ double SpikingNet::getOutputPortion() const {
     return this->outputPortion;
 }
 
-NeuronType SpikingNet::getInhibitoryNeuronType() const {
+NeuronType::Enum SpikingNet::getInhibitoryNeuronType() const {
     return this->inhibitoryNeuronType;
 }
 
-NeuronType SpikingNet::getExcitatoryNeuronType() const {
+NeuronType::Enum SpikingNet::getExcitatoryNeuronType() const {
     return this->excitatoryNeuronType;
 }
 
@@ -772,7 +772,7 @@ void SpikingNet::writeOutputPortion(double outputPortion) {
     emit outputPortionChanged(outputPortion);
 }
 
-void SpikingNet::writeInhibitoryNeuronType(NeuronType inhibitoryNeuronType) {
+void SpikingNet::writeInhibitoryNeuronType(NeuronType::Enum inhibitoryNeuronType) {
     if(this->inhibitoryNeuronType == inhibitoryNeuronType)
         return;
 
@@ -787,7 +787,7 @@ void SpikingNet::writeInhibitoryNeuronType(NeuronType inhibitoryNeuronType) {
     emit inhibitoryNeuronTypeChanged(inhibitoryNeuronType);
 }
 
-void SpikingNet::writeExcitatoryNeuronType(NeuronType excitatoryNeuronType) {
+void SpikingNet::writeExcitatoryNeuronType(NeuronType::Enum excitatoryNeuronType) {
     if(this->excitatoryNeuronType == excitatoryNeuronType)
         return;
 

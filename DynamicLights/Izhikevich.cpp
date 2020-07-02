@@ -22,7 +22,7 @@ Izhikevich::Izhikevich() {
     firing = false;
     
     //set param as default Ne.
-    setNeuronType(spikingNeuronRandomized);
+    setNeuronType(NeuronType::SpikingNeuronRandomized);
     u = b * v;
     I = 0.;
     potentialThreshold = 20.;
@@ -31,7 +31,7 @@ Izhikevich::Izhikevich() {
 Izhikevich::~Izhikevich() {
 }
 
-void Izhikevich::setParam(NeuronType type, double a, double b, double c, double d, double u, double v, double I) {
+void Izhikevich::setParam(NeuronType::Enum type, double a, double b, double c, double d, double u, double v, double I) {
     this->type = type;
     this->a = a;
     this->b = b;
@@ -42,17 +42,17 @@ void Izhikevich::setParam(NeuronType type, double a, double b, double c, double 
     this->I = I;
 }
 
-void Izhikevich::setNeuronType(NeuronType type) {
+void Izhikevich::setNeuronType(NeuronType::Enum type) {
     this->type = type;
     switch(type) {
-        case spikingNeuron: {
+        case NeuronType::SpikingNeuron: {
             a = 0.02;
             b = 0.2;
             c = -65.;
             d = 8.;
             break;
         }
-        case spikingNeuronRandomized: {
+        case NeuronType::SpikingNeuronRandomized: {
             std::mt19937 randomGenerator;
             std::uniform_real_distribution<> randomUniform(0.0, 1.0);
             double random = randomUniform(randomGenerator);
@@ -62,14 +62,14 @@ void Izhikevich::setNeuronType(NeuronType type) {
             d = 8. - 6.* random * random;
             break;
         }
-        case resonatorNeuron: {
+        case NeuronType::ResonatorNeuron: {
             a = 0.1;
             b = 0.2;
             c = -65.;
             d = 2.;
             break;
         }
-        case resonatorNeuronRandomized: {
+        case NeuronType::ResonatorNeuronRandomized: {
             std::mt19937 randomGenerator;
             std::uniform_real_distribution<> randomUniform(0.0, 1.0);
             double random = randomUniform(randomGenerator);
@@ -79,21 +79,21 @@ void Izhikevich::setNeuronType(NeuronType type) {
             d = 2.;
             break;
         }
-        case chatteringNeuron: {
+        case NeuronType::ChatteringNeuron: {
             a = 0.02;
             b = 0.2;
             c = -50.;
             d = 2.;
             break;
         }
-        case inhibitoryNeuron: {
+        case NeuronType::InhibitoryNeuron: {
             a = 0.1;
             b = 0.2;
             c = -65.;
             d = 2.;
             break;
         }
-        case inhibitoryNeuronRandomized: {
+        case NeuronType::InhibitoryNeuronRandomized: {
             std::mt19937 randomGenerator;
             std::uniform_real_distribution<> randomUniform(0.0, 1.0);
             double random = randomUniform(randomGenerator);
@@ -103,14 +103,14 @@ void Izhikevich::setNeuronType(NeuronType type) {
             d = 2.;
             break;
         }
-        case excitatoryNeuron : {
+        case NeuronType::ExcitatoryNeuron : {
             a = 0.02;
             b = 0.2;
             c = -50.;
             d = 2.;
             break;
         }
-        case excitatoryNeuronRandomized : {
+        case NeuronType::ExcitatoryNeuronRandomized : {
             std::mt19937 randomGenerator;
             std::uniform_real_distribution<> randomUniform(0.0, 1.0);
             double random = randomUniform(randomGenerator);
@@ -146,7 +146,7 @@ bool Izhikevich::applyFiring() {
     return(firing);
 }
 
-NeuronType Izhikevich::getNeuronType() {
+NeuronType::Enum Izhikevich::getNeuronType() {
     return(type);
 }
 

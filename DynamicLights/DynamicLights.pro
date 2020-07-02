@@ -60,6 +60,7 @@ HEADERS += \
     Generator.h \
     GeneratorModel.h \
     Izhikevich.h \
+    NeuronType.h \
     SpikingNet.h
 
 INCLUDEPATH += $$PWD/../qosc

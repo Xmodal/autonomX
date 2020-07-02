@@ -29,8 +29,8 @@ class SpikingNet : public Generator {
     Q_PROPERTY(double inhibitoryPortion READ getInhibitoryPortion WRITE writeInhibitoryPortion NOTIFY inhibitoryPortionChanged)
     Q_PROPERTY(double inputPortion READ getInputPortion WRITE writeInputPortion NOTIFY inputPortionChanged)
     Q_PROPERTY(double outputPortion READ getOutputPortion WRITE writeOutputPortion NOTIFY outputPortionChanged)
-    Q_PROPERTY(NeuronType inhibitoryNeuronType READ getInhibitoryNeuronType WRITE writeInhibitoryNeuronType NOTIFY inhibitoryNeuronTypeChanged)
-    Q_PROPERTY(NeuronType excitatoryNeuronType READ getExcitatoryNeuronType WRITE writeExcitatoryNeuronType NOTIFY excitatoryNeuronTypeChanged)
+    Q_PROPERTY(NeuronType::Enum inhibitoryNeuronType READ getInhibitoryNeuronType WRITE writeInhibitoryNeuronType NOTIFY inhibitoryNeuronTypeChanged)
+    Q_PROPERTY(NeuronType::Enum excitatoryNeuronType READ getExcitatoryNeuronType WRITE writeExcitatoryNeuronType NOTIFY excitatoryNeuronTypeChanged)
     Q_PROPERTY(double inhibitoryNoise READ getInhibitoryNoise WRITE writeInhibitoryNoise NOTIFY inhibitoryNoiseChanged)
     Q_PROPERTY(double excitatoryNoise READ getExcitatoryNoise WRITE writeExcitatoryNoise NOTIFY excitatoryNoiseChanged)
 
@@ -51,6 +51,7 @@ public:
         GridNetwork
     };
     Q_ENUM(NetworkType)
+    //Q_ENUM(NeuronType)
 
 private:
     NetworkType networkType = NetworkType::GridNetwork;
@@ -62,11 +63,11 @@ private:
 
     double      inhibitoryPortion = 0.2;
     int         inhibitorySize = neuronSize * inhibitoryPortion;
-    NeuronType  inhibitoryNeuronType = chatteringNeuron;
+    NeuronType::Enum  inhibitoryNeuronType = NeuronType::ChatteringNeuron;
     double      inhibitoryInitWeight = -5.0;
     double      inhibitoryNoise = 3.0;
 
-    NeuronType  excitatoryNeuronType = chatteringNeuron;
+    NeuronType::Enum  excitatoryNeuronType = NeuronType::ChatteringNeuron;
     double      excitatoryInitWeight = 15.0;
     double      excitatoryNoise = 5.0;
 
@@ -161,8 +162,8 @@ public:
     double getInhibitoryPortion() const;
     double getInputPortion() const;
     double getOutputPortion() const;
-    NeuronType getInhibitoryNeuronType() const;
-    NeuronType getExcitatoryNeuronType() const;
+    NeuronType::Enum getInhibitoryNeuronType() const;
+    NeuronType::Enum getExcitatoryNeuronType() const;
     double getInhibitoryNoise() const;
     double getExcitatoryNoise() const;
     double getSTPStrength() const;
@@ -178,8 +179,8 @@ public slots:
     void writeInhibitoryPortion(double inhibitoryPortion);
     void writeInputPortion(double inputPortion);
     void writeOutputPortion(double outputPortion);
-    void writeInhibitoryNeuronType(NeuronType inhibitoryNeuronType);
-    void writeExcitatoryNeuronType(NeuronType excitatoryNeuronType);
+    void writeInhibitoryNeuronType(NeuronType::Enum inhibitoryNeuronType);
+    void writeExcitatoryNeuronType(NeuronType::Enum excitatoryNeuronType);
     void writeInhibitoryNoise(double inhibitoryNoise);
     void writeExcitatoryNoise(double excitatoryNoise);
     void writeSTPStrength(double STPStrength);
@@ -195,8 +196,8 @@ signals:
     void inhibitoryPortionChanged(double inhibitoryPortion);
     void inputPortionChanged(double inputPortion);
     void outputPortionChanged(double outputPortion);
-    void inhibitoryNeuronTypeChanged(NeuronType inhibitoryNeuronType);
-    void excitatoryNeuronTypeChanged(NeuronType excitatoryNeuronType);
+    void inhibitoryNeuronTypeChanged(NeuronType::Enum inhibitoryNeuronType);
+    void excitatoryNeuronTypeChanged(NeuronType::Enum excitatoryNeuronType);
     void inhibitoryNoiseChanged(double inhibitoryNoise);
     void excitatoryNoiseChanged(double excitatoryNoise);
     void STPStrengthChanged(double STPStrength);

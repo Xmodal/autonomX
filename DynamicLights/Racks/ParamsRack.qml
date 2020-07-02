@@ -5,6 +5,8 @@ import QtQuick.Layouts 1.3
 import "../Fields"
 import "../Style"
 
+import ca.hexagram.xmodal.dynamiclight 1.0
+
 Rack {
     id: paramsRack
 
@@ -79,6 +81,9 @@ Rack {
                 labelText: "Inh. neuron type"
 
                 options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
+
+                index: genID < 0 ? 0 : generatorModel.at(genID).inhibitoryNeuronType
+                onValueChanged: generatorModel.at(genID).inhibitoryNeuronType = newValue
             }
 
             SliderField {
@@ -96,6 +101,9 @@ Rack {
                 labelText: "Exc. neuron type"
 
                 options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
+
+                index: genID < 0 ? 0 : generatorModel.at(genID).excitatoryNeuronType
+                onValueChanged: generatorModel.at(genID).excitatoryNeuronType = newValue
             }
 
             SliderField {

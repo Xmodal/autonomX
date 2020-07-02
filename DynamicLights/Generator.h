@@ -58,6 +58,8 @@ public:
     void writeType(QString string);
     void writeDescription(QString string);
     void writeOutputMonitor(double value);
+public slots:
+    void updateValue(const QString &key, const QVariant &value); // for connection with QQmlPropertyMap's valueChanged signal
 signals:
     void nameChanged(QString);
     void typeChanged(QString);

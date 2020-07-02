@@ -72,3 +72,8 @@ void Generator::writeOutputMonitor(double value) {
     emit outputMonitorChanged(outputMonitor);
 }
 
+void Generator::updateValue(const QString &key, const QVariant &value) {
+    QByteArray array = key.toLocal8Bit();
+    char* buffer = array.data();
+    setProperty(buffer, value);
+}

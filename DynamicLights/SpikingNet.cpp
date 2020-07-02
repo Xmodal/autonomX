@@ -27,7 +27,7 @@ SpikingNet::SpikingNet() {
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "constructor (SpikingNet):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    //std::cout << "constructor (SpikingNet):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     // default values for descriptive properties
     name = "Spiking Neural Network";
@@ -43,7 +43,7 @@ SpikingNet::~SpikingNet() {
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "destructor (SpikingNet):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    //std::cout << "destructor (SpikingNet):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     reset();
 }
@@ -54,7 +54,7 @@ void SpikingNet::initialize() {
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "initialize:\t\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    //std::cout << "initialize:\t\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     // set random seed
     if(flagRandomDevice) {
@@ -131,7 +131,7 @@ void SpikingNet::reset() {
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "reset:\t\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    //std::cout << "reset:\t\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
 
     // delete STP variables
@@ -345,7 +345,7 @@ void SpikingNet::computeOutput(double deltaTime) {
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "computeOutput:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    //std::cout << "computeOutput:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     // apply input stimulation
     for(int i = 0; i < inputGroupSize; i++) {
@@ -444,8 +444,8 @@ void SpikingNet::applyFiring() {
         outputGroupActivation[i] = softKneePositive(outputGroupActivation[i], 0.8);
     }
     if(flagDebug) {
-        //std::cout << "number of neurons firing: " << total << endl;
-        //std::cout << "activation of group 0: " << outputGroupActivation[0] << endl;
+        ////std::cout << "number of neurons firing: " << total << endl;
+        ////std::cout << "activation of group 0: " << outputGroupActivation[0] << endl;
     }
 }
 
@@ -757,7 +757,7 @@ void SpikingNet::writeNeuronSize(int neuronSize) {
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "writeNeuronSize:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    //std::cout << "writeNeuronSize:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     // reset network, since these parameters only take effect when the network is created anew
     reset();
@@ -766,6 +766,7 @@ void SpikingNet::writeNeuronSize(int neuronSize) {
     // re-initialize
     initialize();
     // signal
+    emit valueChanged("neuronSize", QVariant(neuronSize));
     emit neuronSizeChanged(neuronSize);
 }
 
@@ -779,9 +780,10 @@ void SpikingNet::writeTimeScale(double timeScale) {
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "writeTimeScale:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    //std::cout << "writeTimeScale:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     this->timeScale = timeScale;
+    emit valueChanged("timeScale", QVariant(timeScale));
     emit timeScaleChanged(timeScale);
 }
 
@@ -795,7 +797,7 @@ void SpikingNet::writeInhibitoryPortion(double inhibitoryPortion) {
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "writeInhibitoryPortion:\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    //std::cout << "writeInhibitoryPortion:\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     // reset network, since these parameters only take effect when the network is created anew
     // TODO: this isn't as efficient as it could be since it's not necessary to deallocate and reallocate memory for weights / STP
@@ -805,6 +807,7 @@ void SpikingNet::writeInhibitoryPortion(double inhibitoryPortion) {
     // re-initialize
     initialize();
     // signal
+    emit valueChanged("inhibitoryPortion", QVariant(inhibitoryPortion));
     emit inhibitoryPortionChanged(inhibitoryPortion);
 }
 
@@ -818,12 +821,13 @@ void SpikingNet::writeInputPortion(double inputPortion) {
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "writeInputPortion:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    //std::cout << "writeInputPortion:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     // update input size
     inputSize = (neuronSize - inhibitorySize) * inputPortion;
 
     this->inputPortion = inputPortion;
+    emit valueChanged("inputPortion", QVariant(inputPortion));
     emit inputPortionChanged(inputPortion);
 }
 
@@ -837,12 +841,13 @@ void SpikingNet::writeOutputPortion(double outputPortion) {
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "writeOutputPortion:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    //std::cout << "writeOutputPortion:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     // update output size
     outputSize = (neuronSize - inhibitorySize) * outputPortion;
 
     this->outputPortion = outputPortion;
+    emit valueChanged("outputPortion", QVariant(outputPortion));
     emit outputPortionChanged(outputPortion);
 }
 
@@ -856,7 +861,7 @@ void SpikingNet::writeInhibitoryNeuronType(NeuronType::Enum inhibitoryNeuronType
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "writeInhibitoryNeuronType:\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    //std::cout << "writeInhibitoryNeuronType:\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     // reset network, since these parameters only take effect when the network is created anew
     // TODO: this isn't as efficient as it could be since it's not necessary to deallocate and reallocate memory for weights / STP
@@ -866,6 +871,7 @@ void SpikingNet::writeInhibitoryNeuronType(NeuronType::Enum inhibitoryNeuronType
     // re-initialize
     initialize();
     // signal
+    emit valueChanged("inhibitoryNeuronType", QVariant(inhibitoryNeuronType));
     emit inhibitoryNeuronTypeChanged(inhibitoryNeuronType);
 }
 
@@ -879,7 +885,7 @@ void SpikingNet::writeExcitatoryNeuronType(NeuronType::Enum excitatoryNeuronType
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "writeExcitatoryNeuronType:\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    //std::cout << "writeExcitatoryNeuronType:\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     // reset network, since these parameters only take effect when the network is created anew
     // TODO: this isn't as efficient as it could be since it's not necessary to deallocate and reallocate memory for weights / STP
@@ -889,6 +895,7 @@ void SpikingNet::writeExcitatoryNeuronType(NeuronType::Enum excitatoryNeuronType
     // re-initialize
     initialize();
     // signal
+    emit valueChanged("excitatoryNeuronType", QVariant(excitatoryNeuronType));
     emit excitatoryNeuronTypeChanged(excitatoryNeuronType);
 }
 
@@ -902,9 +909,10 @@ void SpikingNet::writeInhibitoryNoise(double inhibitoryNoise) {
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "writeInhibitoryNoise:\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    //std::cout << "writeInhibitoryNoise:\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     this->inhibitoryNoise = inhibitoryNoise;
+    emit valueChanged("inhibitoryNoise", QVariant(inhibitoryNoise));
     emit inhibitoryNoiseChanged(inhibitoryNoise);
 }
 
@@ -918,9 +926,10 @@ void SpikingNet::writeExcitatoryNoise(double excitatoryNoise) {
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "writeExcitatoryNoise:\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    //std::cout << "writeExcitatoryNoise:\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     this->excitatoryNoise = excitatoryNoise;
+    emit valueChanged("excitatoryNoise", QVariant(excitatoryNoise));
     emit excitatoryNoiseChanged(excitatoryNoise);
 }
 
@@ -934,9 +943,10 @@ void SpikingNet::writeSTPStrength(double STPStrength) {
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "writeSTPStrength:\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    //std::cout << "writeSTPStrength:\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     this->STPStrength = STPStrength;
+    emit valueChanged("STPStrength", QVariant(STPStrength));
     emit STPStrengthChanged(STPStrength);
 }
 
@@ -950,9 +960,10 @@ void SpikingNet::writeSTDPStrength(double STDPStrength) {
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "writeSTDPStrength:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    //std::cout << "writeSTDPStrength:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     this->STDPStrength = STDPStrength;
+    emit valueChanged("STDPStrength", QVariant(STDPStrength));
     emit STDPStrengthChanged(STDPStrength);
 }
 
@@ -966,9 +977,10 @@ void SpikingNet::writeDecayConstant(double decayConstant) {
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "writeDecayConstant:\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    //std::cout << "writeDecayConstant:\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     this->decayConstant = decayConstant;
+    emit valueChanged("decayConstant", QVariant(decayConstant));
     emit decayConstantChanged(decayConstant);
 }
 
@@ -982,9 +994,10 @@ void SpikingNet::writeFlagSTP(bool flagSTP) {
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "writeFlagSTP:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    //std::cout << "writeFlagSTP:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     this->flagSTP = flagSTP;
+    emit valueChanged("flagSTP", QVariant(flagSTP));
     emit flagSTPChanged(flagSTP);
 }
 
@@ -998,9 +1011,10 @@ void SpikingNet::writeFlagSTDP(bool flagSTDP) {
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "writeFlagSTDP:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    //std::cout << "writeFlagSTDP:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     this->flagSTDP = flagSTDP;
+    emit valueChanged("flagSTDP", QVariant(flagSTDP));
     emit flagSTDPChanged(flagSTDP);
 }
 
@@ -1014,8 +1028,9 @@ void SpikingNet::writeFlagDecay(bool flagDecay) {
                 std::chrono::system_clock::now().time_since_epoch()
     );
 
-    std::cout << "writeFlagDecay:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    //std::cout << "writeFlagDecay:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
 
     this->flagDecay = flagDecay;
+    emit valueChanged("flagDecay", QVariant(flagDecay));
     emit flagDecayChanged(flagDecay);
 }

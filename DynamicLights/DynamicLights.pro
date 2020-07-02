@@ -26,6 +26,7 @@ SOURCES += \
     ../qosc/oscreceiver.cpp \
     ../qosc/oscsender.cpp \
     ComputeEngine.cpp \
+    FacadeMap.cpp \
     Generator.cpp \
     GeneratorModel.cpp \
     Izhikevich.cpp \
@@ -57,6 +58,7 @@ HEADERS += \
     ../qosc/oscreceiver.h \
     ../qosc/oscsender.h \
     ComputeEngine.h \
+    FacadeMap.h \
     Generator.h \
     GeneratorModel.h \
     Izhikevich.h \

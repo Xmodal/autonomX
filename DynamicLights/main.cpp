@@ -20,6 +20,7 @@
 #include <QList>
 #include <QSharedPointer>
 #include <QFontDatabase>
+#include <QQmlPropertyMap>
 
 #include "oscreceiver.h"
 #include "oscsender.h"
@@ -27,6 +28,7 @@
 #include "Generator.h"
 #include "GeneratorModel.h"
 #include "SpikingNet.h"
+#include "Facade.h"
 
 int main(int argc, char *argv[])
 {
@@ -78,6 +80,7 @@ int main(int argc, char *argv[])
     // this line is apparently necessary for the QML engine to receive Generator pointers
     // and retrieve a class instance's exposed properties by model index through said pointer
     qmlRegisterUncreatableType<Generator>("ca.hexagram.xmodal.dynamiclight", 1, 0, "Generator", "Cannot instanciate Generator.");
+    qmlRegisterUncreatableType<Facade>("ca.hexagram.xmodal.dynamiclight", 1, 0, "Facade", "Cannot instanciate Facade.");
     qmlRegisterUncreatableType<SpikingNet>("ca.hexagram.xmodal.dynamiclight", 1, 0, "SpikingNet", "Cannot instanciate SpikingNet.");
     qmlRegisterUncreatableType<NeuronType>("ca.hexagram.xmodal.dynamiclight", 1, 0, "NeuronType", "Cannot instanciate NeuronType.");
 
@@ -85,8 +88,24 @@ int main(int argc, char *argv[])
     QSharedPointer<Generator> spikingNet = QSharedPointer<Generator>(new SpikingNet());
     QList<QSharedPointer<Generator>> generators = {spikingNet};
 
+    // create generator facade list
+    QList<QSharedPointer<Facade>> generatorFacades;
+
+    // create facades and link them
+    for(QList<QSharedPointer<Generator>>::iterator it = generators.begin(); it != generators.end(); it++) {
+        QSharedPointer<Generator> generator = *it;
+        QSharedPointer<Facade> generatorFacade = QSharedPointer<Facade>(new Facade(generator.data()));
+
+        // connect generator changes to facade
+        QObject::connect(generator.data(), &Generator::valueChanged, generatorFacade.data(), &Facade::updateValueRelay);
+        // connect facade changes to generator
+        QObject::connect(generatorFacade.data(), &Facade::valueChanged, generator.data(), &Generator::updateValue);
+        // add the newly constructed facade to the list
+        generatorFacades.append(generatorFacade);
+    }
+
     // create generator model
-    GeneratorModel generatorModel(generators);
+    GeneratorModel generatorModel(generatorFacades);
     // next: make a view and get the two connected
 
     // create compute thread
@@ -100,13 +119,10 @@ int main(int argc, char *argv[])
     // move compute engine to compute thread
     computeEngine.moveToThread(computeThread.data());
 
-    /*
-    // this wrecks everything
     // move generators to compute thread
     for(QList<QSharedPointer<Generator>>::iterator it = generators.begin(); it != generators.end(); it++) {
         (*it)->moveToThread(computeThread.data());
     }
-    */
 
     // start compute engine
     computeEngine.start();

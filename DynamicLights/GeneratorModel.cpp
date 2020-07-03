@@ -2,28 +2,31 @@
 #include <iostream>
 #include <chrono>
 #include <QThread>
+#include <QVector>
 
-GeneratorModel::GeneratorModel(QList<QSharedPointer<Generator>> generators) {
-    this->generators = generators;
+GeneratorModel::GeneratorModel(QList<QSharedPointer<GeneratorFacade>> generatorFacades) {
+    this->generatorFacades = generatorFacades;
 
-    for(int i = 0; i < generators.count(); i++) {
-        // update model every time the output monitor is computed
-        connect(generators[i].get(), &Generator::outputMonitorChanged, this, [=]() {
-            emit dataChanged(index(i), index(i), { OutputMonitorRole });
+    for(int i = 0; i < generatorFacades.count(); i++) {
+        // update model every time something is changed
+        connect(generatorFacades[i].get(), &GeneratorFacade::valueChanged, this, [=](const QString &key, const QVariant &value) {
+            QVector<int> roles;
+            if(key == "name") {
+                roles = {NameRole};
+            } else if (key == "type") {
+                roles = {TypeRole};
+            } else if (key == "description") {
+                roles = {DescriptionRole};
+            } else if (key == "outputMonitor") {
+                roles = {OutputMonitorRole};
+            }
+            emit dataChanged(index(i), index(i), roles);
         });
-
-        // update model when name is changed in GenRack (per-generator action)
-        connect(generators[i].get(), &Generator::nameChanged, this, [=]() {
-            emit dataChanged(index(i), index(i), { NameRole });
-        });
-
-        // these are the only two properties that need to force update the model's data
-        // since they are always relayed to a ListView
     }
 }
 
 int GeneratorModel::rowCount(const QModelIndex& parent) const {
-    return generators.size();
+    return generatorFacades.size();
 }
 
 int GeneratorModel::columnCount(const QModelIndex& parent) const
@@ -35,22 +38,22 @@ QVariant GeneratorModel::data(const QModelIndex &index, int role) const {
     if(!index.isValid())
         return QVariant();
 
-    if(index.column() == 0 && index.row() >= 0 && index.row() < generators.size()) {
+    if(index.column() == 0 && index.row() >= 0 && index.row() < generatorFacades.size()) {
         switch(role) {
             case NameRole : {
-                return QVariant(generators[index.row()]->getName());
+                return generatorFacades[index.row()]->value("name");
                 break;
             }
             case TypeRole : {
-                return QVariant(generators[index.row()]->getType());
+                return generatorFacades[index.row()]->value("type");
                 break;
             }
             case DescriptionRole : {
-                return QVariant(generators[index.row()]->getDescription());
+                return generatorFacades[index.row()]->value("desctiption");
                 break;
             }
             case OutputMonitorRole : {
-                return QVariant(generators[index.row()]->getOutputMonitor());
+                return generatorFacades[index.row()]->value("outputMonitor");
                 break;
             }
         }
@@ -68,8 +71,7 @@ QHash<int, QByteArray> GeneratorModel::roleNames() const {
         return roles;
 }
 
-Generator * GeneratorModel::at(int index)
-{
+GeneratorFacade * GeneratorModel::at(int index) {
     if (index < 0) return nullptr;
-    return generators[index].get();
+    return generatorFacades[index].get();
 }

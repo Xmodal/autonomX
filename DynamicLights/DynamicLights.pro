@@ -26,8 +26,8 @@ SOURCES += \
     ../qosc/oscreceiver.cpp \
     ../qosc/oscsender.cpp \
     ComputeEngine.cpp \
-    FacadeMap.cpp \
     Generator.cpp \
+    GeneratorFacade.cpp \
     GeneratorModel.cpp \
     Izhikevich.cpp \
     SpikingNet.cpp \
@@ -58,8 +58,8 @@ HEADERS += \
     ../qosc/oscreceiver.h \
     ../qosc/oscsender.h \
     ComputeEngine.h \
-    FacadeMap.h \
     Generator.h \
+    GeneratorFacade.h \
     GeneratorModel.h \
     Izhikevich.h \
     NeuronType.h \

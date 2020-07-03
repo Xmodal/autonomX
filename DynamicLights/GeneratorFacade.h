@@ -13,8 +13,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "FacadeMap.h"
+#pragma once
 
-void FacadeMap::updateValueExposed(const QString &key, const QVariant &value) {
-    updateValue(key, value);
-}
+#include <QObject>
+#include <QQmlPropertyMap>
+
+class GeneratorFacade : public QQmlPropertyMap
+{
+    Q_OBJECT
+public slots:
+    void updateValueExposed(const QString &key, const QVariant &value);
+};

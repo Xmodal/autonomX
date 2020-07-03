@@ -13,14 +13,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#pragma once
+#include "GeneratorFacade.h"
 
-#include <QObject>
-#include <QQmlPropertyMap>
+#include <iostream>
+#include <chrono>
+#include <QThread>
 
-class FacadeMap : public QQmlPropertyMap
-{
-    Q_OBJECT
-public slots:
-    void updateValueExposed(const QString &key, const QVariant &value);
-};
+void GeneratorFacade::updateValueExposed(const QString &key, const QVariant &value) {
+
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+        std::chrono::system_clock::now().time_since_epoch()
+    );
+
+    QByteArray array = key.toLocal8Bit();
+    char* buffer = array.data();
+
+    std::cout << "updateValue (" << buffer << "):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+
+    updateValue(key, value);
+}

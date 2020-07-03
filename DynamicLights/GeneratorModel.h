@@ -20,7 +20,7 @@
 #include <QModelIndex>
 #include <QSharedPointer>
 #include <QList>
-#include <Generator.h>
+#include <GeneratorFacade.h>
 
 class GeneratorModel : public QAbstractListModel {
     Q_OBJECT
@@ -32,7 +32,7 @@ public:
         OutputMonitorRole
     };
 
-    GeneratorModel(QList<QSharedPointer<Generator>> generators);
+    GeneratorModel(QList<QSharedPointer<GeneratorFacade>> generators);
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
@@ -40,8 +40,8 @@ public:
     void populate();
     QHash<int, QByteArray> roleNames() const;
 
-    Q_INVOKABLE Generator * at(int index);
+    Q_INVOKABLE GeneratorFacade * at(int index);
 
 private:
-    QList<QSharedPointer<Generator>> generators;
+    QList<QSharedPointer<GeneratorFacade>> generatorFacades;
 };

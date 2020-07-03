@@ -30,7 +30,7 @@ private:
     QElapsedTimer elapsedTimer;
     double frequency = 80;
     bool firstFrame = true;
-    bool flagDebug = true;
+    bool flagDebug = false;
 public:
     ComputeEngine(QList<QSharedPointer<Generator>> generators);
     ~ComputeEngine();

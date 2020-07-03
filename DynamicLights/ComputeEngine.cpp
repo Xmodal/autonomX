@@ -15,7 +15,6 @@
 
 #include "ComputeEngine.h"
 #include "algorithm"
-#include "iostream"
 #include "chrono"
 #include <QDebug>
 #include <QThread>
@@ -25,10 +24,13 @@ ComputeEngine::ComputeEngine(QList<QSharedPointer<Generator>> generators) {
 }
 
 ComputeEngine::~ComputeEngine() {
-    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                std::chrono::system_clock::now().time_since_epoch()
-    );
-    std::cout << "destructor (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+        if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "destructor (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+    }
 }
 
 void ComputeEngine::start() {
@@ -40,16 +42,6 @@ void ComputeEngine::start() {
 }
 
 void ComputeEngine::loop() {
-
-    if(flagDebug) {
-        /*
-        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()
-        );
-        std::cout << std::endl;
-        std::cout << "ComputeStart:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
-        */
-    }
 
     double millisCompute;   // time in nanoseconds taken by computation
     double millisLastFrame; // time in nanoseconds since last frame
@@ -85,17 +77,8 @@ void ComputeEngine::loop() {
     millisCompute = elapsedTimer.nsecsElapsed() / 1000000.0;
 
     if(flagDebug) {
-        /*
-        qDebug() << "refresh interval: " << millisLastFrame;
-        qDebug() << "compute time:     " << millisCompute;
-        */
-
-        /*
-        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()
-        );
-        std::cout << "ComputeEnd:\t\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
-        */
+        qDebug() << "compute refresh interval: " << millisLastFrame;
+        qDebug() << "compute time:             " << millisCompute;
     }
 
     QTimer timer;

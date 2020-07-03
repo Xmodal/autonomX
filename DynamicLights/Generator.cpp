@@ -63,7 +63,7 @@ void Generator::writeName(QString string) {
 
     name = string;
     emit valueChanged("name", QVariant(string));
-    //emit nameChanged(name);
+    emit nameChanged(name);
 }
 
 void Generator::writeType(QString string) {
@@ -73,7 +73,7 @@ void Generator::writeType(QString string) {
 
     type = string;
     emit valueChanged("type", QVariant(string));
-    //emit typeChanged(type);
+    emit typeChanged(type);
 }
 
 void Generator::writeDescription(QString string) {
@@ -83,7 +83,7 @@ void Generator::writeDescription(QString string) {
 
     description = string;
     emit valueChanged("description", QVariant(string));
-    //emit descriptionChanged(string);
+    emit descriptionChanged(string);
 }
 
 void Generator::writeOutputMonitor(double value) {
@@ -91,16 +91,18 @@ void Generator::writeOutputMonitor(double value) {
         return;
     }
 
-    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-        std::chrono::system_clock::now().time_since_epoch()
-    );
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
 
 
-    std::cout << "writeOutputMonitor\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << value << std::endl;
+        std::cout << "writeOutputMonitor\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << value << std::endl;
+    }
 
     outputMonitor = value;
     emit valueChanged("outputMonitor", QVariant(value));
-    //emit outputMonitorChanged(outputMonitor);
+    emit outputMonitorChanged(outputMonitor);
 }
 
 void Generator::updateValue(const QString &key, const QVariant &value) {

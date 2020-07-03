@@ -18,9 +18,13 @@
 #include <QObject>
 #include <QQmlPropertyMap>
 
-class GeneratorFacade : public QQmlPropertyMap
+class Facade : public QQmlPropertyMap
 {
     Q_OBJECT
+public:
+    Facade(QObject *alias);
+private:
+    bool flagDebug = false;
 public slots:
-    void updateValueInterceptor(const QString &key, const QVariant &value);
+    void updateValueRelay(const QString &key, const QVariant &value);
 };

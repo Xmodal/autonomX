@@ -1,15 +1,14 @@
 #include "GeneratorModel.h"
-#include <iostream>
 #include <chrono>
 #include <QThread>
 #include <QVector>
 
-GeneratorModel::GeneratorModel(QList<QSharedPointer<GeneratorFacade>> generatorFacades) {
+GeneratorModel::GeneratorModel(QList<QSharedPointer<Facade>> generatorFacades) {
     this->generatorFacades = generatorFacades;
 
     for(int i = 0; i < generatorFacades.count(); i++) {
         // update model every time something is changed
-        connect(generatorFacades[i].get(), &GeneratorFacade::valueChanged, this, [=](const QString &key, const QVariant &value) {
+        connect(generatorFacades[i].get(), &Facade::valueChanged, this, [=](const QString &key, const QVariant &value) {
             QVector<int> roles;
             if(key == "name") {
                 roles = {NameRole};
@@ -70,7 +69,7 @@ QHash<int, QByteArray> GeneratorModel::roleNames() const {
         return roles;
 }
 
-GeneratorFacade * GeneratorModel::at(int index) {
+Facade * GeneratorModel::at(int index) {
     if (index < 0) return nullptr;
     return generatorFacades[index].get();
 }

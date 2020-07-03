@@ -18,14 +18,14 @@
 #include <QObject>
 #include <QQmlPropertyMap>
 
-// the Facade objects requires that the object it aliases emits a valueChanged(const QString &key, const QVariant &value) signal when any of its QProperties is changed.
+// the Facade objects requires that the object it aliases emits a valueChanged(const QString &key, const QVariant &value) signal when any of its QProperties is changed. This is expected to behave identically to QQmlPropertyMap's implementation.
 // once created, the Facade will have a copy of the QObject's properties, but they are not linked yet. to link them, use:
 
-// connect generator changes to facade
-// QObject::connect(alias, &Generator::valueChanged, fadcade, &Facade::updateValueRelay);
+// connect alias changes to facade
+// QObject::connect(alias, &Alias::valueChanged, fadcade, &Facade::updateValueRelay);
 
-// connect facade changes to generator
-// QObject::connect(facade, &Facade::valueChanged, alias, &Generator::updateValue);
+// connect facade changes to alias
+// QObject::connect(facade, &Facade::valueChanged, alias, &Alias::updateValue);
 
 // this unfortunately can't happen in Facade's constructor because QObject doesn't have a valueChanged() signal by default
 

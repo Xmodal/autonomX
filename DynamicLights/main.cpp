@@ -97,9 +97,9 @@ int main(int argc, char *argv[])
         QSharedPointer<Facade> generatorFacade = QSharedPointer<Facade>(new Facade(generator.data()));
 
         // connect generator changes to facade
-        QObject::connect(generator.data(), &Generator::valueChanged, generatorFacade.data(), &Facade::updateValueRelay);
+        QObject::connect(generator.data(), &Generator::valueChanged, generatorFacade.data(), &Facade::updateValueRelay, Qt::QueuedConnection);
         // connect facade changes to generator
-        QObject::connect(generatorFacade.data(), &Facade::valueChanged, generator.data(), &Generator::updateValue);
+        QObject::connect(generatorFacade.data(), &Facade::valueChanged, generator.data(), &Generator::updateValue, Qt::QueuedConnection);
         // add the newly constructed facade to the list
         generatorFacades.append(generatorFacade);
     }

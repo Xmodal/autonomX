@@ -22,10 +22,10 @@
 // once created, the Facade will have a copy of the QObject's properties, but they are not linked yet. to link them, use:
 
 // connect alias changes to facade
-// QObject::connect(alias, &Alias::valueChanged, fadcade, &Facade::updateValueRelay);
+// QObject::connect(alias, &Alias::valueChanged, fadcade, &Facade::updateValueRelay, Qt::QueuedConnection);
 
 // connect facade changes to alias
-// QObject::connect(facade, &Facade::valueChanged, alias, &Alias::updateValue);
+// QObject::connect(facade, &Facade::valueChanged, alias, &Alias::updateValue, Qt::QueuedConnection);
 
 // this unfortunately can't happen in Facade's constructor because QObject doesn't have a valueChanged() signal by default
 

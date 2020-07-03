@@ -22,5 +22,5 @@ class GeneratorFacade : public QQmlPropertyMap
 {
     Q_OBJECT
 public slots:
-    void updateValueExposed(const QString &key, const QVariant &value);
+    void updateValueInterceptor(const QString &key, const QVariant &value);
 };

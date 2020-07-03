@@ -55,25 +55,25 @@ double Generator::getOutputMonitor() {
 void Generator::writeName(QString string) {
     name = string;
     emit valueChanged("name", QVariant(string));
-    emit nameChanged(name);
+    //emit nameChanged(name);
 }
 
 void Generator::writeType(QString string) {
     type = string;
     emit valueChanged("type", QVariant(string));
-    emit typeChanged(type);
+    //emit typeChanged(type);
 }
 
 void Generator::writeDescription(QString string) {
     description = string;
     emit valueChanged("description", QVariant(string));
-    emit descriptionChanged(string);
+    //emit descriptionChanged(string);
 }
 
 void Generator::writeOutputMonitor(double value) {
     outputMonitor = value;
     emit valueChanged("outputMonitor", QVariant(value));
-    emit outputMonitorChanged(outputMonitor);
+    //emit outputMonitorChanged(outputMonitor);
 }
 
 void Generator::updateValue(const QString &key, const QVariant &value) {

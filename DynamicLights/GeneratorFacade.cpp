@@ -19,7 +19,7 @@
 #include <chrono>
 #include <QThread>
 
-void GeneratorFacade::updateValueExposed(const QString &key, const QVariant &value) {
+void GeneratorFacade::updateValueInterceptor(const QString &key, const QVariant &value) {
 
     std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
         std::chrono::system_clock::now().time_since_epoch()

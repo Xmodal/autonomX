@@ -29,8 +29,7 @@ int GeneratorModel::rowCount(const QModelIndex& parent) const {
     return generatorFacades.size();
 }
 
-int GeneratorModel::columnCount(const QModelIndex& parent) const
-{
+int GeneratorModel::columnCount(const QModelIndex& parent) const {
   return 1;
 }
 

@@ -15,6 +15,10 @@
 
 #include "Generator.h"
 
+#include <iostream>
+#include <chrono>
+#include <QThread>
+
 Generator::Generator(QObject *parent) : QObject(parent)
 {
 
@@ -53,24 +57,47 @@ double Generator::getOutputMonitor() {
 }
 
 void Generator::writeName(QString string) {
+    if(name == string) {
+        return;
+    }
+
     name = string;
     emit valueChanged("name", QVariant(string));
     //emit nameChanged(name);
 }
 
 void Generator::writeType(QString string) {
+    if(type == string) {
+        return;
+    }
+
     type = string;
     emit valueChanged("type", QVariant(string));
     //emit typeChanged(type);
 }
 
 void Generator::writeDescription(QString string) {
+    if(description == string) {
+        return;
+    }
+
     description = string;
     emit valueChanged("description", QVariant(string));
     //emit descriptionChanged(string);
 }
 
 void Generator::writeOutputMonitor(double value) {
+    if(outputMonitor == value) {
+        return;
+    }
+
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+        std::chrono::system_clock::now().time_since_epoch()
+    );
+
+
+    std::cout << "writeOutputMonitor\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << value << std::endl;
+
     outputMonitor = value;
     emit valueChanged("outputMonitor", QVariant(value));
     //emit outputMonitorChanged(outputMonitor);

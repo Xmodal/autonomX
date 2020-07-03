@@ -25,10 +25,12 @@ void GeneratorFacade::updateValueInterceptor(const QString &key, const QVariant 
         std::chrono::system_clock::now().time_since_epoch()
     );
 
-    QByteArray array = key.toLocal8Bit();
-    char* buffer = array.data();
+    QByteArray keyArray = key.toLocal8Bit();
+    char* keyBuffer = keyArray.data();
 
-    std::cout << "updateValue (" << buffer << "):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << std::endl;
+    QByteArray valueArray = value.toString().toLocal8Bit();
+    char* valueBuffer = valueArray.data();
 
-    updateValue(key, value);
+    this->updateValue(key, value);
+    std::cout << "updateValue (" << keyBuffer << "):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << valueBuffer << std::endl;
 }

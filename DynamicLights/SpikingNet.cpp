@@ -339,8 +339,6 @@ void SpikingNet::setGridNetwork() {
 // ############################### update routines and output calculation ###############################
 
 void SpikingNet::computeOutput(double deltaTime) {
-    QMutexLocker locker(&mutex);
-
     std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                 std::chrono::system_clock::now().time_since_epoch()
     );
@@ -751,8 +749,6 @@ void SpikingNet::writeNeuronSize(int neuronSize) {
     if(this->neuronSize == neuronSize)
         return;
 
-    QMutexLocker locker(&mutex);
-
     std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                 std::chrono::system_clock::now().time_since_epoch()
     );
@@ -774,8 +770,6 @@ void SpikingNet::writeTimeScale(double timeScale) {
     if(this->timeScale == timeScale)
         return;
 
-    QMutexLocker locker(&mutex);
-
     std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                 std::chrono::system_clock::now().time_since_epoch()
     );
@@ -790,8 +784,6 @@ void SpikingNet::writeTimeScale(double timeScale) {
 void SpikingNet::writeInhibitoryPortion(double inhibitoryPortion) {
     if(this->inhibitoryPortion == inhibitoryPortion)
         return;
-
-    QMutexLocker locker(&mutex);
 
     std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                 std::chrono::system_clock::now().time_since_epoch()
@@ -815,8 +807,6 @@ void SpikingNet::writeInputPortion(double inputPortion) {
     if(this->inputPortion == inputPortion)
         return;
 
-    QMutexLocker locker(&mutex);
-
     std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                 std::chrono::system_clock::now().time_since_epoch()
     );
@@ -835,8 +825,6 @@ void SpikingNet::writeOutputPortion(double outputPortion) {
     if(this->outputPortion == outputPortion)
         return;
 
-    QMutexLocker locker(&mutex);
-
     std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                 std::chrono::system_clock::now().time_since_epoch()
     );
@@ -854,8 +842,6 @@ void SpikingNet::writeOutputPortion(double outputPortion) {
 void SpikingNet::writeInhibitoryNeuronType(NeuronType::Enum inhibitoryNeuronType) {
     if(this->inhibitoryNeuronType == inhibitoryNeuronType)
         return;
-
-    QMutexLocker locker(&mutex);
 
     std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                 std::chrono::system_clock::now().time_since_epoch()
@@ -879,8 +865,6 @@ void SpikingNet::writeExcitatoryNeuronType(NeuronType::Enum excitatoryNeuronType
     if(this->excitatoryNeuronType == excitatoryNeuronType)
         return;
 
-    QMutexLocker locker(&mutex);
-
     std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                 std::chrono::system_clock::now().time_since_epoch()
     );
@@ -903,8 +887,6 @@ void SpikingNet::writeInhibitoryNoise(double inhibitoryNoise) {
     if(this->inhibitoryNoise == inhibitoryNoise)
         return;
 
-    QMutexLocker locker(&mutex);
-
     std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                 std::chrono::system_clock::now().time_since_epoch()
     );
@@ -919,8 +901,6 @@ void SpikingNet::writeInhibitoryNoise(double inhibitoryNoise) {
 void SpikingNet::writeExcitatoryNoise(double excitatoryNoise) {
     if(this->excitatoryNoise == excitatoryNoise)
         return;
-
-    QMutexLocker locker(&mutex);
 
     std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                 std::chrono::system_clock::now().time_since_epoch()
@@ -937,8 +917,6 @@ void SpikingNet::writeSTPStrength(double STPStrength) {
     if(this->STPStrength == STPStrength)
         return;
 
-    QMutexLocker locker(&mutex);
-
     std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                 std::chrono::system_clock::now().time_since_epoch()
     );
@@ -953,8 +931,6 @@ void SpikingNet::writeSTPStrength(double STPStrength) {
 void SpikingNet::writeSTDPStrength(double STDPStrength) {
     if(this->STDPStrength == STDPStrength)
         return;
-
-    QMutexLocker locker(&mutex);
 
     std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                 std::chrono::system_clock::now().time_since_epoch()
@@ -971,8 +947,6 @@ void SpikingNet::writeDecayConstant(double decayConstant) {
     if(this->decayConstant == decayConstant)
         return;
 
-    QMutexLocker locker(&mutex);
-
     std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                 std::chrono::system_clock::now().time_since_epoch()
     );
@@ -987,8 +961,6 @@ void SpikingNet::writeDecayConstant(double decayConstant) {
 void SpikingNet::writeFlagSTP(bool flagSTP) {
     if(this->flagSTP == flagSTP)
         return;
-
-    QMutexLocker locker(&mutex);
 
     std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                 std::chrono::system_clock::now().time_since_epoch()
@@ -1005,8 +977,6 @@ void SpikingNet::writeFlagSTDP(bool flagSTDP) {
     if(this->flagSTDP == flagSTDP)
         return;
 
-    QMutexLocker locker(&mutex);
-
     std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                 std::chrono::system_clock::now().time_since_epoch()
     );
@@ -1021,8 +991,6 @@ void SpikingNet::writeFlagSTDP(bool flagSTDP) {
 void SpikingNet::writeFlagDecay(bool flagDecay) {
     if(this->flagDecay == flagDecay)
         return;
-
-    QMutexLocker locker(&mutex);
 
     std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                 std::chrono::system_clock::now().time_since_epoch()

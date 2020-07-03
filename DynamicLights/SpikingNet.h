@@ -17,7 +17,6 @@
 
 #include "Generator.h"
 #include "Izhikevich.h"
-#include <QMutex>
 
 #include <random>
 #include <vector>
@@ -55,8 +54,6 @@ public:
     //Q_ENUM(NeuronType)
 
 private:
-    QMutex mutex; // to prevent data corruption when the compute engine and the UI thread both try to use / modify params. this is not an ideal solution because it can allow the UI thread to block the compute engine.
-
     NetworkType networkType = NetworkType::GridNetwork;
     int         neuronSize = 1000;
     int         connectionsPerNeuron = 20; // this is used in any non-grid network

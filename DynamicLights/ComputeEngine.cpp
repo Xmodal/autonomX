@@ -19,12 +19,21 @@
 #include <QDebug>
 #include <QThread>
 
-ComputeEngine::ComputeEngine(QList<QSharedPointer<Generator>> generators) : randomUniform(0.0, 1.0) {
+
+ComputeEngine::ComputeEngine(QSharedPointer<QList<QSharedPointer<Generator>>> generators) : randomUniform(0.0, 1.0) {
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "constructor (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+    }
+
     this->generators = generators;
 }
 
 ComputeEngine::~ComputeEngine() {
-        if(flagDebug) {
+    if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );
@@ -59,7 +68,7 @@ void ComputeEngine::loop() {
     elapsedTimer.start();
 
     // do the computation
-    for(QList<QSharedPointer<Generator>>::iterator it = generators.begin(); it != generators.end(); it++) {
+    for(QList<QSharedPointer<Generator>>::iterator it = generators.get()->begin(); it != generators.get()->end(); it++) {
         // do the actual computation
         (*it)->computeOutput(1.0 / frequency);
         // update the value of the output monitor

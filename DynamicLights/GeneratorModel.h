@@ -32,7 +32,8 @@ public:
         OutputMonitorRole
     };
 
-    GeneratorModel(QList<QSharedPointer<Facade>> generators);
+    GeneratorModel(QSharedPointer<QList<QSharedPointer<Facade>>> generators);
+    ~GeneratorModel();
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
@@ -43,6 +44,6 @@ public:
     Q_INVOKABLE Facade * at(int index);
 
 private:
-    QList<QSharedPointer<Facade>> generatorFacades;
+    QSharedPointer<QList<QSharedPointer<Facade>>> generatorFacades;
     bool flagDebug = false;
 };

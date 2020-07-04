@@ -35,6 +35,7 @@ class Facade : public QQmlPropertyMap
     Q_OBJECT
 public:
     Facade(QObject *alias);
+    ~Facade();
 private:
     bool flagDebug = false;
 public slots:

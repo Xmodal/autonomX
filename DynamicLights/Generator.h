@@ -39,6 +39,7 @@ protected:
     double outputMonitor;   // output monitor / indicator light, generated from output array automatically by ComputeEngine
 public:
     explicit Generator(QObject *parent = nullptr);
+    ~Generator();
 
     // the method implemented by the derived class that computes the output
     virtual void computeOutput(double deltaTime) = 0;

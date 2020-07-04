@@ -27,7 +27,7 @@
 class ComputeEngine : public QObject {
     Q_OBJECT
 private:
-    QList<QSharedPointer<Generator>> generators;
+    QSharedPointer<QList<QSharedPointer<Generator>>> generators;
     QElapsedTimer elapsedTimer;
     double frequency = 80;
     bool firstFrame = true;
@@ -36,7 +36,7 @@ private:
     std::mt19937 randomGenerator;
 std::uniform_real_distribution<> randomUniform;
 public:
-    ComputeEngine(QList<QSharedPointer<Generator>> generators);
+    ComputeEngine(QSharedPointer<QList<QSharedPointer<Generator>>> generators);
     ~ComputeEngine();
 public slots:
     void start();

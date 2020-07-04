@@ -86,22 +86,23 @@ int main(int argc, char *argv[])
 
     // create generator list
     QSharedPointer<Generator> spikingNet = QSharedPointer<Generator>(new SpikingNet());
-    QList<QSharedPointer<Generator>> generators = {spikingNet};
+    QSharedPointer<QList<QSharedPointer<Generator>>> generators = QSharedPointer<QList<QSharedPointer<Generator>>>(new QList<QSharedPointer<Generator>>());
+    generators.get()->append(spikingNet);
 
     // create generator facade list
-    QList<QSharedPointer<Facade>> generatorFacades;
+    QSharedPointer<QList<QSharedPointer<Facade>>> generatorFacades = QSharedPointer<QList<QSharedPointer<Facade>>>(new QList<QSharedPointer<Facade>>());
 
     // create facades and link them
-    for(QList<QSharedPointer<Generator>>::iterator it = generators.begin(); it != generators.end(); it++) {
+    for(QList<QSharedPointer<Generator>>::iterator it = generators.get()->begin(); it != generators.get()->end(); it++) {
         QSharedPointer<Generator> generator = *it;
-        QSharedPointer<Facade> generatorFacade = QSharedPointer<Facade>(new Facade(generator.data()));
+        QSharedPointer<Facade> generatorFacade = QSharedPointer<Facade>(new Facade(generator.get()));
 
         // connect generator changes to facade
         QObject::connect(generator.data(), &Generator::valueChanged, generatorFacade.data(), &Facade::updateValueFromAlias, Qt::QueuedConnection);
         // connect facade changes to generator
-        QObject::connect(generatorFacade.data(), &Facade::valueChanged, generator.data(), &Generator::updateValue, Qt::QueuedConnection);
+        QObject::connect(generatorFacade.get(), &Facade::valueChanged, generator.get(), &Generator::updateValue, Qt::QueuedConnection);
         // add the newly constructed facade to the list
-        generatorFacades.append(generatorFacade);
+        generatorFacades.get()->append(generatorFacade);
     }
 
     // create generator model
@@ -117,11 +118,11 @@ int main(int argc, char *argv[])
     ComputeEngine computeEngine(generators);
 
     // move compute engine to compute thread
-    computeEngine.moveToThread(computeThread.data());
+    computeEngine.moveToThread(computeThread.get());
 
     // move generators to compute thread
-    for(QList<QSharedPointer<Generator>>::iterator it = generators.begin(); it != generators.end(); it++) {
-        (*it)->moveToThread(computeThread.data());
+    for(QList<QSharedPointer<Generator>>::iterator it = generators.get()->begin(); it != generators.get()->end(); it++) {
+        (*it)->moveToThread(computeThread.get());
     }
 
     // start compute engine
@@ -138,6 +139,7 @@ int main(int argc, char *argv[])
         return -1;
 
     QObject::connect(&app, &QCoreApplication::aboutToQuit, [computeThread](){
+        qDebug() << "about to exit";
         computeThread->exit();
     });
 

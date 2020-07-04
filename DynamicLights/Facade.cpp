@@ -21,6 +21,15 @@
 #include <QMetaProperty>
 
 Facade::Facade(QObject *alias) : QQmlPropertyMap(this, nullptr) {
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "constructor (Facade)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+
+    }
+
     const QMetaObject *metaObject = alias->metaObject();
 
     for (int i = 0; i < metaObject->propertyCount(); ++i) {
@@ -29,6 +38,16 @@ Facade::Facade(QObject *alias) : QQmlPropertyMap(this, nullptr) {
         QVariant value = alias->property(name);
         // add key-value pair to facade
         insert(name, value);
+    }
+}
+
+Facade::~Facade() {
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "destructor (Facade)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 }
 

@@ -137,6 +137,9 @@ int main(int argc, char *argv[])
     if (engine.rootObjects().isEmpty())
         return -1;
 
+    QObject::connect(&app, &QCoreApplication::aboutToQuit, [computeThread](){
+        computeThread->exit();
+    });
 
     return app.exec();
 }

@@ -20,7 +20,7 @@
 #include <QDebug>
 #include <QMetaProperty>
 
-Facade::Facade(QObject *alias) {
+Facade::Facade(QObject *alias) : QQmlPropertyMap(this, nullptr) {
     const QMetaObject *metaObject = alias->metaObject();
 
     for (int i = 0; i < metaObject->propertyCount(); ++i) {

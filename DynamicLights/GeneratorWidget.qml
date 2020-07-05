@@ -37,6 +37,16 @@ Button {
 
 
     // TODO: graph
+    HistoryGraph {
+        id: historyGraph
+
+        startIndex: model ? model.outputMonitorHistoryStartIndex : 0
+        sizeMax: model ? model.outputMonitorHistorySizeMax : 0
+        sizeValid: model ? model.outputMonitorHistorySizeValid : 0
+        points: model ? model.outputMonitorHistory : []
+
+        strokeColor: Stylesheet.colors.outputs[model.index % Stylesheet.colors.outputs.length]
+    }
 
     // text content
     RowLayout {
@@ -50,9 +60,7 @@ Button {
             id: labelIndex
 
             text: model.index + 1
-            color: Stylesheet.colors.white
             font {
-                family: Stylesheet.fonts.main
                 weight: Font.Bold
                 pixelSize: 11
             }
@@ -67,9 +75,7 @@ Button {
             text: model.name
             color: selected ? Stylesheet.colors.black : Stylesheet.colors.white
             font {
-                family: Stylesheet.fonts.main
                 weight: Font.Normal
-                pixelSize: 18
             }
             opacity: selected ? 1 : (hovered ? 1 : 0.5)
         }

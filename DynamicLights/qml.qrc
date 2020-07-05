@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file>DebugStack.qml</file>
         <file>GeneratorWidget.qml</file>
+        <file>HistoryGraph.qml</file>
         <file>main.qml</file>
         <file>OutputIndicator.qml</file>
         <file>qtquickcontrols2.conf</file>

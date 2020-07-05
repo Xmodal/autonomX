@@ -95,7 +95,7 @@ private:
     bool        flagDecay               = false;
     bool        flagDirectConnection    = true;
     bool        flagRandomDevice        = true;
-    bool        flagDebug               = false;
+    bool        flagDebug               = true;
 
     // the neurons
     std::vector<Izhikevich> neurons;

@@ -18,6 +18,7 @@
 #include <iostream>
 #include <chrono>
 #include <QThread>
+#include <QDebug>
 
 Generator::Generator(QObject *parent) : QObject(parent)
 {
@@ -61,6 +62,15 @@ void Generator::writeName(QString string) {
         return;
     }
 
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+
+        qDebug() << "writeName\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << string;
+    }
+
     name = string;
     emit valueChanged("name", QVariant(string));
     emit nameChanged(name);
@@ -71,6 +81,15 @@ void Generator::writeType(QString string) {
         return;
     }
 
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+
+        qDebug() << "writeType\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << string;
+    }
+
     type = string;
     emit valueChanged("type", QVariant(string));
     emit typeChanged(type);
@@ -79,6 +98,15 @@ void Generator::writeType(QString string) {
 void Generator::writeDescription(QString string) {
     if(description == string) {
         return;
+    }
+
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+
+        qDebug() << "writeDescription\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << string;
     }
 
     description = string;
@@ -97,7 +125,7 @@ void Generator::writeOutputMonitor(double value) {
         );
 
 
-        std::cout << "writeOutputMonitor\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << value << std::endl;
+        qDebug() << "writeOutputMonitor\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << value;
     }
 
     outputMonitor = value;

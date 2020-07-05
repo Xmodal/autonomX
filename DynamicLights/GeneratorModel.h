@@ -44,4 +44,5 @@ public:
 
 private:
     QList<QSharedPointer<Facade>> generatorFacades;
+    bool flagDebug = true;
 };

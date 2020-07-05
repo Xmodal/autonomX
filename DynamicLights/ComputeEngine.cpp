@@ -14,12 +14,12 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "ComputeEngine.h"
-#include "algorithm"
-#include "chrono"
+#include <algorithm>
+#include <chrono>
 #include <QDebug>
 #include <QThread>
 
-ComputeEngine::ComputeEngine(QList<QSharedPointer<Generator>> generators) {
+ComputeEngine::ComputeEngine(QList<QSharedPointer<Generator>> generators) : randomUniform(0.0, 1.0) {
     this->generators = generators;
 }
 
@@ -68,8 +68,11 @@ void ComputeEngine::loop() {
             outputMonitor += (*it)->readOutput(i);
         }
         // dumb averaging
-        outputMonitor /= (*it)->getOutputSize();
+        //outputMonitor /= (*it)->getOutputSize();
         // maybe doing this here is bad? does the overhead of the signaling slow down the loop?
+
+        outputMonitor = randomUniform(randomGenerator);
+
         (*it)->writeOutputMonitor(outputMonitor);
     }
 

@@ -41,11 +41,13 @@ void Facade::updateValueRelay(const QString &key, const QVariant &value) {
         QByteArray keyArray = key.toLocal8Bit();
         char* keyBuffer = keyArray.data();
 
-        QByteArray valueArray = value.toString().toLocal8Bit();
-        char* valueBuffer = valueArray.data();
-
-        qDebug() << "updateValueRelay (" << keyBuffer << "):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << valueBuffer;
+        qDebug() << "updateValueRelay (" << keyBuffer << "):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    this->updateValue(key, value);
+    insert(key, value);
+
+    if(flagDebug) {
+        qDebug() << "* requested: " << value;
+        qDebug() << "* new:       " << this->value("outputMonitor");
+    }
 }

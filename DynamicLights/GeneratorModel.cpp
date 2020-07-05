@@ -2,6 +2,7 @@
 #include <chrono>
 #include <QThread>
 #include <QVector>
+#include <QDebug>
 
 GeneratorModel::GeneratorModel(QList<QSharedPointer<Facade>> generatorFacades) {
     this->generatorFacades = generatorFacades;
@@ -10,6 +11,8 @@ GeneratorModel::GeneratorModel(QList<QSharedPointer<Facade>> generatorFacades) {
         // update model every time something is changed
         connect(generatorFacades[i].get(), &Facade::valueChanged, this, [=](const QString &key, const QVariant &value) {
             QVector<int> roles;
+            bool unrecognized = false;
+
             if(key == "name") {
                 roles = {NameRole};
             } else if (key == "type") {
@@ -18,7 +21,24 @@ GeneratorModel::GeneratorModel(QList<QSharedPointer<Facade>> generatorFacades) {
                 roles = {DescriptionRole};
             } else if (key == "outputMonitor") {
                 roles = {OutputMonitorRole};
+            } else {
+                unrecognized = true;
             }
+
+            if(flagDebug) {
+                std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+                );
+
+                QByteArray keyArray = key.toLocal8Bit();
+                char* keyBuffer = keyArray.data();
+
+                QByteArray valueArray = value.toString().toLocal8Bit();
+                char* valueBuffer = valueArray.data();
+
+                qDebug() << "lambda (" << keyBuffer << "):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << valueBuffer << (unrecognized ? " (unrecognized)" : "");
+            }
+
             emit dataChanged(index(i), index(i), roles);
         });
     }

@@ -36,7 +36,7 @@ class Facade : public QQmlPropertyMap
 public:
     Facade(QObject *alias);
 private:
-    bool flagDebug = false;
+    bool flagDebug = true;
 public slots:
     void updateValueRelay(const QString &key, const QVariant &value);
 };

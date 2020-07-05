@@ -19,7 +19,7 @@
 #include <QDebug>
 #include <QThread>
 
-ComputeEngine::ComputeEngine(QList<QSharedPointer<Generator>> generators) : randomUniform(0.0, 1.0) {
+ComputeEngine::ComputeEngine(QList<QSharedPointer<Generator>> generators) {
     this->generators = generators;
 }
 

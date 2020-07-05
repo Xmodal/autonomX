@@ -36,30 +36,10 @@ GeneratorModel::GeneratorModel(QSharedPointer<QList<QSharedPointer<Facade>>> gen
             QVector<int> roles;
             bool unrecognized = false;
 
-            int role = roleNames().key(key.toUtf8());
-            if (role == 0) unrecognized = true;         // is this is a fully error-proof check?
+            int role = roleMap.key(key.toUtf8(), -1);
+            // check to see if the value exists in the hash map
+            if (role == -1) unrecognized = true;
             else roles = { role };
-
-            // TODO: this is dumb duplicated code that could be streamlined by instead using the roleNames() hashMap. rewritten above.
-//            if(key == "name") {
-//                roles = {NameRole};
-//            } else if (key == "type") {
-//                roles = {TypeRole};
-//            } else if (key == "description") {
-//                roles = {DescriptionRole};
-//            } else if (key == "outputMonitor") {
-//                roles = {OutputMonitorRole};
-//            } else if (key == "outputMonitorHistory") {
-//                roles = {OutputMonitorHistoryRole};
-//            } else if (key == "outputMonitorHistoryStartIndex") {
-//                roles = {OutputMonitorHistoryStartIndexRole};
-//            } else if (key == "outputMonitorHistorySizeMax") {
-//                roles = {OutputMonitorHistorySizeMaxRole};
-//            } else if (key == "outputMonitorHistorySizeValid") {
-//                roles = {OutputMonitorHistorySizeValidRole};
-//            } else {
-//                unrecognized = true;
-//            }
 
             if(flagDebug) {
                 std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
@@ -104,64 +84,18 @@ QVariant GeneratorModel::data(const QModelIndex &index, int role) const {
     if(!index.isValid())
         return QVariant();
 
+    // check if the index is valid
     if(index.column() == 0 && index.row() >= 0 && index.row() < generatorFacades.get()->size()) {
-
-        // is a truthy-value check necessary here? or is the key always guaranteed to exist?
-        return generatorFacades.get()->at(index.row())->value(roleNames().value(role));
-
-        // TODO: this is dumb duplicated code that could be streamlined by instead using the roleNames() hashMap. rewritten above.
-//        switch(role) {
-//            case NameRole : {
-//                return generatorFacades[index.row()]->value("name");
-//                break;
-//            }
-//            case TypeRole : {
-//                return generatorFacades[index.row()]->value("type");
-//                break;
-//            }
-//            case DescriptionRole : {
-//                return generatorFacades[index.row()]->value("desctiption");
-//                break;
-//            }
-//            case OutputMonitorRole : {
-//                qDebug() << role;
-//                return generatorFacades[index.row()]->value("outputMonitor");
-//                break;
-//            }
-//            case OutputMonitorHistoryRole : {
-//                return generatorFacades[index.row()]->value("outputMonitorHistory");
-//                break;
-//            }
-//            case OutputMonitorHistoryStartIndexRole : {
-//                qDebug() << role;
-//                return generatorFacades[index.row()]->value("outputMonitorHistoryStartIndex");
-//                break;
-//            }
-//            case OutputMonitorHistorySizeMaxRole : {
-//                return generatorFacades[index.row()]->value("outputMonitorHistorySizeMax");
-//                break;
-//            }
-//            case OutputMonitorHistorySizeValidRole : {
-//                return generatorFacades[index.row()]->value("outputMonitorHistorySizeValid");
-//                break;
-//            }
-//        }
+        // check if the key exists in the hash map
+        if(roleMap.contains(role))
+            return generatorFacades.get()->at(index.row())->value(roleMap.value(role));
     }
 
     return QVariant();
 }
 
 QHash<int, QByteArray> GeneratorModel::roleNames() const {
-    QHash<int, QByteArray> roles;
-        roles[NameRole] = "name";
-        roles[TypeRole] = "type";
-        roles[DescriptionRole] = "description";
-        roles[OutputMonitorRole] = "outputMonitor";
-        roles[OutputMonitorHistoryRole] = "outputMonitorHistory";
-        roles[OutputMonitorHistoryStartIndexRole] = "outputMonitorHistoryStartIndex";
-        roles[OutputMonitorHistorySizeMaxRole] = "outputMonitorHistorySizeMax";
-        roles[OutputMonitorHistorySizeValidRole] = "outputMonitorHistorySizeValid";
-        return roles;
+    return roleMap;
 }
 
 Facade * GeneratorModel::at(int index) {

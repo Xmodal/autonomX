@@ -36,6 +36,8 @@ GeneratorModel::GeneratorModel(QSharedPointer<QList<QSharedPointer<Facade>>> gen
             QVector<int> roles;
             bool unrecognized = false;
 
+            // TODO: this is dumb duplicated code that could be streamlined by instead using the roleNames() hashMap. rewrite this.
+
             if(key == "name") {
                 roles = {NameRole};
             } else if (key == "type") {
@@ -44,6 +46,14 @@ GeneratorModel::GeneratorModel(QSharedPointer<QList<QSharedPointer<Facade>>> gen
                 roles = {DescriptionRole};
             } else if (key == "outputMonitor") {
                 roles = {OutputMonitorRole};
+            } else if (key == "outputMonitorHistory") {
+                roles = {OutputMonitorHistoryRole};
+            } else if (key == "outputMonitorHistoryStartIndex") {
+                roles = {OutputMonitorHistoryStartIndexRole};
+            } else if (key == "outputMonitorHistorySizeMax") {
+                roles = {OutputMonitorHistorySizeMaxRole};
+            } else if (key == "outputMonitorHistorySizeValid") {
+                roles = {OutputMonitorHistorySizeValidRole};
             } else {
                 unrecognized = true;
             }
@@ -92,6 +102,9 @@ QVariant GeneratorModel::data(const QModelIndex &index, int role) const {
         return QVariant();
 
     if(index.column() == 0 && index.row() >= 0 && index.row() < generatorFacades.get()->size()) {
+
+        // TODO: this is dumb duplicated code that could be streamlined by instead using the roleNames() hashMap. rewrite this.
+
         switch(role) {
             case NameRole : {
                 return generatorFacades.get()->at(index.row())->value("name");
@@ -109,6 +122,22 @@ QVariant GeneratorModel::data(const QModelIndex &index, int role) const {
                 return generatorFacades.get()->at(index.row())->value("outputMonitor");
                 break;
             }
+            case OutputMonitorHistoryRole : {
+                return generatorFacades.get()->at(index.row())->value("outputMonitorHistory");
+                break;
+            }
+            case OutputMonitorHistoryStartIndexRole : {
+                return generatorFacades.get()->at(index.row())->value("outputMonitorHistoryStartIndex");
+                break;
+            }
+            case OutputMonitorHistorySizeMaxRole : {
+                return generatorFacades.get()->at(index.row())->value("outputMonitorHistorySizeMax");
+                break;
+            }
+            case OutputMonitorHistorySizeValidRole : {
+                return generatorFacades.get()->at(index.row())->value("outputMonitorHistorySizeValid");
+                break;
+            }
         }
     }
 
@@ -121,6 +150,10 @@ QHash<int, QByteArray> GeneratorModel::roleNames() const {
         roles[TypeRole] = "type";
         roles[DescriptionRole] = "description";
         roles[OutputMonitorRole] = "outputMonitor";
+        roles[OutputMonitorHistoryRole] = "outputMonitorHistory";
+        roles[OutputMonitorHistoryStartIndexRole] = "outputMonitorHistoryStartIndex";
+        roles[OutputMonitorHistorySizeMaxRole] = "outputMonitorHistorySizeMax";
+        roles[OutputMonitorHistorySizeValidRole] = "outputMonitorHistorySizeValid";
         return roles;
 }
 

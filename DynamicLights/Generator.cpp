@@ -159,8 +159,6 @@ void Generator::writeOutputMonitor(double value) {
     }
 
     outputMonitor = value;
-    emit valueChanged("outputMonitor", QVariant(value));
-    emit outputMonitorChanged(outputMonitor);
 
     // update history buffer
     if(outputMonitorHistorySizeValid == outputMonitorHistorySizeMax) {
@@ -173,7 +171,8 @@ void Generator::writeOutputMonitor(double value) {
         // increment start index
         outputMonitorHistoryStartIndex = (outputMonitorHistoryStartIndex + 1) % outputMonitorHistorySizeMax;
         // emit signals
-        emit outputMonitorHistoryChanged(outputMonitorHistory);
+        // emit outputMonitorHistoryChanged(outputMonitorHistory);
+        emit valueChanged("outputMonitorHistoryStartIndex", outputMonitorHistoryStartIndex);
         emit outputMonitorHistoryStartIndexChanged(outputMonitorHistoryStartIndex);
     } else {
         // buffer is not full yet
@@ -185,9 +184,13 @@ void Generator::writeOutputMonitor(double value) {
         // increment valid size
         outputMonitorHistorySizeValid++;
         // emit signals
-        emit outputMonitorHistoryChanged(outputMonitorHistory);
+        // emit outputMonitorHistoryChanged(outputMonitorHistory);
+        emit valueChanged("outputMonitorHistorySizeValid", outputMonitorHistorySizeValid);
         emit outputMonitorHistorySizeValidChanged(outputMonitorHistorySizeValid);
     }
+
+    emit valueChanged("outputMonitor", QVariant(value));
+    emit outputMonitorChanged(outputMonitor);
 
     /*
     qDebug() << "";

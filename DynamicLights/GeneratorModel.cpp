@@ -36,27 +36,30 @@ GeneratorModel::GeneratorModel(QSharedPointer<QList<QSharedPointer<Facade>>> gen
             QVector<int> roles;
             bool unrecognized = false;
 
-            // TODO: this is dumb duplicated code that could be streamlined by instead using the roleNames() hashMap. rewrite this.
+            int role = roleNames().key(key.toUtf8());
+            if (role == 0) unrecognized = true;         // is this is a fully error-proof check?
+            else roles = { role };
 
-            if(key == "name") {
-                roles = {NameRole};
-            } else if (key == "type") {
-                roles = {TypeRole};
-            } else if (key == "description") {
-                roles = {DescriptionRole};
-            } else if (key == "outputMonitor") {
-                roles = {OutputMonitorRole};
-            } else if (key == "outputMonitorHistory") {
-                roles = {OutputMonitorHistoryRole};
-            } else if (key == "outputMonitorHistoryStartIndex") {
-                roles = {OutputMonitorHistoryStartIndexRole};
-            } else if (key == "outputMonitorHistorySizeMax") {
-                roles = {OutputMonitorHistorySizeMaxRole};
-            } else if (key == "outputMonitorHistorySizeValid") {
-                roles = {OutputMonitorHistorySizeValidRole};
-            } else {
-                unrecognized = true;
-            }
+            // TODO: this is dumb duplicated code that could be streamlined by instead using the roleNames() hashMap. rewritten above.
+//            if(key == "name") {
+//                roles = {NameRole};
+//            } else if (key == "type") {
+//                roles = {TypeRole};
+//            } else if (key == "description") {
+//                roles = {DescriptionRole};
+//            } else if (key == "outputMonitor") {
+//                roles = {OutputMonitorRole};
+//            } else if (key == "outputMonitorHistory") {
+//                roles = {OutputMonitorHistoryRole};
+//            } else if (key == "outputMonitorHistoryStartIndex") {
+//                roles = {OutputMonitorHistoryStartIndexRole};
+//            } else if (key == "outputMonitorHistorySizeMax") {
+//                roles = {OutputMonitorHistorySizeMaxRole};
+//            } else if (key == "outputMonitorHistorySizeValid") {
+//                roles = {OutputMonitorHistorySizeValidRole};
+//            } else {
+//                unrecognized = true;
+//            }
 
             if(flagDebug) {
                 std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
@@ -103,42 +106,46 @@ QVariant GeneratorModel::data(const QModelIndex &index, int role) const {
 
     if(index.column() == 0 && index.row() >= 0 && index.row() < generatorFacades.get()->size()) {
 
-        // TODO: this is dumb duplicated code that could be streamlined by instead using the roleNames() hashMap. rewrite this.
+        // is a truthy-value check necessary here? or is the key always guaranteed to exist?
+        return generatorFacades.get()->at(index.row())->value(roleNames().value(role));
 
-        switch(role) {
-            case NameRole : {
-                return generatorFacades.get()->at(index.row())->value("name");
-                break;
-            }
-            case TypeRole : {
-                return generatorFacades.get()->at(index.row())->value("type");
-                break;
-            }
-            case DescriptionRole : {
-                return generatorFacades.get()->at(index.row())->value("desctiption");
-                break;
-            }
-            case OutputMonitorRole : {
-                return generatorFacades.get()->at(index.row())->value("outputMonitor");
-                break;
-            }
-            case OutputMonitorHistoryRole : {
-                return generatorFacades.get()->at(index.row())->value("outputMonitorHistory");
-                break;
-            }
-            case OutputMonitorHistoryStartIndexRole : {
-                return generatorFacades.get()->at(index.row())->value("outputMonitorHistoryStartIndex");
-                break;
-            }
-            case OutputMonitorHistorySizeMaxRole : {
-                return generatorFacades.get()->at(index.row())->value("outputMonitorHistorySizeMax");
-                break;
-            }
-            case OutputMonitorHistorySizeValidRole : {
-                return generatorFacades.get()->at(index.row())->value("outputMonitorHistorySizeValid");
-                break;
-            }
-        }
+        // TODO: this is dumb duplicated code that could be streamlined by instead using the roleNames() hashMap. rewritten above.
+//        switch(role) {
+//            case NameRole : {
+//                return generatorFacades[index.row()]->value("name");
+//                break;
+//            }
+//            case TypeRole : {
+//                return generatorFacades[index.row()]->value("type");
+//                break;
+//            }
+//            case DescriptionRole : {
+//                return generatorFacades[index.row()]->value("desctiption");
+//                break;
+//            }
+//            case OutputMonitorRole : {
+//                qDebug() << role;
+//                return generatorFacades[index.row()]->value("outputMonitor");
+//                break;
+//            }
+//            case OutputMonitorHistoryRole : {
+//                return generatorFacades[index.row()]->value("outputMonitorHistory");
+//                break;
+//            }
+//            case OutputMonitorHistoryStartIndexRole : {
+//                qDebug() << role;
+//                return generatorFacades[index.row()]->value("outputMonitorHistoryStartIndex");
+//                break;
+//            }
+//            case OutputMonitorHistorySizeMaxRole : {
+//                return generatorFacades[index.row()]->value("outputMonitorHistorySizeMax");
+//                break;
+//            }
+//            case OutputMonitorHistorySizeValidRole : {
+//                return generatorFacades[index.row()]->value("outputMonitorHistorySizeValid");
+//                break;
+//            }
+//        }
     }
 
     return QVariant();

@@ -29,7 +29,11 @@ public:
         NameRole = Qt::UserRole + 1,
         TypeRole,
         DescriptionRole,
-        OutputMonitorRole
+        OutputMonitorRole,
+        OutputMonitorHistoryRole,
+        OutputMonitorHistoryStartIndexRole,
+        OutputMonitorHistorySizeMaxRole,
+        OutputMonitorHistorySizeValidRole
     };
 
     GeneratorModel(QSharedPointer<QList<QSharedPointer<Facade>>> generators);

@@ -39,7 +39,9 @@ GeneratorModel::GeneratorModel(QList<QSharedPointer<Facade>> generatorFacades) {
                 qDebug() << "lambda (" << keyBuffer << "):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << valueBuffer << (unrecognized ? " (unrecognized)" : "");
             }
 
-            emit dataChanged(index(i), index(i), roles);
+            if(!unrecognized) {
+                emit dataChanged(index(i), index(i), roles);
+            }
         });
     }
 }

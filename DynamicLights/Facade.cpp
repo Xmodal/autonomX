@@ -45,9 +45,5 @@ void Facade::updateValueRelay(const QString &key, const QVariant &value) {
     }
 
     insert(key, value);
-
-    if(flagDebug) {
-        qDebug() << "* requested: " << value;
-        qDebug() << "* new:       " << this->value("outputMonitor");
-    }
+    emit valueChanged(key, value);
 }

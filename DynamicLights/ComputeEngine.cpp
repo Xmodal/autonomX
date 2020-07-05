@@ -68,10 +68,7 @@ void ComputeEngine::loop() {
             outputMonitor += (*it)->readOutput(i);
         }
         // dumb averaging
-        //outputMonitor /= (*it)->getOutputSize();
-        // maybe doing this here is bad? does the overhead of the signaling slow down the loop?
-
-        outputMonitor = randomUniform(randomGenerator);
+        outputMonitor /= (*it)->getOutputSize();
 
         (*it)->writeOutputMonitor(outputMonitor);
     }

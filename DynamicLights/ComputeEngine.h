@@ -29,7 +29,7 @@ class ComputeEngine : public QObject {
 private:
     QList<QSharedPointer<Generator>> generators;
     QElapsedTimer elapsedTimer;
-    double frequency = 5;
+    double frequency = 80;
     bool firstFrame = true;
     bool flagDebug = false;
     std::mt19937 randomGenerator;

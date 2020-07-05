@@ -44,6 +44,10 @@ void Facade::updateValueRelay(const QString &key, const QVariant &value) {
         qDebug() << "updateValueRelay (" << keyBuffer << "):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    insert(key, value);
-    emit valueChanged(key, value);
+    // filter for unchanging updates
+    QVariant currentValue = this->value(key);
+    if(currentValue != value) {
+        insert(key, value);
+        emit valueChanged(key, value);
+    }
 }

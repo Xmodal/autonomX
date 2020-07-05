@@ -9,7 +9,7 @@ GeneratorModel::GeneratorModel(QList<QSharedPointer<Facade>> generatorFacades) {
 
     for(int i = 0; i < generatorFacades.count(); i++) {
         // update model every time something is changed
-        connect(generatorFacades[i].get(), &Facade::valueChanged, this, [=](const QString &key, const QVariant &value) {
+        connect(generatorFacades[i].get(), &Facade::valueChangedFromAlias, this, [=](const QString &key, const QVariant &value) {
             QVector<int> roles;
             bool unrecognized = false;
 

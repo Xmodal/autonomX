@@ -32,7 +32,7 @@ Facade::Facade(QObject *alias) {
     }
 }
 
-void Facade::updateValueRelay(const QString &key, const QVariant &value) {
+void Facade::updateValueFromAlias(const QString &key, const QVariant &value) {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
             std::chrono::system_clock::now().time_since_epoch()
@@ -48,6 +48,6 @@ void Facade::updateValueRelay(const QString &key, const QVariant &value) {
     QVariant currentValue = this->value(key);
     if(currentValue != value) {
         insert(key, value);
-        emit valueChanged(key, value);
+        emit valueChangedFromAlias(key, value);
     }
 }

@@ -19,7 +19,7 @@
 #include <QDebug>
 #include <QThread>
 
-ComputeEngine::ComputeEngine(QList<QSharedPointer<Generator>> generators) {
+ComputeEngine::ComputeEngine(QList<QSharedPointer<Generator>> generators) : randomUniform(0.0, 1.0) {
     this->generators = generators;
 }
 
@@ -67,8 +67,13 @@ void ComputeEngine::loop() {
         for(int i = 0; i < (*it)->getOutputSize(); i++) {
             outputMonitor += (*it)->readOutput(i);
         }
-        // dumb averaging
-        outputMonitor /= (*it)->getOutputSize();
+        if(flagDummyOutputMonitor) {
+            // random output
+            outputMonitor = randomUniform(randomGenerator);
+        } else {
+            // dumb averaging
+            outputMonitor /= (*it)->getOutputSize();
+        }
 
         (*it)->writeOutputMonitor(outputMonitor);
     }

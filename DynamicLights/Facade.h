@@ -22,7 +22,7 @@
 // once created, the Facade will have a copy of the QObject's properties, but they are not linked yet. to link them, use:
 
 // connect alias changes to facade
-// QObject::connect(alias, &Alias::valueChanged, fadcade, &Facade::updateValueRelay, Qt::QueuedConnection);
+// QObject::connect(alias, &Alias::valueChanged, fadcade, &Facade::updateValueFromAlias, Qt::QueuedConnection);
 
 // connect facade changes to alias
 // QObject::connect(facade, &Facade::valueChanged, alias, &Alias::updateValue, Qt::QueuedConnection);
@@ -38,5 +38,8 @@ public:
 private:
     bool flagDebug = false;
 public slots:
-    void updateValueRelay(const QString &key, const QVariant &value);
+    void updateValueFromAlias(const QString &key, const QVariant &value);
+signals:
+    // this is fired when a value is changed from a call to the updateValueFromAlias function, in contrast to valueChanged, which fires when the underlying QQmlPropertyMap is updated from QML
+    void valueChangedFromAlias(const QString &key, const QVariant &value);
 };

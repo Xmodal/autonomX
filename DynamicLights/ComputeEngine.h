@@ -20,6 +20,7 @@
 #include <QElapsedTimer>
 #include <QList>
 #include <QSharedPointer>
+#include <random>
 #include "Generator.h"
 
 
@@ -31,6 +32,9 @@ private:
     double frequency = 80;
     bool firstFrame = true;
     bool flagDebug = false;
+    bool flagDummyOutputMonitor = false;
+    std::mt19937 randomGenerator;
+std::uniform_real_distribution<> randomUniform;
 public:
     ComputeEngine(QList<QSharedPointer<Generator>> generators);
     ~ComputeEngine();

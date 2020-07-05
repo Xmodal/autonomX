@@ -29,7 +29,7 @@ Generator::Generator(QObject *parent) : QObject(parent) {
         qDebug() << "constructor (Generator)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    outputMonitorHistory = QSharedPointer<QVector<double>>(new QVector<double>(outputMonitorHistorySizeMax));
+    outputMonitorHistory = QSharedPointer<QVector<qreal>>(new QVector<qreal>(outputMonitorHistorySizeMax));
 }
 
 
@@ -75,8 +75,8 @@ double Generator::getOutputMonitor() {
     return outputMonitor;
 }
 
-QSharedPointer<QVector<double>> Generator::getOutputMonitorHistory() {
-    return outputMonitorHistory;
+QVector<qreal> Generator::getOutputMonitorHistory() {
+    return *outputMonitorHistory;
 }
 
 int Generator::getOutputMonitorHistoryStartIndex() {
@@ -171,7 +171,8 @@ void Generator::writeOutputMonitor(double value) {
         // increment start index
         outputMonitorHistoryStartIndex = (outputMonitorHistoryStartIndex + 1) % outputMonitorHistorySizeMax;
         // emit signals
-        // emit outputMonitorHistoryChanged(outputMonitorHistory);
+        emit valueChanged("outputMonitorHistory", QVariant::fromValue(*outputMonitorHistory));
+        emit outputMonitorHistoryChanged(*outputMonitorHistory);
         emit valueChanged("outputMonitorHistoryStartIndex", outputMonitorHistoryStartIndex);
         emit outputMonitorHistoryStartIndexChanged(outputMonitorHistoryStartIndex);
     } else {
@@ -184,7 +185,8 @@ void Generator::writeOutputMonitor(double value) {
         // increment valid size
         outputMonitorHistorySizeValid++;
         // emit signals
-        // emit outputMonitorHistoryChanged(outputMonitorHistory);
+        emit valueChanged("outputMonitorHistory", QVariant::fromValue(*outputMonitorHistory));
+        emit outputMonitorHistoryChanged(*outputMonitorHistory);
         emit valueChanged("outputMonitorHistorySizeValid", outputMonitorHistorySizeValid);
         emit outputMonitorHistorySizeValidChanged(outputMonitorHistorySizeValid);
     }

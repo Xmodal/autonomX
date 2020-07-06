@@ -1,8 +1,8 @@
 import QtQuick 2.9
 import QtQuick.Layouts 1.3
 
-import "../Fields"
-import "../Style"
+import "qrc:/stylesheet"
+import "../fields"
 
 Rack {
     id: genRack

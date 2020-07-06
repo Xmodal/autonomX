@@ -2,7 +2,7 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 
-import "./Style"
+import "qrc:/stylesheet"
 
 /**
  * Widget to control a generator.
@@ -26,9 +26,7 @@ Button {
 
         // index background
         Image {
-            source: "assets/images/index-bg.svg"
-            smooth: true
-            mipmap: false
+            source: "qrc:/assets/images/index-bg.svg"
             height: parent.height
             anchors.left: parent.left
             opacity: selected ? 1 : 0

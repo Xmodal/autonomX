@@ -1,10 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>DebugStack.qml</file>
-        <file>GeneratorWidget.qml</file>
-        <file>HistoryGraph.qml</file>
         <file>main.qml</file>
-        <file>OutputIndicator.qml</file>
         <file>qtquickcontrols2.conf</file>
         <file>assets/fonts/Overpass-Bold.ttf</file>
         <file>assets/fonts/Overpass-Regular.ttf</file>
@@ -13,19 +10,25 @@
         <file>assets/images/icon-collapse.svg</file>
         <file>assets/images/icon-expand.svg</file>
         <file>assets/images/index-bg.svg</file>
-        <file>Fields/AreaField.qml</file>
-        <file>Fields/Field.qml</file>
-        <file>Fields/FieldFrame.qml</file>
-        <file>Fields/SelectField.qml</file>
-        <file>Fields/SliderField.qml</file>
-        <file>Fields/SwitchField.qml</file>
-        <file>Fields/TextField.qml</file>
-        <file>Style/qmldir</file>
-        <file>Style/Stylesheet.qml</file>
-        <file>Racks/GenRack.qml</file>
-        <file>Racks/ParamsRack.qml</file>
-        <file>Racks/Rack.qml</file>
-        <file>Racks/RackView.qml</file>
+        <file>assets/images/light-cue.png</file>
+        <file>assets/images/light-cue@2x.png</file>
+        <file>assets/images/light-cue@3x.png</file>
+        <file>assets/images/light-cue@4x.png</file>
+        <file>components/fields/AreaField.qml</file>
+        <file>components/fields/Field.qml</file>
+        <file>components/fields/FieldFrame.qml</file>
+        <file>components/fields/SelectField.qml</file>
+        <file>components/fields/SliderField.qml</file>
+        <file>components/fields/SwitchField.qml</file>
+        <file>components/fields/TextField.qml</file>
+        <file>components/racks/GenRack.qml</file>
+        <file>components/racks/ParamsRack.qml</file>
+        <file>components/racks/Rack.qml</file>
+        <file>components/racks/RackView.qml</file>
+        <file>delegates/GeneratorWidget.qml</file>
+        <file>delegates/OutputIndicator.qml</file>
         <file>shaders/light-cue.frag</file>
+        <file>stylesheet/qmldir</file>
+        <file>stylesheet/Stylesheet.qml</file>
     </qresource>
 </RCC>

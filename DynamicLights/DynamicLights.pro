@@ -19,12 +19,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    ../qosc/OscReceiver.cpp \
+    ../qosc/OscSender.cpp \
     ../qosc/contrib/oscpack/OscOutboundPacketStream.cpp \
     ../qosc/contrib/oscpack/OscPrintReceivedElements.cpp \
     ../qosc/contrib/oscpack/OscReceivedElements.cpp \
     ../qosc/contrib/oscpack/OscTypes.cpp \
-    ../qosc/oscreceiver.cpp \
-    ../qosc/oscsender.cpp \
     ComputeEngine.cpp \
     Facade.cpp \
     Generator.cpp \
@@ -47,6 +47,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    ../qosc/OscReceiver.h \
+    ../qosc/OscSender.h \
     ../qosc/contrib/oscpack/MessageMappingOscPacketListener.h \
     ../qosc/contrib/oscpack/OscException.h \
     ../qosc/contrib/oscpack/OscHostEndianness.h \
@@ -55,8 +57,6 @@ HEADERS += \
     ../qosc/contrib/oscpack/OscPrintReceivedElements.h \
     ../qosc/contrib/oscpack/OscReceivedElements.h \
     ../qosc/contrib/oscpack/OscTypes.h \
-    ../qosc/oscreceiver.h \
-    ../qosc/oscsender.h \
     ComputeEngine.h \
     Facade.h \
     Generator.h \

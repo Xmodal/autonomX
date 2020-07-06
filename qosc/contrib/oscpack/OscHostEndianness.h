@@ -34,8 +34,7 @@
 	requested that these non-binding requests be included whenever the
 	above license is reproduced.
 */
-#ifndef INCLUDED_OSCPACK_OSCHOSTENDIANNESS_H
-#define INCLUDED_OSCPACK_OSCHOSTENDIANNESS_H
+#pragma once
 
 /*
     Make sure either OSC_HOST_LITTLE_ENDIAN or OSC_HOST_BIG_ENDIAN is defined
@@ -122,6 +121,4 @@
 #error please edit OSCHostEndianness.h or define one of {OSC_HOST_LITTLE_ENDIAN, OSC_HOST_BIG_ENDIAN} to configure endianness
 
 #endif
-
-#endif /* INCLUDED_OSCPACK_OSCHOSTENDIANNESS_H */
 

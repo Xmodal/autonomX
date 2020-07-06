@@ -34,8 +34,7 @@
 	requested that these non-binding requests be included whenever the
 	above license is reproduced.
 */
-#ifndef INCLUDED_OSCPACK_OSCOUTBOUNDPACKETSTREAM_H
-#define INCLUDED_OSCPACK_OSCOUTBOUNDPACKETSTREAM_H
+#pragma once
 
 #include <cstring> // size_t
 
@@ -150,5 +149,3 @@ private:
 };
 
 } // namespace osc
-
-#endif /* INCLUDED_OSCPACK_OSCOUTBOUNDPACKETSTREAM_H */

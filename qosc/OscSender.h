@@ -1,5 +1,4 @@
-#ifndef OSCSENDER_H
-#define OSCSENDER_H
+#pragma once
 
 #include <QObject>
 #include <QVariant>
@@ -52,5 +51,3 @@ private:
 
     void variantListToByteArray(QByteArray& outputResult, const QString& oscAddress, const QVariantList& arguments);
 };
-
-#endif // OSCSENDER_H

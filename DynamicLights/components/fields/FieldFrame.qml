@@ -1,6 +1,6 @@
 import QtQuick 2.9
 
-import "../Style"
+import "qrc:/stylesheet"
 
 Item {
     property int frameWidth: Stylesheet.field.initialWidth

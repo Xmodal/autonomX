@@ -3,8 +3,9 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.11
 
-import "./Style"
-import "./Racks"
+import "./stylesheet"
+import "./components/racks"
+import "./delegates"
 
 /**
  * Main window of this application
@@ -116,7 +117,7 @@ ApplicationWindow {
 
             property int genID: activeGeneratorIndex
 
-            source: genID < 0 ? "" : "Racks/RackView.qml"
+            source: genID < 0 ? "" : "components/racks/RackView.qml"
         }
     }
 }

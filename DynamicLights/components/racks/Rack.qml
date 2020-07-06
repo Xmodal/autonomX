@@ -6,8 +6,8 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtGraphicalEffects 1.0
 
-import "../Style"
-import "../Fields"
+import "qrc:/stylesheet"
+import "../fields"
 
 Item {
     // metadata

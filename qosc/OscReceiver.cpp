@@ -1,4 +1,4 @@
-#include "oscreceiver.h"
+#include "OscReceiver.h"
 #include "contrib/oscpack/OscTypes.h"
 #include "contrib/oscpack/OscReceivedElements.h"
 

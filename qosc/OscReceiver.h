@@ -1,5 +1,4 @@
-#ifndef OSCRECEIVER_H
-#define OSCRECEIVER_H
+#pragma once
 
 #include <QObject>
 #include <QVariant>
@@ -42,5 +41,3 @@ private:
     QUdpSocket* m_udpSocket;
     void byteArrayToVariantList(QVariantList& outputVariantList, QString& outputOscAddress, const QByteArray& inputByteArray);
 };
-
-#endif // OSCRECEIVER_H

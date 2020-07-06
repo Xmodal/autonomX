@@ -1,4 +1,4 @@
-#include "oscsender.h"
+#include "OscSender.h"
 #include "contrib/oscpack/OscOutboundPacketStream.h"
 #include "contrib/oscpack/OscTypes.h"
 #include <iostream>

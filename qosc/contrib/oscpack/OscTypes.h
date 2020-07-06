@@ -34,8 +34,7 @@
 	requested that these non-binding requests be included whenever the
 	above license is reproduced.
 */
-#ifndef INCLUDED_OSCPACK_OSCTYPES_H
-#define INCLUDED_OSCPACK_OSCTYPES_H
+#pragma once
 
 
 namespace osc{
@@ -235,6 +234,3 @@ struct ArrayTerminator{
 extern ArrayTerminator EndArray;
 
 } // namespace osc
-
-
-#endif /* INCLUDED_OSCPACK_OSCTYPES_H */

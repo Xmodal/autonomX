@@ -19,8 +19,12 @@
 #include <QThread>
 #include <QDebug>
 #include <QMetaProperty>
+#include <QQmlEngine>
 
 Facade::Facade(QObject *alias) : QQmlPropertyMap(this, nullptr) {
+    // set ownership of the Facade to C++ so that there is no duplicate deletion attempt when the app quits
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
             std::chrono::system_clock::now().time_since_epoch()

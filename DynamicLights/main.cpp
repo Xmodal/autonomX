@@ -22,8 +22,8 @@
 #include <QFontDatabase>
 #include <QQmlPropertyMap>
 
-#include "oscreceiver.h"
-#include "oscsender.h"
+#include "OscReceiver.h"
+#include "OscSender.h"
 #include "ComputeEngine.h"
 #include "Generator.h"
 #include "GeneratorModel.h"

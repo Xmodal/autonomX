@@ -3,9 +3,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.11
 
-import "./stylesheet"
-import "./components/racks"
-import "./delegates"
+import "./pages"
 
 /**
  * Main window of this application
@@ -39,10 +37,8 @@ ApplicationWindow {
         Qt.quit();
     }
 
-    // this function could be useful in the future
-    // so i'll keep it defined
-    function toggleDebugView() {
-        //stackLayout0.currentIndex = (stackLayout0.currentIndex + 1) % 2;
+    function toggleLatticeView() {
+        router.currentIndex = (router.currentIndex + 1) % 2;
     }
 
     // background
@@ -70,8 +66,8 @@ ApplicationWindow {
         onActivated: quitThisApp()
     }
     Shortcut {
-        sequence: "Tab"
-        onActivated: toggleDebugView()
+        sequence: "Ctrl+L"
+        onActivated: toggleLatticeView();
     }
 
     // auto input blur
@@ -80,44 +76,12 @@ ApplicationWindow {
         onClicked: forceActiveFocus()
     }
 
-    // Main two-column layout
-    RowLayout {
+    StackLayout {
+        id: router
         anchors.fill: parent
-        spacing: 0
+        currentIndex: 0
 
-        // List of generators
-        Item {
-            Layout.preferredWidth: parent.width * 0.25
-            Layout.minimumWidth: 200
-            Layout.maximumWidth: 400
-            Layout.fillHeight: true
-
-            Rectangle {
-                color: Stylesheet.colors.black
-                anchors.fill: parent
-            }
-
-            ListView {
-                anchors.fill: parent
-                orientation: Qt.Vertical
-                model: generatorModel
-                delegate: GeneratorWidget {
-                    onClicked: window.activeGeneratorIndex = model.index
-                }
-            }
-
-            // TODO: new generator button here
-        }
-
-        // list of racks for currently selected generator
-        Loader {
-            id: rackViewLoader
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-
-            property int genID: activeGeneratorIndex
-
-            source: genID < 0 ? "" : "components/racks/RackView.qml"
-        }
+        GeneratorView {}
+        LatticeView {}
     }
 }

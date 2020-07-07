@@ -30,8 +30,21 @@
 #include "SpikingNet.h"
 #include "Facade.h"
 
+// only include AppNap code if platform is macOS
+#ifdef Q_OS_MAC
+#include "AppNap.h"
+#endif
+
+#ifdef Q_OS_MAC
+#include <IOKit/pwr_mgt/IOPMLib.h>
+#endif
+
 int main(int argc, char *argv[])
 {
+    #ifdef Q_OS_MAC
+    //IOPMAssertionCreateWithName()
+    #endif
+
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
@@ -107,12 +120,10 @@ int main(int argc, char *argv[])
 
     // create generator model
     GeneratorModel generatorModel(generatorFacades);
-    // next: make a view and get the two connected
 
     // create compute thread
     QSharedPointer<QThread> computeThread = QSharedPointer<QThread>(new QThread());
-    computeThread->start();
-    computeThread->setPriority(QThread::TimeCriticalPriority);
+    computeThread->start(QThread::TimeCriticalPriority);
 
     // create compute engine
     ComputeEngine computeEngine(generators);
@@ -124,6 +135,11 @@ int main(int argc, char *argv[])
     for(QList<QSharedPointer<Generator>>::iterator it = generators.get()->begin(); it != generators.get()->end(); it++) {
         (*it)->moveToThread(computeThread.get());
     }
+
+    // disable App Nap on macOS to prevent computeThread from stalling
+    #ifdef Q_OS_MAC
+    disableAppNap();
+    #endif
 
     // start compute engine
     computeEngine.start();

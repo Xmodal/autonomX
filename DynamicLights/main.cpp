@@ -35,10 +35,6 @@
 #include "AppNap.h"
 #endif
 
-#ifdef Q_OS_MAC
-#include <IOKit/pwr_mgt/IOPMLib.h>
-#endif
-
 int main(int argc, char *argv[])
 {
     #ifdef Q_OS_MAC

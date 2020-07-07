@@ -2,8 +2,8 @@ import QtQuick 2.9
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
 
-import "qrc:/stylesheet"
-import "qrc:/delegates"
+import "../stylesheet"
+import "../delegates"
 
 // Main two-column layout
 RowLayout {
@@ -44,6 +44,6 @@ RowLayout {
 
         property int genID: activeGeneratorIndex
 
-        source: genID < 0 ? "" : "qrc:/Racks/RackView.qml"
+        source: genID < 0 ? "" : "qrc:/components/racks/RackView.qml"
     }
 }

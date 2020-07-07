@@ -28,6 +28,8 @@
         <file>delegates/GeneratorWidget.qml</file>
         <file>delegates/OutputIndicator.qml</file>
         <file>shaders/light-cue.frag</file>
+        <file>pages/GeneratorView.qml</file>
+        <file>pages/LatticeView.qml</file>
         <file>stylesheet/qmldir</file>
         <file>stylesheet/Stylesheet.qml</file>
     </qresource>

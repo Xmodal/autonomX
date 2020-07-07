@@ -73,8 +73,8 @@ double Generator::getOutputMonitor() {
     return outputMonitor;
 }
 
-GeneratorHistoryData Generator::getOutputMonitorHistory() {
-    return outputMonitorHistory;
+double Generator::getOutputMonitorHistoryDataAt(int index) {
+    return outputMonitorHistory.at(index);
 }
 
 int Generator::getOutputMonitorHistoryStartIndex() {
@@ -166,10 +166,6 @@ void Generator::writeOutputMonitor(double value) {
 
     outputMonitorHistory.addHistory(value);
 
-    if(outputMonitorHistory.checkDataChanged()) {
-        emit valueChanged("outputMonitorHistory", outputMonitorHistory);
-        emit outputMonitorHistoryChanged(outputMonitorHistory);
-    }
     if(outputMonitorHistory.checkStartIndexChanged()) {
         int startIndex = outputMonitorHistory.getStartIndex();
         emit valueChanged("outputMonitorHistoryStartIndex", startIndex);

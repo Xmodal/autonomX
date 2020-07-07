@@ -29,7 +29,6 @@ class Generator : public QObject {
     Q_PROPERTY(QString type READ getType NOTIFY typeChanged)
     Q_PROPERTY(QString description READ getDescription WRITE writeDescription NOTIFY descriptionChanged)
     Q_PROPERTY(double outputMonitor READ getOutputMonitor NOTIFY outputMonitorChanged)
-    Q_PROPERTY(GeneratorHistoryData outputMonitorHistory READ getOutputMonitorHistory NOTIFY outputMonitorHistoryChanged)
     Q_PROPERTY(int outputMonitorHistoryStartIndex READ getOutputMonitorHistoryStartIndex NOTIFY outputMonitorHistoryStartIndexChanged)
     Q_PROPERTY(int outputMonitorHistorySizeMax READ getOutputMonitorHistorySizeMax NOTIFY outputMonitorHistorySizeMaxChanged)
     Q_PROPERTY(int outputMonitorHistorySizeValid READ getOutputMonitorHistorySizeValid NOTIFY outputMonitorHistorySizeValidChanged)
@@ -79,7 +78,7 @@ public:
     QString getType();
     QString getDescription();
     double getOutputMonitor();
-    GeneratorHistoryData getOutputMonitorHistory();
+    Q_INVOKABLE double getOutputMonitorHistoryDataAt(int index);
     int getOutputMonitorHistoryStartIndex();
     int getOutputMonitorHistorySizeMax();
     int getOutputMonitorHistorySizeValid();
@@ -98,7 +97,6 @@ signals:
     void typeChanged(QString);
     void descriptionChanged(QString);
     void outputMonitorChanged(double);
-    void outputMonitorHistoryChanged(GeneratorHistoryData);
     void outputMonitorHistoryStartIndexChanged(int);
     void outputMonitorHistorySizeMaxChanged(int);
     void outputMonitorHistorySizeValidChanged(int);

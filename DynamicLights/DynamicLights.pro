@@ -29,6 +29,7 @@ SOURCES += \
     Facade.cpp \
     Generator.cpp \
     GeneratorModel.cpp \
+    GeneratorHistoryData.cpp \
     Izhikevich.cpp \
     SpikingNet.cpp \
     main.cpp
@@ -61,6 +62,7 @@ HEADERS += \
     Facade.h \
     Generator.h \
     GeneratorModel.h \
+    GeneratorHistoryData.h \
     Izhikevich.h \
     NeuronType.h \
     SpikingNet.h

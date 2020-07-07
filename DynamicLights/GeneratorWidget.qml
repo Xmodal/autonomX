@@ -41,7 +41,6 @@ Button {
         startIndex: model ? model.outputMonitorHistoryStartIndex : 0
         sizeMax: model ? model.outputMonitorHistorySizeMax : 0
         sizeValid: model ? model.outputMonitorHistorySizeValid : 0
-        points: model ? model.outputMonitorHistory : []
 
         strokeColor: Stylesheet.colors.outputs[model.index % Stylesheet.colors.outputs.length]
     }

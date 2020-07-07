@@ -21,16 +21,11 @@ Item {
         opacity: 0.5
 
         onPaint: {
-            console.log("JS execution");
-
             var ctx = getContext("2d");
             ctx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
             ctx.strokeStyle = strokeColor;
 
             var lX = graphCanvas.width / (sizeMax - 1);
-
-            console.log("range: [0, " + (sizeValid - 2) + "]");
-            console.log(points);
 
             ctx.beginPath();
             for (var i = 0; i < sizeValid - 1; i++) {

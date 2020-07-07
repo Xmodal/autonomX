@@ -8,7 +8,7 @@ Item {
     property int sizeMax
     property variant points
 
-    onStartIndexChanged: graphCanvas.requestPaint()
+    onPointsChanged: graphCanvas.requestPaint()
 
     property color strokeColor: "#fff"
 
@@ -21,16 +21,23 @@ Item {
         opacity: 0.5
 
         onPaint: {
+            console.log("JS execution");
+
             var ctx = getContext("2d");
             ctx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
             ctx.strokeStyle = strokeColor;
 
             var lX = graphCanvas.width / (sizeMax - 1);
 
+            console.log("range: [0, " + (sizeValid - 2) + "]");
+            console.log(points);
+
             ctx.beginPath();
-            for (var i = 0; i < sizeMax - 1; i++) {
-                ctx.moveTo(i * lX, points[(startIndex + i) % sizeMax] * graphCanvas.height);
-                ctx.lineTo((i + 1) * lX, points[(startIndex + i + 1) % sizeMax] * graphCanvas.height)
+            for (var i = 0; i < sizeValid - 1; i++) {
+                var indexStart = (startIndex + sizeValid - 1 - i + sizeMax) % sizeMax;
+                var indexEnd = (startIndex + sizeValid - i + sizeMax) % sizeMax;
+                ctx.moveTo(graphCanvas.width - i * lX, points[indexStart] * graphCanvas.height);
+                ctx.lineTo(graphCanvas.width - (i + 1) * lX, points[indexEnd] * graphCanvas.height)
             }
             ctx.closePath();
             ctx.stroke();

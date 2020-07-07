@@ -24,6 +24,7 @@ ColumnLayout {
     // top label
     RowLayout {
         Layout.fillWidth: true
+        spacing: 0
 
         Label {
             id: rackTitle
@@ -46,8 +47,29 @@ ColumnLayout {
             }
         }
 
-        //TODO: collapse rack button + state logic
-        //Button { id: btnCollapse }
+        // TODO: remove rack button
+
+        // collapse rack button
+        Button {
+            id: btnCollapse
+
+            Layout.alignment: Qt.AlignRight
+            Layout.preferredWidth: 35
+            Layout.fillHeight: true
+
+            background: Rectangle {
+                color: "#4A4A4A"
+            }
+
+            Image {
+                id: icon
+                source: collapsed ? "qrc:/assets/images/icon-expand.svg" : "qrc:/assets/images/icon-collapse.svg"
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            onClicked: collapsed = !collapsed
+        }
     }
 
     // content (extended)

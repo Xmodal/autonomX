@@ -29,11 +29,7 @@ public:
         NameRole = Qt::UserRole + 1,
         TypeRole,
         DescriptionRole,
-        OutputMonitorRole,
-        OutputMonitorHistoryRole,
-        OutputMonitorHistoryStartIndexRole,
-        OutputMonitorHistorySizeMaxRole,
-        OutputMonitorHistorySizeValidRole
+        OutputMonitorRole
     };
 
     GeneratorModel(QSharedPointer<QList<QSharedPointer<Facade>>> generators);
@@ -50,14 +46,4 @@ public:
 private:
     QSharedPointer<QList<QSharedPointer<Facade>>> generatorFacades;
     bool flagDebug = false;
-    const QHash<int, QByteArray> roleMap = {
-        {NameRole, "name"},
-        {TypeRole, "type"},
-        {DescriptionRole, "description"},
-        {OutputMonitorRole, "outputMonitor"},
-        {OutputMonitorHistoryRole, "outputMonitorHistory"},
-        {OutputMonitorHistoryStartIndexRole, "outputMonitorHistoryStartIndex"},
-        {OutputMonitorHistorySizeMaxRole, "outputMonitorHistorySizeMax"},
-        {OutputMonitorHistorySizeValidRole,"outputMonitorHistorySizeValid"}
-    };
 };

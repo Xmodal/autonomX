@@ -36,10 +36,17 @@ GeneratorModel::GeneratorModel(QSharedPointer<QList<QSharedPointer<Facade>>> gen
             QVector<int> roles;
             bool unrecognized = false;
 
-            int role = roleMap.key(key.toUtf8(), -1);
-            // check to see if the value exists in the hash map
-            if (role == -1) unrecognized = true;
-            else roles = { role };
+            if(key == "name") {
+                roles = {NameRole};
+            } else if (key == "type") {
+                roles = {TypeRole};
+            } else if (key == "description") {
+                roles = {DescriptionRole};
+            } else if (key == "outputMonitor") {
+                roles = {OutputMonitorRole};
+            } else {
+                unrecognized = true;
+            }
 
             if(flagDebug) {
                 std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
@@ -84,18 +91,37 @@ QVariant GeneratorModel::data(const QModelIndex &index, int role) const {
     if(!index.isValid())
         return QVariant();
 
-    // check if the index is valid
     if(index.column() == 0 && index.row() >= 0 && index.row() < generatorFacades.get()->size()) {
-        // check if the key exists in the hash map
-        if(roleMap.contains(role))
-            return generatorFacades.get()->at(index.row())->value(roleMap.value(role));
+        switch(role) {
+            case NameRole : {
+                return generatorFacades.get()->at(index.row())->value("name");
+                break;
+            }
+            case TypeRole : {
+                return generatorFacades.get()->at(index.row())->value("type");
+                break;
+            }
+            case DescriptionRole : {
+                return generatorFacades.get()->at(index.row())->value("desctiption");
+                break;
+            }
+            case OutputMonitorRole : {
+                return generatorFacades.get()->at(index.row())->value("outputMonitor");
+                break;
+            }
+        }
     }
 
     return QVariant();
 }
 
 QHash<int, QByteArray> GeneratorModel::roleNames() const {
-    return roleMap;
+    QHash<int, QByteArray> roles;
+        roles[NameRole] = "name";
+        roles[TypeRole] = "type";
+        roles[DescriptionRole] = "description";
+        roles[OutputMonitorRole] = "outputMonitor";
+        return roles;
 }
 
 Facade * GeneratorModel::at(int index) {

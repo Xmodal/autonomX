@@ -16,11 +16,12 @@
 #include "Generator.h"
 #include <QDebug>
 
+#include <iostream>
 #include <chrono>
 #include <QThread>
 #include <QDebug>
 
-Generator::Generator(QObject *parent) : QObject(parent) {
+Generator::Generator(QObject *parent) : QObject(parent), outputMonitorHistory(2048) {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
             std::chrono::system_clock::now().time_since_epoch()
@@ -28,10 +29,7 @@ Generator::Generator(QObject *parent) : QObject(parent) {
 
         qDebug() << "constructor (Generator)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
-
-    outputMonitorHistory = QSharedPointer<QVector<qreal>>(new QVector<qreal>(outputMonitorHistorySizeMax));
 }
-
 
 Generator::~Generator() {
     if(flagDebug) {
@@ -75,20 +73,20 @@ double Generator::getOutputMonitor() {
     return outputMonitor;
 }
 
-QVector<qreal> Generator::getOutputMonitorHistory() {
-    return *outputMonitorHistory;
+GeneratorHistoryData Generator::getOutputMonitorHistory() {
+    return outputMonitorHistory;
 }
 
 int Generator::getOutputMonitorHistoryStartIndex() {
-    return outputMonitorHistoryStartIndex;
+    return outputMonitorHistory.getStartIndex();
 }
 
 int Generator::getOutputMonitorHistorySizeMax() {
-    return outputMonitorHistorySizeMax;
+    return outputMonitorHistory.getSizeMax();
 }
 
 int Generator::getOutputMonitorHistorySizeValid() {
-    return outputMonitorHistorySizeValid;
+    return outputMonitorHistory.getSizeValid();
 }
 
 void Generator::writeName(QString string) {
@@ -158,57 +156,35 @@ void Generator::writeOutputMonitor(double value) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-
         qDebug() << "writeOutputMonitor\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << value;
     }
 
     outputMonitor = value;
 
-    // update history buffer
-    if(outputMonitorHistorySizeValid == outputMonitorHistorySizeMax) {
-        // buffer is full
-
-        // index to write to is the previous start index
-        int index = outputMonitorHistoryStartIndex;
-        // write new value
-        (*outputMonitorHistory)[index] = value;
-        // increment start index
-        outputMonitorHistoryStartIndex = (outputMonitorHistoryStartIndex + 1) % outputMonitorHistorySizeMax;
-        // emit signals
-        emit valueChanged("outputMonitorHistory", QVariant::fromValue(*outputMonitorHistory));
-        emit outputMonitorHistoryChanged(*outputMonitorHistory);
-        emit valueChanged("outputMonitorHistoryStartIndex", outputMonitorHistoryStartIndex);
-        emit outputMonitorHistoryStartIndexChanged(outputMonitorHistoryStartIndex);
-    } else {
-        // buffer is not full yet
-
-        // index to write to is at start index offset by valid size
-        int index = (outputMonitorHistoryStartIndex + outputMonitorHistorySizeValid) % outputMonitorHistorySizeMax;
-        // write new value
-        (*outputMonitorHistory)[index] = value;
-        // increment valid size
-        outputMonitorHistorySizeValid++;
-        // emit signals
-        emit valueChanged("outputMonitorHistory", QVariant::fromValue(*outputMonitorHistory));
-        emit outputMonitorHistoryChanged(*outputMonitorHistory);
-        emit valueChanged("outputMonitorHistorySizeValid", outputMonitorHistorySizeValid);
-        emit outputMonitorHistorySizeValidChanged(outputMonitorHistorySizeValid);
-    }
-
     emit valueChanged("outputMonitor", QVariant(value));
     emit outputMonitorChanged(outputMonitor);
 
-    /*
-    qDebug() << "";
-    for(int index = 0; index < outputMonitorHistorySizeMax; index++) {
-        if((index >= outputMonitorHistoryStartIndex && index < outputMonitorHistoryStartIndex + outputMonitorHistorySizeValid) || (index + outputMonitorHistorySizeMax < outputMonitorHistoryStartIndex + outputMonitorHistorySizeValid)) {
-            qDebug() << "index: " << index << "\tvalue: " << (*outputMonitorHistory)[index];
-        } else {
-            qDebug() << "index: " << index << "\tvalue: unassigned";
-        }
+    outputMonitorHistory.addHistory(value);
 
+    if(outputMonitorHistory.checkDataChanged()) {
+        emit valueChanged("outputMonitorHistory", outputMonitorHistory);
+        emit outputMonitorHistoryChanged(outputMonitorHistory);
     }
-    */
+    if(outputMonitorHistory.checkStartIndexChanged()) {
+        int startIndex = outputMonitorHistory.getStartIndex();
+        emit valueChanged("outputMonitorHistoryStartIndex", startIndex);
+        emit outputMonitorHistoryStartIndexChanged(startIndex);
+    }
+    if(outputMonitorHistory.checkSizeMaxChanged()) {
+        int sizeMax = outputMonitorHistory.getSizeMax();
+        emit valueChanged("outputMonitorHistorySizeMax", sizeMax);
+        emit outputMonitorHistorySizeMaxChanged(sizeMax);
+    }
+    if(outputMonitorHistory.checkSizeValidChanged()) {
+        int sizeValid = outputMonitorHistory.getSizeValid();
+        emit valueChanged("outputMonitorHistorySizeValid", sizeValid);
+        emit outputMonitorHistorySizeValidChanged(sizeValid);
+    }
 }
 
 void Generator::updateValue(const QString &key, const QVariant &value) {

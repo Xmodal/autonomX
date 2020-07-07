@@ -35,8 +35,6 @@ SOURCES += \
 
 OBJECTIVE_SOURCES += AppNap.m
 
-LIBS += -framework Foundation
-
 RESOURCES += qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
@@ -72,6 +70,11 @@ HEADERS += \
 
 INCLUDEPATH += $$PWD/../qosc
 INCLUDEPATH += $$PWD/../qosc/contrib/packosc
+
+# necessary on macOS for App Nap patch
+macx {
+    LIBS += -framework Foundation
+}
 
 # Should disable assertions # FIXME: It doesn't
 CONFIG(release, debug|release): DEFINES += NDEBUG

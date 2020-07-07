@@ -14,6 +14,8 @@ Rack {
     removable: false
 
     ColumnLayout {
+        visible: !collapsed
+
         Layout.fillWidth: true
         Layout.margins: Stylesheet.field.spacing
         Layout.alignment: Qt.AlignLeft | Qt.AlignTop

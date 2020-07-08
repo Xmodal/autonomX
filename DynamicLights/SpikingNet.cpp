@@ -443,10 +443,9 @@ void SpikingNet::applyFiring() {
     // apply soft-clamp on output group activation
     for(int i = 0; i < outputGroupSize; i++) {
         outputGroupActivation[i] = softKneePositive(outputGroupActivation[i], 0.8);
-    }
-    if(flagDebug) {
-        //qDebug() << "number of neurons firing: " << total << endl;
-        //qDebug() << "activation of group 0: " << outputGroupActivation[0] << endl;
+        if(flagDebug) {
+            qDebug() << "output group " << i << " activation: " << outputGroupActivation[i];
+        }
     }
 }
 

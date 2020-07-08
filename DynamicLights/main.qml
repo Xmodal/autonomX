@@ -47,15 +47,6 @@ ApplicationWindow {
         color: Stylesheet.colors.darkGrey
     }
 
-    // TODO: move this in OSC rack
-    Connections {
-        target: oscReceiver
-
-        onMessageReceived: {
-            handleMessageReceived(oscAddress, message);
-        }
-    }
-
     // Shortcuts:
     Shortcut {
         sequence: "Esc"

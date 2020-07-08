@@ -36,46 +36,4 @@ StackLayout {
             }
         }
     }
-
-    // OSC debug layout:
-    ColumnLayout {
-        RowLayout {
-            SpinBox {
-                id: someInt
-                value: 2
-            }
-            Slider {
-                id: someDouble
-                value: 3.14159
-                from: 0.0
-                to: 5.0
-            }
-            TextField {
-                id: someText
-                text: "hello"
-            }
-        }
-
-        Button {
-            text: "Send OSC"
-            font.strikeout: false
-            font.underline: false
-            font.bold: false
-            font.family: "Avenir Next Cyr Medium"
-            checked: false
-            checkable: false
-            onClicked: {
-                oscSender.send("/hello", [someInt.value, someDouble.value, someText.text]);
-            }
-        }
-
-        RowLayout {
-            Label {
-                text: "Received:"
-            }
-            Label {
-                text: lastMessageReceived
-            }
-        }
-    }
 }

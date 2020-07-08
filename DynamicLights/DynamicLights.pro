@@ -30,6 +30,7 @@ SOURCES += \
     Generator.cpp \
     GeneratorModel.cpp \
     Izhikevich.cpp \
+    OscEngine.cpp \
     SpikingNet.cpp \
     main.cpp
 
@@ -63,6 +64,7 @@ HEADERS += \
     GeneratorModel.h \
     Izhikevich.h \
     NeuronType.h \
+    OscEngine.h \
     SpikingNet.h
 
 INCLUDEPATH += $$PWD/../qosc

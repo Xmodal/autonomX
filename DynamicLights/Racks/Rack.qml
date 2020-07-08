@@ -20,7 +20,7 @@ Item {
 
     Layout.fillWidth: true
     Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-    Layout.preferredHeight: rack.height
+    Layout.preferredHeight: rack.implicitHeight
 
     ColumnLayout {
         id: rack
@@ -83,10 +83,22 @@ Item {
             id: contentLoader
             sourceComponent: content
 
-            visible: !collapsed
+            clip: true
 
             Layout.margins: Stylesheet.field.spacing
             Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+            Layout.preferredHeight: implicitHeight
+
+            states: [
+                State {
+                    name: "collapsed"; when: collapsed
+                    PropertyChanges { target: contentLoader; Layout.preferredHeight: 0; }
+                }
+            ]
+
+            Behavior on Layout.preferredHeight {
+                NumberAnimation { duration: 500; easing.type: Easing.InOutCubic }
+            }
         }
     }
 

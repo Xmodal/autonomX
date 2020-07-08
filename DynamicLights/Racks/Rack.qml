@@ -89,15 +89,23 @@ Item {
             Layout.alignment: Qt.AlignLeft | Qt.AlignTop
             Layout.preferredHeight: implicitHeight
 
+
+
+
+            // animation management
             states: [
                 State {
                     name: "collapsed"; when: collapsed
-                    PropertyChanges { target: contentLoader; Layout.preferredHeight: 0; }
+                    PropertyChanges { target: contentLoader; Layout.preferredHeight: 0; Layout.topMargin: 0; Layout.bottomMargin: 0; }
                 }
             ]
 
-            Behavior on Layout.preferredHeight {
-                NumberAnimation { duration: 500; easing.type: Easing.InOutCubic }
+            transitions: Transition {
+                NumberAnimation {
+                    properties: "Layout.preferredHeight,Layout.topMargin,Layout.bottomMargin"
+                    duration: 500
+                    easing.type: Easing.InOutCubic
+                }
             }
         }
     }

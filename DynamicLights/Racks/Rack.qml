@@ -4,6 +4,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
+import QtGraphicalEffects 1.0
 
 import "../Style"
 import "../Fields"
@@ -24,32 +25,34 @@ Item {
 
     ColumnLayout {
         id: rack
+
         width: parent.width
         spacing: 0
 
         // top label
-        RowLayout {
+        Item {
             Layout.fillWidth: true
-            spacing: 0
+            Layout.preferredHeight: 35
 
+            // background
+            Rectangle {
+                anchors.fill: parent
+                color: "#717171"
+            }
+
+            // rack label
             Label {
                 id: rackTitle
                 text: rackName
 
+                anchors.verticalCenter: parent.verticalCenter
                 leftPadding: 20
-                bottomPadding: 10
-                topPadding: 10
-                Layout.fillWidth: true
 
                 font {
                     family: Stylesheet.fonts.sub
                     pixelSize: 16
                     letterSpacing: 0.8
                     capitalization: Font.Capitalize
-                }
-
-                background: Rectangle {
-                    color: "#717171"
                 }
             }
 
@@ -59,21 +62,65 @@ Item {
             Button {
                 id: btnCollapse
 
-                Layout.alignment: Qt.AlignRight
-                Layout.preferredWidth: 35
-                Layout.fillHeight: true
+                // dimensions and alignments
+                anchors.right: parent.right
+                width: 35
+                height: 35
 
+                // background
                 background: Rectangle {
-                    color: "#4A4A4A"
+                    id: btnCollapseBg
+                    color: Stylesheet.colors.white
+                    opacity: 0
+
+                    states: [
+                        State {
+                            name: "pressed"; when: btnCollapse.pressed
+                            PropertyChanges { target: btnCollapseBg; opacity: 1; color: Stylesheet.colors.outputs[genID % Stylesheet.colors.outputs.length] }
+                        },
+
+                        State {
+                            name: "hovered"; when: btnCollapse.hovered
+                            PropertyChanges { target: btnCollapseBg; opacity: 0.3 }
+                        }
+                    ]
+
+                    // i don't really like how the NumberAnimation component is essentially doubled
+                    // but whatever this works for now i think
+                    transitions: [
+                        Transition {
+                            from: ""; to: "hovered"
+                            NumberAnimation { target: btnCollapseBg; properties: "opacity"; duration: 250; easing.type: Easing.InOutQuad }
+                        },
+
+                        Transition {
+                            from: "hovered"; to: ""
+                            NumberAnimation { target: btnCollapseBg; properties: "opacity"; duration: 250; easing.type: Easing.InOutQuad }
+                        }
+
+                    ]
                 }
 
+                // expand / collapse icon
                 Image {
                     id: icon
-                    source: collapsed ? "qrc:/assets/images/icon-expand.svg" : "qrc:/assets/images/icon-collapse.svg"
+                    source: collapsed ? "qrc:/assets/images/icon-expand.png" : "qrc:/assets/images/icon-collapse.png"
+                    smooth: false
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
                 }
 
+                // color inversion effect on button press
+                // might be unnecessary to load an entire Qt submodule for this
+                // TO-INVESTIGATE: find better way to switch colors on SVG image in this framework
+                ColorOverlay {
+                    anchors.fill: icon
+                    source: icon
+                    color: Stylesheet.colors.darkGrey
+                    opacity: btnCollapse.pressed ? 1 : 0
+                }
+
+                // internal property management
                 onClicked: collapsed = !collapsed
             }
         }
@@ -89,9 +136,6 @@ Item {
             Layout.alignment: Qt.AlignLeft | Qt.AlignTop
             Layout.preferredHeight: implicitHeight
 
-
-
-
             // animation management
             states: [
                 State {
@@ -99,7 +143,6 @@ Item {
                     PropertyChanges { target: contentLoader; Layout.preferredHeight: 0; Layout.topMargin: 0; Layout.bottomMargin: 0; }
                 }
             ]
-
             transitions: Transition {
                 NumberAnimation {
                     properties: "Layout.preferredHeight,Layout.topMargin,Layout.bottomMargin"

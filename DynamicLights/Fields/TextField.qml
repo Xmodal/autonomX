@@ -21,7 +21,6 @@ Field {
         id: fieldInput
 
         // alignment
-        Layout.fillWidth: true
         leftPadding: 0
         height: 40
 

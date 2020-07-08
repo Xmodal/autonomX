@@ -31,7 +31,6 @@ Field {
     // main slider area
     ColumnLayout {
         id: sliderContainer
-        Layout.fillWidth: true
         Layout.preferredHeight: 40
         spacing: 3
 

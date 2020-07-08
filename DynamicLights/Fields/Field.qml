@@ -13,8 +13,8 @@ ColumnLayout {
     signal valueChanged(variant newValue)
 
     Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+    Layout.preferredWidth: fieldWidth
     Layout.maximumWidth: fieldWidth
-    Layout.fillWidth: true
 
     spacing: 5
 

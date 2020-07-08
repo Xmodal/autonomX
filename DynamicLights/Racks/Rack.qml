@@ -8,69 +8,96 @@ import QtQuick.Layouts 1.3
 import "../Style"
 import "../Fields"
 
-ColumnLayout {
+Item {
     // metadata
     property string rackName: "Rack"
     property int genID: -1 // -1: no assigned generator ID
     // state flags
     property bool collapsed: false
     property bool removable: true
+    // content component
+    property Component content
 
     Layout.fillWidth: true
-    Layout.maximumHeight: 245
     Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-    spacing: 0
+    Layout.preferredHeight: rack.height
 
-    // top label
-    RowLayout {
-        Layout.fillWidth: true
+    ColumnLayout {
+        id: rack
+        width: parent.width
         spacing: 0
 
-        Label {
-            id: rackTitle
-            text: rackName
-
-            leftPadding: 20
-            bottomPadding: 10
-            topPadding: 10
+        // top label
+        RowLayout {
             Layout.fillWidth: true
+            spacing: 0
 
-            font {
-                family: Stylesheet.fonts.sub
-                pixelSize: 16
-                letterSpacing: 0.8
-                capitalization: Font.Capitalize
+            Label {
+                id: rackTitle
+                text: rackName
+
+                leftPadding: 20
+                bottomPadding: 10
+                topPadding: 10
+                Layout.fillWidth: true
+
+                font {
+                    family: Stylesheet.fonts.sub
+                    pixelSize: 16
+                    letterSpacing: 0.8
+                    capitalization: Font.Capitalize
+                }
+
+                background: Rectangle {
+                    color: "#717171"
+                }
             }
 
-            background: Rectangle {
-                color: "#717171"
+            // TODO: remove rack button
+
+            // collapse rack button
+            Button {
+                id: btnCollapse
+
+                Layout.alignment: Qt.AlignRight
+                Layout.preferredWidth: 35
+                Layout.fillHeight: true
+
+                background: Rectangle {
+                    color: "#4A4A4A"
+                }
+
+                Image {
+                    id: icon
+                    source: collapsed ? "qrc:/assets/images/icon-expand.svg" : "qrc:/assets/images/icon-collapse.svg"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
+                onClicked: collapsed = !collapsed
             }
         }
 
-        // TODO: remove rack button
+        // content (extended)
+        Loader {
+            id: contentLoader
+            sourceComponent: content
 
-        // collapse rack button
-        Button {
-            id: btnCollapse
+            visible: !collapsed
 
-            Layout.alignment: Qt.AlignRight
-            Layout.preferredWidth: 35
-            Layout.fillHeight: true
-
-            background: Rectangle {
-                color: "#4A4A4A"
-            }
-
-            Image {
-                id: icon
-                source: collapsed ? "qrc:/assets/images/icon-expand.svg" : "qrc:/assets/images/icon-collapse.svg"
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-            }
-
-            onClicked: collapsed = !collapsed
+            Layout.margins: Stylesheet.field.spacing
+            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
         }
     }
 
-    // content (extended)
+    // bottom border
+    Rectangle {
+        anchors.bottom: parent.bottom
+        width: parent.width
+        height: 1
+        color: Stylesheet.colors.black
+        opacity: 0.3
+    }
 }
+
+

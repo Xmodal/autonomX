@@ -13,12 +13,7 @@ Rack {
     rackName: "PARAMS"
     removable: false
 
-    ColumnLayout {
-        visible: !collapsed
-
-        Layout.fillWidth: true
-        Layout.margins: Stylesheet.field.spacing
-        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+    content: ColumnLayout {
         spacing: Stylesheet.field.spacing
 
         // --= BASIC =--
@@ -164,7 +159,7 @@ Rack {
             }
 
             ColumnLayout {
-                spacing: 5
+                spacing: 0
 
                 SwitchField {
                     labelText: "Decay"

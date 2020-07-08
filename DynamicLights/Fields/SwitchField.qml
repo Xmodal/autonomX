@@ -10,7 +10,6 @@ Field {
     property bool on: false
 
     spacing: 5
-    Layout.fillWidth: false
 
     Switch {
         id: switchObj

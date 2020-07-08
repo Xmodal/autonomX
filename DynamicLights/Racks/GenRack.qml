@@ -10,12 +10,8 @@ Rack {
     rackName: "GEN"
     removable: false
 
-    RowLayout {
-        visible: !collapsed
-
-        Layout.fillWidth: true
-        Layout.margins: Stylesheet.field.spacing
-        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+    content: RowLayout {
+        Layout.maximumHeight: 210
         spacing: Stylesheet.field.spacing
 
         ColumnLayout {

@@ -1,7 +1,8 @@
 uniform lowp sampler2D source;
-uniform vec4 bgColor;
-uniform vec4 haloColor;
-uniform float luminosity;
+// TODO: add reactive halo
+// uniform vec4 bgColor;
+// uniform vec4 haloColor;
+// uniform float luminosity;
 
 varying vec4 qt_TexCoord0;
 

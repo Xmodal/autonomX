@@ -9,11 +9,9 @@
         <file>assets/fonts/Overpass-Regular.ttf</file>
         <file>assets/fonts/Questrial-Regular.ttf</file>
         <file>assets/images/down-caret.svg</file>
+        <file>assets/images/icon-collapse.svg</file>
+        <file>assets/images/icon-expand.svg</file>
         <file>assets/images/index-bg.svg</file>
-        <file>assets/images/light-cue.png</file>
-        <file>assets/images/light-cue@2x.png</file>
-        <file>assets/images/light-cue@3x.png</file>
-        <file>assets/images/light-cue@4x.png</file>
         <file>Fields/AreaField.qml</file>
         <file>Fields/Field.qml</file>
         <file>Fields/FieldFrame.qml</file>
@@ -27,13 +25,5 @@
         <file>Racks/ParamsRack.qml</file>
         <file>Racks/Rack.qml</file>
         <file>Racks/RackView.qml</file>
-        <file>assets/images/icon-collapse.png</file>
-        <file>assets/images/icon-collapse@2x.png</file>
-        <file>assets/images/icon-collapse@3x.png</file>
-        <file>assets/images/icon-collapse@4x.png</file>
-        <file>assets/images/icon-expand.png</file>
-        <file>assets/images/icon-expand@2x.png</file>
-        <file>assets/images/icon-expand@3x.png</file>
-        <file>assets/images/icon-expand@4x.png</file>
     </qresource>
 </RCC>

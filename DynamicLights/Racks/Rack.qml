@@ -102,22 +102,14 @@ Item {
                 }
 
                 // expand / collapse icon
+                // NICE TO HAVE: icon becomes dark grey on pressed state
+                // (couldn't find a good workaround for this unfortunately)
                 Image {
                     id: icon
-                    source: collapsed ? "qrc:/assets/images/icon-expand.png" : "qrc:/assets/images/icon-collapse.png"
+                    source: collapsed ? "qrc:/assets/images/icon-expand.svg" : "qrc:/assets/images/icon-collapse.svg"
                     smooth: false
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
-                }
-
-                // color inversion effect on button press
-                // might be unnecessary to load an entire Qt submodule for this
-                // TO-INVESTIGATE: find better way to switch colors on SVG image in this framework
-                ColorOverlay {
-                    anchors.fill: icon
-                    source: icon
-                    color: Stylesheet.colors.darkGrey
-                    opacity: btnCollapse.pressed ? 1 : 0
                 }
 
                 // internal property management

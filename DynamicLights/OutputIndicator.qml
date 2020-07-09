@@ -7,10 +7,15 @@ Item {
 
     width: 30; height: 30
 
-    Image {
+    Rectangle {
         anchors.fill: parent
-        source: "assets/images/light-cue.png"
-        x: 0; y: 0
+        color: "#393939"
+        radius: 15
+
+        layer.enabled: true
+        layer.effect: ShaderEffect {
+            fragmentShader: "qrc:/shaders/light-cue.frag"
+        }
     }
 
     Rectangle {

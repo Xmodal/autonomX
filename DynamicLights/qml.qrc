@@ -10,10 +10,6 @@
         <file>assets/images/icon-collapse.svg</file>
         <file>assets/images/icon-expand.svg</file>
         <file>assets/images/index-bg.svg</file>
-        <file>assets/images/light-cue.png</file>
-        <file>assets/images/light-cue@2x.png</file>
-        <file>assets/images/light-cue@3x.png</file>
-        <file>assets/images/light-cue@4x.png</file>
         <file>assets/images/neurongrid_20x20.png</file>
         <file>components/fields/AreaField.qml</file>
         <file>components/fields/Field.qml</file>

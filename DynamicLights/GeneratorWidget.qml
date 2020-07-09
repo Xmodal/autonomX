@@ -27,6 +27,8 @@ Button {
         // index background
         Image {
             source: "assets/images/index-bg.svg"
+            smooth: true
+            mipmap: false
             height: parent.height
             anchors.left: parent.left
             opacity: selected ? 1 : 0

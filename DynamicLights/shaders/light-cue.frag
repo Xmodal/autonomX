@@ -4,7 +4,7 @@ uniform lowp sampler2D source;
 // uniform vec4 haloColor;
 // uniform float luminosity;
 
-varying vec4 qt_TexCoord0;
+varying highp vec2 qt_TexCoord0;
 
 void main(void)
 {

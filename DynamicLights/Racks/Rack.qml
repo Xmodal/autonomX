@@ -107,7 +107,8 @@ Item {
                 Image {
                     id: icon
                     source: collapsed ? "qrc:/assets/images/icon-expand.svg" : "qrc:/assets/images/icon-collapse.svg"
-                    smooth: false
+                    smooth: true
+                    mipmap: false
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
                 }

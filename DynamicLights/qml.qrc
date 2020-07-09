@@ -25,5 +25,6 @@
         <file>Racks/ParamsRack.qml</file>
         <file>Racks/Rack.qml</file>
         <file>Racks/RackView.qml</file>
+        <file>shaders/light-cue.frag</file>
     </qresource>
 </RCC>

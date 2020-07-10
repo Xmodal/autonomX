@@ -28,7 +28,6 @@
         <file>pages/GeneratorView.qml</file>
         <file>pages/LatticeView.qml</file>
         <file>shaders/neuron_matrix.frag</file>
-        <file>shaders/neuron_matrix.vert</file>
         <file>stylesheet/qmldir</file>
         <file>stylesheet/Stylesheet.qml</file>
     </qresource>

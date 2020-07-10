@@ -10,16 +10,11 @@ RowLayout {
 
     ShaderEffect {
         width: 400; height: 400
-        property int imgWidth: neuronGrid.width
-        property int imgHeight: neuronGrid.height
-        property variant textureMap: neuronGrid
-        vertexShader: "qrc:/shaders/neuron_matrix.vert"
+        property int cw: width
+        property int ch: height
+        property int cols: 20
+        property int rows: 20
+        property Image textureMap: Image { id: neuronGrid; source: "qrc:/assets/images/neurongrid_20x20.png" }
         fragmentShader: "qrc:/shaders/neuron_matrix.frag"
-    }
-
-    Image {
-        id: neuronGrid
-        visible: false
-        source: "qrc:/assets/images/neurongrid_20x20.png"
     }
 }

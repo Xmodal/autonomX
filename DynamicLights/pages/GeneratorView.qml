@@ -42,7 +42,7 @@ RowLayout {
         Layout.fillWidth: true
         Layout.alignment: Qt.AlignLeft | Qt.AlignTop
 
-        property int genID: activeGeneratorIndex
+        property int genID: window.activeGeneratorIndex
 
         source: genID < 0 ? "" : "qrc:/components/racks/RackView.qml"
     }

@@ -77,25 +77,54 @@ ColumnLayout {
         }
     }
 
-    ShaderEffect {
-        Layout.preferredWidth: 400
-        Layout.preferredHeight: 400
-        //width: 400; height: 400
+    // main content
+    RowLayout {
+        Layout.fillWidth: true
+        Layout.fillHeight: true
 
-        property int cw: width
-        property int ch: height
-        property int cols: 20
-        property int rows: 20
+        spacing: 0
 
-        property variant inputs: [
-            Qt.rect(2, 4, 4, 5)
-        ]
-        property variant outputs: [
-            Qt.rect(10, 10, 2, 5)
-        ]
+        // matrix zone
+        Item {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
 
-        property Image textureMap: Image { id: neuronGrid; source: "qrc:/assets/images/neurongrid_20x20.png" }
+            Rectangle {
+                anchors.fill: parent
+                color: Stylesheet.colors.black
+            }
 
-        fragmentShader: "qrc:/shaders/neuron_matrix.frag"
+            ShaderEffect {
+                anchors.fill: parent
+
+                property real cw: width
+                property real ch: height
+                property int cols: 20
+                property int rows: 20
+                property int show: 1
+
+                property variant inputs: [
+                    Qt.rect(2, 4, 4, 5)
+                ]
+                property variant outputs: [
+                    Qt.rect(10, 10, 2, 5)
+                ]
+
+                property Image textureMap: Image { id: neuronGrid; source: "qrc:/assets/images/neurongrid_20x20.png" }
+
+                fragmentShader: "qrc:/shaders/neuron_matrix.frag"
+            }
+        }
+
+        // control zone
+        Item {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            Rectangle {
+                anchors.fill: parent
+                color: Stylesheet.colors.darkGrey
+            }
+        }
     }
 }

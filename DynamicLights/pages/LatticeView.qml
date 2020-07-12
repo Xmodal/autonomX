@@ -23,7 +23,7 @@ ColumnLayout {
         // background
         Rectangle {
             anchors.fill: parent
-            color: Stylesheet.colors.outputs[genID % Stylesheet.colors.outputs.length]
+            color: genID < 0 ? Stylesheet.colors.white : Stylesheet.colors.outputs[genID % Stylesheet.colors.outputs.length]
         }
 
         // back arrow
@@ -72,7 +72,7 @@ ColumnLayout {
             anchors.left: parent.horizontalCenter
             anchors.leftMargin: 20
 
-            text: generatorModel.at(genID).name
+            text: genID < 0 ? "<no generator selected>" : generatorModel.at(genID).name
             color: Stylesheet.colors.darkGrey
         }
     }
@@ -94,8 +94,11 @@ ColumnLayout {
                 color: Stylesheet.colors.black
             }
 
+            // shader
             ShaderEffect {
                 anchors.fill: parent
+
+                visible: !(genID < 0)
 
                 property real cw: width
                 property real ch: height
@@ -113,6 +116,24 @@ ColumnLayout {
                 property Image textureMap: Image { id: neuronGrid; source: "qrc:/assets/images/neurongrid_20x20.png" }
 
                 fragmentShader: "qrc:/shaders/neuron_matrix.frag"
+            }
+
+            // tooltip
+            Label {
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: 320
+
+                visible: genID < 0
+
+                text: qsTr("Please select a generator from the Generator View to edit its I/O zones.")
+                wrapMode: Text.WordWrap
+                horizontalAlignment: Text.AlignHCenter
+                font {
+                    family: Stylesheet.fonts.main
+                    pixelSize: 14
+                }
+                opacity: 0.4
             }
         }
 

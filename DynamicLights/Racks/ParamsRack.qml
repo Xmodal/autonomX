@@ -124,6 +124,7 @@ Rack {
                 spacing: 0
 
                 SwitchField {
+                    id: stpFlag
                     labelText: "STP"
 
                     on: genID < 0 ? 0 : generatorModel.at(genID).flagSTP
@@ -136,6 +137,7 @@ Rack {
 
                     currVal: genID < 0 ? 0 : generatorModel.at(genID).STPStrength
                     onValueChanged: generatorModel.at(genID).STPStrength = newValue
+                    deactivated: !stpFlag.on
                 }
             }
 
@@ -143,6 +145,7 @@ Rack {
                 spacing: 0
 
                 SwitchField {
+                    id: stdpFlag
                     labelText: "STDP"
 
                     on: genID < 0 ? 0 : generatorModel.at(genID).flagSTDP
@@ -155,6 +158,7 @@ Rack {
 
                     currVal: genID < 0 ? 0 : generatorModel.at(genID).STDPStrength
                     onValueChanged: generatorModel.at(genID).STDPStrength = newValue
+                    deactivated: !stdpFlag.on
                 }
             }
 
@@ -162,6 +166,7 @@ Rack {
                 spacing: 0
 
                 SwitchField {
+                    id: decayFlag
                     labelText: "Decay"
 
                     on: genID < 0 ? 0 : generatorModel.at(genID).flagDecay
@@ -174,6 +179,7 @@ Rack {
 
                     currVal: genID < 0 ? 0 : generatorModel.at(genID).decayConstant
                     onValueChanged: generatorModel.at(genID).decayConstant = newValue
+                    deactivated: !decayFlag.on
                 }
             }
         }

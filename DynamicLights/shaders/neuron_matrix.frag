@@ -1,18 +1,8 @@
-precision highp float;
-
-// constants
-const int MAX_INS = 4;
-const int MAX_OUTS = 4;
-
 // input pixel coords
 varying highp vec2 qt_TexCoord0;
 
 // source neuron grid
 uniform sampler2D textureMap;
-
-// zones
-uniform vec4 inputs[MAX_INS];
-uniform vec4 outputs[MAX_OUTS];
 
 // various props
 uniform int cols;
@@ -43,15 +33,6 @@ void main(void)
 //    vec2 value = vec2(mod(qt_TexCoord0.x, pxl.x*cols), mod(qt_TexCoord0.y, pxl.x*rows));
 //    c *= value.x > pxl.x*pad && value.x < pxl.x*cols-(pxl.x*(pad+1.0)) ? 1.0 : 0.0;
 //    c *= value.y > pxl.y*pad && value.y < pxl.y*rows-(pxl.y*(pad+1.0)) ? 1.0 : 0.0;
-
-    // draw I/O zones
-    for (int i = 0; i < MAX_INS; i++) {
-
-    }
-
-    for (int i = 0; i < MAX_OUTS; i++) {
-
-    }
 
     // export color
     gl_FragColor = c;

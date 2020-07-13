@@ -34,9 +34,6 @@ Field {
         Layout.preferredHeight: 40
         spacing: 3
 
-        // current state
-        state: slider.pressed ? "pressed" : (slider.hovered ? "hovered" : "")
-
         // slider
         Slider {
             id: slider
@@ -136,16 +133,29 @@ Field {
             }
         }
 
-        // states
+        // states & transitions
+        // current state (apparently I have to set it like this for it to work properly instead of using "when" in each state)
+        state: slider.pressed ? "pressed" : (slider.hovered ? "hovered" : "")
         states: [
             State {
-                name: "hovered"
+                name: "hovered";
                 PropertyChanges { target: trueHandle; handleColor: Stylesheet.colors.white }
             },
 
             State {
-                name: "pressed"
+                name: "pressed";
                 PropertyChanges { target: trueHandle; handleColor: Stylesheet.colors.outputs[0] }
+            }
+        ]
+        transitions: [
+            Transition {
+                from: ""; to: "hovered"
+                ColorAnimation { target: trueHandle; properties: "handleColor"; duration: 250; easing.type: Easing.InOutQuad }
+            },
+
+            Transition {
+                from: "hovered"; to: ""
+                ColorAnimation { target: trueHandle; properties: "handleColor"; duration: 250; easing.type: Easing.InOutQuad }
             }
         ]
     }

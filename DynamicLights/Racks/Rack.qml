@@ -87,6 +87,9 @@ Item {
 
                     // i don't really like how the NumberAnimation component is essentially doubled
                     // but whatever this works for now i think
+
+                    // TODO: if i ever find a nicer way to implement this
+                    // make sure i also apply it to the SliderField handle anim. management
                     transitions: [
                         Transition {
                             from: ""; to: "hovered"
@@ -97,7 +100,6 @@ Item {
                             from: "hovered"; to: ""
                             NumberAnimation { target: btnCollapseBg; properties: "opacity"; duration: 250; easing.type: Easing.InOutQuad }
                         }
-
                     ]
                 }
 

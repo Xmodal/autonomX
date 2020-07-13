@@ -25,9 +25,8 @@ Item {
             opacity: 0.5
 
             // states
-            state: isHovered ? "active" : (isFocused ? "active" : "")
             states: State {
-                name: "active"
+                name: "active"; when: isHovered || isFocused
                 PropertyChanges { target: line; opacity: 1 }
             }
 

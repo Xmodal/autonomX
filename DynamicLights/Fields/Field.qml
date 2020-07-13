@@ -33,9 +33,8 @@ ColumnLayout {
     }
 
     // animations
-    state: deactivated ? "deactivated" : ""
     states: State {
-        name: "deactivated"
+        name: "deactivated"; when: field.deactivated
         PropertyChanges { target: field; opacity: 0.25 }
     }
     Behavior on opacity {

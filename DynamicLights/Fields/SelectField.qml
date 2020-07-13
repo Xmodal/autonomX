@@ -97,9 +97,8 @@ Field {
         }
 
         // animations
-        state: down ? "down" : ""
         states: State {
-            name: "down"
+            name: "down"; when: comboBox.down
             PropertyChanges {
                 target: indicatorRot
                 angle: 180

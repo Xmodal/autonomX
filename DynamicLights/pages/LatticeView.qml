@@ -104,14 +104,6 @@ ColumnLayout {
                 property real ch: height
                 property int cols: 20
                 property int rows: 20
-                property int show: 1
-
-                property variant inputs: [
-                    Qt.rect(2, 4, 4, 5)
-                ]
-                property variant outputs: [
-                    Qt.rect(10, 10, 2, 5)
-                ]
 
                 property Image textureMap: Image { id: neuronGrid; source: "qrc:/assets/images/neurongrid_20x20.png" }
 

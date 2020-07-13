@@ -90,9 +90,28 @@ Field {
 
             // auto rotate
             transform: Rotation {
-                angle: comboBox.down ? 180 : 0
+                id: indicatorRot
                 origin.x: indicator.width / 2
                 origin.y: indicator.height / 2
+            }
+        }
+
+        // animations
+        state: down ? "down" : ""
+        states: State {
+            name: "down"
+            PropertyChanges {
+                target: indicatorRot
+                angle: 180
+            }
+        }
+
+        transitions: Transition {
+            NumberAnimation {
+                target: indicatorRot
+                property: "angle"
+                duration: 400
+                easing.type: Easing.OutCubic
             }
         }
     }

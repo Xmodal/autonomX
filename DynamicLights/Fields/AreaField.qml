@@ -17,6 +17,7 @@ Field {
         Layout.fillHeight: true
 
         FieldFrame {
+            enabled: !deactivated
             isHovered: textArea.hovered
             isFocused: textArea.activeFocus
         }
@@ -26,8 +27,12 @@ Field {
             anchors.fill: parent
             maximumFlickVelocity: 350
 
+            enabled: !deactivated
+
             TextArea.flickable: TextArea {
                 id: textArea
+
+                enabled: !deactivated
 
                 // root settings
                 text: defaultText

@@ -17,12 +17,15 @@ Field {
         currentIndex: selectField.index
         model: options
 
+        enabled: !deactivated
+
         onCurrentIndexChanged: selectField.valueChanged(currentIndex)
 
         // background
         background: FieldFrame {
-            frameWidth: fieldWidth
+            enabled: !deactivated
             isHovered: comboBox.hovered
+            isFocused: comboBox.down
         }
 
         // options delegate
@@ -67,7 +70,7 @@ Field {
             contentItem: ListView {
                 clip: true
                 implicitHeight: contentHeight
-                model: comboBox.popup.visible ? comboBox.delegateModel : null
+                model: comboBox.down ? comboBox.delegateModel : null
 
                 ScrollIndicator.vertical: ScrollIndicator {}
             }
@@ -87,7 +90,7 @@ Field {
 
             // auto rotate
             transform: Rotation {
-                angle: comboBox.popup.visible ? 180 : 0
+                angle: comboBox.down ? 180 : 0
                 origin.x: indicator.width / 2
                 origin.y: indicator.height / 2
             }

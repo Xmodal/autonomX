@@ -9,6 +9,7 @@ ColumnLayout {
 
     property string labelText: "Label"
     property int fieldWidth: Stylesheet.field.initialWidth
+    property bool deactivated: false
 
     signal valueChanged(variant newValue)
 
@@ -28,6 +29,20 @@ ColumnLayout {
             pixelSize: 13
             letterSpacing: 13 * 0.05
             capitalization: Font.AllUppercase
+        }
+    }
+
+    // animations
+    state: deactivated ? "deactivated" : ""
+    states: State {
+        name: "deactivated"
+        PropertyChanges { target: field; opacity: 0.25 }
+    }
+    Behavior on opacity {
+        NumberAnimation {
+            property: "opacity"
+            duration: 300
+            easing.type: Easing.InOutQuad
         }
     }
 }

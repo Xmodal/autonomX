@@ -20,9 +20,12 @@ Field {
     TextField {
         id: fieldInput
 
+        enabled: !deactivated
+
         // alignment
         leftPadding: 0
-        height: 40
+        Layout.fillWidth: true
+        Layout.preferredHeight: 40
 
         // text
         text: activeFocus ? defaultText : metrics.elidedText
@@ -39,6 +42,7 @@ Field {
 
         // background
         background: FieldFrame {
+            enabled: !deactivated
             isHovered: fieldInput.hovered
             isFocused: fieldInput.activeFocus
         }

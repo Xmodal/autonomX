@@ -41,6 +41,8 @@ Field {
         Slider {
             id: slider
 
+            enabled: !deactivated
+
             // alignment
             Layout.fillWidth: true
             Layout.preferredHeight: 10 + trueHandle.height
@@ -109,6 +111,8 @@ Field {
 
         TextField {
             id: sliderValue
+
+            enabled: !deactivated
 
             // alignment
             padding: 0

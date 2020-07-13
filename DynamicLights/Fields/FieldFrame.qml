@@ -12,15 +12,33 @@ Item {
     anchors.fill: parent
 
     Repeater {
+        id: frameLines
         model: ["top", "bottom"]
 
         Rectangle {
+            id: line
             width: parent.width
             height: 1
             anchors.top: modelData == "top" ? parent.top : undefined
             anchors.bottom: modelData == "bottom" ? parent.bottom : undefined
             color: Stylesheet.colors.white
-            opacity: isHovered ? 1 : (isFocused ? 1 : 0.5)
+            opacity: 0.5
+
+            // states
+            state: isHovered ? "active" : (isFocused ? "active" : "")
+            states: State {
+                name: "active"
+                PropertyChanges { target: line; opacity: 1 }
+            }
+
+            // animations
+            Behavior on opacity {
+                NumberAnimation {
+                    property: "opacity"
+                    duration: 150
+                    easing.type: Easing.InOutQuad
+                }
+            }
         }
     }
 }

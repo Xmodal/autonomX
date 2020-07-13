@@ -73,8 +73,28 @@ double Generator::getOutputMonitor() {
     return outputMonitor;
 }
 
-void Generator::writeName(QString string) {
-    if(name == string) {
+int Generator::getOscInputPort() {
+    return oscInputPort;
+}
+
+QString Generator::getOscInputAddress() {
+    return oscInputAddress;
+}
+
+int Generator::getOscOutputPort() {
+    return oscOutputPort;
+}
+
+QString Generator::getOscOutputAddressHost() {
+    return oscOutputAddressHost;
+}
+
+QString Generator::getOscOutputAddressTarget() {
+    return oscOutputAddressTarget;
+}
+
+void Generator::writeName(QString name) {
+    if(this->name == name) {
         return;
     }
 
@@ -83,16 +103,16 @@ void Generator::writeName(QString string) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "writeName\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << string;
+        qDebug() << "writeName\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << name;
     }
 
-    name = string;
-    emit valueChanged("name", QVariant(string));
+    this->name = name;
+    emit valueChanged("name", QVariant(name));
     emit nameChanged(name);
 }
 
-void Generator::writeType(QString string) {
-    if(type == string) {
+void Generator::writeType(QString type) {
+    if(this->type == type) {
         return;
     }
 
@@ -101,16 +121,16 @@ void Generator::writeType(QString string) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "writeType\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << string;
+        qDebug() << "writeType\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << type;
     }
 
-    type = string;
-    emit valueChanged("type", QVariant(string));
+    this->type = type;
+    emit valueChanged("type", QVariant(type));
     emit typeChanged(type);
 }
 
-void Generator::writeDescription(QString string) {
-    if(description == string) {
+void Generator::writeDescription(QString description) {
+    if(this->description == description) {
         return;
     }
 
@@ -119,16 +139,16 @@ void Generator::writeDescription(QString string) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "writeDescription\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << string;
+        qDebug() << "writeDescription\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << description;
     }
 
-    description = string;
-    emit valueChanged("description", QVariant(string));
-    emit descriptionChanged(string);
+    this->description = description;
+    emit valueChanged("description", QVariant(description));
+    emit descriptionChanged(description);
 }
 
-void Generator::writeOutputMonitor(double value) {
-    if(outputMonitor == value) {
+void Generator::writeOutputMonitor(double outputMonitor) {
+    if(this->outputMonitor == outputMonitor) {
         return;
     }
 
@@ -137,13 +157,102 @@ void Generator::writeOutputMonitor(double value) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "writeOutputMonitor\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << value;
+        qDebug() << "writeOutputMonitor\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << outputMonitor;
     }
 
-    outputMonitor = value;
-
-    emit valueChanged("outputMonitor", QVariant(value));
+    this->outputMonitor = outputMonitor;
+    emit valueChanged("outputMonitor", QVariant(outputMonitor));
     emit outputMonitorChanged(outputMonitor);
+}
+
+void Generator::writeOscInputPort(int oscInputPort) {
+    if(this->oscInputPort == oscInputPort) {
+        return;
+    }
+
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "writeOscInputPort\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << oscInputPort;
+    }
+
+    this->oscInputPort = oscInputPort;
+    emit valueChanged("oscInputPort", QVariant(oscInputPort));
+    emit oscInputPortChanged(oscInputPort);
+}
+
+void Generator::writeOscInputAddress(QString oscInputAddress) {
+    if(this->oscInputAddress == oscInputAddress) {
+        return;
+    }
+
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "writeOscInputAddress\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << oscInputAddress;
+    }
+
+    this->oscInputAddress = oscInputAddress;
+    emit valueChanged("oscInputAddress", QVariant(oscInputAddress));
+    emit oscInputAddressChanged(oscInputAddress);
+}
+
+void Generator::writeOscOutputPort(int oscOutputPort) {
+    if(this->oscOutputPort == oscOutputPort) {
+        return;
+    }
+
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "writeOscOutputPort\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << oscOutputPort;
+    }
+
+    this->oscOutputPort = oscOutputPort;
+    emit valueChanged("oscOutputPort", QVariant(oscOutputPort));
+    emit oscOutputPortChanged(oscOutputPort);
+}
+
+void Generator::writeOscOutputAddressHost(QString oscOutputAddressHost) {
+    if(this->oscOutputAddressHost == oscOutputAddressHost) {
+        return;
+    }
+
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "writeOscOutputAddressHost\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << oscOutputAddressHost;
+    }
+
+    this->oscOutputAddressHost = oscOutputAddressHost;
+    emit valueChanged("oscOutputAddressHost", QVariant(oscOutputAddressHost));
+    emit oscOutputAddressHostChanged(oscOutputAddressHost);
+}
+
+void Generator::writeOscOutputAddressTarget(QString oscOutputAddressTarget) {
+    if(this->oscOutputAddressTarget == oscOutputAddressTarget) {
+        return;
+    }
+
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "writeOscOutputAddressTarget\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << oscOutputAddressTarget;
+    }
+
+    this->oscOutputAddressTarget = oscOutputAddressTarget;
+    emit valueChanged("oscOutputAddressTarget", QVariant(oscOutputAddressTarget));
+    emit oscOutputAddressTargetChanged(oscOutputAddressTarget);
 }
 
 void Generator::updateValue(const QString &key, const QVariant &value) {

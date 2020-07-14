@@ -33,6 +33,7 @@ private:
     bool firstFrame = true;
     bool flagDebug = false;
     bool flagDummyOutputMonitor = false;
+    bool flagDisableProcessing = true;
     std::mt19937 randomGenerator;
 std::uniform_real_distribution<> randomUniform;
 public:

@@ -70,7 +70,7 @@ void Facade::updateValueFromAlias(const QString &key, const QVariant &value) {
 
         QString valueString = value.toString();
 
-        qDebug() << "updateValueFromAlias (" << keyBuffer << "):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tvalue: " << valueString;
+        qDebug() << "updateValueFromAlias (" << keyBuffer << ") (in Facade):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tvalue: " << valueString;
     }
 
     // filter for unchanging updates

@@ -82,7 +82,6 @@ void Generator::writeName(QString string) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-
         qDebug() << "writeName\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << string;
     }
 
@@ -100,7 +99,6 @@ void Generator::writeType(QString string) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
             std::chrono::system_clock::now().time_since_epoch()
         );
-
 
         qDebug() << "writeType\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << string;
     }
@@ -120,7 +118,6 @@ void Generator::writeDescription(QString string) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-
         qDebug() << "writeDescription\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << string;
     }
 
@@ -139,7 +136,6 @@ void Generator::writeOutputMonitor(double value) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-
         qDebug() << "writeOutputMonitor\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << value;
     }
 
@@ -157,9 +153,12 @@ void Generator::updateValue(const QString &key, const QVariant &value) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-
-        qDebug() << "updateValue (" << keyBuffer << ")\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << value;
+        qDebug() << "updateValue (" << keyBuffer << ") (in Generator)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << value;
     }
 
-    setProperty(keyBuffer, value);
+    bool success = setProperty(keyBuffer, value);
+
+    if(!success) {
+        qDebug() << "failed to find property!";
+    }
 }

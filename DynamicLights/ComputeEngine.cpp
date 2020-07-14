@@ -52,6 +52,10 @@ void ComputeEngine::start() {
 
 void ComputeEngine::loop() {
 
+    if(flagDisableProcessing) {
+        return;
+    }
+
     double millisCompute;   // time in nanoseconds taken by computation
     double millisLastFrame; // time in nanoseconds since last frame
 

@@ -152,7 +152,7 @@ private:
     double getOutputGroupActivation(int outputGroupIndex);
 
 public:
-    SpikingNet();
+    SpikingNet(int id);
     ~SpikingNet();
 
     void computeOutput(double deltaTime);

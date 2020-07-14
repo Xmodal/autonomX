@@ -42,6 +42,10 @@ Facade::Facade(QObject *alias) : QQmlPropertyMap(this, nullptr) {
         QVariant value = alias->property(name);
         // add key-value pair to facade
         insert(name, value);
+
+        if(flagDebug) {
+            qDebug() << "added property (Facade): " << name;
+        }
     }
 }
 
@@ -64,7 +68,9 @@ void Facade::updateValueFromAlias(const QString &key, const QVariant &value) {
         QByteArray keyArray = key.toLocal8Bit();
         char* keyBuffer = keyArray.data();
 
-        qDebug() << "updateValueRelay (" << keyBuffer << "):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+        QString valueString = value.toString();
+
+        qDebug() << "updateValueFromAlias (" << keyBuffer << "):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tvalue: " << valueString;
     }
 
     // filter for unchanging updates

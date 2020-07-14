@@ -149,7 +149,17 @@ void Generator::writeOutputMonitor(double value) {
 }
 
 void Generator::updateValue(const QString &key, const QVariant &value) {
-    QByteArray array = key.toLocal8Bit();
-    char* buffer = array.data();
-    setProperty(buffer, value);
+    QByteArray keyArray = key.toLocal8Bit();
+    char* keyBuffer = keyArray.data();
+
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+
+        qDebug() << "updateValue (" << keyBuffer << ")\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << value;
+    }
+
+    setProperty(keyBuffer, value);
 }

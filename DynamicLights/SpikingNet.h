@@ -95,7 +95,8 @@ private:
     bool        flagDecay               = false;
     bool        flagDirectConnection    = true;
     bool        flagRandomDevice        = true;
-    bool        flagDebug               = false;
+    bool        flagDebug               = true;
+    bool        flagDebugFilter         = true; // disables logging for events that happen once per render loop
 
     // the neurons
     std::vector<Izhikevich> neurons;

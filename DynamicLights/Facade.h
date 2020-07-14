@@ -37,7 +37,7 @@ public:
     Facade(QObject *alias);
     ~Facade();
 private:
-    bool flagDebug = false;
+    bool flagDebug = true;
 public slots:
     void updateValueFromAlias(const QString &key, const QVariant &value);
 signals:

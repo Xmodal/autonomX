@@ -150,6 +150,35 @@ int main(int argc, char *argv[])
     if (engine.rootObjects().isEmpty())
         return -1;
 
+    QObject::connect(generatorFacades->at(0).data(), &Facade::valueChanged, nullptr, [=](const QString &key, const QVariant &value) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        QByteArray keyArray = key.toLocal8Bit();
+        char* keyBuffer = keyArray.data();
+
+        QString valueString = value.toString();
+
+        qDebug() << "valueChanged (" << keyBuffer << "):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tvalue: " << valueString;
+    });
+
+    QObject::connect(generatorFacades->at(0).data(), &Facade::valueChangedFromAlias, nullptr, [=](const QString &key, const QVariant &value) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        QByteArray keyArray = key.toLocal8Bit();
+        char* keyBuffer = keyArray.data();
+
+        QString valueString = value.toString();
+
+        qDebug() << "valueChangedFromAlias (" << keyBuffer << "):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tvalue: " << valueString;
+    });
+
+    //emit generatorFacades->at(0).data()->valueChanged("STPStrength", QVariant(-1.0));
+    generatorFacades->at(0).data()->updateValueFromAlias("STPStrength", QVariant(-1.0));
+
     QObject::connect(&app, &QCoreApplication::aboutToQuit, [computeThread](){
         qDebug() << "about to exit";
         computeThread->exit();

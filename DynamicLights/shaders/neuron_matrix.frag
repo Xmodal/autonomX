@@ -7,17 +7,19 @@ uniform sampler2D textureMap;
 // various props
 uniform int cols;
 uniform int rows;
+uniform float realWidth;
+uniform float realHeight;
 uniform float cw;
 uniform float ch;
 
 void main(void)
 {
     // props
-    float pad = 2.0;                        // pixel padding between cells
-    vec2 s = vec2(400, 400);                // 100% size in pixels
-    vec2 cr = vec2(cols, rows);             // cols/rows vector
-    vec2 pxl = (1.0 / cw, 1.0 / ch);        // pixel unit relative to GLSL's [0, 1] coord system
-    vec2 diff = vec2(cw, ch) / s - 1.0;     // offset value to map grid to center
+    float pad = 2.0;                            // pixel padding between cells
+    vec2 s = vec2(realWidth, realHeight);       // 100% size in pixels
+    vec2 cr = vec2(cols, rows);                 // cols/rows vector
+    vec2 pxl = (1.0 / cw, 1.0 / ch);            // pixel unit relative to GLSL's [0, 1] coord system
+    vec2 diff = vec2(cw, ch) / s - 1.0;         // offset value to map grid to center
 
     // map tex coord to centered grid
     vec2 st = qt_TexCoord0 * (1.0 + diff) - (diff / 2.0);

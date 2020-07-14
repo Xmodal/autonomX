@@ -9,7 +9,27 @@ Item {
     property int sizeValid: 0
     property int startIndex: 0
 
-    onNewValueChanged: graphCanvas.requestPaint()
+    onNewValueChanged: {
+        if(sizeValid == sizeMax) {
+            // buffer is full
+
+            // index to write to is the previous start index
+            let index = startIndex;
+            // write new value
+            history[index] = newValue;
+            // increment start index
+            startIndex = (startIndex + 1) % sizeMax;
+        } else {
+            // buffer is not full yet
+
+            // index to write to is at start index offset by valid size
+            let index = (startIndex + sizeValid) % sizeMax;
+            // write new value
+            history[index] = newValue;
+            // increment valid size
+            sizeValid++;
+        }
+    }
 
     property color strokeColor: "#fff"
 
@@ -23,27 +43,9 @@ Item {
 
         opacity: 0.5
 
-        onPaint: {
-            if(sizeValid == sizeMax) {
-                // buffer is full
+        onAvailableChanged: if(available) drawGraph()
 
-                // index to write to is the previous start index
-                let index = startIndex;
-                // write new value
-                history[index] = newValue;
-                // increment start index
-                startIndex = (startIndex + 1) % sizeMax;
-            } else {
-                // buffer is not full yet
-
-                // index to write to is at start index offset by valid size
-                let index = (startIndex + sizeValid) % sizeMax;
-                // write new value
-                history[index] = newValue;
-                // increment valid size
-                sizeValid++;
-            }
-
+        function drawGraph() {
             var ctx = getContext("2d");
             ctx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
             ctx.strokeStyle = strokeColor;
@@ -59,6 +61,8 @@ Item {
             }
             ctx.closePath();
             ctx.stroke();
+
+            requestAnimationFrame(drawGraph);
         }
     }
 }

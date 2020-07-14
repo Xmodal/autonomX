@@ -32,7 +32,7 @@ private:
     double frequency = 80;
     bool firstFrame = true;
     bool flagDebug = false;
-    bool flagDummyOutputMonitor = false;
+    bool flagDummyOutputMonitor = true;
     std::mt19937 randomGenerator;
 std::uniform_real_distribution<> randomUniform;
 public:

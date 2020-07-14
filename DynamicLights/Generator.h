@@ -45,7 +45,7 @@ protected:
     double outputMonitor;   // output monitor / indicator light, generated from output array automatically by ComputeEngine
     QSharedPointer<QVector<qreal>> outputMonitorHistory;    // circular buffer containing the history of the output monitor
     int outputMonitorHistoryStartIndex = 0;                 // index of the first element in the buffer (historically the oldest element)
-    int outputMonitorHistorySizeMax = 2048;                 // size of the circular buffer
+    int outputMonitorHistorySizeMax = 128;                  // size of the circular buffer
     int outputMonitorHistorySizeValid = 0;                  // number of valid entries in the circular buffer (initialized to 0 since the buffer will be empty)
 
     // example for indexing outputMonitorHistory:

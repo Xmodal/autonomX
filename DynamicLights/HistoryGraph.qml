@@ -8,8 +8,6 @@ Item {
     property int sizeMax
     property variant points
 
-    onPointsChanged: graphCanvas.requestPaint()
-
     property color strokeColor: "#fff"
 
     anchors.fill: parent
@@ -32,10 +30,12 @@ Item {
                 var indexStart = (startIndex + sizeValid - 1 - i + sizeMax) % sizeMax;
                 var indexEnd = (startIndex + sizeValid - i + sizeMax) % sizeMax;
                 ctx.moveTo(graphCanvas.width - i * lX, (1.0 - points[indexStart]) * graphCanvas.height);
-                ctx.lineTo(graphCanvas.width - (i + 1) * lX, (1.0 - points[indexEnd]) * graphCanvas.height)
+                ctx.lineTo(graphCanvas.width - (i + 1) * lX, (1.0 - points[indexEnd]) * graphCanvas.height);
             }
             ctx.closePath();
             ctx.stroke();
+
+            requestAnimationFrame(paint);
         }
     }
 }

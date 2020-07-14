@@ -61,7 +61,7 @@ public:
     void writeDescription(QString string);
     void writeOutputMonitor(double value);
 private:
-    bool flagDebug = true;
+    bool flagDebug = false;
 public slots:
     void updateValue(const QString &key, const QVariant &value); // for connection from QQmlPropertyMap's valueChanged signal
 signals:

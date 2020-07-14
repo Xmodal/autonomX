@@ -34,7 +34,7 @@ class SpikingNet : public Generator {
     Q_PROPERTY(double inhibitoryNoise READ getInhibitoryNoise WRITE writeInhibitoryNoise NOTIFY inhibitoryNoiseChanged)
     Q_PROPERTY(double excitatoryNoise READ getExcitatoryNoise WRITE writeExcitatoryNoise NOTIFY excitatoryNoiseChanged)
 
-    Q_PROPERTY(double STPStrength READ getSTPStrength WRITE writeSTDPStrength NOTIFY STPStrengthChanged)
+    Q_PROPERTY(double STPStrength READ getSTPStrength WRITE writeSTPStrength NOTIFY STPStrengthChanged)
     Q_PROPERTY(double STDPStrength READ getSTDPStrength WRITE writeSTDPStrength NOTIFY STDPStrengthChanged)
     Q_PROPERTY(double decayConstant READ getDecayConstant WRITE writeDecayConstant NOTIFY decayConstantChanged)
 

@@ -29,7 +29,7 @@ class ComputeEngine : public QObject {
 private:
     QSharedPointer<QList<QSharedPointer<Generator>>> generators;
     QElapsedTimer elapsedTimer;
-    double frequency = 80;
+    double frequency = 1;
     bool firstFrame = true;
     bool flagDebug = false;
     bool flagDummyOutputMonitor = false;

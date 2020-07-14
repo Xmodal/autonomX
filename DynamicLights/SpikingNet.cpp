@@ -340,7 +340,7 @@ void SpikingNet::setGridNetwork() {
 // ############################### update routines and output calculation ###############################
 
 void SpikingNet::computeOutput(double deltaTime) {
-    if(flagDebug) {
+    if(flagDebug && !flagDebugFilter) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );

@@ -21,7 +21,7 @@
 
 // ############################### initialization routines ###############################
 
-SpikingNet::SpikingNet() {
+SpikingNet::SpikingNet(int id) : Generator(id) {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()

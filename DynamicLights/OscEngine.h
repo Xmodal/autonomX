@@ -16,6 +16,8 @@
 #pragma once
 
 #include <QObject>
+#include <QSharedPointer>
+#include <QHash>
 #include "OscSender.h"
 #include "OscReceiver.h"
 
@@ -23,5 +25,19 @@ class OscEngine : public QObject {
     Q_OBJECT
 public:
     OscEngine();
-    // TODO: implement signal / slots to process incoming / outgoing messages
+private:
+    QHash<int, QSharedPointer<OscSender>> oscSenders;
+    QHash<int, QSharedPointer<OscReceiver>> oscRecievers;
+signals:
+    void dataRecieved(int, QVariant);
+public slots:
+    void sendData(int id, QVariant data);
+
+    void createReciever(int id, QString address, int port);
+    void updateReciever(int id, QString address, int port);
+    void deleteReciever(int id);
+
+    void createSender(int id, QString hostAddress, int port);
+    void updateSender(int id, QString hostAddress, int port);
+    void deleteSender(int id);
 };

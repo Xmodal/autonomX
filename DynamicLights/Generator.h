@@ -41,20 +41,22 @@ protected:
     std::vector<double> input;
     std::vector<double> output;
 
+    int id;                         // generator id, generated automatically by ComputeEngine in constructor
+
     // descriptive properties seen in the generators list panel
-    QString name;           // generator name, assigned by user
-    QString type;           // generator type, fixed
-    QString description;    // generator description, fixed
-    double outputMonitor;   // output monitor / indicator light, generated from output array automatically by ComputeEngine
+    QString name;                   // generator name, assigned by user
+    QString type;                   // generator type, fixed
+    QString description;            // generator description, fixed
+    double outputMonitor;           // output monitor / indicator light, generated from output array automatically by ComputeEngine
 
-    int oscInputPort;
-    QString oscInputAddress;
+    int oscInputPort;               // generator osc input port, assigned by user
+    QString oscInputAddress;        // generator osc input address, assigned by user
 
-    int oscOutputPort;
-    QString oscOutputAddressHost;
-    QString oscOutputAddressTarget;
+    int oscOutputPort;              // generator osc output port, assigned by user
+    QString oscOutputAddressHost;   // generator osc output address for host, assigned by user
+    QString oscOutputAddressTarget; // generator osc output address for target, assigned by user
 public:
-    explicit Generator(QObject *parent = nullptr);
+    Generator(int id);
     ~Generator();
 
     // the method implemented by the derived class that computes the output
@@ -65,6 +67,9 @@ public:
     double readOutput(int index);
     int getInputSize();
     int getOutputSize();
+
+    // method for reading id
+    int getId();
 
     // methods to read properties
     QString getName();

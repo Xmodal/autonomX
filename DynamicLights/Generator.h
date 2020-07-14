@@ -29,10 +29,6 @@ class Generator : public QObject
     Q_PROPERTY(QString type READ getType NOTIFY typeChanged)
     Q_PROPERTY(QString description READ getDescription WRITE writeDescription NOTIFY descriptionChanged)
     Q_PROPERTY(double outputMonitor READ getOutputMonitor NOTIFY outputMonitorChanged)
-    Q_PROPERTY(QVector<qreal> outputMonitorHistory READ getOutputMonitorHistory NOTIFY outputMonitorHistoryChanged)
-    Q_PROPERTY(int outputMonitorHistoryStartIndex READ getOutputMonitorHistoryStartIndex NOTIFY outputMonitorHistoryStartIndexChanged)
-    Q_PROPERTY(int outputMonitorHistorySizeMax READ getOutputMonitorHistorySizeMax NOTIFY outputMonitorHistorySizeMaxChanged)
-    Q_PROPERTY(int outputMonitorHistorySizeValid READ getOutputMonitorHistorySizeValid NOTIFY outputMonitorHistorySizeValidChanged)
 protected:
     // the generator class provides input and output buffers
     std::vector<double> input;
@@ -43,10 +39,6 @@ protected:
     QString type;           // generator type, fixed
     QString description;    // generator description, fixed
     double outputMonitor;   // output monitor / indicator light, generated from output array automatically by ComputeEngine
-    QSharedPointer<QVector<qreal>> outputMonitorHistory;    // circular buffer containing the history of the output monitor
-    int outputMonitorHistoryStartIndex = 0;                 // index of the first element in the buffer (historically the oldest element)
-    int outputMonitorHistorySizeMax = 2048;                 // size of the circular buffer
-    int outputMonitorHistorySizeValid = 0;                  // number of valid entries in the circular buffer (initialized to 0 since the buffer will be empty)
 
     // example for indexing outputMonitorHistory:
 
@@ -82,10 +74,6 @@ public:
     QString getType();
     QString getDescription();
     double getOutputMonitor();
-    QVector<qreal> getOutputMonitorHistory();
-    int getOutputMonitorHistoryStartIndex();
-    int getOutputMonitorHistorySizeMax();
-    int getOutputMonitorHistorySizeValid();
 
     void writeName(QString string);
     void writeType(QString string);
@@ -101,8 +89,4 @@ signals:
     void typeChanged(QString);
     void descriptionChanged(QString);
     void outputMonitorChanged(double);
-    void outputMonitorHistoryChanged(QVector<qreal>);
-    void outputMonitorHistoryStartIndexChanged(int);
-    void outputMonitorHistorySizeMaxChanged(int);
-    void outputMonitorHistorySizeValidChanged(int);
 };

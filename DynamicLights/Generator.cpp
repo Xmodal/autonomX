@@ -156,9 +156,15 @@ void Generator::updateValue(const QString &key, const QVariant &value) {
         qDebug() << "updateValue (" << keyBuffer << ") (in Generator)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << value;
     }
 
+    qDebug() << "| STDPStrength pre:\t" << property("STDPStrength");
+    qDebug() << "| STPStrength pre:\t" << property("STPStrength");
+
     bool success = setProperty(keyBuffer, value);
 
     if(!success) {
-        qDebug() << "failed to find property!";
+        qDebug() << "| failed to find property!";
     }
+
+    qDebug() << "| STDPStrength post:\t" << property("STDPStrength");
+    qDebug() << "| STPStrength post:\t" << property("STPStrength");
 }

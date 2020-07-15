@@ -113,7 +113,7 @@ ColumnLayout {
                 property real cw: width
                 property real ch: height
                 property real realWidth: mainContent.realWidth
-                property real realheight: mainContent.realHeight
+                property real realHeight: mainContent.realHeight
                 property int cols: mainContent.cols
                 property int rows: mainContent.rows
                 property Image textureMap: Image { id: neuronGrid; source: "qrc:/assets/images/neurongrid_20x20.png" }

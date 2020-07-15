@@ -2,6 +2,9 @@
 #include "contrib/oscpack/OscOutboundPacketStream.h"
 #include "contrib/oscpack/OscTypes.h"
 #include <iostream>
+#include <chrono>
+#include <QDebug>
+#include <QThread>
 
 // FIXME: we should also allow addresses such as "localhost", or "example.com"
 
@@ -11,6 +14,14 @@ OscSender::OscSender(const QString& hostAddress, quint16 port, QObject *parent) 
         m_hostAddress(hostAddress),
         m_port(port)
 {
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "constructor (OscSender):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+    }
+
     m_udpSocket->connectToHost(QHostAddress(m_hostAddress) , m_port);
 }
 
@@ -20,11 +31,8 @@ void OscSender::send(const QString& oscAddress, const QVariantList& arguments) {
 
     qint64 written = m_udpSocket->write(datagram);
 
-    qDebug() << "C++OscSender Send" << datagram.size() << "bytes:" << datagram.toHex() <<
-                "to " << m_hostAddress << "on port" << m_port;
-
     if (written == -1) {
-        qCritical() << "Failed to send OSC. (write bytes to the send socket)";
+        qCritical() << "failed to send OSC (write bytes to the send socket)";
     }
     m_udpSocket->flush();
     m_udpSocket->waitForBytesWritten();
@@ -57,7 +65,7 @@ void OscSender::variantListToByteArray(QByteArray& outputResult, const QString& 
         } else if (type == QMetaType::Bool) {
             packet << argument.toBool();
         } else {
-            qDebug() << "Unhandled OSC argument type " << argument.typeName();
+            qDebug() << "unhandled OSC argument type " << argument.typeName();
         }
         // TODO: implement other OSC types
     }

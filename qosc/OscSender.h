@@ -50,4 +50,6 @@ private:
     quint16 m_port;
 
     void variantListToByteArray(QByteArray& outputResult, const QString& oscAddress, const QVariantList& arguments);
+
+    bool flagDebug = true;
 };

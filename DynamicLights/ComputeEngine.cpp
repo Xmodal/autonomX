@@ -154,12 +154,15 @@ void ComputeEngine::loop() {
     // measure the time used to do the computation
     millisCompute = elapsedTimer.nsecsElapsed() / 1000000.0;
 
-    if(flagDebug) {
-        qDebug() << "compute refresh interval: " << millisLastFrame;
-        qDebug() << "compute time:             " << millisCompute;
-    }
-
     QTimer timer;
     timer.setTimerType(Qt::PreciseTimer);
     timer.singleShot((int) std::min<double>(1.0 / frequency * 1000.0, std::max<double>(1.0 / frequency * 1000.0 - millisCompute, 0)), this, &ComputeEngine::loop);
+
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "loop (ComputeEngine):\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\trefresh (ms) = " << millisLastFrame << "\tcompute (ms) = " << millisCompute;
+    }
 }

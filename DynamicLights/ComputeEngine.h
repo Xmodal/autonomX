@@ -33,7 +33,7 @@ private:
     QElapsedTimer elapsedTimer;
     double frequency = 80;
     bool firstFrame = true;
-    bool flagDebug = false;
+    bool flagDebug = true;
     bool flagDummyOutputMonitor = false;
     bool flagDisableProcessing = false;
     std::mt19937 randomGenerator;

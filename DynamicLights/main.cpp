@@ -51,6 +51,8 @@ int main(int argc, char *argv[]) {
     qDebug() << "Built against Qt" << QT_VERSION_STR;
     qDebug() << "Using Qt" << QLibraryInfo::version() << "at runtime";
 
+    qDebug() << "GUI id = " << QThread::currentThreadId();
+
 
     // make Generator virtual class recognizable to QML
     // this line is apparently necessary for the QML engine to receive Generator pointers
@@ -113,18 +115,18 @@ int main(int argc, char *argv[]) {
     oscEngine.moveToThread(oscThread.get());
 
     // connect compute engine to osc engine
-    QObject::connect(&computeEngine, &ComputeEngine::sendOscData, &oscEngine, &OscEngine::sendOscData);
+    QObject::connect(&computeEngine, &ComputeEngine::sendOscData, &oscEngine, &OscEngine::sendOscData, Qt::QueuedConnection);
 
-    QObject::connect(&computeEngine, &ComputeEngine::createOscReceiver, &oscEngine, &OscEngine::createOscReceiver);
-    QObject::connect(&computeEngine, &ComputeEngine::updateOscReceiver, &oscEngine, &OscEngine::updateOscReceiver);
-    QObject::connect(&computeEngine, &ComputeEngine::deleteOscReceiver, &oscEngine, &OscEngine::deleteOscReceiver);
+    QObject::connect(&computeEngine, &ComputeEngine::createOscReceiver, &oscEngine, &OscEngine::createOscReceiver, Qt::QueuedConnection);
+    QObject::connect(&computeEngine, &ComputeEngine::updateOscReceiver, &oscEngine, &OscEngine::updateOscReceiver, Qt::QueuedConnection);
+    QObject::connect(&computeEngine, &ComputeEngine::deleteOscReceiver, &oscEngine, &OscEngine::deleteOscReceiver, Qt::QueuedConnection);
 
-    QObject::connect(&computeEngine, &ComputeEngine::createOscSender, &oscEngine, &OscEngine::createOscSender);
-    QObject::connect(&computeEngine, &ComputeEngine::updateOscSender, &oscEngine, &OscEngine::updateOscSender);
-    QObject::connect(&computeEngine, &ComputeEngine::deleteOscSender, &oscEngine, &OscEngine::deleteOscSender);
+    QObject::connect(&computeEngine, &ComputeEngine::createOscSender, &oscEngine, &OscEngine::createOscSender, Qt::QueuedConnection);
+    QObject::connect(&computeEngine, &ComputeEngine::updateOscSender, &oscEngine, &OscEngine::updateOscSender, Qt::QueuedConnection);
+    QObject::connect(&computeEngine, &ComputeEngine::deleteOscSender, &oscEngine, &OscEngine::deleteOscSender, Qt::QueuedConnection);
 
     // connect osc engine to compute engine
-    QObject::connect(&oscEngine, &OscEngine::recieveOscData, &computeEngine, &ComputeEngine::recieveOscData);
+    QObject::connect(&oscEngine, &OscEngine::recieveOscData, &computeEngine, &ComputeEngine::recieveOscData, Qt::QueuedConnection);
 
     // start compute engine
     computeEngine.start();

@@ -19,6 +19,7 @@
 #include <QTimer>
 #include <QElapsedTimer>
 #include <QList>
+#include <QHash>
 #include <QSharedPointer>
 #include <random>
 #include "Generator.h"
@@ -28,6 +29,7 @@ class ComputeEngine : public QObject {
     Q_OBJECT
 private:
     QSharedPointer<QList<QSharedPointer<Generator>>> generators;
+    QSharedPointer<QHash<int, QSharedPointer<Generator>>> generatorsHashMap;
     QElapsedTimer elapsedTimer;
     double frequency = 80;
     bool firstFrame = true;
@@ -39,7 +41,19 @@ std::uniform_real_distribution<> randomUniform;
 public:
     ComputeEngine(QSharedPointer<QList<QSharedPointer<Generator>>> generators);
     ~ComputeEngine();
+signals:
+    void sendOscData(int id, QVariant data);
+
+    void createOscReceiver(int id, QString address, int port);
+    void updateOscReceiver(int id, QString address, int port);
+    void deleteOscReceiver(int id);
+
+    void createOscSender(int id, QString addressHost, QString addressTarget, int port);
+    void updateOscSender(int id, QString addressHost, QString addressTarget, int port);
+    void deleteOscSender(int id);
 public slots:
     void start();
     void loop();
+
+    void recieveOscData(int id, QVariant data);
 };

@@ -24,6 +24,7 @@
         <file>components/racks/Rack.qml</file>
         <file>components/racks/RackView.qml</file>
         <file>delegates/GeneratorWidget.qml</file>
+        <file>delegates/HistoryGraph.qml</file>
         <file>delegates/OutputIndicator.qml</file>
         <file>shaders/light-cue.frag</file>
         <file>pages/GeneratorView.qml</file>

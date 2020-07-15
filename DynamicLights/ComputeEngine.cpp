@@ -30,10 +30,10 @@ ComputeEngine::ComputeEngine(QSharedPointer<QList<QSharedPointer<Generator>>> ge
         qDebug() << "constructor (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    this->generatorsList = generators;
+    this->generators = generators;
     generatorsHashMap = QSharedPointer<QHash<int, QSharedPointer<Generator>>>(new QHash<int, QSharedPointer<Generator>>);
 
-    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
+    for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
         // get generator info
         QSharedPointer<Generator> generator = *it;
         // create hash map entry
@@ -50,7 +50,7 @@ ComputeEngine::~ComputeEngine() {
         qDebug() << "destructor (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
+    for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
         // get generator info
         QSharedPointer<Generator> generator = *it;
         int id = generator->getId();
@@ -77,7 +77,7 @@ void ComputeEngine::recieveOscData(int id, QVariant data) {
 
 void ComputeEngine::start() {
     // first we need to send some signals to the osc engine to create senders and recievers
-    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
+    for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
         // get generator info
         QSharedPointer<Generator> generator = *it;
         int id = generator->getId();
@@ -120,7 +120,7 @@ void ComputeEngine::loop() {
     elapsedTimer.start();
 
     // do the computation
-    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
+    for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
         // do the actual computation
         (*it)->computeOutput(1.0 / frequency);
         // update the value of the output monitor

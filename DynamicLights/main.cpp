@@ -110,7 +110,19 @@ int main(int argc, char *argv[]) {
     // move osc engine to compute thread
     oscEngine.moveToThread(oscThread.get());
 
-    // TODO: connect compute engine to osc engine
+    // connect compute engine to osc engine
+    QObject::connect(&computeEngine, &ComputeEngine::sendOscData, &oscEngine, &OscEngine::sendOscData);
+
+    QObject::connect(&computeEngine, &ComputeEngine::createOscReceiver, &oscEngine, &OscEngine::createOscReceiver);
+    QObject::connect(&computeEngine, &ComputeEngine::updateOscReceiver, &oscEngine, &OscEngine::updateOscReceiver);
+    QObject::connect(&computeEngine, &ComputeEngine::deleteOscReceiver, &oscEngine, &OscEngine::deleteOscReceiver);
+
+    QObject::connect(&computeEngine, &ComputeEngine::createOscSender, &oscEngine, &OscEngine::createOscSender);
+    QObject::connect(&computeEngine, &ComputeEngine::updateOscSender, &oscEngine, &OscEngine::updateOscSender);
+    QObject::connect(&computeEngine, &ComputeEngine::deleteOscSender, &oscEngine, &OscEngine::deleteOscSender);
+
+    // connect osc engine to compute engine
+    QObject::connect(&oscEngine, &OscEngine::recieveOscData, &computeEngine, &ComputeEngine::recieveOscData);
 
     // start compute engine
     computeEngine.start();

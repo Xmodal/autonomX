@@ -14,6 +14,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "ComputeEngine.h"
+
 #include <algorithm>
 #include <chrono>
 #include <QDebug>
@@ -29,20 +30,67 @@ ComputeEngine::ComputeEngine(QSharedPointer<QList<QSharedPointer<Generator>>> ge
         qDebug() << "constructor (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    this->generators = generators;
+    this->generatorsList = generators;
+    generatorsHashMap = QSharedPointer<QHash<int, QSharedPointer<Generator>>>(new QHash<int, QSharedPointer<Generator>>);
+
+    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
+        // get generator info
+        QSharedPointer<Generator> generator = *it;
+        // create hash map entry
+        generatorsHashMap.get()->insert(generator->getId(), generator);
+    }
 }
 
 ComputeEngine::~ComputeEngine() {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
-        );
+        );// get generator
 
         qDebug() << "destructor (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+    }
+
+    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
+        // get generator info
+        QSharedPointer<Generator> generator = *it;
+        int id = generator->getId();
+        // delete osc sender and receiver
+        emit deleteOscReceiver(id);
+        emit deleteOscSender(id);
+    }
+}
+
+void ComputeEngine::recieveOscData(int id, QVariant data) {
+    if(!generatorsHashMap->contains(id)) {
+        throw std::runtime_error("generator does not exist");
+    }
+    QSharedPointer<Generator> generator = generatorsHashMap->value(id);
+
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "recieveOscData (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t genid = " << id << "\t data = " << data;
     }
 }
 
 void ComputeEngine::start() {
+    // first we need to send some signals to the osc engine to create senders and recievers
+    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
+        // get generator info
+        QSharedPointer<Generator> generator = *it;
+        int id = generator->getId();
+        QString addressReceiver = generator->getOscInputAddress();
+        QString addressSenderHost = generator->getOscOutputAddressHost();
+        QString addressSenderTarget = generator->getOscOutputAddressTarget();
+        int portReceiver = generator->getOscInputPort();
+        int portSender = generator->getOscOutputPort();
+        // create osc sender and receiver
+        emit createOscReceiver(id, addressReceiver, portReceiver);
+        emit createOscSender(id, addressSenderHost, addressSenderTarget, portSender);
+    }
+
     // this is called from an external thread initially and allows this object's thread to pick up the loop statement through its event queue
     // having a singleshot timer with time zero executes as soon as possible
     QTimer timer;
@@ -72,7 +120,7 @@ void ComputeEngine::loop() {
     elapsedTimer.start();
 
     // do the computation
-    for(QList<QSharedPointer<Generator>>::iterator it = generators.get()->begin(); it != generators.get()->end(); it++) {
+    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
         // do the actual computation
         (*it)->computeOutput(1.0 / frequency);
         // update the value of the output monitor

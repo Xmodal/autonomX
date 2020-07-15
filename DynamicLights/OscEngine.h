@@ -25,19 +25,27 @@ class OscEngine : public QObject {
     Q_OBJECT
 public:
     OscEngine();
+    ~OscEngine();
 private:
     QHash<int, QSharedPointer<OscSender>> oscSenders;
-    QHash<int, QSharedPointer<OscReceiver>> oscRecievers;
+    QHash<int, QString> oscSenderAddresses;
+    QHash<int, QSharedPointer<OscReceiver>> oscReceivers;
+    QHash<int, QString> oscReceiverAddresses;
+
+    void connectReceiver(int id);
+
+    bool flagDebug = true;
 signals:
-    void dataRecieved(int, QVariant);
+    void recieveOscData(int id, QVariant data);
 public slots:
-    void sendData(int id, QVariant data);
+    void recieveOscDataHandler(int id, const QString& oscAddress, const QVariantList& message);
+    void sendOscData(int id, QVariant data);
 
-    void createReciever(int id, QString address, int port);
-    void updateReciever(int id, QString address, int port);
-    void deleteReciever(int id);
+    void createOscReceiver(int id, QString address, int port);
+    void updateOscReceiver(int id, QString address, int port);
+    void deleteOscReceiver(int id);
 
-    void createSender(int id, QString hostAddress, int port);
-    void updateSender(int id, QString hostAddress, int port);
-    void deleteSender(int id);
+    void createOscSender(int id, QString addressHost, QString addressTarget, int port);
+    void updateOscSender(int id, QString addressHost, QString addressTarget, int port);
+    void deleteOscSender(int id);
 };

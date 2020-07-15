@@ -123,7 +123,10 @@ void ComputeEngine::loop() {
     for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
         // do the actual computation
         (*it)->computeOutput(1.0 / frequency);
-        // update the value of the output monitor
+    }
+
+    // write to outputMonitor
+    for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
         double outputMonitor = 0;
         for(int i = 0; i < (*it)->getOutputSize(); i++) {
             outputMonitor += (*it)->readOutput(i);
@@ -135,8 +138,17 @@ void ComputeEngine::loop() {
             // dumb averaging
             outputMonitor /= (*it)->getOutputSize();
         }
-
         (*it)->writeOutputMonitor(outputMonitor);
+    }
+
+    // send output messages to osc engine
+    for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
+        double * outputs = new double[(*it)->getOutputSize()];
+        for(int i = 0; i < (*it)->getOutputSize(); i++) {
+            outputs[i] = (*it)->readOutput(i);
+        }
+        emit sendOscData((*it)->getId(), QVariant(*outputs));
+        delete[] outputs;
     }
 
     // measure the time used to do the computation

@@ -1,13 +1,23 @@
 #include "OscReceiver.h"
 #include "contrib/oscpack/OscTypes.h"
 #include "contrib/oscpack/OscReceivedElements.h"
+#include <chrono>
+#include <QDebug>
+#include <QThread>
 
 OscReceiver::OscReceiver(quint16 receivePort, QObject* parent) :
         QObject(parent)
 {
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "constructor (OscReceiver):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+    }
+
     m_udpSocket = new QUdpSocket(this);
     // m_udpSocket->bind(QHostAddress::LocalHost, receivePort);
-    qDebug() << "Listening for OSC on port " << receivePort;
     m_udpSocket->bind(QHostAddress::Any, receivePort);
     connect(m_udpSocket, &QUdpSocket::readyRead, this, &OscReceiver::readyReadCb);
 }
@@ -21,7 +31,6 @@ void OscReceiver::readyReadCb() {
         QString oscAddress;
         this->byteArrayToVariantList(arguments, oscAddress, data);
         emit messageReceived(oscAddress, arguments);
-        qDebug() << "C++OscReceiver Received: " << oscAddress << arguments;
     }
 }
 

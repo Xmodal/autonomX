@@ -44,6 +44,14 @@ Generator::~Generator() {
 }
 
 void Generator::writeInput(double value, int index) {
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "writeInput (Generator)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\tinid = " << index << "\tvalue = " << value;
+    }
+
     input[index] = value;
 }
 

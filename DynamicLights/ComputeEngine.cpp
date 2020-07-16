@@ -66,12 +66,33 @@ void ComputeEngine::recieveOscData(int id, QVariantList data) {
     }
     QSharedPointer<Generator> generator = generatorsHashMap->value(id);
 
+    QList<QVariant> dataAsList = data;
+
+    int argumentsTotal = data.size();
+    int argumentsValid = 0;
+
+    for(int i = 0; i < generator->getInputSize(); i++) {
+        // set default to 0
+        double input = 0;
+        // check that the message's list is long enough
+        if(i < data.size()) {
+            // check the message's type can be cast to double
+            QMetaType::Type type = (QMetaType::Type) dataAsList.at(i).type();
+            if(type == QMetaType::Float || QMetaType::Double || QMetaType::Int || QMetaType::Long) {
+                input = dataAsList.at(i).toDouble();
+                argumentsValid++;
+            }
+        }
+        // write to input
+        generator->writeInput(input, i);
+    }
+
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "recieveOscData (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t genid = " << id << "\t data = " << data;
+        qDebug() << "recieveOscData (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\tdata = " << data << "\t(" << argumentsValid << " of " << argumentsTotal << " valid)";
     }
 }
 

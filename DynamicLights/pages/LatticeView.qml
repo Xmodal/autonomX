@@ -114,8 +114,8 @@ ColumnLayout {
                 property real ch: height
                 property real realWidth: mainContent.realWidth
                 property real realHeight: mainContent.realHeight
-                property int cols: mainContent.cols
-                property int rows: mainContent.rows
+                property int cols: neuronGrid.sourceSize.width
+                property int rows: neuronGrid.sourceSize.height
                 property Image textureMap: Image { id: neuronGrid; source: "qrc:/assets/images/neurongrid_20x20.png" }
 
                 // fragment shader

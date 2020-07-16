@@ -34,9 +34,9 @@ void main(void)
     c *= (st.x < 0.0 || st.y < 0.0 || st.x >= 1.0 || st.y >= 1.0) ? 0.0 : 1.0;
 
     // set padding
-    vec2 value = vec2(mod(st.x, pxl.x*cols), mod(st.y, pxl.y*rows));
-    c *= value.x > pxl.x*pad && value.x < pxl.x*cols-(pxl.x*(pad+1.0)) ? 1.0 : 0.0;
-    c *= value.y > pxl.y*pad && value.y < pxl.y*rows-(pxl.y*(pad+1.0)) ? 1.0 : 0.0;
+    vec2 value = vec2(mod(st.x, pxl.x * float(cols)), mod(st.y, pxl.y * float(rows)));
+    c *= value.x > pxl.x * pad && value.x < pxl.x * float(cols) - (pxl.x * (pad + 1.0)) ? 1.0 : 0.0;
+    c *= value.y > pxl.y * pad && value.y < pxl.y * float(rows) - (pxl.y * (pad + 1.0)) ? 1.0 : 0.0;
 
     // export color
     gl_FragColor = c;

@@ -97,7 +97,7 @@ public:
     void writeOscOutputAddressHost(QString oscOutputAddressHost);
     void writeOscOutputAddressTarget(QString oscOutputAddressTarget);
 private:
-    bool flagDebug = false;
+    bool flagDebug = true;
 public slots:
     // common slot allowing to update any property. allows the Facade class to work properly
     // (for connection from QQmlPropertyMap's valueChanged signal)

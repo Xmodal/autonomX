@@ -36,10 +36,10 @@ private:
 
     bool flagDebug = true;
 signals:
-    void recieveOscData(int id, QVariant data);
+    void recieveOscData(int id, QVariantList data);
 public slots:
     void recieveOscDataHandler(int id, const QString& oscAddress, const QVariantList& message);
-    void sendOscData(int id, QVariant data);
+    void sendOscData(int id, QVariantList data);
 
     void createOscReceiver(int id, QString address, int port);
     void updateOscReceiver(int id, QString address, int port);

@@ -60,7 +60,7 @@ ComputeEngine::~ComputeEngine() {
     }
 }
 
-void ComputeEngine::recieveOscData(int id, QVariant data) {
+void ComputeEngine::recieveOscData(int id, QVariantList data) {
     if(!generatorsHashMap->contains(id)) {
         throw std::runtime_error("generator does not exist");
     }
@@ -77,6 +77,7 @@ void ComputeEngine::recieveOscData(int id, QVariant data) {
 
 void ComputeEngine::start() {
     // first we need to send some signals to the osc engine to create senders and recievers
+    // this doesn't happen in the constructor because the osc engine / thread don't exist yet when the compute engine is created in the main thread
     for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
         // get generator info
         QSharedPointer<Generator> generator = *it;
@@ -143,12 +144,15 @@ void ComputeEngine::loop() {
 
     // send output messages to osc engine
     for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
-        double * outputs = new double[(*it)->getOutputSize()];
+        QList<QVariant> outputs;
         for(int i = 0; i < (*it)->getOutputSize(); i++) {
-            outputs[i] = (*it)->readOutput(i);
+            if(flagDummyOscOutput) {
+                outputs.append(randomUniform(randomGenerator));
+            } else {
+                outputs.append((*it)->readOutput(i));
+            }
         }
-        emit sendOscData((*it)->getId(), QVariant(*outputs));
-        delete[] outputs;
+        emit sendOscData((*it)->getId(), outputs);
     }
 
     // measure the time used to do the computation

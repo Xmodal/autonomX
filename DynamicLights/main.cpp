@@ -63,11 +63,9 @@ int main(int argc, char *argv[]) {
     qmlRegisterUncreatableType<NeuronType>("ca.hexagram.xmodal.dynamiclight", 1, 0, "NeuronType", "Cannot instanciate NeuronType.");
 
     // create generator list
-    QSharedPointer<Generator> spikingNet1 = QSharedPointer<Generator>(new SpikingNet(0));
-    QSharedPointer<Generator> spikingNet2 = QSharedPointer<Generator>(new SpikingNet(1));
+    QSharedPointer<Generator> spikingNet = QSharedPointer<Generator>(new SpikingNet(0));
     QSharedPointer<QList<QSharedPointer<Generator>>> generators = QSharedPointer<QList<QSharedPointer<Generator>>>(new QList<QSharedPointer<Generator>>());
-    generators.get()->append(spikingNet1);
-    generators.get()->append(spikingNet2);
+    generators.get()->append(spikingNet);
 
 
     // create generator facade list

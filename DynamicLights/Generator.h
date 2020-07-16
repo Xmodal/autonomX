@@ -49,12 +49,12 @@ protected:
     QString description;            // generator description, fixed
     double outputMonitor;           // output monitor / indicator light, generated from output array automatically by ComputeEngine
 
-    int oscInputPort;               // generator osc input port, assigned by user
-    QString oscInputAddress;        // generator osc input address, assigned by user
+    int oscInputPort = 6668;                    // generator osc input port, assigned by user
+    QString oscInputAddress = "/input";         // generator osc input address, assigned by user
 
-    int oscOutputPort;              // generator osc output port, assigned by user
-    QString oscOutputAddressHost;   // generator osc output address for host, assigned by user
-    QString oscOutputAddressTarget; // generator osc output address for target, assigned by user
+    int oscOutputPort = 6669;                   // generator osc output port, assigned by user
+    QString oscOutputAddressHost = "127.0.0.1"; // generator osc output address for host, assigned by user
+    QString oscOutputAddressTarget = "/output"; // generator osc output address for target, assigned by user
 public:
     Generator(int id);
     ~Generator();

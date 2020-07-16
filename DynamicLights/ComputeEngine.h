@@ -35,6 +35,7 @@ private:
     bool firstFrame = true;
     bool flagDebug = true;
     bool flagDummyOutputMonitor = false;
+    bool flagDummyOscOutput = true;
     bool flagDisableProcessing = false;
     std::mt19937 randomGenerator;
 std::uniform_real_distribution<> randomUniform;
@@ -42,7 +43,7 @@ public:
     ComputeEngine(QSharedPointer<QList<QSharedPointer<Generator>>> generators);
     ~ComputeEngine();
 signals:
-    void sendOscData(int id, QVariant data);
+    void sendOscData(int id, QVariantList data);
 
     void createOscReceiver(int id, QString address, int port);
     void updateOscReceiver(int id, QString address, int port);
@@ -55,5 +56,5 @@ public slots:
     void start();
     void loop();
 
-    void recieveOscData(int id, QVariant data);
+    void recieveOscData(int id, QVariantList data);
 };

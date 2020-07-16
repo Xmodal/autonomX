@@ -77,7 +77,7 @@ void OscEngine::recieveOscDataHandler(int id, const QString& oscAddress, const Q
     }
 }
 
-void OscEngine::sendOscData(int id, QVariant data) {
+void OscEngine::sendOscData(int id, QVariantList data) {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
@@ -90,6 +90,8 @@ void OscEngine::sendOscData(int id, QVariant data) {
         throw std::runtime_error("osc sender does not exist");
     }
     QSharedPointer<OscSender> sender = oscSenders.value(id);
+    QString address = oscSenderAddresses.value(id);
+    sender->send(address, data);
 }
 
 void OscEngine::createOscReceiver(int id, QString address, int port) {

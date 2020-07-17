@@ -195,7 +195,6 @@ void Generator::writeOscInputPort(int oscInputPort) {
     this->oscInputPort = oscInputPort;
     emit valueChanged("oscInputPort", QVariant(oscInputPort));
     emit oscInputPortChanged(oscInputPort);
-    emit oscInputUpdated(oscInputAddress, oscInputPort);
 }
 
 void Generator::writeOscInputAddress(QString oscInputAddress) {
@@ -214,7 +213,6 @@ void Generator::writeOscInputAddress(QString oscInputAddress) {
     this->oscInputAddress = oscInputAddress;
     emit valueChanged("oscInputAddress", QVariant(oscInputAddress));
     emit oscInputAddressChanged(oscInputAddress);
-    emit oscInputUpdated(oscInputAddress, oscInputPort);
 }
 
 void Generator::writeOscOutputPort(int oscOutputPort) {
@@ -233,7 +231,6 @@ void Generator::writeOscOutputPort(int oscOutputPort) {
     this->oscOutputPort = oscOutputPort;
     emit valueChanged("oscOutputPort", QVariant(oscOutputPort));
     emit oscOutputPortChanged(oscOutputPort);
-    emit oscOutputUpdated(oscOutputAddressHost, oscOutputAddressTarget, oscInputPort);
 }
 
 void Generator::writeOscOutputAddressHost(QString oscOutputAddressHost) {
@@ -252,7 +249,6 @@ void Generator::writeOscOutputAddressHost(QString oscOutputAddressHost) {
     this->oscOutputAddressHost = oscOutputAddressHost;
     emit valueChanged("oscOutputAddressHost", QVariant(oscOutputAddressHost));
     emit oscOutputAddressHostChanged(oscOutputAddressHost);
-    emit oscOutputUpdated(oscOutputAddressHost, oscOutputAddressTarget, oscInputPort);
 }
 
 void Generator::writeOscOutputAddressTarget(QString oscOutputAddressTarget) {
@@ -271,7 +267,6 @@ void Generator::writeOscOutputAddressTarget(QString oscOutputAddressTarget) {
     this->oscOutputAddressTarget = oscOutputAddressTarget;
     emit valueChanged("oscOutputAddressTarget", QVariant(oscOutputAddressTarget));
     emit oscOutputAddressTargetChanged(oscOutputAddressTarget);
-    emit oscOutputUpdated(oscOutputAddressHost, oscOutputAddressTarget, oscInputPort);
 }
 
 void Generator::updateValue(const QString &key, const QVariant &value) {

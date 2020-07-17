@@ -42,10 +42,13 @@ public slots:
     void sendOscData(int id, QVariantList data);
 
     void createOscReceiver(int id, QString address, int port);
-    void updateOscReceiver(int id, QString address, int port);
     void deleteOscReceiver(int id);
+    void updateOscReceiverAddress(int id, QString address);
+    void updateOscReceiverPort(int id, int port);
 
     void createOscSender(int id, QString addressHost, QString addressTarget, int port);
-    void updateOscSender(int id, QString addressHost, QString addressTarget, int port);
     void deleteOscSender(int id);
+    void updateOscSenderAddressHost(int id, QString addressHost);
+    void updateOscSenderAddressTarget(int id, QString addressHost);
+    void updateOscSenderPort(int id, int port);
 };

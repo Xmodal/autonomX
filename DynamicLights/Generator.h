@@ -119,8 +119,4 @@ signals:
     void oscOutputPortChanged(int oscOutputPort);
     void oscOutputAddressHostChanged(QString oscOutputAddressHost);
     void oscOutputAddressTargetChanged(QString oscOutputAddressTarget);
-
-    // signals for updating osc engine
-    void oscInputUpdated(QString oscInputAddress, int oscInputPort);
-    void oscOutputUpdated(QString oscOutputAddressHost, QString oscOutputAddressTarget, int oscOutputPort);
 };

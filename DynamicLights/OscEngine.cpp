@@ -177,8 +177,13 @@ void OscEngine::updateOscSender(int id, QString addressHost, QString addressTarg
                     std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "createOscSender (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\taddressHost = " << addressHost << "\taddressTarget = " << addressTarget << "\tport = " << port;
+        qDebug() << "updateOscSender (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\taddressHost = " << addressHost << "\taddressTarget = " << addressTarget << "\tport = " << port;
     }
+
+    deleteOscSender(id);
+    createOscSender(id, addressHost, addressTarget, port);
+
+    /*
 
     if(!oscSenders.contains(id)) {
         throw std::runtime_error("osc sender does not exist");
@@ -189,6 +194,7 @@ void OscEngine::updateOscSender(int id, QString addressHost, QString addressTarg
     // update hash maps
     oscSenders.insert(id, sender);
     oscSenderAddresses.insert(id, addressTarget);
+    */
 }
 
 void OscEngine::deleteOscSender(int id) {

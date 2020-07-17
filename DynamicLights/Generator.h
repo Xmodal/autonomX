@@ -50,11 +50,11 @@ protected:
     double outputMonitor;           // output monitor / indicator light, generated from output array automatically by ComputeEngine
 
     int oscInputPort = 6668;                    // generator osc input port, assigned by user
-    QString oscInputAddress = "/input";         // generator osc input address, assigned by user
+    QString oscInputAddress = "/input";         // generator osc input address, assigned by user (this is an osc destination)
 
     int oscOutputPort = 6669;                   // generator osc output port, assigned by user
-    QString oscOutputAddressHost = "127.0.0.1"; // generator osc output address for host, assigned by user
-    QString oscOutputAddressTarget = "/output"; // generator osc output address for target, assigned by user
+    QString oscOutputAddressHost = "127.0.0.1"; // generator osc output address for host, assigned by user (this is an ip)
+    QString oscOutputAddressTarget = "/output"; // generator osc output address for target, assigned by user (this is an osc destination)
 public:
     Generator(int id);
     ~Generator();
@@ -108,15 +108,19 @@ signals:
     void valueChanged(const QString &key, const QVariant &value);
 
     // usual signals for property changes
-    void nameChanged(QString);
-    void typeChanged(QString);
-    void descriptionChanged(QString);
-    void outputMonitorChanged(double);
+    void nameChanged(QString name);
+    void typeChanged(QString type);
+    void descriptionChanged(QString description);
+    void outputMonitorChanged(double outputMonitor);
 
-    void oscInputPortChanged(int);
-    void oscInputAddressChanged(QString);
+    void oscInputPortChanged(int oscInputPort);
+    void oscInputAddressChanged(QString oscInputAddress);
 
-    void oscOutputPortChanged(int);
-    void oscOutputAddressHostChanged(QString);
-    void oscOutputAddressTargetChanged(QString);
+    void oscOutputPortChanged(int oscOutputPort);
+    void oscOutputAddressHostChanged(QString oscOutputAddressHost);
+    void oscOutputAddressTargetChanged(QString oscOutputAddressTarget);
+
+    // signals for updating osc engine
+    void oscInputUpdated(QString oscInputAddress, int oscInputPort);
+    void oscOutputUpdated(QString oscOutputAddressHost, QString oscOutputAddressTarget, int oscOutputPort);
 };

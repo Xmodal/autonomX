@@ -112,9 +112,7 @@ int main(int argc, char *argv[]) {
     // move osc engine to compute thread
     oscEngine.moveToThread(oscThread.get());
 
-    // connect compute engine to osc engine
-    QObject::connect(&computeEngine, &ComputeEngine::sendOscData, &oscEngine, &OscEngine::sendOscData, Qt::QueuedConnection);
-
+    // connect compute engine setting changes to osc engine
     QObject::connect(&computeEngine, &ComputeEngine::createOscReceiver, &oscEngine, &OscEngine::createOscReceiver, Qt::QueuedConnection);
     QObject::connect(&computeEngine, &ComputeEngine::updateOscReceiver, &oscEngine, &OscEngine::updateOscReceiver, Qt::QueuedConnection);
     QObject::connect(&computeEngine, &ComputeEngine::deleteOscReceiver, &oscEngine, &OscEngine::deleteOscReceiver, Qt::QueuedConnection);
@@ -123,8 +121,28 @@ int main(int argc, char *argv[]) {
     QObject::connect(&computeEngine, &ComputeEngine::updateOscSender, &oscEngine, &OscEngine::updateOscSender, Qt::QueuedConnection);
     QObject::connect(&computeEngine, &ComputeEngine::deleteOscSender, &oscEngine, &OscEngine::deleteOscSender, Qt::QueuedConnection);
 
-    // connect osc engine to compute engine
+    // connect compute engine data output to osc engine
+    QObject::connect(&computeEngine, &ComputeEngine::sendOscData, &oscEngine, &OscEngine::sendOscData, Qt::QueuedConnection);
+
+    // connect osc engine data reception to compute engine
     QObject::connect(&oscEngine, &OscEngine::recieveOscData, &computeEngine, &ComputeEngine::recieveOscData, Qt::QueuedConnection);
+
+    // connect generator osc setting changes to osc engine
+    for(QList<QSharedPointer<Generator>>::iterator it = generators.get()->begin(); it != generators.get()->end(); it++) {
+        QSharedPointer<Generator> generator = *it;
+
+        // connect input / receiver changes
+        QObject::connect(generator.data(), &Generator::oscInputUpdated, &oscEngine, [&oscEngine, generator](QString oscInputAddress, int oscInputPort){
+            qDebug() << "oscInputUpdated (lambda)";
+            emit oscEngine.updateOscReceiver(generator->getId(), oscInputAddress, oscInputPort);
+        });
+
+        // connect output / sender changes
+        QObject::connect(generator.data(), &Generator::oscOutputUpdated, &oscEngine, [&oscEngine, generator](QString oscOutputAddressHost, QString oscOutputAddressTarget, int oscOutputPort){
+            qDebug() << "oscOutputUpdated (lambda)";
+            emit oscEngine.updateOscSender(generator->getId(), oscOutputAddressHost, oscOutputAddressTarget, oscOutputPort);
+        });
+    }
 
     // start compute engine
     computeEngine.start();
@@ -182,6 +200,18 @@ int main(int argc, char *argv[]) {
             });
         }
     }
+
+    /*
+    QTimer timer;
+    timer.setTimerType(Qt::PreciseTimer);
+    timer.setSingleShot(true);
+
+    QObject::connect(&timer, &QTimer::timeout, [spikingNet]() {
+        spikingNet->writeOscOutputAddressTarget("/test");
+    });
+
+    timer.start(1000);
+    */
 
     // end compute and osc threads on application exit
     QObject::connect(&app, &QCoreApplication::aboutToQuit, [computeThread, oscThread](){

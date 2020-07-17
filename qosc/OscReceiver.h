@@ -24,7 +24,8 @@ public:
      * @brief Constructor.
      * @param receivePort Port number to listen to.
      */
-    explicit OscReceiver(quint16 receivePort, QObject *parent = nullptr);
+    explicit OscReceiver(quint16 port, QObject *parent = nullptr);
+    void setPort(quint16 port);
 
 signals:
     /**
@@ -39,6 +40,8 @@ public slots:
 
 private:
     QUdpSocket* m_udpSocket;
+    quint16 m_port;
+
     void byteArrayToVariantList(QVariantList& outputVariantList, QString& outputOscAddress, const QByteArray& inputByteArray);
 
     bool flagDebug = true;

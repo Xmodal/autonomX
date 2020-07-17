@@ -5,7 +5,7 @@
 #include <QDebug>
 #include <QThread>
 
-OscReceiver::OscReceiver(quint16 receivePort, QObject* parent) :
+OscReceiver::OscReceiver(quint16 port, QObject* parent) :
         QObject(parent)
 {
     if(flagDebug) {
@@ -17,9 +17,16 @@ OscReceiver::OscReceiver(quint16 receivePort, QObject* parent) :
     }
 
     m_udpSocket = new QUdpSocket(this);
-    // m_udpSocket->bind(QHostAddress::LocalHost, receivePort);
-    m_udpSocket->bind(QHostAddress::Any, receivePort);
+    m_port = port;
+    m_udpSocket->bind(QHostAddress::Any, m_port);
     connect(m_udpSocket, &QUdpSocket::readyRead, this, &OscReceiver::readyReadCb);
+}
+
+void OscReceiver::setPort(quint16 port)
+{
+    m_port = port;
+    m_udpSocket->close();
+    m_udpSocket->bind(QHostAddress::Any, m_port);
 }
 
 void OscReceiver::readyReadCb() {

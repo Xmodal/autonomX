@@ -25,6 +25,20 @@ OscSender::OscSender(const QString& hostAddress, quint16 port, QObject *parent) 
     m_udpSocket->connectToHost(QHostAddress(m_hostAddress) , m_port);
 }
 
+void OscSender::setPort(quint16 port)
+{
+    m_port = port;
+    m_udpSocket->disconnectFromHost();
+    m_udpSocket->connectToHost(QHostAddress(m_hostAddress) , m_port);
+}
+
+void OscSender::setHostAddress(const QString& hostAddress)
+{
+    m_hostAddress = hostAddress;
+    m_udpSocket->disconnectFromHost();
+    m_udpSocket->connectToHost(QHostAddress(m_hostAddress) , m_port);
+}
+
 void OscSender::send(const QString& oscAddress, const QVariantList& arguments) {
     QByteArray datagram;
     this->variantListToByteArray(datagram, oscAddress, arguments);

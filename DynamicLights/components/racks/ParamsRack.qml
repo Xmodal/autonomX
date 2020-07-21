@@ -21,19 +21,18 @@ Rack {
             Layout.fillWidth: true
             spacing: Stylesheet.field.spacing
 
-            TextField {
-                validateInt: true
-                unsigned: true
+            NumberField {
                 labelText: "Neurons"
+                unsigned: true
 
-                defaultText: generatorModel.at(genID).neuronSize
+                defaultNum: generatorModel.at(genID).neuronSize
                 onValueChanged: generatorModel.at(genID).neuronSize = newValue
             }
 
             SliderField {
                 labelText: "Time scale"
 
-                currVal: genID < 0 ? 0 : generatorModel.at(genID).timeScale
+                currVal: generatorModel.at(genID).timeScale
                 onValueChanged: generatorModel.at(genID).timeScale = newValue
             }
         }
@@ -46,7 +45,7 @@ Rack {
 
                 updateLag: 70
 
-                currVal: genID < 0 ? 0 : generatorModel.at(genID).inhibitoryPortion
+                currVal: generatorModel.at(genID).inhibitoryPortion
                 onValueChanged: generatorModel.at(genID).inhibitoryPortion = newValue
             }
 
@@ -55,7 +54,7 @@ Rack {
 
                 updateLag: 70
 
-                currVal: genID < 0 ? 0 : generatorModel.at(genID).inputPortion
+                currVal: generatorModel.at(genID).inputPortion
                 onValueChanged: generatorModel.at(genID).inputPortion = newValue
             }
 
@@ -64,7 +63,7 @@ Rack {
 
                 updateLag: 70
 
-                currVal: genID < 0 ? 0 : generatorModel.at(genID).outputPortion
+                currVal: generatorModel.at(genID).outputPortion
                 onValueChanged: generatorModel.at(genID).outputPortion = newValue
             }
         }
@@ -79,7 +78,7 @@ Rack {
 
                 options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
 
-                index: genID < 0 ? 0 : generatorModel.at(genID).inhibitoryNeuronType
+                index: generatorModel.at(genID).inhibitoryNeuronType
                 onValueChanged: generatorModel.at(genID).inhibitoryNeuronType = newValue
             }
 
@@ -90,7 +89,7 @@ Rack {
                 maxVal: 20.0
                 updateLag: 70
 
-                currVal: genID < 0 ? 0 : generatorModel.at(genID).inhibitoryNoise
+                currVal: generatorModel.at(genID).inhibitoryNoise
                 onValueChanged: generatorModel.at(genID).inhibitoryNoise = newValue
             }
 
@@ -99,7 +98,7 @@ Rack {
 
                 options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
 
-                index: genID < 0 ? 0 : generatorModel.at(genID).excitatoryNeuronType
+                index: generatorModel.at(genID).excitatoryNeuronType
                 onValueChanged: generatorModel.at(genID).excitatoryNeuronType = newValue
             }
 
@@ -110,7 +109,7 @@ Rack {
                 maxVal: 20.0
                 updateLag: 70
 
-                currVal: genID < 0 ? 0 : generatorModel.at(genID).excitatoryNoise
+                currVal: generatorModel.at(genID).excitatoryNoise
                 onValueChanged: generatorModel.at(genID).excitatoryNoise = newValue
             }
         }
@@ -127,7 +126,7 @@ Rack {
                     id: stpFlag
                     labelText: "STP"
 
-                    on: genID < 0 ? 0 : generatorModel.at(genID).flagSTP
+                    on: generatorModel.at(genID).flagSTP
                     onValueChanged: generatorModel.at(genID).flagSTP = newValue
                 }
 
@@ -135,7 +134,7 @@ Rack {
                     labelText: "STP strength"
                     updateLag: 70
 
-                    currVal: genID < 0 ? 0 : generatorModel.at(genID).STPStrength
+                    currVal: generatorModel.at(genID).STPStrength
                     onValueChanged: generatorModel.at(genID).STPStrength = newValue
                     deactivated: !stpFlag.on
                 }
@@ -148,7 +147,7 @@ Rack {
                     id: stdpFlag
                     labelText: "STDP"
 
-                    on: genID < 0 ? 0 : generatorModel.at(genID).flagSTDP
+                    on: generatorModel.at(genID).flagSTDP
                     onValueChanged: generatorModel.at(genID).flagSTDP = newValue
                 }
 
@@ -156,7 +155,7 @@ Rack {
                     labelText: "STDP strength"
                     updateLag: 70
 
-                    currVal: genID < 0 ? 0 : generatorModel.at(genID).STDPStrength
+                    currVal: generatorModel.at(genID).STDPStrength
                     onValueChanged: generatorModel.at(genID).STDPStrength = newValue
                     deactivated: !stdpFlag.on
                 }
@@ -169,7 +168,7 @@ Rack {
                     id: decayFlag
                     labelText: "Decay"
 
-                    on: genID < 0 ? 0 : generatorModel.at(genID).flagDecay
+                    on: generatorModel.at(genID).flagDecay
                     onValueChanged: generatorModel.at(genID).flagDecay = newValue
                 }
 
@@ -177,7 +176,7 @@ Rack {
                     labelText: "Decay constant"
                     updateLag: 70
 
-                    currVal: genID < 0 ? 0 : generatorModel.at(genID).decayConstant
+                    currVal: generatorModel.at(genID).decayConstant
                     onValueChanged: generatorModel.at(genID).decayConstant = newValue
                     deactivated: !decayFlag.on
                 }

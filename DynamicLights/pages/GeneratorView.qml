@@ -40,6 +40,7 @@ RowLayout {
     Loader {
         id: rackViewLoader
         Layout.fillWidth: true
+        Layout.fillHeight: true
         Layout.alignment: Qt.AlignLeft | Qt.AlignTop
 
         property int genID: window.activeGeneratorIndex

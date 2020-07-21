@@ -11,7 +11,6 @@ Rack {
     removable: false
 
     content: RowLayout {
-        Layout.maximumHeight: 210
         spacing: Stylesheet.field.spacing
 
         ColumnLayout {

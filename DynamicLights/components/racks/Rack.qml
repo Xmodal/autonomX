@@ -52,7 +52,7 @@ Item {
                     family: Stylesheet.fonts.sub
                     pixelSize: 16
                     letterSpacing: 0.8
-                    capitalization: Font.Capitalize
+                    capitalization: Font.AllUppercase
                 }
             }
 
@@ -76,7 +76,7 @@ Item {
                     states: [
                         State {
                             name: "pressed"; when: btnCollapse.pressed
-                            PropertyChanges { target: btnCollapseBg; opacity: 1; color: Stylesheet.colors.outputs[genID % Stylesheet.colors.outputs.length] }
+                            PropertyChanges { target: btnCollapseBg; opacity: 1; color: Stylesheet.colors.generators[genID % Stylesheet.colors.generators.length] }
                         },
 
                         State {

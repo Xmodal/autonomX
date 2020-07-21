@@ -58,7 +58,7 @@ ApplicationWindow {
         onActivated: quitThisApp()
     }
     Shortcut {
-        sequence: "Ctrl+L"
+        sequence: "Tab"
         onActivated: toggleLatticeView();
     }
 

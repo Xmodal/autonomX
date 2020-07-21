@@ -10,6 +10,7 @@ ColumnLayout {
     property string labelText: "Label"
     property int fieldWidth: Stylesheet.field.initialWidth
     property bool deactivated: false
+    property bool showLabel: true
 
     signal valueChanged(variant newValue)
 
@@ -22,6 +23,7 @@ ColumnLayout {
     // top label
     Label {
         id: fieldLabel
+        visible: showLabel
 
         text: labelText
         font {

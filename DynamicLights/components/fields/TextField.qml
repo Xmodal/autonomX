@@ -10,13 +10,6 @@ Field {
     property string placeholder: ""
     property string defaultText: "Text Field"
 
-    // for number fields only
-    // TODO: NumberField with increment/decrement arrows
-    property bool validateInt: false
-    property bool unsigned: false
-
-    IntValidator { id: validator; bottom: unsigned ? 0 : -2147483647 }
-
     TextField {
         id: fieldInput
 
@@ -49,7 +42,6 @@ Field {
 
         // TODO: add validator
         // eg. no empty values allowed flag as widget property
-        validator: validateInt ? validator : null
 
         // interactivity
         selectByMouse: true

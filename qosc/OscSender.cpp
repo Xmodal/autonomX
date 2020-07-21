@@ -40,6 +40,10 @@ void OscSender::setHostAddress(const QString& hostAddress)
 }
 
 void OscSender::send(const QString& oscAddress, const QVariantList& arguments) {
+    if(flagDebug) {
+        qDebug() << "send (OscSender)\targuments = " << arguments;
+    }
+
     QByteArray datagram;
     this->variantListToByteArray(datagram, oscAddress, arguments);
 

@@ -14,6 +14,7 @@
         <file>assets/images/neurongrid_20x20.png</file>
         <file>components/delegates/GeneratorWidget.qml</file>
         <file>components/delegates/HistoryGraph.qml</file>
+        <file>components/delegates/NodeTrack.qml</file>
         <file>components/delegates/OutputIndicator.qml</file>
         <file>components/fields/AreaField.qml</file>
         <file>components/fields/Field.qml</file>
@@ -30,9 +31,10 @@
         <file>components/racks/RackView.qml</file>
         <file>pages/GeneratorView.qml</file>
         <file>pages/LatticeView.qml</file>
-        <file>shaders/light-cue.frag</file>
+        <file>shaders/light_cue.frag</file>
         <file>shaders/neuron_matrix.frag</file>
         <file>stylesheet/qmldir</file>
         <file>stylesheet/Stylesheet.qml</file>
+        <file>components/racks/IORack.qml</file>
     </qresource>
 </RCC>

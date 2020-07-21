@@ -2,8 +2,8 @@ import QtQuick 2.0
 import QtQuick.Window 2.2
 
 Item {
-    property real luminosity: 0.0
-    property color lightColor: "red"
+    property real luminosity
+    property color lightColor
 
     width: 30; height: 30
 
@@ -14,7 +14,9 @@ Item {
 
         layer.enabled: true
         layer.effect: ShaderEffect {
-            fragmentShader: "qrc:/shaders/light-cue.frag"
+            property color c: lightColor
+            property real l: luminosity
+            fragmentShader: "qrc:/shaders/light_cue.frag"
         }
     }
 

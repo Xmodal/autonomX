@@ -34,7 +34,7 @@ private:
 
     void connectReceiver(int id);
 
-    bool flagDebug = true;
+    bool flagDebug = false;
 signals:
     void recieveOscData(int id, QVariantList data);
 public slots:

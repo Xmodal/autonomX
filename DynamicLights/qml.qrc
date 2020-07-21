@@ -24,6 +24,7 @@
         <file>components/fields/SwitchField.qml</file>
         <file>components/fields/TextField.qml</file>
         <file>components/racks/GenRack.qml</file>
+        <file>components/racks/OscRack.qml</file>
         <file>components/racks/ParamsRack.qml</file>
         <file>components/racks/Rack.qml</file>
         <file>components/racks/RackView.qml</file>

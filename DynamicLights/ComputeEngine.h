@@ -33,7 +33,7 @@ private:
     QElapsedTimer elapsedTimer;
     double frequency = 1;
     bool firstFrame = true;
-    bool flagDebug = true;
+    bool flagDebug = false;
     bool flagDummyOutputMonitor = false;
     bool flagDummyOscOutput = true;
     bool flagDisableProcessing = false;

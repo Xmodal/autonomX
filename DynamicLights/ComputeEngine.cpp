@@ -97,22 +97,6 @@ void ComputeEngine::recieveOscData(int id, QVariantList data) {
 }
 
 void ComputeEngine::start() {
-    // first we need to send some signals to the osc engine to create senders and recievers
-    // this doesn't happen in the constructor because the osc engine / thread don't exist yet when the compute engine is created in the main thread
-    for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
-        // get generator info
-        QSharedPointer<Generator> generator = *it;
-        int id = generator->getId();
-        QString addressReceiver = generator->getOscInputAddress();
-        QString addressSenderHost = generator->getOscOutputAddressHost();
-        QString addressSenderTarget = generator->getOscOutputAddressTarget();
-        int portReceiver = generator->getOscInputPort();
-        int portSender = generator->getOscOutputPort();
-        // create osc sender and receiver
-        emit createOscReceiver(id, addressReceiver, portReceiver);
-        emit createOscSender(id, addressSenderHost, addressSenderTarget, portSender);
-    }
-
     // this is called from an external thread initially and allows this object's thread to pick up the loop statement through its event queue
     // having a singleshot timer with time zero executes as soon as possible
     QTimer timer;

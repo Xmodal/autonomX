@@ -44,5 +44,5 @@ private:
 
     void byteArrayToVariantList(QVariantList& outputVariantList, QString& outputOscAddress, const QByteArray& inputByteArray);
 
-    bool flagDebug = true;
+    bool flagDebug = false;
 };

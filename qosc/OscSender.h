@@ -53,5 +53,5 @@ private:
 
     void variantListToByteArray(QByteArray& outputResult, const QString& oscAddress, const QVariantList& arguments);
 
-    bool flagDebug = true;
+    bool flagDebug = false;
 };

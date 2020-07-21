@@ -10,10 +10,10 @@ QtObject {
         readonly property color black: "#151515"
         readonly property color darkGrey: "#212121"
 
-        readonly property color inputColor: "#3BB3E7"
-        readonly property color outputColor: "#C53412"
+        readonly property color input: "#3BB3E7"
+        readonly property color output: "#C53412"
 
-        readonly property variant outputs: [
+        readonly property variant generators: [
             "#E44646",      // red
             "#F18D30",      // orange
             "#ECDA3E",      // yellow

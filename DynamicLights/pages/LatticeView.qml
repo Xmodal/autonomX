@@ -23,7 +23,7 @@ ColumnLayout {
         // background
         Rectangle {
             anchors.fill: parent
-            color: genID < 0 ? Stylesheet.colors.white : Stylesheet.colors.outputs[genID % Stylesheet.colors.outputs.length]
+            color: genID < 0 ? Stylesheet.colors.white : Stylesheet.colors.generators[genID % Stylesheet.colors.generators.length]
         }
 
         // back arrow
@@ -139,11 +139,11 @@ ColumnLayout {
                 property real realHeight: mainContent.realHeight
 
                 // I/O
-                property color inputColor: Stylesheet.colors.inputColor
+                property color inputColor: Stylesheet.colors.input
                 property variant inputs: [
                     Qt.rect(2, 2, 4, 5)
                 ]
-                property color outputColor: Stylesheet.colors.outputColor
+                property color outputColor: Stylesheet.colors.output
                 property variant outputs: [
                     Qt.rect(10, 10, 2, 2)
                 ]

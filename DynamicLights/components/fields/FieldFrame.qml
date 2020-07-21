@@ -35,7 +35,7 @@ Item {
                 NumberAnimation {
                     property: "opacity"
                     duration: 150
-                    easing.type: Easing.InOutQuad
+                    easing.type: Easing.Linear
                 }
             }
         }

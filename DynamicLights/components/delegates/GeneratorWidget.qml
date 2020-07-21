@@ -40,7 +40,7 @@ Button {
 
         newValue: model ? model.outputMonitor : 0
 
-        strokeColor: Stylesheet.colors.outputs[model.index % Stylesheet.colors.outputs.length]
+        strokeColor: Stylesheet.colors.generators[model.index % Stylesheet.colors.generators.length]
     }
 
     // text content
@@ -80,7 +80,7 @@ Button {
             id: outputIndicator
 
             luminosity: model.outputMonitor
-            lightColor: Stylesheet.colors.outputs[model.index % Stylesheet.colors.outputs.length]
+            lightColor: Stylesheet.colors.generators[model.index % Stylesheet.colors.generators.length]
 
             Layout.rightMargin: 10
             Layout.alignment: Qt.AlignRight

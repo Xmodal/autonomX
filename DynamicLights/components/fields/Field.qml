@@ -42,7 +42,7 @@ ColumnLayout {
     Behavior on opacity {
         NumberAnimation {
             property: "opacity"
-            duration: 300
+            duration: 250
             easing.type: Easing.InOutQuad
         }
     }

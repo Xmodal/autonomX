@@ -18,6 +18,7 @@
         <file>components/fields/AreaField.qml</file>
         <file>components/fields/Field.qml</file>
         <file>components/fields/FieldFrame.qml</file>
+        <file>components/fields/NumberField.qml</file>
         <file>components/fields/SelectField.qml</file>
         <file>components/fields/SliderField.qml</file>
         <file>components/fields/SwitchField.qml</file>

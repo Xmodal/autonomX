@@ -8,6 +8,7 @@ Field {
     id: switchField
 
     property bool on: false
+    property color controlColor: Stylesheet.colors.generators[0]
 
     spacing: 5
 
@@ -40,8 +41,7 @@ Field {
             PropertyChanges {
                 target: indicator
                 x: indicatorBg.implicitWidth - indicator.width - 5
-                // TODO: change 0 to generator index
-                color: Stylesheet.colors.outputs[0]
+                color: controlColor
             }
         }
 

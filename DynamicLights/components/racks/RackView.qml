@@ -14,9 +14,11 @@ ColumnLayout {
     property int genID: item.genID
 
     Layout.fillWidth: true
+    Layout.fillHeight: true
     Layout.alignment: Qt.AlignTop | Qt.AlignLeft
     spacing: 0
 
     GenRack { genID: rackView.genID; }
     ParamsRack { genID: rackView.genID; }
+    OscRack { genID: rackView.genID; }
 }

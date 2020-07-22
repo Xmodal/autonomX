@@ -8,7 +8,7 @@ import QtQuick 2.9
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.0
 
-ColumnLayout {
+ScrollView {
     id: rackView
 
     property int genID: item.genID
@@ -16,9 +16,14 @@ ColumnLayout {
     Layout.fillWidth: true
     Layout.fillHeight: true
     Layout.alignment: Qt.AlignTop | Qt.AlignLeft
-    spacing: 0
+    ScrollBar.vertical.interactive: false
 
-    GenRack { genID: rackView.genID; }
-    ParamsRack { genID: rackView.genID; }
-    OscRack { genID: rackView.genID; }
+    ColumnLayout {
+        width: parent.width
+        spacing: 0
+
+        GenRack { genID: rackView.genID; }
+        ParamsRack { genID: rackView.genID; }
+        OscRack { genID: rackView.genID; }
+    }
 }

@@ -28,6 +28,7 @@ SOURCES += \
     ComputeEngine.cpp \
     Facade.cpp \
     Generator.cpp \
+    GeneratorImageProvider.cpp \
     GeneratorModel.cpp \
     Izhikevich.cpp \
     OscEngine.cpp \
@@ -61,6 +62,7 @@ HEADERS += \
     ComputeEngine.h \
     Facade.h \
     Generator.h \
+    GeneratorImageProvider.h \
     GeneratorModel.h \
     Izhikevich.h \
     NeuronType.h \

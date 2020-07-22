@@ -22,6 +22,7 @@
 
 Generator::Generator(int id) {
     this->id = id;
+    this->imageProvider = new GeneratorImageProvider(this);
 
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
@@ -67,16 +68,16 @@ int Generator::getOutputSize() {
     return output.size();
 }
 
-int Generator::getId() {
-    return id;
-}
-
 QString Generator::getName() {
     return name;
 }
 
 QString Generator::getType() {
     return type;
+}
+
+int Generator::getID() {
+    return id;
 }
 
 QString Generator::getDescription() {

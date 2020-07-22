@@ -37,7 +37,7 @@ ComputeEngine::ComputeEngine(QSharedPointer<QList<QSharedPointer<Generator>>> ge
         // get generator info
         QSharedPointer<Generator> generator = *it;
         // create hash map entry
-        generatorsHashMap.get()->insert(generator->getId(), generator);
+        generatorsHashMap.get()->insert(generator->getID(), generator);
     }
 }
 
@@ -53,7 +53,7 @@ ComputeEngine::~ComputeEngine() {
     for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
         // get generator info
         QSharedPointer<Generator> generator = *it;
-        int id = generator->getId();
+        int id = generator->getID();
         // delete osc sender and receiver
         emit deleteOscReceiver(id);
         emit deleteOscSender(id);
@@ -158,7 +158,7 @@ void ComputeEngine::loop() {
                 outputs.append(value);
             }
         }
-        emit sendOscData((*it)->getId(), outputs);
+        emit sendOscData((*it)->getID(), outputs);
     }
 
     // measure the time used to do the computation

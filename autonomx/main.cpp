@@ -26,6 +26,7 @@
 #include "ComputeEngine.h"
 #include "Generator.h"
 #include "GeneratorModel.h"
+#include "GeneratorImageProvider.h"
 #include "SpikingNet.h"
 #include "Facade.h"
 
@@ -66,7 +67,6 @@ int main(int argc, char *argv[]) {
     QSharedPointer<Generator> spikingNet = QSharedPointer<Generator>(new SpikingNet(0));
     QSharedPointer<QList<QSharedPointer<Generator>>> generators = QSharedPointer<QList<QSharedPointer<Generator>>>(new QList<QSharedPointer<Generator>>());
     generators.get()->append(spikingNet);
-
 
     // create generator facade list
     QSharedPointer<QList<QSharedPointer<Facade>>> generatorFacades = QSharedPointer<QList<QSharedPointer<Facade>>>(new QList<QSharedPointer<Facade>>());
@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
     for(QList<QSharedPointer<Generator>>::iterator it = generators.get()->begin(); it != generators.get()->end(); it++) {
         // get generator info
         QSharedPointer<Generator> generator = *it;
-        int id = generator->getId();
+        int id = generator->getID();
         QString addressReceiver = generator->getOscInputAddress();
         QString addressSenderHost = generator->getOscOutputAddressHost();
         QString addressSenderTarget = generator->getOscOutputAddressTarget();
@@ -147,14 +147,14 @@ int main(int argc, char *argv[]) {
             if(flagDebug) {
                 qDebug() << "oscInputAddressChanged (lambda)";
             }
-            emit oscEngine.updateOscReceiverAddress(generator->getId(), oscInputAddress);
+            emit oscEngine.updateOscReceiverAddress(generator->getID(), oscInputAddress);
         });
 
         QObject::connect(generator.data(), &Generator::oscInputPortChanged, &oscEngine, [&oscEngine, generator](int oscInputPort){
             if(flagDebug) {
                 qDebug() << "oscInputPortChanged (lambda)";
             }
-            emit oscEngine.updateOscReceiverPort(generator->getId(), oscInputPort);
+            emit oscEngine.updateOscReceiverPort(generator->getID(), oscInputPort);
         });
 
         // connect output / sender changes
@@ -162,21 +162,21 @@ int main(int argc, char *argv[]) {
             if(flagDebug) {
                 qDebug() << "oscOutputAddressHostChanged (lambda)";
             }
-            emit oscEngine.updateOscSenderAddressHost(generator->getId(), oscOutputAddressHost);
+            emit oscEngine.updateOscSenderAddressHost(generator->getID(), oscOutputAddressHost);
         });
 
         QObject::connect(generator.data(), &Generator::oscOutputAddressTargetChanged, &oscEngine, [&oscEngine, generator](QString oscOutputAddressTarget){
             if(flagDebug) {
                 qDebug() << "oscOutputAddressTargetChanged (lambda)";
             }
-            emit oscEngine.updateOscSenderAddressTarget(generator->getId(), oscOutputAddressTarget);
+            emit oscEngine.updateOscSenderAddressTarget(generator->getID(), oscOutputAddressTarget);
         });
 
         QObject::connect(generator.data(), &Generator::oscOutputPortChanged, &oscEngine, [&oscEngine, generator](int oscOutputPort){
             if(flagDebug) {
                 qDebug() << "oscOutputAddressTargetChanged (lambda)";
             }
-            emit oscEngine.updateOscSenderPort(generator->getId(), oscOutputPort);
+            emit oscEngine.updateOscSenderPort(generator->getID(), oscOutputPort);
         });
     }
 
@@ -187,6 +187,12 @@ int main(int argc, char *argv[]) {
 
     // Pass C++ objects to QML.
     qmlEngine.rootContext()->setContextProperty("generatorModel", &generatorModel);
+    // register image providers
+    for(QList<QSharedPointer<Generator>>::iterator it = generators.get()->begin(); it != generators.get()->end(); it++) {
+        QSharedPointer<Generator> generator = *it;
+        //qmlEngine.addImageProvider(QString(generator->getID()), generator->imageProvider);
+        qmlEngine.addImageProvider("test", generator->imageProvider);
+    }
     qmlEngine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (qmlEngine.rootObjects().isEmpty())
         return -1;

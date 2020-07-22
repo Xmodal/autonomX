@@ -119,12 +119,11 @@ Rack {
             Layout.fillWidth: true
             spacing: Stylesheet.field.spacing
 
-            ColumnLayout {
-                spacing: 0
+            RowLayout {
+                spacing: 15
 
-                SwitchField {
+                CheckField {
                     id: stpFlag
-                    labelText: "STP"
 
                     on: generatorModel.at(genID).flagSTP
                     onValueChanged: generatorModel.at(genID).flagSTP = newValue
@@ -140,12 +139,11 @@ Rack {
                 }
             }
 
-            ColumnLayout {
-                spacing: 0
+            RowLayout {
+                spacing: 15
 
-                SwitchField {
+                CheckField {
                     id: stdpFlag
-                    labelText: "STDP"
 
                     on: generatorModel.at(genID).flagSTDP
                     onValueChanged: generatorModel.at(genID).flagSTDP = newValue
@@ -161,12 +159,11 @@ Rack {
                 }
             }
 
-            ColumnLayout {
-                spacing: 0
+            RowLayout {
+                spacing: 15
 
-                SwitchField {
+                CheckField {
                     id: decayFlag
-                    labelText: "Decay"
 
                     on: generatorModel.at(genID).flagDecay
                     onValueChanged: generatorModel.at(genID).flagDecay = newValue

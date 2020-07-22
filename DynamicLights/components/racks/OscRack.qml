@@ -31,11 +31,6 @@ Rack {
                 defaultText: generatorModel.at(genID).oscInputAddress
                 onValueChanged: generatorModel.at(genID).oscInputAddress = newValue
             }
-            TextField {
-                labelText: "Host"
-                defaultText: "127.0.0.1"
-                deactivated: !enableOscIn.on
-            }
             NumberField {
                 labelText: "Port"
                 deactivated: !enableOscIn.on

@@ -14,57 +14,63 @@ Rack {
     removable: false
 
     content: ColumnLayout {
-        spacing: Stylesheet.field.spacing
+        // TEMPORARY MEASURE, WILL REMOVE IN NEXT SPRINT
+        spacing: 50
 
         // --= BASIC =--
-        RowLayout {
+        ColumnLayout {
             Layout.fillWidth: true
             spacing: Stylesheet.field.spacing
 
-            NumberField {
-                labelText: "Neurons"
-                unsigned: true
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: Stylesheet.field.spacing
 
-                defaultNum: generatorModel.at(genID).neuronSize
-                onValueChanged: generatorModel.at(genID).neuronSize = newValue
+                NumberField {
+                    labelText: "Neurons"
+                    unsigned: true
+
+                    defaultNum: generatorModel.at(genID).neuronSize
+                    onValueChanged: generatorModel.at(genID).neuronSize = newValue
+                }
+
+                SliderField {
+                    labelText: "Time scale"
+
+                    currVal: generatorModel.at(genID).timeScale
+                    onValueChanged: generatorModel.at(genID).timeScale = newValue
+                }
             }
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: Stylesheet.field.spacing
 
-            SliderField {
-                labelText: "Time scale"
+                SliderField {
+                    labelText: "Inh. portion"
 
-                currVal: generatorModel.at(genID).timeScale
-                onValueChanged: generatorModel.at(genID).timeScale = newValue
-            }
-        }
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: Stylesheet.field.spacing
+                    updateLag: 70
 
-            SliderField {
-                labelText: "Inh. portion"
+                    currVal: generatorModel.at(genID).inhibitoryPortion
+                    onValueChanged: generatorModel.at(genID).inhibitoryPortion = newValue
+                }
 
-                updateLag: 70
+                SliderField {
+                    labelText: "Input portion"
 
-                currVal: generatorModel.at(genID).inhibitoryPortion
-                onValueChanged: generatorModel.at(genID).inhibitoryPortion = newValue
-            }
+                    updateLag: 70
 
-            SliderField {
-                labelText: "Input portion"
+                    currVal: generatorModel.at(genID).inputPortion
+                    onValueChanged: generatorModel.at(genID).inputPortion = newValue
+                }
 
-                updateLag: 70
+                SliderField {
+                    labelText: "Output portion"
 
-                currVal: generatorModel.at(genID).inputPortion
-                onValueChanged: generatorModel.at(genID).inputPortion = newValue
-            }
+                    updateLag: 70
 
-            SliderField {
-                labelText: "Output portion"
-
-                updateLag: 70
-
-                currVal: generatorModel.at(genID).outputPortion
-                onValueChanged: generatorModel.at(genID).outputPortion = newValue
+                    currVal: generatorModel.at(genID).outputPortion
+                    onValueChanged: generatorModel.at(genID).outputPortion = newValue
+                }
             }
         }
 

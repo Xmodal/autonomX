@@ -20,13 +20,16 @@
 #include <QVariant>
 #include <QVector>
 #include <QSharedPointer>
+#include <QColor>
 #include <vector>
+#include "GeneratorImageProvider.h"
 
 class Generator : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString name READ getName WRITE writeName NOTIFY nameChanged)
     Q_PROPERTY(QString type READ getType NOTIFY typeChanged)
+    Q_PROPERTY(int id READ getID)
     Q_PROPERTY(QString description READ getDescription WRITE writeDescription NOTIFY descriptionChanged)
     Q_PROPERTY(double outputMonitor READ getOutputMonitor NOTIFY outputMonitorChanged)
 
@@ -37,10 +40,6 @@ class Generator : public QObject
     Q_PROPERTY(QString oscOutputAddressHost READ getOscOutputAddressHost WRITE writeOscOutputAddressHost NOTIFY oscOutputAddressHostChanged)
     Q_PROPERTY(QString oscOutputAddressTarget READ getOscOutputAddressTarget WRITE writeOscOutputAddressTarget NOTIFY oscOutputAddressTargetChanged)
 protected:
-    // the generator class provides input and output buffers
-    std::vector<double> input;
-    std::vector<double> output;
-
     int id;                         // generator id, generated automatically by ComputeEngine in constructor
 
     // descriptive properties seen in the generators list panel
@@ -59,8 +58,10 @@ public:
     Generator(int id);
     ~Generator();
 
-    // the method implemented by the derived class that computes the output
-    virtual void computeOutput(double deltaTime) = 0;
+    // the generator class provides input and output buffers
+    // these are resized automatically by the class deriving generator
+    std::vector<double> input;
+    std::vector<double> output;
 
     // methods to read, write, and query the size of the io buffers
     void writeInput(double value, int index);
@@ -68,12 +69,23 @@ public:
     int getInputSize();
     int getOutputSize();
 
-    // method for reading id
-    int getId();
+    // the method implemented by the derived class that computes the output
+    virtual void computeOutput(double deltaTime) = 0;
+
+    // pointer to image provider
+    GeneratorImageProvider* imageProvider;
+
+    // the method implemented by the derived class that returns pixel values to construct the lattice image
+    virtual QColor getLatticeAt(int x, int y) = 0;
+
+    // methods used to query the size of the lattice image
+    virtual int getLatticeWidth() = 0;
+    virtual int getLatticeHeight() = 0;
 
     // methods to read properties
     QString getName();
     QString getType();
+    int getID();
     QString getDescription();
     double getOutputMonitor();
 

@@ -28,6 +28,7 @@ public:
     enum GeneratorRoles {
         NameRole = Qt::UserRole + 1,
         TypeRole,
+        IDRole,
         DescriptionRole,
         OutputMonitorRole,
         OutputMonitorHistoryRole,
@@ -53,6 +54,7 @@ private:
     const QHash<int, QByteArray> roleMap = {
         {NameRole, "name"},
         {TypeRole, "type"},
+        {IDRole, "id"},
         {DescriptionRole, "description"},
         {OutputMonitorRole, "outputMonitor"},
         {OutputMonitorHistoryRole, "outputMonitorHistory"},

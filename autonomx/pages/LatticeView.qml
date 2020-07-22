@@ -116,7 +116,8 @@ ColumnLayout {
                 property real realHeight: mainContent.realHeight
                 property int cols: neuronGrid.sourceSize.width
                 property int rows: neuronGrid.sourceSize.height
-                property Image textureMap: Image { id: neuronGrid; source: "qrc:/assets/images/neurongrid_20x20.png" }
+                //property Image textureMap: Image { id: neuronGrid; source: genID < 0 ? "image://invalid" : "image://" + generatorModel.at(genID).id + "/lattice" }
+                property Image textureMap: Image { id: neuronGrid; source: genID < 0 ? "image://invalid" : "image://test/lattice" }
 
                 // fragment shader
                 fragmentShader: "qrc:/shaders/neuron_matrix.frag"

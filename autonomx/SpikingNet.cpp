@@ -747,9 +747,29 @@ bool SpikingNet::getFlagDecay() const {
     return this->flagDecay;
 }
 
+QColor SpikingNet::getLatticeAt(int x, int y) {
+    //double clamped = std::max<double>(0.0, std::min<double>(1.0, neurons[x + neuronWidth * y].getU()));
+    std::uniform_real_distribution<> randomUniform(0.0, 1.0);
+    double clamped = randomUniform(randomGenerator);
+    int rounded = (int) (clamped * 255.0);
+    QColor color(rounded, rounded, rounded, 255);
+    return color;
+}
+
+int SpikingNet::getLatticeWidth() {
+    return neuronWidth;
+}
+
+int SpikingNet::getLatticeHeight() {
+    return neuronHeight;
+}
+
 void SpikingNet::writeNeuronSize(int neuronSize) {
     if(this->neuronSize == neuronSize)
         return;
+
+    qDebug() << "WARNING: changing neuron size is currently disabled. this interferes with the ability to draw the lattice in lattive view. the generator class needs to be updated to provide a uniform way of changing the size of algorithms.";
+    return;
 
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(

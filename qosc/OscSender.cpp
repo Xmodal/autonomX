@@ -49,8 +49,8 @@ void OscSender::send(const QString& oscAddress, const QVariantList& arguments) {
 
     qint64 written = m_udpSocket->write(datagram);
 
-    if (written == -1) {
-        qCritical() << "failed to send OSC (write bytes to the send socket)";
+    if (flagDebug && written == -1) {
+        qDebug() << "failed to send OSC (write bytes to the send socket)";
     }
     m_udpSocket->flush();
     m_udpSocket->waitForBytesWritten();
@@ -83,7 +83,9 @@ void OscSender::variantListToByteArray(QByteArray& outputResult, const QString& 
         } else if (type == QMetaType::Bool) {
             packet << argument.toBool();
         } else {
-            qDebug() << "unhandled OSC argument type " << argument.typeName();
+            if(flagDebug) {
+                qDebug() << "unhandled OSC argument type " << argument.typeName();
+            }
         }
         // TODO: implement other OSC types
     }

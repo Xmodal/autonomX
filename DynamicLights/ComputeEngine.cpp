@@ -151,10 +151,11 @@ void ComputeEngine::loop() {
     for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
         QList<QVariant> outputs;
         for(int i = 0; i < (*it)->getOutputSize(); i++) {
-            if(flagDummyOscOutput) {
-                outputs.append(randomUniform(randomGenerator));
+            double value = flagDummyOutputMonitor ? randomUniform(randomGenerator) : (*it)->readOutput(i);
+            if(flagCastOutputToFloat) {
+                outputs.append((float)value);
             } else {
-                outputs.append((*it)->readOutput(i));
+                outputs.append(value);
             }
         }
         emit sendOscData((*it)->getId(), outputs);

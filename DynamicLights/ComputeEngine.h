@@ -37,6 +37,7 @@ private:
     bool flagDummyOutputMonitor = false;
     bool flagDummyOscOutput = false;
     bool flagDisableProcessing = false;
+    bool flagCastOutputToFloat = true; // needed for Max as it doesn't support doubles
     std::mt19937 randomGenerator;
 std::uniform_real_distribution<> randomUniform;
 public:

@@ -62,12 +62,6 @@ ApplicationWindow {
         onActivated: toggleLatticeView();
     }
 
-    // auto input blur
-    MouseArea {
-        anchors.fill: parent
-        onClicked: forceActiveFocus()
-    }
-
     StackLayout {
         id: router
         anchors.fill: parent

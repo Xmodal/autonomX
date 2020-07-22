@@ -18,8 +18,7 @@ Rack {
             spacing: Stylesheet.field.spacing
             Layout.fillWidth: true
 
-            SwitchField {
-                showLabel: false
+            CheckField {
                 on: true
                 controlColor: Stylesheet.colors.input
             }
@@ -42,8 +41,7 @@ Rack {
             spacing: Stylesheet.field.spacing
             Layout.fillWidth: true
 
-            SwitchField {
-                showLabel: false
+            CheckField {
                 on: true
                 controlColor: Stylesheet.colors.output
             }

@@ -17,6 +17,7 @@ ScrollView {
     Layout.fillHeight: true
     Layout.alignment: Qt.AlignTop | Qt.AlignLeft
     ScrollBar.vertical.interactive: false
+    ScrollBar.vertical.hoverEnabled: false
 
     ColumnLayout {
         width: parent.width

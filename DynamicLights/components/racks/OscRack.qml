@@ -19,6 +19,7 @@ Rack {
             Layout.fillWidth: true
 
             CheckField {
+                id: enableOscIn
                 on: true
                 controlColor: Stylesheet.colors.input
             }
@@ -26,14 +27,17 @@ Rack {
             TextField {
                 labelText: "Address"
                 defaultText: "/generator1/ins"
+                deactivated: !enableOscIn.on
             }
             TextField {
                 labelText: "Host"
                 defaultText: "127.0.0.1"
+                deactivated: !enableOscIn.on
             }
             NumberField {
                 labelText: "Port"
                 defaultNum: 57120
+                deactivated: !enableOscIn.on
             }
         }
 
@@ -42,6 +46,7 @@ Rack {
             Layout.fillWidth: true
 
             CheckField {
+                id: enableOscOut
                 on: true
                 controlColor: Stylesheet.colors.output
             }
@@ -49,14 +54,17 @@ Rack {
             TextField {
                 labelText: "Address"
                 defaultText: "/generator1/outs"
+                deactivated: !enableOscOut.on
             }
             TextField {
                 labelText: "Host"
                 defaultText: "127.0.0.1"
+                deactivated: !enableOscOut.on
             }
             NumberField {
                 labelText: "Port"
                 defaultNum: 57120
+                deactivated: !enableOscOut.on
             }
         }
     }

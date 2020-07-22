@@ -15,6 +15,7 @@ Field {
     spacing: 0
 
     property bool on: false
+    onValueChanged: on = newValue
     property color controlColor: Stylesheet.colors.white
 
     CheckBox {
@@ -22,7 +23,7 @@ Field {
         implicitWidth: 20
         implicitHeight: 20
         checked: on
-        onCheckedChanged: valueChanged(checked)
+        onCheckedChanged: checkField.valueChanged(checked)
 
         background: Rectangle {
             id: controlFrame
@@ -32,7 +33,7 @@ Field {
                 width: 1
                 color: Stylesheet.colors.white
             }
-            opacity: 0.35
+            opacity: 0.5
 
             Behavior on opacity {
                 NumberAnimation {

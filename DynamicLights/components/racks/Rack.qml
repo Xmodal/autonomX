@@ -23,6 +23,11 @@ Item {
     Layout.alignment: Qt.AlignLeft | Qt.AlignTop
     Layout.preferredHeight: rack.implicitHeight
 
+    MouseArea {
+        anchors.fill: parent
+        onClicked: forceActiveFocus()
+    }
+
     ColumnLayout {
         id: rack
 

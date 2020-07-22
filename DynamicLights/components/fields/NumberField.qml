@@ -20,10 +20,12 @@ Field {
     function increment() {
         defaultNum += incStep;
         if (max && defaultNum < max) defaultNum = max;
+        valueChanged(defaultNum);
     }
     function decrement() {
         defaultNum -= incStep;
         if (min && defaultNum < min) defaultNum = min;
+        valueChanged(defaultNum);
     }
 
     // validators

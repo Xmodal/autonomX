@@ -14,7 +14,6 @@
         <file>assets/images/neurongrid_20x20.png</file>
         <file>components/delegates/GeneratorWidget.qml</file>
         <file>components/delegates/HistoryGraph.qml</file>
-        <file>components/delegates/NodeTrack.qml</file>
         <file>components/delegates/OutputIndicator.qml</file>
         <file>components/fields/AreaField.qml</file>
         <file>components/fields/CheckField.qml</file>

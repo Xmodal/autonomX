@@ -26,8 +26,10 @@ Rack {
 
             TextField {
                 labelText: "Address"
-                defaultText: "/generator1/ins"
                 deactivated: !enableOscIn.on
+
+                defaultText: generatorModel.at(genID).oscInputAddress
+                onValueChanged: generatorModel.at(genID).oscInputAddress = newValue
             }
             TextField {
                 labelText: "Host"
@@ -36,8 +38,10 @@ Rack {
             }
             NumberField {
                 labelText: "Port"
-                defaultNum: 57120
                 deactivated: !enableOscIn.on
+
+                defaultNum: generatorModel.at(genID).oscInputPort
+                onValueChanged: generatorModel.at(genID).oscInputPort = newValue
             }
         }
 
@@ -53,18 +57,25 @@ Rack {
 
             TextField {
                 labelText: "Address"
-                defaultText: "/generator1/outs"
                 deactivated: !enableOscOut.on
+
+                defaultText: generatorModel.at(genID).oscOutputAddressTarget
+                onValueChanged: generatorModel.at(genID).oscOutputAddressTarget = newValue
             }
             TextField {
                 labelText: "Host"
-                defaultText: "127.0.0.1"
                 deactivated: !enableOscOut.on
+                // TODO: input masking to only allow a standard IP address format
+
+                defaultText: generatorModel.at(genID).oscOutputAddressHost
+                onValueChanged: generatorModel.at(genID).oscOutputAddressHost = newValue
             }
             NumberField {
                 labelText: "Port"
-                defaultNum: 57120
                 deactivated: !enableOscOut.on
+
+                defaultNum: generatorModel.at(genID).oscOutputPort
+                onValueChanged: generatorModel.at(genID).oscOutputPort = newValue
             }
         }
     }

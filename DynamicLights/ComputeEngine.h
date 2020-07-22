@@ -31,7 +31,7 @@ private:
     QSharedPointer<QList<QSharedPointer<Generator>>> generators;
     QSharedPointer<QHash<int, QSharedPointer<Generator>>> generatorsHashMap;
     QElapsedTimer elapsedTimer;
-    double frequency = 1;
+    double frequency = 60;
     bool firstFrame = true;
     bool flagDebug = false;
     bool flagDummyOutputMonitor = false;

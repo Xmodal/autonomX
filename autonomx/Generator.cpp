@@ -22,7 +22,6 @@
 
 Generator::Generator(int id) {
     this->id = id;
-    this->imageProvider = new GeneratorImageProvider(this);
 
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(

@@ -22,7 +22,6 @@
 #include <QSharedPointer>
 #include <QColor>
 #include <vector>
-#include "GeneratorImageProvider.h"
 
 class Generator : public QObject
 {
@@ -71,9 +70,6 @@ public:
 
     // the method implemented by the derived class that computes the output
     virtual void computeOutput(double deltaTime) = 0;
-
-    // pointer to image provider
-    GeneratorImageProvider* imageProvider;
 
     // the method implemented by the derived class that returns pixel values to construct the lattice image
     virtual QColor getLatticeAt(int x, int y) = 0;

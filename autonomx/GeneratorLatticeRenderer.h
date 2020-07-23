@@ -15,26 +15,16 @@
 
 #pragma once
 
-#include <QObject>
+#include <QQuickFramebufferObject>
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
 #include <QQuickWindow>
 
-class GeneratorLatticeRenderer : public QObject, protected QOpenGLFunctions {
-    Q_OBJECT
+class GeneratorLatticeRenderer : public QQuickFramebufferObject::Renderer {
 public:
-    GeneratorLatticeRenderer() : m_program(0) { }
-    ~GeneratorLatticeRenderer();
-
-    void setViewportSize(const QSize &size) { m_viewportSize = size; }
-    void setWindow(QQuickWindow *window) { m_window = window; }
-
-public slots:
-    void init();
-    void paint();
-
+    void render();
+    void synchronize(QQuickFramebufferObject *item);
 private:
-    QSize m_viewportSize;
-    QOpenGLShaderProgram *m_program;
-    QQuickWindow *m_window;
+    QOpenGLShaderProgram *program;
+    QQuickWindow *window;
 };

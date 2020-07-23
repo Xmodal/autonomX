@@ -13,19 +13,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include <QQuickWindow>
 #include <QDebug>
 #include "GeneratorLatticeRenderer.h"
 
-void GeneratorLatticeRenderer::init() {
-    if (!m_program) {
-        QSGRendererInterface *rif = m_window->rendererInterface();
-        Q_ASSERT(rif->graphicsApi() == QSGRendererInterface::OpenGL || rif->graphicsApi() == QSGRendererInterface::OpenGLRhi);
-
-        initializeOpenGLFunctions();
-
-        m_program = new QOpenGLShaderProgram();
-        m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Vertex,
+void GeneratorLatticeRenderer::render() {
+    qDebug() << "render (GeneratorLatticeRenderer)";
+    // init shaders on first draw. this isn't really optimal
+    if (!program) {
+        program = new QOpenGLShaderProgram();
+        program->addCacheableShaderFromSourceCode(QOpenGLShader::Vertex,
                                                     "attribute highp vec4 vertices;"
                                                     "varying highp vec2 coords;"
                                                     "void main() {"
@@ -33,7 +29,7 @@ void GeneratorLatticeRenderer::init() {
                                                     "    coords = vertices.xy;"
                                                     "}");
         /*
-        m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment,
+        program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment,
                                                     "lowp float t = 0.5;"
                                                     "varying highp vec2 coords;"
                                                     "void main() {"
@@ -43,28 +39,26 @@ void GeneratorLatticeRenderer::init() {
                                                     "    gl_FragColor = vec4(coords * .5 + .5, i, i);"
                                                     "}");
         */
-        m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment,
+        program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment,
                                                     "varying highp vec2 coords;"
                                                     "void main() {"
                                                     "    gl_FragColor = vec4(coords.x, coords.y, 1.0, 1.0);"
                                                     "}");
-        m_program->bindAttributeLocation("vertices", 0);
-        m_program->link();
+        program->bindAttributeLocation("vertices", 0);
+        program->link();
     }
-}
 
-void GeneratorLatticeRenderer::paint() {
     // these don't solve the problem...
-    //m_window->setClearBeforeRendering(false);
+    //window->setClearBeforeRendering(false);
     //glDisable(GL_CULL_FACE);
 
     // Play nice with the RHI. Not strictly needed when the scenegraph uses
     // OpenGL directly.
-    m_window->beginExternalCommands();
+    window->beginExternalCommands();
 
-    m_program->bind();
+    program->bind();
 
-    m_program->enableAttributeArray(0);
+    program->enableAttributeArray(0);
 
     float values[] = {
         -1, -1,
@@ -77,9 +71,7 @@ void GeneratorLatticeRenderer::paint() {
     // input. Therefore, we have to make sure no vertex buffer is bound.
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    m_program->setAttributeArray(0, GL_FLOAT, values, 2);
-
-    glViewport(0, 0, m_viewportSize.width(), m_viewportSize.height());
+    program->setAttributeArray(0, GL_FLOAT, values, 2);
 
     glDisable(GL_DEPTH_TEST);
 
@@ -88,20 +80,20 @@ void GeneratorLatticeRenderer::paint() {
 
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-    m_program->disableAttributeArray(0);
-    m_program->release();
+    program->disableAttributeArray(0);
+    program->release();
 
     // these don't do anything
     //glClearColor(1.0, 0.0, 0.0, 1.0);
     //glClear(GL_COLOR_BUFFER_BIT);
 
-    // Not strictly needed for this example, but generally useful for when
-    // mixing with raw OpenGL.
-    m_window->resetOpenGLState();
+    window->resetOpenGLState();
 
-    m_window->endExternalCommands();
+    window->endExternalCommands();
 }
 
-GeneratorLatticeRenderer::~GeneratorLatticeRenderer() {
-    delete m_program;
+void GeneratorLatticeRenderer::synchronize(QQuickFramebufferObject *item) {
+    // sync with GeneratorLattice
+    qDebug() << "synchronize (GeneratorLatticeRenderer)";
+    window = item->window();
 }

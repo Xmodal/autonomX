@@ -15,25 +15,12 @@
 
 #pragma once
 
-#include <QQuickItem>
+#include <QQuickFramebufferObject>
 #include "GeneratorLatticeRenderer.h"
 
-class GeneratorLattice : public QQuickItem {
+class GeneratorLattice : public QQuickFramebufferObject {
     Q_OBJECT
     QML_ELEMENT
-
 public:
-    GeneratorLattice();
-
-public slots:
-    void sync();
-    void cleanup();
-
-private slots:
-    void handleWindowChanged(QQuickWindow *win);
-
-private:
-    void releaseResources() override;
-
-    GeneratorLatticeRenderer *m_renderer;
+    QQuickFramebufferObject::Renderer * createRenderer() const;
 };

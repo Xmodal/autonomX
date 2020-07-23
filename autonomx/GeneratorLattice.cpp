@@ -16,5 +16,7 @@
 #include "GeneratorLattice.h"
 
 QQuickFramebufferObject::Renderer * GeneratorLattice::createRenderer() const {
-    return new GeneratorLatticeRenderer();
+    connect(this, &GeneratorLattice::visibleChanged, this, &QQuickFramebufferObject::update);
+    QQuickFramebufferObject::Renderer * renderer = new GeneratorLatticeRenderer();
+    return renderer;
 }

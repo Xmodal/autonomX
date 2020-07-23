@@ -22,9 +22,11 @@
 
 class GeneratorLatticeRenderer : public QQuickFramebufferObject::Renderer {
 public:
+    ~GeneratorLatticeRenderer();
     void render();
     void synchronize(QQuickFramebufferObject *item);
 private:
     QOpenGLShaderProgram *program;
     QQuickWindow *window;
+    bool visible;
 };

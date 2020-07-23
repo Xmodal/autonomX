@@ -10,11 +10,12 @@ Item {
     property int startIndex: 0
 
     onNewValueChanged: {
+        var index;
         if(sizeValid == sizeMax) {
             // buffer is full
 
             // index to write to is the previous start index
-            let index = startIndex;
+            index = startIndex;
             // write new value
             history[index] = newValue;
             // increment start index
@@ -23,7 +24,7 @@ Item {
             // buffer is not full yet
 
             // index to write to is at start index offset by valid size
-            let index = (startIndex + sizeValid) % sizeMax;
+            index = (startIndex + sizeValid) % sizeMax;
             // write new value
             history[index] = newValue;
             // increment valid size

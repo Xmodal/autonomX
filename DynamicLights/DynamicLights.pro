@@ -1,5 +1,6 @@
 QT += quick
 QT += core
+QT += svg
 # QT += serialport
 CONFIG += c++11
 
@@ -32,6 +33,7 @@ SOURCES += \
     Izhikevich.cpp \
     OscEngine.cpp \
     SpikingNet.cpp \
+    SvgImageProvider.cpp \
     main.cpp
 
 RESOURCES += qml.qrc
@@ -65,7 +67,8 @@ HEADERS += \
     Izhikevich.h \
     NeuronType.h \
     OscEngine.h \
-    SpikingNet.h
+    SpikingNet.h \
+    SvgImageProvider.h
 
 INCLUDEPATH += $$PWD/../qosc
 INCLUDEPATH += $$PWD/../qosc/contrib/packosc

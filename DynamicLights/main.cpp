@@ -28,6 +28,7 @@
 #include "GeneratorModel.h"
 #include "SpikingNet.h"
 #include "Facade.h"
+#include "SvgImageProvider.h"
 
 // only include AppNap code if platform is macOS
 #ifdef Q_OS_MAC
@@ -37,7 +38,8 @@
 bool flagDebug = false;
 
 int main(int argc, char *argv[]) {
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QCoreApplication::setAttribute( Qt::AA_EnableHighDpiScaling, true );
+    QCoreApplication::setAttribute( Qt::AA_UseHighDpiPixmaps, true );
 
     QGuiApplication app(argc, argv);
 
@@ -188,6 +190,7 @@ int main(int argc, char *argv[]) {
     // Pass C++ objects to QML.
     qmlEngine.rootContext()->setContextProperty("generatorModel", &generatorModel);
     qmlEngine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    qmlEngine.addImageProvider(QLatin1String("svg"), new SvgImageProvider);
     if (qmlEngine.rootObjects().isEmpty())
         return -1;
 

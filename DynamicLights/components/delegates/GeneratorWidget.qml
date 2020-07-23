@@ -26,7 +26,7 @@ Button {
 
         // index background
         Image {
-            source: "qrc:/assets/images/index-bg.svg"
+            source: "image://svg/assets/images/index-bg"
             height: parent.height
             anchors.left: parent.left
             opacity: selected ? 1 : 0

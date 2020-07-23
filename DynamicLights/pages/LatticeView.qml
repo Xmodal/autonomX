@@ -32,7 +32,7 @@ ColumnLayout {
             anchors.leftMargin: 20
             anchors.verticalCenter: parent.verticalCenter
 
-            source: "qrc:/assets/images/left-arrow.svg"
+            source: "image://svg/assets/images/left-arrow"
 
             MouseArea {
                 anchors.fill: parent

@@ -113,7 +113,7 @@ Item {
                 // (couldn't find a good workaround for this unfortunately)
                 Image {
                     id: icon
-                    source: collapsed ? "qrc:/assets/images/icon-expand.svg" : "qrc:/assets/images/icon-collapse.svg"
+                    source: collapsed ? "image://svg/assets/images/icon-expand" : "image://svg/assets/images/icon-collapse"
                     smooth: true
                     mipmap: false
                     anchors.horizontalCenter: parent.horizontalCenter

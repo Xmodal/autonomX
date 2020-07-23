@@ -2,6 +2,8 @@ import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 
+import ca.hexagram.xmodal.autonomx 1.0
+
 import "qrc:/stylesheet"
 
 ColumnLayout {
@@ -99,6 +101,11 @@ ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
+            GeneratorLattice {
+                anchors.fill: parent
+            }
+
+            /*
             Rectangle {
                 anchors.fill: parent
                 color: Stylesheet.colors.black
@@ -211,6 +218,7 @@ ColumnLayout {
                 }
                 opacity: 0.4
             }
+            */
         }
 
         // control zone

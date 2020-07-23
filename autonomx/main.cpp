@@ -26,6 +26,7 @@
 #include "ComputeEngine.h"
 #include "Generator.h"
 #include "GeneratorModel.h"
+#include "GeneratorLattice.h"
 #include "SpikingNet.h"
 #include "Facade.h"
 
@@ -61,6 +62,7 @@ int main(int argc, char *argv[]) {
     qmlRegisterUncreatableType<Facade>("ca.hexagram.xmodal.autonomx", 1, 0, "Facade", "Cannot instanciate Facade.");
     qmlRegisterUncreatableType<SpikingNet>("ca.hexagram.xmodal.autonomx", 1, 0, "SpikingNet", "Cannot instanciate SpikingNet.");
     qmlRegisterUncreatableType<NeuronType>("ca.hexagram.xmodal.autonomx", 1, 0, "NeuronType", "Cannot instanciate NeuronType.");
+    qmlRegisterType<GeneratorLattice>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorLattice");
 
     // create generator list
     QSharedPointer<Generator> spikingNet = QSharedPointer<Generator>(new SpikingNet(0));

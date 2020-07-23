@@ -1,7 +1,13 @@
 QT += quick
 QT += core
+QT += qml
 # QT += serialport
 CONFIG += c++11
+
+# registers custom QML types
+CONFIG += qmltypes
+QML_IMPORT_NAME = ca.hexagram.xmodal.autonomx
+QML_IMPORT_MAJOR_VERSION = 1
 
 # Disable macOS version check (it prints a WARNING)
 CONFIG += sdk_no_version_check
@@ -28,6 +34,8 @@ SOURCES += \
     ComputeEngine.cpp \
     Facade.cpp \
     Generator.cpp \
+    GeneratorLattice.cpp \
+    GeneratorLatticeRenderer.cpp \
     GeneratorModel.cpp \
     Izhikevich.cpp \
     OscEngine.cpp \
@@ -37,10 +45,10 @@ SOURCES += \
 RESOURCES += qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH =
+#QML_IMPORT_PATH =
 
 # Additional import path used to resolve QML modules just for Qt Quick Designer
-QML_DESIGNER_IMPORT_PATH =
+#QML_DESIGNER_IMPORT_PATH =
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -61,6 +69,8 @@ HEADERS += \
     ComputeEngine.h \
     Facade.h \
     Generator.h \
+    GeneratorLattice.h \
+    GeneratorLatticeRenderer.h \
     GeneratorModel.h \
     Izhikevich.h \
     NeuronType.h \

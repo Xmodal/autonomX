@@ -190,8 +190,9 @@ int main(int argc, char *argv[]) {
     // register image providers
     for(QList<QSharedPointer<Generator>>::iterator it = generators.get()->begin(); it != generators.get()->end(); it++) {
         QSharedPointer<Generator> generator = *it;
-        //qmlEngine.addImageProvider(QString(generator->getID()), generator->imageProvider);
-        qmlEngine.addImageProvider("test", generator->imageProvider);
+        QString id = "generator-" + QString::number(generator->getID());
+        qDebug() << "added image provider with id:\t" << id;
+        qmlEngine.addImageProvider(id, generator->imageProvider);
     }
     qmlEngine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (qmlEngine.rootObjects().isEmpty())

@@ -29,4 +29,5 @@ private:
     QOpenGLShaderProgram *program;
     QQuickWindow *window;
     bool visible;
+    bool flagDebug = true;
 };

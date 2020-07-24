@@ -27,31 +27,15 @@ void GeneratorLatticeRenderer::render() {
     // init shaders on first draw. this isn't really optimal
     if (!program) {
         program = new QOpenGLShaderProgram();
-        program->addCacheableShaderFromSourceCode(QOpenGLShader::Vertex,
-                                                    "attribute highp vec4 vertices;"
-                                                    "varying highp vec2 coords;"
-                                                    "void main() {"
-                                                    "    gl_Position = vertices;"
-                                                    "    coords = vertices.xy;"
-                                                    "}");
-        /*
-        program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment,
-                                                    "lowp float t = 0.5;"
-                                                    "varying highp vec2 coords;"
-                                                    "void main() {"
-                                                    "    lowp float i = 1. - (pow(abs(coords.x), 4.) + pow(abs(coords.y), 4.));"
-                                                    "    i = smoothstep(t - 0.8, t + 0.8, i);"
-                                                    "    i = floor(i * 20.) / 20.;"
-                                                    "    gl_FragColor = vec4(coords * .5 + .5, i, i);"
-                                                    "}");
-        */
-        program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment,
-                                                    "varying highp vec2 coords;"
-                                                    "void main() {"
-                                                    "    gl_FragColor = vec4(coords.x, coords.y, 1.0, 1.0);"
-                                                    "}");
+        program->addCacheableShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/lattice.vert");
+        program->addCacheableShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/lattice.frag");
         program->bindAttributeLocation("vertices", 0);
         program->link();
+
+        QString log = program->log();
+        if(flagDebug && log != "") {
+            qDebug() << "Error in shader compilation or linking: " << log;
+        }
     }
 
     // these don't solve the problem...

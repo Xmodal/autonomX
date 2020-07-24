@@ -18,6 +18,7 @@
 #include <QQuickFramebufferObject>
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
+#include <QOpenGLFramebufferObject>
 #include <QQuickWindow>
 
 class GeneratorLatticeRenderer : public QQuickFramebufferObject::Renderer {
@@ -29,5 +30,6 @@ private:
     QOpenGLShaderProgram *program;
     QQuickWindow *window;
     bool visible;
+    bool synchronized = false;
     bool flagDebug = true;
 };

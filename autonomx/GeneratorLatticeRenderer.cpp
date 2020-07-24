@@ -21,6 +21,13 @@ GeneratorLatticeRenderer::~GeneratorLatticeRenderer() {
 }
 
 void GeneratorLatticeRenderer::render() {
+    if(synchronized) {
+        QOpenGLFramebufferObject* framebuffer = this->framebufferObject();
+        QSize size = framebuffer->size();
+        qDebug() << "size: " << size;
+        synchronized = false;
+    }
+
     if(flagDebug) {
         qDebug() << "render (GeneratorLatticeRenderer)";
     }
@@ -38,13 +45,21 @@ void GeneratorLatticeRenderer::render() {
         }
     }
 
-    // these don't solve the problem...
-    //window->setClearBeforeRendering(false);
-    //glDisable(GL_CULL_FACE);
-
     // Play nice with the RHI. Not strictly needed when the scenegraph uses
     // OpenGL directly.
     window->beginExternalCommands();
+
+    /*
+    window->setSurfaceType(QWindow::OpenGLSurface);
+    QSurfaceFormat format;
+    format.setSamples(4);
+    window->setFormat(format);
+
+    QOpenGLContext* context = window->openglContext();
+    context->setFormat(format);
+    */
+
+    glEnable(GL_MULTISAMPLE);
 
     program->bind();
 
@@ -96,4 +111,5 @@ void GeneratorLatticeRenderer::synchronize(QQuickFramebufferObject *item) {
     if(visible) {
         update();
     }
+    synchronized = true;
 }

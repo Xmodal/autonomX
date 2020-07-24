@@ -21,7 +21,9 @@ GeneratorLatticeRenderer::~GeneratorLatticeRenderer() {
 }
 
 void GeneratorLatticeRenderer::render() {
-    qDebug() << "render (GeneratorLatticeRenderer)";
+    if(flagDebug) {
+        qDebug() << "render (GeneratorLatticeRenderer)";
+    }
     // init shaders on first draw. this isn't really optimal
     if (!program) {
         program = new QOpenGLShaderProgram();
@@ -102,7 +104,9 @@ void GeneratorLatticeRenderer::render() {
 
 void GeneratorLatticeRenderer::synchronize(QQuickFramebufferObject *item) {
     // sync with GeneratorLattice
-    qDebug() << "synchronize (GeneratorLatticeRenderer)";
+    if(flagDebug) {
+        qDebug() << "synchronize (GeneratorLatticeRenderer)";
+    }
     window = item->window();
     visible = item->isVisible();
     if(visible) {

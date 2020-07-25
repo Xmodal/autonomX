@@ -5,19 +5,19 @@ QT -= gui
 CONFIG += sdk_no_version_check
 CONFIG += c++11
 
-TARGET = test_DynamicLights
+TARGET = test_autonomx
 CONFIG += console
 CONFIG -= app_bundle
 
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    TestDynamicLights.cpp
+    TestAutonomX.cpp
 
 HEADERS += \
-    TestDynamicLights.h
+    TestAutonomX.h
 
-INCLUDEPATH += $$PWD/../DynamicLights/
+INCLUDEPATH += $$PWD/../autonomx/
 
-# LIBS += -L$$PWD/../DynamicLights -lDynamicLights
+# LIBS += -L$$PWD/../autonomx -lautonomx
 

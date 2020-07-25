@@ -3,13 +3,14 @@ TEMPLATE = subdirs
 # Silent a warning on macOS:
 CONFIG += sdk_no_version_check
 
-# DynamicLights:
-sub_DynamicLights.subdir = DynamicLights
-sub_DynamicLights.target = sub_DynamicLights
-SUBDIRS += DynamicLights
+# autonomx
+sub_autonomx.subdir = autonomx
+sub_autonomx.target = sub_autonomx
+SUBDIRS += autonomx
 
-# test_DynamicLights:
-sub_test_DynamicLights.subdir = test_DynamicLights
-sub_test_DynamicLights.target = sub_test_DynamicLights
-sub_test_DynamicLights.depends += sub_DynamicLights
-SUBDIRS += test_DynamicLights
+# test_autonomx:
+sub_test_autonomx.subdir = test_autonomx
+sub_test_autonomx.target = sub_test_autonomx
+sub_test_autonomx.depends += sub_autonomx
+SUBDIRS += test_autonomx
+

@@ -29,6 +29,11 @@ public:
 private:
     QOpenGLShaderProgram *program;
     QQuickWindow *window;
+    QOpenGLFramebufferObject *framebuffer = nullptr;
+    QOpenGLFramebufferObject *framebufferSuper = nullptr;
+    QSize size;
+    QSize sizeSuper = QSize(0, 0);
+    int factorSuper = 2;
     bool visible;
     bool synchronized = false;
     bool flagDebug = true;

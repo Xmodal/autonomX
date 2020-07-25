@@ -21,16 +21,30 @@ GeneratorLatticeRenderer::~GeneratorLatticeRenderer() {
 }
 
 void GeneratorLatticeRenderer::render() {
-    if(synchronized) {
-        QOpenGLFramebufferObject* framebuffer = this->framebufferObject();
-        QSize size = framebuffer->size();
-        qDebug() << "size: " << size;
-        synchronized = false;
-    }
-
     if(flagDebug) {
         qDebug() << "render (GeneratorLatticeRenderer)";
     }
+
+    if(synchronized) {
+        synchronized = false;
+        if(flagDebug) {
+            qDebug() << "synchronization detected just before render";
+        }
+        framebuffer = this->framebufferObject();
+        QSize sizeNew = framebuffer->size();
+        if(sizeNew != size) {
+            size = sizeNew;
+            if(flagDebug) {
+                qDebug() << "synchronization caused framebuffer size change, updating supersampling framebuffer";
+            }
+            if(framebufferSuper != nullptr) {
+                delete framebufferSuper;
+            }
+            sizeSuper = size * factorSuper;
+            framebufferSuper = new QOpenGLFramebufferObject(sizeSuper);
+        }
+    }
+
     // init shaders on first draw. this isn't really optimal
     if (!program) {
         program = new QOpenGLShaderProgram();
@@ -49,17 +63,13 @@ void GeneratorLatticeRenderer::render() {
     // OpenGL directly.
     window->beginExternalCommands();
 
-    /*
-    window->setSurfaceType(QWindow::OpenGLSurface);
-    QSurfaceFormat format;
-    format.setSamples(4);
-    window->setFormat(format);
+    // bind supersampling framebuffer
+    framebufferSuper->bind();
 
-    QOpenGLContext* context = window->openglContext();
-    context->setFormat(format);
-    */
+    // set viewport size to match supersampling framebuffer
+    glViewport(0, 0, sizeSuper.width(), sizeSuper.height());
 
-    glEnable(GL_MULTISAMPLE);
+    //glEnable(GL_MULTISAMPLE);
 
     program->bind();
 
@@ -88,9 +98,11 @@ void GeneratorLatticeRenderer::render() {
     program->disableAttributeArray(0);
     program->release();
 
-    // these don't do anything
-    //glClearColor(1.0, 0.0, 0.0, 1.0);
-    //glClear(GL_COLOR_BUFFER_BIT);
+    // release supersampling framebuffer
+    framebufferSuper->release();
+
+    // blit supersampling framebuffer onto real framebuffer
+    QOpenGLFramebufferObject::blitFramebuffer(framebuffer, QRect(0, 0, size.width(), size.height()), framebufferSuper, QRect(0, 0, sizeSuper.width(), sizeSuper.height()), GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
     window->resetOpenGLState();
 

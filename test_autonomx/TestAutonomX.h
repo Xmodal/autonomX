@@ -3,7 +3,7 @@
 #include <QObject>
 #include <QtTest/QtTest>
 
-class TestDynamicLights: public QObject
+class TestAutonomX: public QObject
 {
     Q_OBJECT
 

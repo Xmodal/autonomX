@@ -58,3 +58,7 @@ compile_commands.json
 *~
 .*.swp
 
+# our built files (if you build it in the same dir)
+autonomx/autonomx
+test_autonomx/test_autonomx
+

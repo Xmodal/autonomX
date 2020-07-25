@@ -18,7 +18,7 @@ ApplicationWindow {
     visible: true
     width: 1280
     height: 720
-    title: qsTr("Dynamic Lights")
+    title: qsTr("autonomX")
 
     // TODO: move into appropriate Rack component
     function handleMessageReceived(oscPath, oscArguments) {

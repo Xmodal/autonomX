@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.3
 import "qrc:/stylesheet"
 import "../fields"
 
-import ca.hexagram.xmodal.dynamiclight 1.0
+import ca.hexagram.xmodal.autonomx 1.0
 
 Rack {
     id: paramsRack

@@ -130,74 +130,97 @@ ColumnLayout {
                 fragmentShader: "qrc:/shaders/neuron_matrix.frag"
             }
 
-            // I/O zones
-            Canvas {
-                id: zoneDrawings
-                anchors.fill: parent
-                visible: !(genID < 0)
+            // I/O regions
+            Item {
+                id: regions
 
-                // slots
-                onWidthChanged: requestPaint()
-                onHeightChanged: requestPaint()
+                property int latticeW: 400
+                property int latticeH: 400
 
-                // props
-                property int cols: mainContent.cols
-                property int rows: mainContent.rows
-                property real realWidth: mainContent.realWidth
-                property real realHeight: mainContent.realHeight
+                x: parent.width/2 - width/2
+                y: parent.height/2 - height/2
+                width: latticeW
+                height: latticeH
 
-                // I/O
-                property color inputColor: Stylesheet.colors.inputColor
-                property variant inputs: [
-                    Qt.rect(2, 2, 4, 5)
-                ]
-                property color outputColor: Stylesheet.colors.outputColor
-                property variant outputs: [
-                    Qt.rect(10, 10, 2, 2)
-                ]
+                Repeater {
+                    model: ListModel {
+                        ListElement {
+                            colX: 1
+                            colY: 3
+                            colW: 3
+                            colH: 3
+                            type: 0
+                        }
 
-                // painting code
-                onPaint: {
-                    var ctx = getContext("2d");
-                    ctx.reset();
-                    ctx.strokeWidth = 1;
+                        ListElement {
+                            colX: 6
+                            colY: 3
+                            colW: 3
+                            colH: 3
+                            type: 0
+                        }
 
-                    // props
-                    var i;
-                    var offset = {
-                        x: width/2 - realWidth/2,
-                        y: height/2 - realHeight/2
-                    };
-                    var coords;
+                        ListElement {
+                            colX: 11
+                            colY: 3
+                            colW: 3
+                            colH: 3
+                            type: 0
+                        }
 
-                    // draw inputs
-                    for (i = 0; i < inputs.length; i++) {
-                        ctx.beginPath();
-                        ctx.strokeStyle = inputColor;
+                        ListElement {
+                            colX: 16
+                            colY: 3
+                            colW: 3
+                            colH: 3
+                            type: 0
+                        }
 
-                        coords = {
-                            x: offset.x + (realWidth/cols*inputs[i].x),
-                            y: offset.y + (realHeight/rows*inputs[i].y),
-                            w: realWidth/cols*inputs[i].width,
-                            h: realHeight/rows*inputs[i].height
-                        };
+                        ListElement {
+                            colX: 1
+                            colY: 14
+                            colW: 3
+                            colH: 3
+                            type: 1
+                        }
 
-                        ctx.strokeRect(coords.x, coords.y, coords.w, coords.h);
+                        ListElement {
+                            colX: 6
+                            colY: 14
+                            colW: 3
+                            colH: 3
+                            type: 1
+                        }
+
+                        ListElement {
+                            colX: 11
+                            colY: 14
+                            colW: 3
+                            colH: 3
+                            type: 1
+                        }
+
+                        ListElement {
+                            colX: 16
+                            colY: 14
+                            colW: 3
+                            colH: 3
+                            type: 1
+                        }
                     }
 
-                    // draw outputs
-                    for (i = 0; i < outputs.length; i++) {
-                        ctx.beginPath();
-                        ctx.strokeStyle = outputColor;
+                    Rectangle {
+                        antialiasing: true
+                        width: regions.latticeW * model.colW / 20.0
+                        height: regions.latticeH * model.colH / 20.0
+                        x: regions.latticeW * model.colX / 20.0
+                        y: regions.latticeH * model.colY / 20.0
 
-                        coords = {
-                            x: offset.x + (realWidth/cols*outputs[i].x),
-                            y: offset.y + (realHeight/rows*outputs[i].y),
-                            w: realWidth/cols*outputs[i].width,
-                            h: realHeight/rows*outputs[i].height
-                        };
-
-                        ctx.strokeRect(coords.x, coords.y, coords.w, coords.h);
+                        color: "transparent"
+                        border {
+                            color: type == 0 ? Stylesheet.colors.input : Stylesheet.colors.output
+                            width: 1
+                        }
                     }
                 }
             }

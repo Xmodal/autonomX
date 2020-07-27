@@ -23,6 +23,7 @@
 
 class GeneratorLatticeRenderer : public QQuickFramebufferObject::Renderer {
 public:
+    GeneratorLatticeRenderer();
     ~GeneratorLatticeRenderer();
     void render();
     void synchronize(QQuickFramebufferObject *item);
@@ -36,5 +37,6 @@ private:
     int factorSuper = 2;            // supersampling factor
     bool visible;                   // indicates if the object is visible in QML and turns on and off the render loop accordingly
     bool synchronized = false;      // indicates if there was a call to synchronize since the last render call
-    bool flagDebug = true;
+    bool flagSuper = true;          // enables supersampling
+    bool flagDebug = true;          // enables debug
 };

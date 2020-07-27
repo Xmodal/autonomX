@@ -16,8 +16,32 @@
 #include <QDebug>
 #include "GeneratorLatticeRenderer.h"
 
+GeneratorLatticeRenderer::GeneratorLatticeRenderer() : QQuickFramebufferObject::Renderer() {
+    if(flagDebug) {
+        qDebug() << "constructor (GeneratorLatticeRenderer)";
+    }
+    // init the shader program
+    program = new QOpenGLShaderProgram();
+    program->addCacheableShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/lattice.vert");
+    program->addCacheableShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/lattice.frag");
+    program->bindAttributeLocation("vertices", 0);
+    program->link();
+
+    QString log = program->log();
+    if(flagDebug && log != "") {
+        qDebug() << "constructor (GeneratorLatticeRenderer): Error in shader compilation or linking: " << log;
+    }
+}
+
 GeneratorLatticeRenderer::~GeneratorLatticeRenderer() {
+    // delete shader program
     delete program;
+    // delete supersampling framebuffer if it exists
+    if(flagSuper) {
+        if(framebufferSuper != nullptr) {
+            delete framebufferSuper;
+        }
+    }
 }
 
 void GeneratorLatticeRenderer::render() {
@@ -39,31 +63,23 @@ void GeneratorLatticeRenderer::render() {
             qDebug() << "render (GeneratorLatticeRenderer): synchronization detected just before render";
         }
         framebuffer = this->framebufferObject();
-        QSize sizeNew = framebuffer->size();
-        if(sizeNew != size) {
-            size = sizeNew;
-            if(flagDebug) {
-                qDebug() << "render (GeneratorLatticeRenderer): synchronization caused framebuffer size change, updating supersampling framebuffer";
+        if(flagSuper) {
+            // check to see if the framebuffer size changed
+            QSize sizeNew = framebuffer->size();
+            if(sizeNew != size) {
+                // the size changed, we need to update the supersampling framebuffer
+                size = sizeNew;
+                if(flagDebug) {
+                    qDebug() << "render (GeneratorLatticeRenderer): synchronization caused framebuffer size change, updating supersampling framebuffer";
+                }
+                if(framebufferSuper != nullptr) {
+                    // deallocate old supersampling framebuffer if it exists
+                    delete framebufferSuper;
+                }
+                // create a new supersampling framebuffer
+                sizeSuper = size * factorSuper;
+                framebufferSuper = new QOpenGLFramebufferObject(sizeSuper);
             }
-            if(framebufferSuper != nullptr) {
-                delete framebufferSuper;
-            }
-            sizeSuper = size * factorSuper;
-            framebufferSuper = new QOpenGLFramebufferObject(sizeSuper);
-        }
-    }
-
-    // init shaders on first draw. this isn't really optimal
-    if (!program) {
-        program = new QOpenGLShaderProgram();
-        program->addCacheableShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/lattice.vert");
-        program->addCacheableShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/lattice.frag");
-        program->bindAttributeLocation("vertices", 0);
-        program->link();
-
-        QString log = program->log();
-        if(flagDebug && log != "") {
-            qDebug() << "render (GeneratorLatticeRenderer): Error in shader compilation or linking: " << log;
         }
     }
 
@@ -71,11 +87,13 @@ void GeneratorLatticeRenderer::render() {
     // OpenGL directly.
     window->beginExternalCommands();
 
-    // bind supersampling framebuffer
-    framebufferSuper->bind();
+    if(flagSuper) {
+        // bind supersampling framebuffer
+        framebufferSuper->bind();
 
-    // set viewport size to match supersampling framebuffer
-    glViewport(0, 0, sizeSuper.width(), sizeSuper.height());
+        // set viewport size to match supersampling framebuffer
+        glViewport(0, 0, sizeSuper.width(), sizeSuper.height());
+    }
 
     // bind shaders
     program->bind();
@@ -110,11 +128,13 @@ void GeneratorLatticeRenderer::render() {
     // unbind shaders
     program->release();
 
-    // release supersampling framebuffer
-    framebufferSuper->release();
+    if(flagSuper) {
+        // release supersampling framebuffer
+        framebufferSuper->release();
 
-    // blit supersampling framebuffer onto real framebuffer, performing downsampling
-    QOpenGLFramebufferObject::blitFramebuffer(framebuffer, QRect(0, 0, size.width(), size.height()), framebufferSuper, QRect(0, 0, sizeSuper.width(), sizeSuper.height()), GL_COLOR_BUFFER_BIT, GL_LINEAR);
+        // blit supersampling framebuffer onto real framebuffer, performing downsampling
+        QOpenGLFramebufferObject::blitFramebuffer(framebuffer, QRect(0, 0, size.width(), size.height()), framebufferSuper, QRect(0, 0, sizeSuper.width(), sizeSuper.height()), GL_COLOR_BUFFER_BIT, GL_LINEAR);
+    }
 
     // restore previous OpenGL state
     window->resetOpenGLState();

@@ -27,14 +27,14 @@ public:
     void render();
     void synchronize(QQuickFramebufferObject *item);
 private:
-    QOpenGLShaderProgram *program;
-    QQuickWindow *window;
-    QOpenGLFramebufferObject *framebuffer = nullptr;
-    QOpenGLFramebufferObject *framebufferSuper = nullptr;
-    QSize size;
-    QSize sizeSuper = QSize(0, 0);
-    int factorSuper = 2;
-    bool visible;
-    bool synchronized = false;
+    QOpenGLShaderProgram *program;      // pointer to shader
+    QQuickWindow *window;               // pointer to window
+    QOpenGLFramebufferObject *framebuffer = nullptr;        // pointer to the assigned framebuffer that is displayed in QML
+    QOpenGLFramebufferObject *framebufferSuper = nullptr;   // pointer to high resolution framebuffer that will be downsampled
+    QSize size;                     // size of the assigned framebuffer
+    QSize sizeSuper = QSize(0, 0);  // size of the supersampling framebuffer
+    int factorSuper = 2;            // supersampling factor
+    bool visible;                   // indicates if the object is visible in QML and turns on and off the render loop accordingly
+    bool synchronized = false;      // indicates if there was a call to synchronize since the last render call
     bool flagDebug = true;
 };

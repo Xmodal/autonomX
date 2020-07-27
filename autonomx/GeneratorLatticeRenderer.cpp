@@ -25,17 +25,25 @@ void GeneratorLatticeRenderer::render() {
         qDebug() << "render (GeneratorLatticeRenderer)";
     }
 
+    // exit loop if not visible
+    if(!visible) {
+        if(flagDebug) {
+            qDebug() << "render (GeneratorLatticeRenderer): not visible, exiting loop";
+        }
+        return;
+    }
+
     if(synchronized) {
         synchronized = false;
         if(flagDebug) {
-            qDebug() << "synchronization detected just before render";
+            qDebug() << "render (GeneratorLatticeRenderer): synchronization detected just before render";
         }
         framebuffer = this->framebufferObject();
         QSize sizeNew = framebuffer->size();
         if(sizeNew != size) {
             size = sizeNew;
             if(flagDebug) {
-                qDebug() << "synchronization caused framebuffer size change, updating supersampling framebuffer";
+                qDebug() << "render (GeneratorLatticeRenderer): synchronization caused framebuffer size change, updating supersampling framebuffer";
             }
             if(framebufferSuper != nullptr) {
                 delete framebufferSuper;
@@ -55,7 +63,7 @@ void GeneratorLatticeRenderer::render() {
 
         QString log = program->log();
         if(flagDebug && log != "") {
-            qDebug() << "Error in shader compilation or linking: " << log;
+            qDebug() << "render (GeneratorLatticeRenderer): Error in shader compilation or linking: " << log;
         }
     }
 
@@ -69,12 +77,13 @@ void GeneratorLatticeRenderer::render() {
     // set viewport size to match supersampling framebuffer
     glViewport(0, 0, sizeSuper.width(), sizeSuper.height());
 
-    //glEnable(GL_MULTISAMPLE);
-
+    // bind shaders
     program->bind();
 
+    // TODO: what does this do
     program->enableAttributeArray(0);
 
+    // simple rectangle covering the whole NDC XY plane
     float values[] = {
         -1, -1,
         1, -1,
@@ -86,28 +95,34 @@ void GeneratorLatticeRenderer::render() {
     // input. Therefore, we have to make sure no vertex buffer is bound.
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+    // TODO: what does this do
     program->setAttributeArray(0, GL_FLOAT, values, 2);
 
+    // disable depth test
     glDisable(GL_DEPTH_TEST);
 
-    //glEnable(GL_BLEND);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-
+    // draw
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
+    // TODO: what does this do
     program->disableAttributeArray(0);
+
+    // unbind shaders
     program->release();
 
     // release supersampling framebuffer
     framebufferSuper->release();
 
-    // blit supersampling framebuffer onto real framebuffer
+    // blit supersampling framebuffer onto real framebuffer, performing downsampling
     QOpenGLFramebufferObject::blitFramebuffer(framebuffer, QRect(0, 0, size.width(), size.height()), framebufferSuper, QRect(0, 0, sizeSuper.width(), sizeSuper.height()), GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
+    // restore previous OpenGL state
     window->resetOpenGLState();
 
+    // TODO: what does this do
     window->endExternalCommands();
 
+    // render again if visible
     if(visible) {
         update();
     }

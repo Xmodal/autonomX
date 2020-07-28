@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.3
 import ca.hexagram.xmodal.autonomx 1.0
 
 import "qrc:/stylesheet"
+import "../models"
 
 ColumnLayout {
     id: latticeView
@@ -13,7 +14,7 @@ ColumnLayout {
 
     Layout.fillWidth: true
     Layout.fillHeight: true
-    spacing: 0;
+    spacing: 0
 
     // header
     Header {}
@@ -32,6 +33,21 @@ ColumnLayout {
         property real realHeight: 400
         property int cols: 20
         property int rows: 20
+        property int currRegionIndex: -1
+
+        // manage selected region
+        function switchSelectedRegion(index) {
+            currRegionIndex = index;
+            regions.rectSelected = index >= 0;
+        }
+
+        function elementToRect(element) {
+            return Qt.rect(element.colX, element.colY, element.colW, element.colH);
+        }
+
+        RegionModel {
+            id: regionModel
+        }
 
         spacing: 0
 
@@ -63,6 +79,7 @@ ColumnLayout {
                 property real realHeight: mainContent.realHeight
                 property int cols: neuronGrid.sourceSize.width
                 property int rows: neuronGrid.sourceSize.height
+                property rect selected: mainContent.currRegionIndex < 0 ? Qt.rect(-1, -1, -1, -1) : mainContent.elementToRect(regionModel.get(mainContent.currRegionIndex))
                 property Image textureMap: Image { id: neuronGrid; source: "qrc:/assets/images/neurongrid_20x20.png" }
 
                 // fragment shader
@@ -75,90 +92,43 @@ ColumnLayout {
 
                 property int latticeW: 400
                 property int latticeH: 400
+                property bool rectSelected: false
 
                 x: parent.width/2 - width/2
                 y: parent.height/2 - height/2
                 width: latticeW
                 height: latticeH
 
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: mainContent.switchSelectedRegion(-1)
+                }
+
                 Repeater {
-                    model: ListModel {
-                        ListElement {
-                            colX: 1
-                            colY: 3
-                            colW: 3
-                            colH: 3
-                            type: 0
-                        }
-
-                        ListElement {
-                            colX: 6
-                            colY: 3
-                            colW: 3
-                            colH: 3
-                            type: 0
-                        }
-
-                        ListElement {
-                            colX: 11
-                            colY: 3
-                            colW: 3
-                            colH: 3
-                            type: 0
-                        }
-
-                        ListElement {
-                            colX: 16
-                            colY: 3
-                            colW: 3
-                            colH: 3
-                            type: 0
-                        }
-
-                        ListElement {
-                            colX: 1
-                            colY: 14
-                            colW: 3
-                            colH: 3
-                            type: 1
-                        }
-
-                        ListElement {
-                            colX: 6
-                            colY: 14
-                            colW: 3
-                            colH: 3
-                            type: 1
-                        }
-
-                        ListElement {
-                            colX: 11
-                            colY: 14
-                            colW: 3
-                            colH: 3
-                            type: 1
-                        }
-
-                        ListElement {
-                            colX: 16
-                            colY: 14
-                            colW: 3
-                            colH: 3
-                            type: 1
-                        }
-                    }
+                    model: regionModel
 
                     Rectangle {
+                        property bool selected: index === mainContent.currRegionIndex
+
                         antialiasing: true
-                        width: regions.latticeW * model.colW / 20.0
-                        height: regions.latticeH * model.colH / 20.0
-                        x: regions.latticeW * model.colX / 20.0
-                        y: regions.latticeH * model.colY / 20.0
+                        width: regions.latticeW * colW / 20.0
+                        height: regions.latticeH * colH / 20.0
+                        x: regions.latticeW * colX / 20.0
+                        y: regions.latticeH * colY / 20.0
+
+                        opacity: regions.rectSelected && !selected ? 0.2 : 1
 
                         color: "transparent"
                         border {
                             color: type == 0 ? Stylesheet.colors.input : Stylesheet.colors.output
                             width: 1
+                        }
+
+                        // drag area
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: mainContent.switchSelectedRegion(index)
+                            cursorShape: Qt.SizeAllCursor
                         }
                     }
                 }

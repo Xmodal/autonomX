@@ -76,8 +76,6 @@ Item {
                 }
             }
 
-            // TODO: remove rack button
-
             // collapse rack button
             Button {
                 id: btnCollapse
@@ -101,7 +99,7 @@ Item {
 
                         State {
                             name: "hovered"; when: btnCollapse.hovered
-                            PropertyChanges { target: btnCollapseBg; opacity: 0.3 }
+                            PropertyChanges { target: btnCollapseBg; opacity: 0.15 }
                         }
                     ]
 

@@ -39,8 +39,7 @@ Button {
         id: historyGraph
 
         newValue: model.index >= 0 ? model.outputMonitor : 0
-
-        strokeColor: model.index >= 0 ? (selected ? Stylesheet.colors.generator : Stylesheet.colors.darkGrey) : "#000"
+        strokeColor: model.index >= 0 ? (selected ? Stylesheet.colors.white : Stylesheet.colors.generator) : "#000"
     }
 
     // text content
@@ -76,14 +75,13 @@ Button {
             opacity: selected ? 1 : (hovered ? 1 : 0.5)
         }
 
-        // output indicator
-        OutputIndicator {
-            id: outputIndicator
+        // VU-meter
+        VuMeter {
+            id: vuMeter
 
             luminosity: model.index >= 0 ? model.outputMonitor : 0
-            lightColor:  model.index >= 0 ? Stylesheet.colors.generator : "#000"
+            barColor: Stylesheet.colors.white
 
-            Layout.rightMargin: 10
             Layout.alignment: Qt.AlignRight
         }
     }

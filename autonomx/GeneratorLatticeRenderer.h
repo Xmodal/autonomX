@@ -20,6 +20,7 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLFramebufferObject>
 #include <QQuickWindow>
+#include "Generator.h"
 
 class GeneratorLatticeRenderer : public QQuickFramebufferObject::Renderer {
 public:
@@ -39,4 +40,6 @@ private:
     bool synchronized = false;      // indicates if there was a call to synchronize since the last render call
     bool flagSuper = true;          // enables supersampling
     bool flagDebug = true;          // enables debug
+    int generatorID;                // associated generator id
+    Generator* generator;           // associated generator
 };

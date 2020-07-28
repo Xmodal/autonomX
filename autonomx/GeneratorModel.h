@@ -40,6 +40,10 @@ public:
     GeneratorModel(QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generators);
     ~GeneratorModel();
 
+    void createAliasConnections();
+    void deleteAliasConnections();
+    void relinkAliasConnections();
+
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
@@ -47,6 +51,9 @@ public:
     QHash<int, QByteArray> roleNames() const;
 
     Q_INVOKABLE GeneratorFacade * at(int index);
+
+public slots:
+    void updateValueFromAlias(const QString &key, const QVariant &value, int modelIndex);
 
 private:
     QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generatorGeneratorFacades;

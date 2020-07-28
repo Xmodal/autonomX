@@ -15,6 +15,8 @@
 
 #include <QDebug>
 #include "GeneratorLatticeRenderer.h"
+#include "GeneratorLattice.h"
+#include "AppModel.h"
 
 GeneratorLatticeRenderer::GeneratorLatticeRenderer() : QQuickFramebufferObject::Renderer() {
     if(flagDebug) {
@@ -153,10 +155,19 @@ void GeneratorLatticeRenderer::synchronize(QQuickFramebufferObject *item) {
     if(flagDebug) {
         qDebug() << "synchronize (GeneratorLatticeRenderer)";
     }
+    // update window
     window = item->window();
+    // update visible
     visible = item->isVisible();
     if(visible) {
         update();
     }
+    // set synchronized flag
     synchronized = true;
+    // update linked generator
+    // TODO: uncomment this once AppModel is properly populated
+    /*
+    generatorID = ((GeneratorLattice*) item)->getGeneratorID();
+    generator = AppModel::getInstance().getGenerator(generatorID);
+    */
 }

@@ -30,36 +30,7 @@ GeneratorModel::GeneratorModel(QSharedPointer<QList<QSharedPointer<GeneratorFaca
 
     this->generatorGeneratorFacades = generatorGeneratorFacades;
 
-    for(int i = 0; i < generatorGeneratorFacades.get()->count(); i++) {
-        // update model every time something is changed
-        connect(generatorGeneratorFacades.get()->at(i).get(), &GeneratorFacade::valueChangedFromAlias, this, [=](const QString &key, const QVariant &value) {
-            QVector<int> roles;
-            bool unrecognized = false;
-
-            int role = roleMap.key(key.toUtf8(), -1);
-            // check to see if the value exists in the hash map
-            if (role == -1) unrecognized = true;
-            else roles = { role };
-
-            if(flagDebug) {
-                std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()
-                );
-
-                QByteArray keyArray = key.toLocal8Bit();
-                char* keyBuffer = keyArray.data();
-
-                QByteArray valueArray = value.toString().toLocal8Bit();
-                char* valueBuffer = valueArray.data();
-
-                qDebug() << "lambda (" << keyBuffer << "):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << valueBuffer << (unrecognized ? " (unrecognized)" : "");
-            }
-
-            if(!unrecognized) {
-                emit dataChanged(index(i), index(i), roles);
-            }
-        });
-    }
+    createAliasConnections();
 }
 
 GeneratorModel::~GeneratorModel() {
@@ -70,6 +41,52 @@ GeneratorModel::~GeneratorModel() {
 
         qDebug() << "destructor (GeneratorModel)\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
+}
+
+void GeneratorModel::updateValueFromAlias(const QString &key, const QVariant &value, int modelIndex) {
+    QVector<int> roles;
+    bool unrecognized = false;
+
+    int role = roleMap.key(key.toUtf8(), -1);
+    // check to see if the value exists in the hash map
+    if (role == -1) unrecognized = true;
+    else roles = { role };
+
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        QByteArray keyArray = key.toLocal8Bit();
+        char* keyBuffer = keyArray.data();
+
+        QByteArray valueArray = value.toString().toLocal8Bit();
+        char* valueBuffer = valueArray.data();
+
+        qDebug() << "lambda (" << keyBuffer << "):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << valueBuffer << (unrecognized ? " (unrecognized)" : "");
+    }
+
+    if(!unrecognized) {
+        emit dataChanged(index(modelIndex), index(modelIndex), roles);
+    }
+}
+
+void GeneratorModel::createAliasConnections() {
+    for(int i = 0; i < generatorGeneratorFacades.get()->count(); i++) {
+        // update model every time something is changed
+        connect(generatorGeneratorFacades.get()->at(i).get(), &GeneratorFacade::valueChangedFromAlias, this, [=](const QString &key, const QVariant &value) {
+            emit updateValueFromAlias(key, value, i);
+        });
+    }
+}
+
+void GeneratorModel::deleteAliasConnections() {
+    disconnect(this);
+}
+
+void GeneratorModel::relinkAliasConnections() {
+    deleteAliasConnections();
+    createAliasConnections();
 }
 
 int GeneratorModel::rowCount(const QModelIndex& parent) const {

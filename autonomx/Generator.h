@@ -85,6 +85,9 @@ public:
     //
     virtual void writeLatticeTexture(double* latticeTexture) = 0;
 
+    // this mutex must be used within the implementation of writeLatticeTexture, and also whenever the data it produces is used
+    QMutex latticeMutex;
+
     // methods used to query the size of the lattice image
     virtual int getLatticeWidth() = 0;
     virtual int getLatticeHeight() = 0;

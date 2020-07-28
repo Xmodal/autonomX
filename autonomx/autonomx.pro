@@ -31,9 +31,11 @@ SOURCES += \
     ../qosc/contrib/oscpack/OscPrintReceivedElements.cpp \
     ../qosc/contrib/oscpack/OscReceivedElements.cpp \
     ../qosc/contrib/oscpack/OscTypes.cpp \
+    AppModel.cpp \
     ComputeEngine.cpp \
     Facade.cpp \
     Generator.cpp \
+    GeneratorFacade.cpp \
     GeneratorLattice.cpp \
     GeneratorLatticeRenderer.cpp \
     GeneratorModel.cpp \
@@ -66,9 +68,11 @@ HEADERS += \
     ../qosc/contrib/oscpack/OscPrintReceivedElements.h \
     ../qosc/contrib/oscpack/OscReceivedElements.h \
     ../qosc/contrib/oscpack/OscTypes.h \
+    AppModel.h \
     ComputeEngine.h \
     Facade.h \
     Generator.h \
+    GeneratorFacade.h \
     GeneratorLattice.h \
     GeneratorLatticeRenderer.h \
     GeneratorModel.h \

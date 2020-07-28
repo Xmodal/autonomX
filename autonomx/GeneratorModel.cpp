@@ -19,7 +19,7 @@
 #include <QVector>
 #include <QDebug>
 
-GeneratorModel::GeneratorModel(QSharedPointer<QList<QSharedPointer<Facade>>> generatorFacades) {
+GeneratorModel::GeneratorModel(QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generatorGeneratorFacades) {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
             std::chrono::system_clock::now().time_since_epoch()
@@ -28,11 +28,11 @@ GeneratorModel::GeneratorModel(QSharedPointer<QList<QSharedPointer<Facade>>> gen
         qDebug() << "constructor (GeneratorModel)\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    this->generatorFacades = generatorFacades;
+    this->generatorGeneratorFacades = generatorGeneratorFacades;
 
-    for(int i = 0; i < generatorFacades.get()->count(); i++) {
+    for(int i = 0; i < generatorGeneratorFacades.get()->count(); i++) {
         // update model every time something is changed
-        connect(generatorFacades.get()->at(i).get(), &Facade::valueChangedFromAlias, this, [=](const QString &key, const QVariant &value) {
+        connect(generatorGeneratorFacades.get()->at(i).get(), &GeneratorFacade::valueChangedFromAlias, this, [=](const QString &key, const QVariant &value) {
             QVector<int> roles;
             bool unrecognized = false;
 
@@ -73,7 +73,7 @@ GeneratorModel::~GeneratorModel() {
 }
 
 int GeneratorModel::rowCount(const QModelIndex& parent) const {
-    return generatorFacades.get()->size();
+    return generatorGeneratorFacades.get()->size();
 }
 
 int GeneratorModel::columnCount(const QModelIndex& parent) const {
@@ -85,10 +85,10 @@ QVariant GeneratorModel::data(const QModelIndex &index, int role) const {
         return QVariant();
 
     // check if the index is valid
-    if(index.column() == 0 && index.row() >= 0 && index.row() < generatorFacades.get()->size()) {
+    if(index.column() == 0 && index.row() >= 0 && index.row() < generatorGeneratorFacades.get()->size()) {
         // check if the key exists in the hash map
         if(roleMap.contains(role))
-            return generatorFacades.get()->at(index.row())->value(roleMap.value(role));
+            return generatorGeneratorFacades.get()->at(index.row())->value(roleMap.value(role));
     }
 
     return QVariant();
@@ -98,7 +98,7 @@ QHash<int, QByteArray> GeneratorModel::roleNames() const {
     return roleMap;
 }
 
-Facade * GeneratorModel::at(int index) {
+GeneratorFacade * GeneratorModel::at(int index) {
     if (index < 0) return nullptr;
-    return generatorFacades.get()->at(index).get();
+    return generatorGeneratorFacades.get()->at(index).get();
 }

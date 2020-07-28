@@ -8,6 +8,9 @@ Item {
     property int sizeMax: 128
     property int sizeValid: 0
     property int startIndex: 0
+    property color strokeColor: "#fff"
+
+    anchors.fill: parent
 
     onNewValueChanged: {
         var index;
@@ -31,10 +34,6 @@ Item {
             sizeValid++;
         }
     }
-
-    property color strokeColor: "#fff"
-
-    anchors.fill: parent
 
     Canvas {
         // add recent value

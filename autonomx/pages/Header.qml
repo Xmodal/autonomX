@@ -8,25 +8,15 @@ Item {
     id: header
 
     Layout.fillWidth: true
-    Layout.preferredHeight: 45
+    Layout.preferredHeight: 40
 
     // background
     Rectangle {
         anchors.fill: parent
-        color: genID < 0 ? Stylesheet.colors.white : Stylesheet.colors.generator
-    }
-
-    // back arrow
-    Image {
-        anchors.left: parent.left
-        anchors.leftMargin: 20
-        anchors.verticalCenter: parent.verticalCenter
-
-        source: "qrc:/assets/images/left-arrow.svg"
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: router.currentIndex = 0
+        color: Stylesheet.colors.white
+        gradient: Gradient {
+            GradientStop { position: 0; color: Stylesheet.setAlpha(Stylesheet.colors.darkGrey, 0.9) }
+            GradientStop { position: 1; color: Stylesheet.setAlpha(Stylesheet.colors.darkGrey, 0.8) }
         }
     }
 
@@ -43,7 +33,6 @@ Item {
             letterSpacing: 13 * 0.05
             capitalization: Font.AllUppercase
         }
-        color: Stylesheet.colors.darkGrey
     }
 
     // Generator name label
@@ -52,7 +41,10 @@ Item {
         anchors.left: parent.horizontalCenter
         anchors.leftMargin: 20
 
+        font {
+            weight: Font.DemiBold
+        }
+
         text: genID < 0 ? "<no generator selected>" : generatorModel.at(genID).name
-        color: Stylesheet.colors.darkGrey
     }
 }

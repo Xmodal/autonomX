@@ -30,6 +30,7 @@
         <file>components/racks/Rack.qml</file>
         <file>components/racks/RackView.qml</file>
         <file>pages/GeneratorView.qml</file>
+        <file>pages/Header.qml</file>
         <file>pages/LatticeView.qml</file>
         <file>shaders/light_cue.frag</file>
         <file>shaders/neuron_matrix.frag</file>

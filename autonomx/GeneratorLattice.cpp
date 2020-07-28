@@ -14,9 +14,25 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "GeneratorLattice.h"
+#include <QDebug>
 
 QQuickFramebufferObject::Renderer * GeneratorLattice::createRenderer() const {
     connect(this, &GeneratorLattice::visibleChanged, this, &QQuickFramebufferObject::update);
     QQuickFramebufferObject::Renderer * renderer = new GeneratorLatticeRenderer();
     return renderer;
+}
+
+int GeneratorLattice::getGeneratorID() {
+    return generatorID;
+}
+
+void GeneratorLattice::writeGeneratorID(int generatorID) {
+    if(this->generatorID == generatorID) {
+        return;
+    }
+
+    qDebug() << "generator ID changed: " << generatorID;
+
+    this->generatorID = generatorID;
+    emit generatorIDChanged(generatorID);
 }

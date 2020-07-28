@@ -102,6 +102,7 @@ ColumnLayout {
             Layout.fillHeight: true
 
             GeneratorLattice {
+                generatorID: 0
                 anchors.fill: parent
             }
 

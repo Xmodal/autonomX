@@ -16,6 +16,10 @@
 #pragma once
 
 #include <QObject>
+#include <QList>
+#include <QHash>
+#include <QSharedPointer>
+#include <QThread>
 #include "ComputeEngine.h"
 #include "OscEngine.h"
 #include "Generator.h"
@@ -29,18 +33,36 @@ public:
         static AppModel instance;
         return instance;
     }
-    // TODO: implement this stuff
-    /*
+    void startThreads();
+    QThread* getComputeThread() const;
+    QThread* getOscThread() const;
     Q_INVOKABLE void createGenerator();
     Q_INVOKABLE void deleteGenerator(int id);
-    Q_INVOKABLE Generator* getGenerator(int id);
-    Q_INVOKABLE GeneratorFacade* getGeneratorFacade(int id);
-    Q_INVOKABLE GeneratorModel* getGeneratorModel();
-    */
+    Q_INVOKABLE bool validateNewGeneratorName(QString name);
+    Q_INVOKABLE Generator* getGenerator(int id) const;              // this isn't thread safe?
+    Q_INVOKABLE GeneratorFacade* getGeneratorFacade(int id) const;  // this should be thread safe from the GUI thread?
+    Q_INVOKABLE GeneratorModel* getGeneratorModel() const;          // this should be thread safe from the GUI thread?
 private:
-    AppModel() {}                               // prevent instanciation
+    AppModel();                                 // prevent instanciation
     AppModel(AppModel const&) = delete;         // prevent copy
     void operator=(AppModel const&) = delete;   // prevent assignment
 
-    // TODO: add necessary variables
+    // data (list form)
+    QSharedPointer<QList<QSharedPointer<Generator>>> generatorsList;
+    QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generatorFacadesList;
+
+    // data (hashmap form)
+    QSharedPointer<QHash<int, QSharedPointer<Generator>>> generatorsHash;
+    QSharedPointer<QHash<int, QSharedPointer<GeneratorFacade>>> generatorFacadesHash;
+
+    // data (unique elements)
+    QSharedPointer<GeneratorModel> generatorModel;
+
+    // engines
+    QSharedPointer<ComputeEngine> computeEngine;
+    QSharedPointer<OscEngine> oscEngine;
+
+    // threads
+    QSharedPointer<QThread> computeThread;
+    QSharedPointer<QThread> oscThread;
 };

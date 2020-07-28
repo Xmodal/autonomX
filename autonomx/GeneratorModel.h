@@ -40,8 +40,14 @@ public:
     GeneratorModel(QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generators);
     ~GeneratorModel();
 
+    // GeneratorModel is constructed from a GeneratorFacade list which is identical to the one found in AppModel. This is not a copy, this is the same memory location.
+    // whenever AppModel adds or removes a GeneratorFacade, all connections between each GeneratorFacade's valueChangedFromAlias and the GeneratorModel's updateValueFromAlias must be reset, because the order of the list might have changed, which breaks the indexing system used by the dataChanged signal eventually emitted by updateValueFromAlias.
+
+    // iterates over all members of the GeneratorFacade list and creates connections for them.
     void createAliasConnections();
+    // deletes all connections from GeneratorFacade. WARNING: the way this is implemented, this will delete all connections to the GeneratorModel. Keep this in mind, otherwise things might break in the future.
     void deleteAliasConnections();
+    // this simply deletes then creates the connections. This is called by AppModel whenever the list changes.
     void relinkAliasConnections();
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const;

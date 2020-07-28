@@ -87,6 +87,7 @@ ColumnLayout {
             // I/O regions
             Item {
                 id: regions
+                visible: !(genID < 0)
 
                 property bool rectSelected: false
 

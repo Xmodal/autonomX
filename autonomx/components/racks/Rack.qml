@@ -10,18 +10,27 @@ import "qrc:/stylesheet"
 import "../fields"
 
 Item {
+    id: rack
+
     // metadata
     property string rackName: "Rack"
-    property int genID: -1 // -1: no assigned generator ID
+    property int genID: window.activeGeneratorIndex // -1: no assigned generator ID
     // state flags
     property bool collapsed: false
     property bool removable: true
+    property color rackColor: Stylesheet.colors.generator
     // content component
     property Component content
 
     Layout.fillWidth: true
     Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-    Layout.preferredHeight: rack.implicitHeight
+    Layout.preferredHeight: container.implicitHeight
+
+    // background
+    Rectangle {
+        anchors.fill: parent
+        color: Stylesheet.colors.darkGrey
+    }
 
     MouseArea {
         anchors.fill: parent
@@ -29,7 +38,7 @@ Item {
     }
 
     ColumnLayout {
-        id: rack
+        id: container
 
         width: parent.width
         spacing: 0
@@ -42,7 +51,13 @@ Item {
             // background
             Rectangle {
                 anchors.fill: parent
-                color: "#717171"
+                color: Stylesheet.colors.darkGrey
+
+                layer.enabled: true
+                layer.effect: ShaderEffect {
+                    property color bg: rack.rackColor
+                    fragmentShader: "qrc:/shaders/rack_bg.frag"
+                }
             }
 
             // rack label
@@ -81,7 +96,7 @@ Item {
                     states: [
                         State {
                             name: "pressed"; when: btnCollapse.pressed
-                            PropertyChanges { target: btnCollapseBg; opacity: 1; color: Stylesheet.colors.generators[genID % Stylesheet.colors.generators.length] }
+                            PropertyChanges { target: btnCollapseBg; opacity: 1; color: Stylesheet.colors.generator }
                         },
 
                         State {

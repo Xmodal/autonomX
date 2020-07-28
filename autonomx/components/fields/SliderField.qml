@@ -62,7 +62,7 @@ Field {
                     anchors.left: parent.left
                     height: parent.height
                     // TODO: change 0 to generator index
-                    color: Stylesheet.colors.generators[0]
+                    color: Stylesheet.colors.generator
                 }
             }
 
@@ -144,7 +144,7 @@ Field {
 
             State {
                 name: "pressed";
-                PropertyChanges { target: trueHandle; handleColor: Stylesheet.colors.generators[0] }
+                PropertyChanges { target: trueHandle; handleColor: Stylesheet.colors.generator }
             }
         ]
         transitions: [

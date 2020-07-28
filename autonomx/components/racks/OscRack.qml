@@ -21,7 +21,7 @@ Rack {
             CheckField {
                 id: enableOscIn
                 on: true
-                controlColor: Stylesheet.colors.input
+                controlColor: Stylesheet.colors.inputs[0]
             }
 
             TextField {
@@ -47,7 +47,7 @@ Rack {
             CheckField {
                 id: enableOscOut
                 on: true
-                controlColor: Stylesheet.colors.output
+                controlColor: Stylesheet.colors.outputs[0]
             }
 
             TextField {

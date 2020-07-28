@@ -15,7 +15,7 @@ Rectangle {
 
     color: "transparent"
     border {
-        color: type == 0 ? Stylesheet.colors.input : Stylesheet.colors.output
+        color: type == 0 ? Stylesheet.colors.inputs[0] : Stylesheet.colors.outputs[0]
         width: 1
     }
 

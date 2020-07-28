@@ -8,7 +8,7 @@ Field {
     id: switchField
 
     property bool on: false
-    property color controlColor: Stylesheet.colors.generators[0]
+    property color controlColor: Stylesheet.colors.generator
 
     spacing: 5
 

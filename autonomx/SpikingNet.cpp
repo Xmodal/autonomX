@@ -747,6 +747,7 @@ bool SpikingNet::getFlagDecay() const {
     return this->flagDecay;
 }
 
+/*
 QColor SpikingNet::getLatticeAt(int x, int y) {
     //double clamped = std::max<double>(0.0, std::min<double>(1.0, neurons[x + neuronWidth * y].getU()));
     std::uniform_real_distribution<> randomUniform(0.0, 1.0);
@@ -754,6 +755,15 @@ QColor SpikingNet::getLatticeAt(int x, int y) {
     int rounded = (int) (clamped * 255.0);
     QColor color(rounded, rounded, rounded, 255);
     return color;
+}
+*/
+
+void SpikingNet::writeLatticeTexture(double *latticeTexture) {
+    for(int x = 0; x < neuronWidth; x++) {
+        for(int y = 0; y < neuronHeight; y++) {
+            latticeTexture[x + y * neuronHeight] = neurons[x + neuronWidth * y].getU();
+        }
+    }
 }
 
 int SpikingNet::getLatticeWidth() {

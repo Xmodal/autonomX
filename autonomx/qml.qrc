@@ -29,6 +29,7 @@
         <file>components/racks/ParamsRack.qml</file>
         <file>components/racks/Rack.qml</file>
         <file>components/racks/RackView.qml</file>
+        <file>models/RegionModel.qml</file>
         <file>pages/GeneratorView.qml</file>
         <file>pages/Header.qml</file>
         <file>pages/LatticeView.qml</file>

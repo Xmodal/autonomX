@@ -25,10 +25,10 @@
 #include "OscEngine.h"
 #include "ComputeEngine.h"
 #include "Generator.h"
+#include "GeneratorFacade.h"
 #include "GeneratorModel.h"
 #include "GeneratorLattice.h"
 #include "SpikingNet.h"
-#include "Facade.h"
 
 // only include AppNap code if platform is macOS
 #ifdef Q_OS_MAC
@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
     // this line is apparently necessary for the QML engine to receive Generator pointers
     // and retrieve a class instance's exposed properties by model index through said pointer
     qmlRegisterUncreatableType<Generator>("ca.hexagram.xmodal.autonomx", 1, 0, "Generator", "Cannot instanciate Generator.");
-    qmlRegisterUncreatableType<Facade>("ca.hexagram.xmodal.autonomx", 1, 0, "Facade", "Cannot instanciate Facade.");
+    qmlRegisterUncreatableType<GeneratorFacade>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorFacade", "Cannot instanciate GeneratorFacade.");
     qmlRegisterUncreatableType<SpikingNet>("ca.hexagram.xmodal.autonomx", 1, 0, "SpikingNet", "Cannot instanciate SpikingNet.");
     qmlRegisterUncreatableType<NeuronType>("ca.hexagram.xmodal.autonomx", 1, 0, "NeuronType", "Cannot instanciate NeuronType.");
     qmlRegisterType<GeneratorLattice>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorLattice");
@@ -70,23 +70,19 @@ int main(int argc, char *argv[]) {
     generators.get()->append(spikingNet);
 
     // create generator facade list
-    QSharedPointer<QList<QSharedPointer<Facade>>> generatorFacades = QSharedPointer<QList<QSharedPointer<Facade>>>(new QList<QSharedPointer<Facade>>());
+    QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generatorGeneratorFacades = QSharedPointer<QList<QSharedPointer<GeneratorFacade>>>(new QList<QSharedPointer<GeneratorFacade>>());
 
     // create facades and link them
     for(QList<QSharedPointer<Generator>>::iterator it = generators.get()->begin(); it != generators.get()->end(); it++) {
         QSharedPointer<Generator> generator = *it;
-        QSharedPointer<Facade> generatorFacade = QSharedPointer<Facade>(new Facade(generator.get()));
+        QSharedPointer<GeneratorFacade> generatorGeneratorFacade = QSharedPointer<GeneratorFacade>(new GeneratorFacade(generator.get()));
 
-        // connect generator changes to facade
-        QObject::connect(generator.data(), &Generator::valueChanged, generatorFacade.data(), &Facade::updateValueFromAlias, Qt::QueuedConnection);
-        // connect facade changes to generator
-        QObject::connect(generatorFacade.get(), &Facade::valueChanged, generator.get(), &Generator::updateValue, Qt::QueuedConnection);
         // add the newly constructed facade to the list
-        generatorFacades.get()->append(generatorFacade);
+        generatorGeneratorFacades.get()->append(generatorGeneratorFacade);
     }
 
     // create generator model
-    GeneratorModel generatorModel(generatorFacades);
+    GeneratorModel generatorModel(generatorGeneratorFacades);
 
     // create compute thread
     QSharedPointer<QThread> computeThread = QSharedPointer<QThread>(new QThread());
@@ -209,8 +205,8 @@ int main(int argc, char *argv[]) {
             });
         }
 
-        for(QList<QSharedPointer<Facade>>::iterator it = generatorFacades.get()->begin(); it != generatorFacades.get()->end(); it++) {
-            QObject::connect((*it).data(), &Facade::valueChanged, &computeEngine, [=](const QString &key, const QVariant &value) {
+        for(QList<QSharedPointer<GeneratorFacade>>::iterator it = generatorGeneratorFacades.get()->begin(); it != generatorGeneratorFacades.get()->end(); it++) {
+            QObject::connect((*it).data(), &GeneratorFacade::valueChanged, &computeEngine, [=](const QString &key, const QVariant &value) {
                 std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
                 );
@@ -220,10 +216,10 @@ int main(int argc, char *argv[]) {
 
                 QString valueString = value.toString();
 
-                qDebug() << "valueChanged (" << keyBuffer << ") (caught from Facade):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tvalue: " << valueString;
+                qDebug() << "valueChanged (" << keyBuffer << ") (caught from GeneratorFacade):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tvalue: " << valueString;
             });
 
-            QObject::connect((*it).data(), &Facade::valueChangedFromAlias, &computeEngine, [=](const QString &key, const QVariant &value) {
+            QObject::connect((*it).data(), &GeneratorFacade::valueChangedFromAlias, &computeEngine, [=](const QString &key, const QVariant &value) {
                 std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
                 );
@@ -233,7 +229,7 @@ int main(int argc, char *argv[]) {
 
                 QString valueString = value.toString();
 
-                qDebug() << "valueChangedFromAlias (" << keyBuffer << ") (caught from Facade):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tvalue: " << valueString;
+                qDebug() << "valueChangedFromAlias (" << keyBuffer << ") (caught from GeneratorFacade):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tvalue: " << valueString;
             });
         }
     }

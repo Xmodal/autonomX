@@ -20,7 +20,7 @@
 #include <QModelIndex>
 #include <QSharedPointer>
 #include <QList>
-#include <Facade.h>
+#include <GeneratorFacade.h>
 
 class GeneratorModel : public QAbstractListModel {
     Q_OBJECT
@@ -37,7 +37,7 @@ public:
         OutputMonitorHistorySizeValidRole
     };
 
-    GeneratorModel(QSharedPointer<QList<QSharedPointer<Facade>>> generators);
+    GeneratorModel(QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generators);
     ~GeneratorModel();
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
@@ -46,10 +46,10 @@ public:
     void populate();
     QHash<int, QByteArray> roleNames() const;
 
-    Q_INVOKABLE Facade * at(int index);
+    Q_INVOKABLE GeneratorFacade * at(int index);
 
 private:
-    QSharedPointer<QList<QSharedPointer<Facade>>> generatorFacades;
+    QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generatorGeneratorFacades;
     bool flagDebug = false;
     const QHash<int, QByteArray> roleMap = {
         {NameRole, "name"},

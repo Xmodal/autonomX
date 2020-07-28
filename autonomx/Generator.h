@@ -71,8 +71,19 @@ public:
     // the method implemented by the derived class that computes the output
     virtual void computeOutput(double deltaTime) = 0;
 
-    // the method implemented by the derived class that returns pixel values to construct the lattice image
-    virtual QColor getLatticeAt(int x, int y) = 0;
+    // the method implemented by the derived class that populates a lattice texture
+    // the argument must point to a block of memory with latticeWidth * latticeHeight * sizeof(double) free bytes, where memory allocation is entirely managed by the caller
+    // the argument is written to by treating the memory as a flattened 2D double array
+    //
+    // the indexing scheme goes as follows:
+    //
+    //    lattice[indexWidth, indexHeight] = flattened[indexWidth + indexHeight * latticeHeight]
+    //
+    // equivalent to (where / is integer round down division):
+    //
+    //    flattened[index] = lattice[index % latticeWidth, index / latticeWidth]
+    //
+    virtual void writeLatticeTexture(double* latticeTexture) = 0;
 
     // methods used to query the size of the lattice image
     virtual int getLatticeWidth() = 0;

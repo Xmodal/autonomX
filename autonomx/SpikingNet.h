@@ -175,7 +175,7 @@ public:
     bool getFlagSTDP() const;
     bool getFlagDecay() const;
 
-    QColor getLatticeAt(int x, int y);
+    void writeLatticeTexture(double *latticeTexture);
     int getLatticeWidth();
     int getLatticeHeight();
 

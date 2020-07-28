@@ -7,8 +7,7 @@ uniform sampler2D textureMap;
 // various props
 uniform int cols;
 uniform int rows;
-uniform float realWidth;
-uniform float realHeight;
+uniform int ppc;
 uniform float cw;
 uniform float ch;
 uniform vec4 selected;
@@ -17,7 +16,7 @@ void main(void)
 {
     // props
     float pad = 3.0;                            // pixel padding between cells
-    vec2 s = vec2(realWidth, realHeight);       // 100% size in pixels
+    vec2 s = vec2(ppc*cols, ppc*rows);          // 100% size in pixels
     vec2 wh = vec2(cw, ch);                     // container width/height
     vec2 cr = vec2(cols, rows);                 // cols/rows vector
 

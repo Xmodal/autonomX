@@ -6,6 +6,7 @@ import ca.hexagram.xmodal.autonomx 1.0
 
 import "qrc:/stylesheet"
 import "../models"
+import "../components/delegates"
 
 ColumnLayout {
     id: latticeView
@@ -25,12 +26,10 @@ ColumnLayout {
 
         Layout.fillWidth: true
         Layout.fillHeight: true
+        spacing: 0
 
-        // this will eventually change
-        // since real width/height will depend on zoom factor
-        // same thing goes for panning
-        property real realWidth: 400
-        property real realHeight: 400
+        // props
+        property int ppc: 20            // pixels per cell, ie. how wide a cell square is in pixels. this is scaled by the zoom factor
         property int cols: 20
         property int rows: 20
         property int currRegionIndex: -1
@@ -41,15 +40,15 @@ ColumnLayout {
             regions.rectSelected = index >= 0;
         }
 
+        // convert ListElement to QRect
         function elementToRect(element) {
             return Qt.rect(element.colX, element.colY, element.colW, element.colH);
         }
 
+        // model
         RegionModel {
             id: regionModel
         }
-
-        spacing: 0
 
         // matrix zone
         Item {
@@ -75,10 +74,9 @@ ColumnLayout {
                 // uniforms
                 property real cw: width
                 property real ch: height
-                property real realWidth: mainContent.realWidth
-                property real realHeight: mainContent.realHeight
-                property int cols: neuronGrid.sourceSize.width
-                property int rows: neuronGrid.sourceSize.height
+                property int ppc: mainContent.ppc
+                property int cols: mainContent.cols
+                property int rows: mainContent.rows
                 property rect selected: mainContent.currRegionIndex < 0 ? Qt.rect(-1, -1, -1, -1) : mainContent.elementToRect(regionModel.get(mainContent.currRegionIndex))
                 property Image textureMap: Image { id: neuronGrid; source: "qrc:/assets/images/neurongrid_20x20.png" }
 
@@ -90,14 +88,12 @@ ColumnLayout {
             Item {
                 id: regions
 
-                property int latticeW: 400
-                property int latticeH: 400
                 property bool rectSelected: false
 
+                width: mainContent.ppc * mainContent.cols
+                height: mainContent.ppc * mainContent.rows
                 x: parent.width/2 - width/2
                 y: parent.height/2 - height/2
-                width: latticeW
-                height: latticeH
 
                 MouseArea {
                     anchors.fill: parent
@@ -106,31 +102,7 @@ ColumnLayout {
 
                 Repeater {
                     model: regionModel
-
-                    Rectangle {
-                        property bool selected: index === mainContent.currRegionIndex
-
-                        antialiasing: true
-                        width: regions.latticeW * colW / 20.0
-                        height: regions.latticeH * colH / 20.0
-                        x: regions.latticeW * colX / 20.0
-                        y: regions.latticeH * colY / 20.0
-
-                        opacity: regions.rectSelected && !selected ? 0.2 : 1
-
-                        color: "transparent"
-                        border {
-                            color: type == 0 ? Stylesheet.colors.input : Stylesheet.colors.output
-                            width: 1
-                        }
-
-                        // drag area
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: mainContent.switchSelectedRegion(index)
-                            cursorShape: Qt.SizeAllCursor
-                        }
-                    }
+                    Region {}
                 }
             }
 

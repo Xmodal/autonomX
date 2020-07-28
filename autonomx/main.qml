@@ -59,7 +59,7 @@ ApplicationWindow {
 
     // background
     background: Rectangle {
-        color: Stylesheet.colors.darkGrey
+        color: Stylesheet.colors.black
     }
 
     // Shortcuts:

@@ -13,7 +13,7 @@ Item {
     // background
     Rectangle {
         anchors.fill: parent
-        color: genID < 0 ? Stylesheet.colors.white : Stylesheet.colors.generators[genID % Stylesheet.colors.generators.length]
+        color: genID < 0 ? Stylesheet.colors.white : Stylesheet.colors.generator
     }
 
     // back arrow
@@ -43,16 +43,6 @@ Item {
             letterSpacing: 13 * 0.05
             capitalization: Font.AllUppercase
         }
-        color: Stylesheet.colors.darkGrey
-    }
-
-    // Middle separator
-    Rectangle {
-        anchors.bottom: parent.bottom;
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.topMargin: 12
-
-        width: 1; height: parent.height - anchors.topMargin
         color: Stylesheet.colors.darkGrey
     }
 

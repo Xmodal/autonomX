@@ -20,7 +20,7 @@ Button {
         anchors.fill: parent
 
         Rectangle {
-            color: selected ? Stylesheet.colors.white : Stylesheet.colors.black
+            color: selected ? Stylesheet.colors.generator : Stylesheet.colors.black
             anchors.fill: parent
         }
 
@@ -39,7 +39,8 @@ Button {
         id: historyGraph
 
         newValue: model.index >= 0 ? model.outputMonitor : 0
-        strokeColor: model.index >= 0 ? Stylesheet.colors.generators[model.index % Stylesheet.colors.generators.length] : "#000"
+
+        strokeColor: model.index >= 0 ? (selected ? Stylesheet.colors.generator : Stylesheet.colors.darkGrey) : "#000"
     }
 
     // text content
@@ -54,8 +55,9 @@ Button {
             id: labelIndex
 
             text: model.index + 1
+            color: Stylesheet.colors[selected ? 'darkGrey' : 'white']
             font {
-                weight: Font.Bold
+                weight: Font.DemiBold
                 pixelSize: 11
             }
             opacity: selected ? 1 : (hovered ? 1 : 0.5)
@@ -67,9 +69,9 @@ Button {
 
             Layout.leftMargin: 30
             text: model.name
-            color: selected ? Stylesheet.colors.black : Stylesheet.colors.white
+            color: Stylesheet.colors.white
             font {
-                weight: Font.Normal
+                weight: Font.DemiBold
             }
             opacity: selected ? 1 : (hovered ? 1 : 0.5)
         }
@@ -79,7 +81,7 @@ Button {
             id: outputIndicator
 
             luminosity: model.index >= 0 ? model.outputMonitor : 0
-            lightColor: model.index >= 0 ? Stylesheet.colors.generators[model.index % Stylesheet.colors.generators.length] : "#000"
+            lightColor:  model.index >= 0 ? Stylesheet.colors.generator : "#000"
 
             Layout.rightMargin: 10
             Layout.alignment: Qt.AlignRight

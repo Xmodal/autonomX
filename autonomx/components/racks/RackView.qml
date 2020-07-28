@@ -8,10 +8,10 @@ import QtQuick 2.9
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.0
 
+import "qrc:/stylesheet"
+
 ScrollView {
     id: rackView
-
-    property int genID: item.genID
 
     Layout.fillWidth: true
     Layout.fillHeight: true
@@ -23,8 +23,8 @@ ScrollView {
         width: parent.width
         spacing: 0
 
-        GenRack { genID: rackView.genID; }
-        ParamsRack { genID: rackView.genID; }
-        OscRack { genID: rackView.genID; }
+        GenRack {}
+        ParamsRack {}
+        OscRack {}
     }
 }

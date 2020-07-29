@@ -71,27 +71,6 @@ public:
     // the method implemented by the derived class that computes the output
     virtual void computeOutput(double deltaTime) = 0;
 
-    // the method implemented by the derived class that populates a lattice texture
-    // the argument must point to a block of memory with latticeWidth * latticeHeight * sizeof(double) free bytes, where memory allocation is entirely managed by the caller
-    // the argument is written to by treating the memory as a flattened 2D double array
-    //
-    // the indexing scheme goes as follows:
-    //
-    //    lattice[indexWidth, indexHeight] = flattened[indexWidth + indexHeight * latticeHeight]
-    //
-    // equivalent to (where / is integer round down division):
-    //
-    //    flattened[index] = lattice[index % latticeWidth, index / latticeWidth]
-    //
-    virtual void writeLatticeTexture(double* latticeTexture) = 0;
-
-    // this mutex must be used within the implementation of writeLatticeTexture, and also whenever the data it produces is used
-    QMutex latticeMutex;
-
-    // methods used to query the size of the lattice image
-    virtual int getLatticeWidth() = 0;
-    virtual int getLatticeHeight() = 0;
-
     // methods to read properties
     QString getName();
     QString getType();

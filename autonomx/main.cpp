@@ -58,6 +58,7 @@ int main(int argc, char *argv[]) {
     // make Generator virtual class recognizable to QML
     // this line is apparently necessary for the QML engine to receive Generator pointers
     // and retrieve a class instance's exposed properties by model index through said pointer
+    qmlRegisterUncreatableType<AppModel>("ca.hexagram.xmodal.autonomx", 1, 0, "AppModel", "Cannot instanciate AppModel.");
     qmlRegisterUncreatableType<Generator>("ca.hexagram.xmodal.autonomx", 1, 0, "Generator", "Cannot instanciate Generator.");
     qmlRegisterUncreatableType<GeneratorFacade>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorFacade", "Cannot instanciate GeneratorFacade.");
     qmlRegisterUncreatableType<SpikingNet>("ca.hexagram.xmodal.autonomx", 1, 0, "SpikingNet", "Cannot instanciate SpikingNet.");
@@ -69,6 +70,7 @@ int main(int argc, char *argv[]) {
     QQmlApplicationEngine qmlEngine;
 
     // Pass C++ objects to QML.
+    qmlEngine.rootContext()->setContextProperty("appModel", &AppModel::getInstance());
     qmlEngine.rootContext()->setContextProperty("generatorModel", AppModel::getInstance().getGeneratorModel());
     qmlEngine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (qmlEngine.rootObjects().isEmpty())

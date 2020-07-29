@@ -101,12 +101,6 @@ ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            GeneratorLattice {
-                generatorID: 0
-                anchors.fill: parent
-            }
-
-            /*
             Rectangle {
                 anchors.fill: parent
                 color: Stylesheet.colors.black
@@ -219,7 +213,6 @@ ColumnLayout {
                 }
                 opacity: 0.4
             }
-            */
         }
 
         // control zone

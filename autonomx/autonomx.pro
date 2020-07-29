@@ -36,8 +36,6 @@ SOURCES += \
     Facade.cpp \
     Generator.cpp \
     GeneratorFacade.cpp \
-    GeneratorLattice.cpp \
-    GeneratorLatticeRenderer.cpp \
     GeneratorModel.cpp \
     Izhikevich.cpp \
     OscEngine.cpp \
@@ -73,8 +71,6 @@ HEADERS += \
     Facade.h \
     Generator.h \
     GeneratorFacade.h \
-    GeneratorLattice.h \
-    GeneratorLatticeRenderer.h \
     GeneratorModel.h \
     Izhikevich.h \
     NeuronType.h \

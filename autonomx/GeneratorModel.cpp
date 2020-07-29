@@ -19,7 +19,7 @@
 #include <QVector>
 #include <QDebug>
 
-GeneratorModel::GeneratorModel(QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generatorGeneratorFacades) {
+GeneratorModel::GeneratorModel(QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generatorFacades) : connections() {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
             std::chrono::system_clock::now().time_since_epoch()
@@ -28,7 +28,7 @@ GeneratorModel::GeneratorModel(QSharedPointer<QList<QSharedPointer<GeneratorFaca
         qDebug() << "constructor (GeneratorModel)\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    this->generatorGeneratorFacades = generatorGeneratorFacades;
+    this->generatorFacades = generatorFacades;
 
     createAliasConnections();
 }
@@ -72,29 +72,49 @@ void GeneratorModel::updateValueFromAlias(const QString &key, const QVariant &va
 }
 
 void GeneratorModel::createAliasConnections() {
-    for(int i = 0; i < generatorGeneratorFacades.get()->count(); i++) {
-        // update model every time something is changed
-        connect(generatorGeneratorFacades.get()->at(i).get(), &GeneratorFacade::valueChangedFromAlias, this, [=](const QString &key, const QVariant &value) {
+    if(flagDebug) {
+        qDebug() << "createAliasConnections (GeneratorModel)";
+    }
+
+    for(int i = 0; i < generatorFacades->count(); i++) {
+        GeneratorFacade* generatorFacade = generatorFacades->at(i).data();
+
+        // create the connection
+        QMetaObject::Connection connection = connect(generatorFacade, &GeneratorFacade::valueChangedFromAlias, this, [=](const QString &key, const QVariant &value) {
             emit updateValueFromAlias(key, value, i);
         });
+
+        connections.append(connection);
     }
 }
 
 void GeneratorModel::deleteAliasConnections() {
-    disconnect(this);
+    if(flagDebug) {
+        qDebug() << "deleteAliasConnections (GeneratorModel)";
+    }
+
+    // delete the alias contexts, destroying connections as a result
+    for(QList<QMetaObject::Connection>::iterator it = connections.begin(); it != connections.end(); it++) {
+        disconnect(*it);
+    }
+    connections.clear();
 }
 
+
 void GeneratorModel::relinkAliasConnections() {
+    if(flagDebug) {
+        qDebug() << "relinkAliasConnections (GeneratorModel)";
+    }
     deleteAliasConnections();
     createAliasConnections();
 }
 
 int GeneratorModel::rowCount(const QModelIndex& parent) const {
-    return generatorGeneratorFacades.get()->size();
+    return generatorFacades->size();
 }
 
 int GeneratorModel::columnCount(const QModelIndex& parent) const {
-  return 1;
+    return 1;
 }
 
 QVariant GeneratorModel::data(const QModelIndex &index, int role) const {
@@ -102,10 +122,10 @@ QVariant GeneratorModel::data(const QModelIndex &index, int role) const {
         return QVariant();
 
     // check if the index is valid
-    if(index.column() == 0 && index.row() >= 0 && index.row() < generatorGeneratorFacades.get()->size()) {
+    if(index.column() == 0 && index.row() >= 0 && index.row() < generatorFacades->size()) {
         // check if the key exists in the hash map
         if(roleMap.contains(role))
-            return generatorGeneratorFacades.get()->at(index.row())->value(roleMap.value(role));
+            return generatorFacades->at(index.row())->value(roleMap.value(role));
     }
 
     return QVariant();
@@ -117,5 +137,5 @@ QHash<int, QByteArray> GeneratorModel::roleNames() const {
 
 GeneratorFacade * GeneratorModel::at(int index) {
     if (index < 0) return nullptr;
-    return generatorGeneratorFacades.get()->at(index).get();
+    return generatorFacades->at(index).data();
 }

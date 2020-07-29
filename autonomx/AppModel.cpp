@@ -15,22 +15,43 @@
 
 #include "AppModel.h"
 #include "SpikingNet.h"
+#include <QDebug>
 
 AppModel::AppModel() {
+    if(flagDebug) {
+        qDebug() << "constructor (AppModel): initializing lists";
+    }
+
     // init data (lists)
     generators = QSharedPointer<QList<QSharedPointer<Generator>>>(new QList<QSharedPointer<Generator>>());
     generatorFacades = QSharedPointer<QList<QSharedPointer<GeneratorFacade>>>(new QList<QSharedPointer<GeneratorFacade>>());
 
+    if(flagDebug) {
+        qDebug() << "constructor (AppModel): initializing generatorModel";
+    }
+
     // init data (unique elements)
-    QSharedPointer<GeneratorModel> generatorModel = QSharedPointer<GeneratorModel>(new GeneratorModel(generatorFacades));
+    generatorModel = QSharedPointer<GeneratorModel>(new GeneratorModel(generatorFacades));
+
+    if(flagDebug) {
+        qDebug() << "constructor (AppModel): initializing engines";
+    }
 
     // init engines
     computeEngine = QSharedPointer<ComputeEngine>(new ComputeEngine(generators));
     oscEngine = QSharedPointer<OscEngine>(new OscEngine());
 
+    if(flagDebug) {
+        qDebug() << "constructor (AppModel): initializing threads";
+    }
+
     // init threads
     computeThread = QSharedPointer<QThread>(new QThread());
     oscThread = QSharedPointer<QThread>(new QThread());
+
+    if(flagDebug) {
+        qDebug() << "constructor (AppModel): connecting engines";
+    }
 
     // connect compute engine setting changes to osc engine
     connect(computeEngine.data(), &ComputeEngine::createOscReceiver, oscEngine.data(), &OscEngine::createOscReceiver, Qt::QueuedConnection);
@@ -47,12 +68,20 @@ AppModel::AppModel() {
 }
 
 void AppModel::start() {
+    if(flagDebug) {
+        qDebug() << "start (AppModel): starting computeThread";
+    }
+
     computeThread->start(QThread::TimeCriticalPriority);
     computeEngine->moveToThread(computeThread.data());
 
     // we need to move all Generator instances to computeThread
     for(QList<QSharedPointer<Generator>>::iterator it = generators.get()->begin(); it != generators.get()->end(); it++) {
         (*it)->moveToThread(computeThread.data());
+    }
+
+    if(flagDebug) {
+        qDebug() << "start (AppModel): starting oscThread";
     }
 
     oscThread->start(QThread::TimeCriticalPriority);
@@ -80,6 +109,9 @@ OscEngine* AppModel::getOscEngine() const {
 }
 
 void AppModel::createGenerator() {
+    if(flagDebug) {
+        qDebug() << "createGenerator (AppModel)";
+    }
     // find a free ID for the new generator
     // create a temporary list of taken IDs
     // we do this instead of using generatorsList because we will want to sort it, and this is thread-unsafe since computeEngine might be iterating generators it at any time
@@ -114,13 +146,16 @@ void AppModel::createGenerator() {
 
     // create a GeneratorFacade and add it to the list
     QSharedPointer<GeneratorFacade> generatorFacade = QSharedPointer<GeneratorFacade>(new GeneratorFacade(generator.data()));
-    generatorFacades->push_back(generatorFacade);
+    generatorFacades->append(generatorFacade);
 
     // once the list is changed, update the GeneratorModel connections
     generatorModel->relinkAliasConnections();
 }
 
 void AppModel::deleteGenerator(int id) {
+    if(flagDebug) {
+        qDebug() << "deleteGenerator (AppModel)";
+    }
     // we can't delete on the Generator list directly because this could break things on the computeThread.
     // delete it later on the computeThread thread once it is safe to do so
     // this also takes care of deleting the appropriate osc sender and receiver

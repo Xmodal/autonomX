@@ -76,7 +76,7 @@ void AppModel::start() {
     computeEngine->moveToThread(computeThread.data());
 
     // we need to move all Generator instances to computeThread
-    for(QList<QSharedPointer<Generator>>::iterator it = generators.get()->begin(); it != generators.get()->end(); it++) {
+    for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
         (*it)->moveToThread(computeThread.data());
     }
 

@@ -34,16 +34,17 @@ public:
         return instance;
     }
     void start();
-    QThread* getComputeThread() const;          // needed to exit the thread at app quit. we can only connect this from the main.
-    QThread* getOscThread() const;              // needed to exit the thread at app quit. we can only connect this from the main.
-    ComputeEngine* getComputeEngine() const;    // needed for connections
-    OscEngine* getOscEngine() const;            // needed for connections
-    Q_INVOKABLE void createGenerator();
-    Q_INVOKABLE void deleteGenerator(int id);
-    Q_INVOKABLE bool validateNewGeneratorName(QString name);
-    Generator* getGenerator(int id) const;
-    Q_INVOKABLE GeneratorFacade* getGeneratorFacade(int id) const;  // this should be thread safe from the GUI thread?
-    Q_INVOKABLE GeneratorModel* getGeneratorModel() const;          // this should be thread safe from the GUI thread?
+    QThread*            getComputeThread() const;           // needed to exit the thread at app quit. we can only connect this from the main.
+    QThread*            getOscThread() const;               // needed to exit the thread at app quit. we can only connect this from the main.
+    ComputeEngine*      getComputeEngine() const;           // needed for connections
+    OscEngine*          getOscEngine() const;               // needed for connections
+    Generator*          getGenerator(int id) const;
+    GeneratorFacade*    getGeneratorFacade(int id) const;
+    GeneratorModel*     getGeneratorModel() const;
+
+    Q_INVOKABLE void    createGenerator();
+    Q_INVOKABLE void    deleteGenerator(int id);
+    Q_INVOKABLE bool    validateNewGeneratorName(QString name);
 private:
     AppModel();                                 // prevent instanciation
     AppModel(AppModel const&) = delete;         // prevent copy

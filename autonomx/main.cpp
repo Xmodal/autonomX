@@ -27,7 +27,6 @@
 #include "Generator.h"
 #include "GeneratorFacade.h"
 #include "GeneratorModel.h"
-#include "GeneratorLattice.h"
 #include "SpikingNet.h"
 #include "AppModel.h"
 
@@ -63,7 +62,6 @@ int main(int argc, char *argv[]) {
     qmlRegisterUncreatableType<GeneratorFacade>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorFacade", "Cannot instanciate GeneratorFacade.");
     qmlRegisterUncreatableType<SpikingNet>("ca.hexagram.xmodal.autonomx", 1, 0, "SpikingNet", "Cannot instanciate SpikingNet.");
     qmlRegisterUncreatableType<NeuronType>("ca.hexagram.xmodal.autonomx", 1, 0, "NeuronType", "Cannot instanciate NeuronType.");
-    qmlRegisterType<GeneratorLattice>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorLattice");
 
     AppModel::getInstance().createGenerator();
     AppModel::getInstance().start();

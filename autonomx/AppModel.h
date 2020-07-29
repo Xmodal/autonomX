@@ -33,9 +33,9 @@ public:
         static AppModel instance;
         return instance;
     }
-    void startThreads();
-    QThread* getComputeThread() const;
-    QThread* getOscThread() const;
+    void start();
+    QThread* getComputeThread() const;  // needed to exit the thread at app quit. we can only connect this from the main.
+    QThread* getOscThread() const;      // needed to exit the thread at app quit. we can only connect this from the main.
     Q_INVOKABLE void createGenerator();
     Q_INVOKABLE void deleteGenerator(int id);
     Q_INVOKABLE bool validateNewGeneratorName(QString name);
@@ -47,13 +47,9 @@ private:
     AppModel(AppModel const&) = delete;         // prevent copy
     void operator=(AppModel const&) = delete;   // prevent assignment
 
-    // data (list form)
-    QSharedPointer<QList<QSharedPointer<Generator>>> generatorsList;
-    QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generatorFacadesList;
-
-    // data (hashmap form)
-    QSharedPointer<QHash<int, QSharedPointer<Generator>>> generatorsHash;
-    QSharedPointer<QHash<int, QSharedPointer<GeneratorFacade>>> generatorFacadesHash;
+    // data (lists)
+    QSharedPointer<QList<QSharedPointer<Generator>>> generators;
+    QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generatorFacades;
 
     // data (unique elements)
     QSharedPointer<GeneratorModel> generatorModel;
@@ -65,4 +61,7 @@ private:
     // threads
     QSharedPointer<QThread> computeThread;
     QSharedPointer<QThread> oscThread;
+
+    // utility variables
+    bool started = false;
 };

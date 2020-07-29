@@ -34,8 +34,10 @@ public:
         return instance;
     }
     void start();
-    QThread* getComputeThread() const;  // needed to exit the thread at app quit. we can only connect this from the main.
-    QThread* getOscThread() const;      // needed to exit the thread at app quit. we can only connect this from the main.
+    QThread* getComputeThread() const;          // needed to exit the thread at app quit. we can only connect this from the main.
+    QThread* getOscThread() const;              // needed to exit the thread at app quit. we can only connect this from the main.
+    ComputeEngine* getComputeEngine() const;    // needed for connections
+    OscEngine* getOscEngine() const;            // needed for connections
     Q_INVOKABLE void createGenerator();
     Q_INVOKABLE void deleteGenerator(int id);
     Q_INVOKABLE bool validateNewGeneratorName(QString name);

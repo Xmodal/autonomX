@@ -56,8 +56,6 @@ public:
 private:
     NetworkType networkType = NetworkType::GridNetwork;
     int         neuronSize = 400;
-    int         neuronWidth = 20;
-    int         neuronHeight = 20;
     int         connectionsPerNeuron = 20; // this is used in any non-grid network
     int         randomSeed = 0;
     int         gridNetworkWidth = 20;
@@ -174,10 +172,6 @@ public:
     bool getFlagSTP() const;
     bool getFlagSTDP() const;
     bool getFlagDecay() const;
-
-    void writeLatticeTexture(double *latticeTexture);
-    int getLatticeWidth();
-    int getLatticeHeight();
 
 public slots:
     void writeNeuronSize(int neuronSize);

@@ -35,7 +35,5 @@
         <file>shaders/neuron_matrix.frag</file>
         <file>stylesheet/qmldir</file>
         <file>stylesheet/Stylesheet.qml</file>
-        <file>shaders/lattice.frag</file>
-        <file>shaders/lattice.vert</file>
     </qresource>
 </RCC>

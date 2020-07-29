@@ -38,7 +38,7 @@ ComputeEngine::ComputeEngine(QSharedPointer<QList<QSharedPointer<Generator>>> ge
         // get generator info
         QSharedPointer<Generator> generator = *it;
         // create hash map entry
-        generatorsHashMap.get()->insert(generator->getID(), generator);
+        generatorsHashMap->insert(generator->getID(), generator);
     }
 }
 

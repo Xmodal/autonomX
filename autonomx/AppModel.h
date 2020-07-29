@@ -66,4 +66,5 @@ private:
 
     // utility variables
     bool started = false;
+    bool flagDebug = false;
 };

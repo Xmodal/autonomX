@@ -14,6 +14,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "ComputeEngine.h"
+#include "AppModel.h"
 
 #include <algorithm>
 #include <chrono>
@@ -174,5 +175,74 @@ void ComputeEngine::loop() {
         );
 
         qDebug() << "loop (ComputeEngine):\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\trefresh (ms) = " << millisLastFrame << "\tcompute (ms) = " << millisCompute;
+    }
+}
+
+void ComputeEngine::addGenerator(QSharedPointer<Generator> generator) {
+    // add to list
+    generators->append(generator);
+
+    int id = generator->getID();
+    QString addressReceiver = generator->getOscInputAddress();
+    QString addressSenderHost = generator->getOscOutputAddressHost();
+    QString addressSenderTarget = generator->getOscOutputAddressTarget();
+    int portReceiver = generator->getOscInputPort();
+    int portSender = generator->getOscOutputPort();
+
+    // create osc sender and receiver
+    emit createOscReceiver(id, addressReceiver, portReceiver);
+    emit createOscSender(id, addressSenderHost, addressSenderTarget, portSender);
+
+    // get a pointer to the osc engine to connect it
+    OscEngine* oscEngine = AppModel::getInstance().getOscEngine();
+
+    // connect input / receiver changes
+    QObject::connect(generator.data(), &Generator::oscInputAddressChanged, oscEngine, [this, oscEngine, generator](QString oscInputAddress){
+        if(flagDebug) {
+            qDebug() << "oscInputAddressChanged (lambda)";
+        }
+        emit oscEngine->updateOscReceiverAddress(generator->getID(), oscInputAddress);
+    });
+
+    QObject::connect(generator.data(), &Generator::oscInputPortChanged, oscEngine, [this, oscEngine, generator](int oscInputPort){
+        if(flagDebug) {
+            qDebug() << "oscInputPortChanged (lambda)";
+        }
+        emit oscEngine->updateOscReceiverPort(generator->getID(), oscInputPort);
+    });
+
+    // connect output / sender changes
+    QObject::connect(generator.data(), &Generator::oscOutputAddressHostChanged, oscEngine, [this, oscEngine, generator](QString oscOutputAddressHost){
+        if(flagDebug) {
+            qDebug() << "oscOutputAddressHostChanged (lambda)";
+        }
+        emit oscEngine->updateOscSenderAddressHost(generator->getID(), oscOutputAddressHost);
+    });
+
+    QObject::connect(generator.data(), &Generator::oscOutputAddressTargetChanged, oscEngine, [this, oscEngine, generator](QString oscOutputAddressTarget){
+        if(flagDebug) {
+            qDebug() << "oscOutputAddressTargetChanged (lambda)";
+        }
+        emit oscEngine->updateOscSenderAddressTarget(generator->getID(), oscOutputAddressTarget);
+    });
+
+    QObject::connect(generator.data(), &Generator::oscOutputPortChanged, oscEngine, [this, oscEngine, generator](int oscOutputPort){
+        if(flagDebug) {
+            qDebug() << "oscOutputAddressTargetChanged (lambda)";
+        }
+        emit oscEngine->updateOscSenderPort(generator->getID(), oscOutputPort);
+    });
+}
+
+void ComputeEngine::deleteGenerator(int id) {
+    for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
+        if(id == (*it)->getID()) {
+            // erase from the list
+            generators->erase(it);
+            // delete osc sender and receiver
+            emit deleteOscReceiver(id);
+            emit deleteOscSender(id);
+            return;
+        }
     }
 }

@@ -58,4 +58,7 @@ public slots:
     void loop();
 
     void recieveOscData(int id, QVariantList data);
+
+    void addGenerator(QSharedPointer<Generator>);
+    void deleteGenerator(int id);
 };

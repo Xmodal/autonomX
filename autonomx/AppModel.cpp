@@ -31,6 +31,19 @@ AppModel::AppModel() {
     // init threads
     computeThread = QSharedPointer<QThread>(new QThread());
     oscThread = QSharedPointer<QThread>(new QThread());
+
+    // connect compute engine setting changes to osc engine
+    connect(computeEngine.data(), &ComputeEngine::createOscReceiver, oscEngine.data(), &OscEngine::createOscReceiver, Qt::QueuedConnection);
+    connect(computeEngine.data(), &ComputeEngine::deleteOscReceiver, oscEngine.data(), &OscEngine::deleteOscReceiver, Qt::QueuedConnection);
+
+    connect(computeEngine.data(), &ComputeEngine::createOscSender, oscEngine.data(), &OscEngine::createOscSender, Qt::QueuedConnection);
+    connect(computeEngine.data(), &ComputeEngine::deleteOscSender, oscEngine.data(), &OscEngine::deleteOscSender, Qt::QueuedConnection);
+
+    // connect compute engine data output to osc engine
+    connect(computeEngine.data(), &ComputeEngine::sendOscData, oscEngine.data(), &OscEngine::sendOscData, Qt::QueuedConnection);
+
+    // connect osc engine data reception to compute engine
+    connect(oscEngine.data(), &OscEngine::recieveOscData, computeEngine.data(), &ComputeEngine::recieveOscData, Qt::QueuedConnection);
 }
 
 void AppModel::start() {
@@ -56,6 +69,14 @@ QThread* AppModel::getComputeThread() const {
 
 QThread* AppModel::getOscThread() const {
     return oscThread.data();
+}
+
+ComputeEngine*  AppModel::getComputeEngine() const {
+    return computeEngine.data();
+}
+
+OscEngine* AppModel::getOscEngine() const {
+    return oscEngine.data();
 }
 
 void AppModel::createGenerator() {
@@ -88,13 +109,13 @@ void AppModel::createGenerator() {
 
     // we can't add to the Generator list directly because this could break things on the computeThread.
     // add it later on the computeThread thread once it is safe to do so
-
-    // we can only create an OscSender / OscReceiver pair once the Generator exists because we have to setup some connections.
-    // this means we have to do this after the pervious operation is done.
+    // this also takes care of creating the appropriate osc sender and receiver
+    emit computeEngine->addGenerator(generator);
 
     // create a GeneratorFacade and add it to the list
     QSharedPointer<GeneratorFacade> generatorFacade = QSharedPointer<GeneratorFacade>(new GeneratorFacade(generator.data()));
     generatorFacades->push_back(generatorFacade);
+
     // once the list is changed, update the GeneratorModel connections
     generatorModel->relinkAliasConnections();
 }
@@ -102,9 +123,17 @@ void AppModel::createGenerator() {
 void AppModel::deleteGenerator(int id) {
     // we can't delete on the Generator list directly because this could break things on the computeThread.
     // delete it later on the computeThread thread once it is safe to do so
+    // this also takes care of deleting the appropriate osc sender and receiver
+    emit computeEngine->deleteGenerator(id);
 
-    // we can delete an OscSender / OscReceiver pair anytime as long as we update OscEngine to not kill itself if an invalid generator id is used (which would happen if the matching OscSender / OscReceiver were deleted before the Generator was deleted, leaving enough time for a ComputeEngine cycle to finish)
-    // it's actually much simpler to just handle in ComputeEngine, in the slot dedicated to Generator deletion, much like how we will manage OscSender / OscReceiver creation.
+    // delete the GeneratorFacade from the list
+    for(QList<QSharedPointer<GeneratorFacade>>::iterator it = generatorFacades->begin(); it != generatorFacades->end(); it++) {
+        if(id == (*it)->value("id").toInt()) {
+            // erase from the list
+            generatorFacades->erase(it);
+            break;
+        }
+    }
 
     // once the list is changed, update the GeneratorModel connections
     generatorModel->relinkAliasConnections();

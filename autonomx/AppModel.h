@@ -41,7 +41,7 @@ public:
     Q_INVOKABLE void createGenerator();
     Q_INVOKABLE void deleteGenerator(int id);
     Q_INVOKABLE bool validateNewGeneratorName(QString name);
-    Q_INVOKABLE Generator* getGenerator(int id) const;              // this isn't thread safe?
+    Generator* getGenerator(int id) const;
     Q_INVOKABLE GeneratorFacade* getGeneratorFacade(int id) const;  // this should be thread safe from the GUI thread?
     Q_INVOKABLE GeneratorModel* getGeneratorModel() const;          // this should be thread safe from the GUI thread?
 private:

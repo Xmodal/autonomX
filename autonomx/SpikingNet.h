@@ -155,7 +155,7 @@ public:
     SpikingNet(int id);
     ~SpikingNet();
 
-    void computeOutput(double deltaTime);
+    void computeOutput(double deltaTime) override;
 
     int getNeuronSize() const;
     double getTimeScale() const;
@@ -173,7 +173,6 @@ public:
     bool getFlagSTDP() const;
     bool getFlagDecay() const;
 
-public slots:
     void writeNeuronSize(int neuronSize);
     void writeTimeScale(double timeScale);
     void writeInhibitoryPortion(double inhibitoryPortion);
@@ -189,6 +188,10 @@ public slots:
     void writeFlagSTP(bool flagSTP);
     void writeFlagSTDP(bool flagSTDP);
     void writeFlagDecay(bool flagDecay);
+
+    void writeLatticeWidthDelegate(int latticeWidth) override;
+    void writeLatticeHeightDelegate(int latticeHeight) override;
+    void writeLatticeDataDelegate(double* latticeData) override;
 
 signals:
     void neuronSizeChanged(int neuronSize);

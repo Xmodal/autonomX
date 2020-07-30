@@ -15,6 +15,7 @@
 
 #pragma once
 
+#include <QObject>
 #include <QQuickFramebufferObject>
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
@@ -22,24 +23,38 @@
 #include <QQuickWindow>
 #include "Generator.h"
 
-class GeneratorLatticeRenderer : public QQuickFramebufferObject::Renderer {
+// multiple inheritance is gross, but needed to allow connections to work
+class GeneratorLatticeRenderer : public QQuickFramebufferObject::Renderer, public QObject {
+    Q_OBJECT
 public:
     GeneratorLatticeRenderer();
     ~GeneratorLatticeRenderer();
     void render();
     void synchronize(QQuickFramebufferObject *item);
 private:
-    QOpenGLShaderProgram *program;      // pointer to shader
-    QQuickWindow *window;               // pointer to window
+    QOpenGLShaderProgram *program;          // pointer to shader
+    QQuickWindow *window;                   // pointer to window
     QOpenGLFramebufferObject *framebuffer = nullptr;        // pointer to the assigned framebuffer that is displayed in QML
     QOpenGLFramebufferObject *framebufferSuper = nullptr;   // pointer to high resolution framebuffer that will be downsampled
-    QSize size;                     // size of the assigned framebuffer
-    QSize sizeSuper = QSize(0, 0);  // size of the supersampling framebuffer
-    int factorSuper = 2;            // supersampling factor
-    bool visible;                   // indicates if the object is visible in QML and turns on and off the render loop accordingly
-    bool synchronized = false;      // indicates if there was a call to synchronize since the last render call
-    bool flagSuper = true;          // enables supersampling
-    bool flagDebug = true;          // enables debug
-    int generatorID;                // associated generator id
-    Generator* generator;           // associated generator
+    QSize size;                             // size of the assigned framebuffer
+    QSize sizeSuper;                        // size of the supersampling framebuffer
+    int factorSuper = 2;                    // supersampling factor
+    bool visible;                           // indicates if the object is visible in QML and turns on and off the render loop accordingly
+    bool synchronized = false;              // indicates if there was a call to synchronize since the last render call
+    bool synchronizedFirstDone = false;     // indicates if the object was ever synchronized
+    bool flagSuper = true;                  // enables supersampling
+    bool flagDebug = true;                  // enables debug
+    int generatorID;                        // associated generator id
+    Generator* generator;                   // associated generator
+    double* latticeData = nullptr;          // the lattice data used to draw the graphics
+    int* allocatedWidth = nullptr;          // the width of allocated flattened array in the memory block pointed by latticeData
+    int* allocatedHeight = nullptr;         // the height of allocated flattened array in the memory block pointed by latticeData
+    QMetaObject::Connection connectionWriteLatticeData;         // connection from GeneratorLatticeRenderer's writeLatticeData signal to Generator's writeLatticeData slot
+    QMetaObject::Connection connectionWriteLatticeDataCompleted;// connection from Generator's writeLatticeDataCompleted signal to GeneratorLatticeRenderer's writeLatticeDataCompleted slot
+    bool writeLatticeDataCurrentDone = true;// indicates if the current writeLatticeData call is done
+    bool writeLatticeDataFirstDone = false; // indicates if a the first writeLatticeData call is done, meaning there is valid data to use
+signals:
+    void writeLatticeData(double* latticeData, int* allocatedWidth, int* allocatedHeight);
+public slots:
+    void writeLatticeDataCompleted();       // called once writeLatticeData is done, allows a new writeLatticeData signal to be emitted at the end of the next render cycle
 };

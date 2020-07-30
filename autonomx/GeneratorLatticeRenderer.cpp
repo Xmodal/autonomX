@@ -59,90 +59,79 @@ void GeneratorLatticeRenderer::render() {
         return;
     }
 
-    if(synchronized) {
-        synchronized = false;
-        if(flagDebug) {
-            qDebug() << "render (GeneratorLatticeRenderer): synchronization detected just before render";
-        }
-        framebuffer = this->framebufferObject();
+    // only render if lattice data is ready
+    if(writeLatticeDataFirstDone) {
+        // lock the lattice data mutex since we want to use that data
+        generator->getLatticeMutex().lock();
+
+        // Play nice with the RHI. Not strictly needed when the scenegraph uses
+        // OpenGL directly.
+        window->beginExternalCommands();
+
         if(flagSuper) {
-            // check to see if the framebuffer size changed
-            QSize sizeNew = framebuffer->size();
-            if(sizeNew != size) {
-                // the size changed, we need to update the supersampling framebuffer
-                size = sizeNew;
-                if(flagDebug) {
-                    qDebug() << "render (GeneratorLatticeRenderer): synchronization caused framebuffer size change, updating supersampling framebuffer";
-                }
-                if(framebufferSuper != nullptr) {
-                    // deallocate old supersampling framebuffer if it exists
-                    delete framebufferSuper;
-                }
-                // create a new supersampling framebuffer
-                sizeSuper = size * factorSuper;
-                framebufferSuper = new QOpenGLFramebufferObject(sizeSuper);
-            }
+            // bind supersampling framebuffer
+            framebufferSuper->bind();
+
+            // set viewport size to match supersampling framebuffer
+            glViewport(0, 0, sizeSuper.width(), sizeSuper.height());
         }
+
+        // bind shaders
+        program->bind();
+
+        // TODO: what does this do
+        program->enableAttributeArray(0);
+
+        // simple rectangle covering the whole NDC XY plane
+        float values[] = {
+            -1, -1,
+            1, -1,
+            -1, 1,
+            1, 1
+        };
+
+        // This example relies on (deprecated) client-side pointers for the vertex
+        // input. Therefore, we have to make sure no vertex buffer is bound.
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        // TODO: what does this do
+        program->setAttributeArray(0, GL_FLOAT, values, 2);
+
+        // disable depth test
+        glDisable(GL_DEPTH_TEST);
+
+        // draw
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+        // we can now release the lattice data mutex
+        generator->getLatticeMutex().unlock();
+
+        // we request an update of the lattice data (as soon as possible!) if the last request finished before this frame
+        if(writeLatticeDataCurrentDone) {
+            writeLatticeDataCurrentDone = false;
+            emit writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
+        }
+
+        // TODO: what does this do
+        program->disableAttributeArray(0);
+
+        // unbind shaders
+        program->release();
+
+        if(flagSuper) {
+            // release supersampling framebuffer
+            framebufferSuper->release();
+
+            // blit supersampling framebuffer onto real framebuffer, performing downsampling
+            QOpenGLFramebufferObject::blitFramebuffer(framebuffer, QRect(0, 0, size.width(), size.height()), framebufferSuper, QRect(0, 0, sizeSuper.width(), sizeSuper.height()), GL_COLOR_BUFFER_BIT, GL_LINEAR);
+        }
+
+        // restore previous OpenGL state
+        window->resetOpenGLState();
+
+        // TODO: what does this do
+        window->endExternalCommands();
     }
-
-    // Play nice with the RHI. Not strictly needed when the scenegraph uses
-    // OpenGL directly.
-    window->beginExternalCommands();
-
-    if(flagSuper) {
-        // bind supersampling framebuffer
-        framebufferSuper->bind();
-
-        // set viewport size to match supersampling framebuffer
-        glViewport(0, 0, sizeSuper.width(), sizeSuper.height());
-    }
-
-    // bind shaders
-    program->bind();
-
-    // TODO: what does this do
-    program->enableAttributeArray(0);
-
-    // simple rectangle covering the whole NDC XY plane
-    float values[] = {
-        -1, -1,
-        1, -1,
-        -1, 1,
-        1, 1
-    };
-
-    // This example relies on (deprecated) client-side pointers for the vertex
-    // input. Therefore, we have to make sure no vertex buffer is bound.
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    // TODO: what does this do
-    program->setAttributeArray(0, GL_FLOAT, values, 2);
-
-    // disable depth test
-    glDisable(GL_DEPTH_TEST);
-
-    // draw
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-    // TODO: what does this do
-    program->disableAttributeArray(0);
-
-    // unbind shaders
-    program->release();
-
-    if(flagSuper) {
-        // release supersampling framebuffer
-        framebufferSuper->release();
-
-        // blit supersampling framebuffer onto real framebuffer, performing downsampling
-        QOpenGLFramebufferObject::blitFramebuffer(framebuffer, QRect(0, 0, size.width(), size.height()), framebufferSuper, QRect(0, 0, sizeSuper.width(), sizeSuper.height()), GL_COLOR_BUFFER_BIT, GL_LINEAR);
-    }
-
-    // restore previous OpenGL state
-    window->resetOpenGLState();
-
-    // TODO: what does this do
-    window->endExternalCommands();
 
     // render again if visible
     if(visible) {
@@ -155,19 +144,78 @@ void GeneratorLatticeRenderer::synchronize(QQuickFramebufferObject *item) {
     if(flagDebug) {
         qDebug() << "synchronize (GeneratorLatticeRenderer)";
     }
-    // update window
-    window = item->window();
+
+    // remember we are synchronizing now
+    synchronized = true;
+
+    // check if this is the first synchronization
+    if(!synchronizedFirstDone) {
+        synchronizedFirstDone = true;
+        // update window
+        window = item->window();
+
+        // link generator
+        generatorID = ((GeneratorLattice*) item)->getGeneratorID();
+        generator = AppModel::getInstance().getGenerator(generatorID);
+
+        // connect new generator
+        connectionWriteLatticeData = QObject::connect(this, &GeneratorLatticeRenderer::writeLatticeData, generator, &Generator::writeLatticeData);
+        connectionWriteLatticeDataCompleted = QObject::connect(generator, &Generator::writeLatticeDataCompleted, this, &GeneratorLatticeRenderer::writeLatticeDataCompleted);
+
+        // request the lattice data
+        writeLatticeDataCurrentDone = false;
+        emit writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
+    } else {
+        // check to see if the linked generator changed
+        int generatorIDNew = ((GeneratorLattice*) item)->getGeneratorID();
+        if(generatorIDNew != generatorID) {
+            // link generator
+            generatorID = generatorIDNew;
+            generator = AppModel::getInstance().getGenerator(generatorID);
+
+            // disconnect old generator
+            QObject::disconnect(connectionWriteLatticeData);
+            QObject::disconnect(connectionWriteLatticeDataCompleted);
+
+            // connect new generator
+            connectionWriteLatticeData = QObject::connect(this, &GeneratorLatticeRenderer::writeLatticeData, generator, &Generator::writeLatticeData);
+            connectionWriteLatticeDataCompleted = QObject::connect(generator, &Generator::writeLatticeDataCompleted, this, &GeneratorLatticeRenderer::writeLatticeDataCompleted);
+
+            // request the lattice data
+            writeLatticeDataCurrentDone = false;
+            emit writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
+        }
+    }
+
+    // get the current framebuffer, which will have changed if the window was resized
+    framebuffer = this->framebufferObject();
+    if(flagSuper) {
+        // check to see if the framebuffer size changed
+        QSize sizeNew = framebuffer->size();
+        if(sizeNew != size) {
+            // the size changed, we need to update the supersampling framebuffer
+            size = sizeNew;
+            if(flagDebug) {
+                qDebug() << "render (GeneratorLatticeRenderer): synchronization caused framebuffer size change, updating supersampling framebuffer";
+            }
+            if(framebufferSuper != nullptr) {
+                // deallocate old supersampling framebuffer if it exists
+                delete framebufferSuper;
+            }
+            // create a new supersampling framebuffer
+            sizeSuper = size * factorSuper;
+            framebufferSuper = new QOpenGLFramebufferObject(sizeSuper);
+        }
+    }
+
     // update visible
     visible = item->isVisible();
     if(visible) {
         update();
     }
-    // set synchronized flag
-    synchronized = true;
-    // update linked generator
-    // TODO: uncomment this once AppModel is properly populated
-    /*
-    generatorID = ((GeneratorLattice*) item)->getGeneratorID();
-    generator = AppModel::getInstance().getGenerator(generatorID);
-    */
+}
+
+void GeneratorLatticeRenderer::writeLatticeDataCompleted() {
+    writeLatticeDataCurrentDone = false;
+    writeLatticeDataFirstDone = true;
 }

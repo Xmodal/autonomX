@@ -7,8 +7,11 @@ Rectangle {
     property bool dragActive: dragArea.drag.active
 
     function snapToGrid() {
-        x = Math.min(Math.max(Math.round(x / mainContent.ppc), 0), 20 - colW) * mainContent.ppc;
-        y = Math.min(Math.max(Math.round(y / mainContent.ppc), 0), 20 - colH) * mainContent.ppc;
+        colX = Math.min(Math.max(Math.round(x / mainContent.ppc), 0), 20 - colW);
+        colY = Math.min(Math.max(Math.round(y / mainContent.ppc), 0), 20 - colH);
+        // TODO: find better way to reevaluate property binding for coords
+        x = regions.width * colX / 20.0;
+        y = regions.height * colY / 20.0;
     }
 
     antialiasing: true
@@ -26,13 +29,10 @@ Rectangle {
     }
 
     // drag configuration
-    Drag.hotSpot {
-        x: 40
-        y: 40
-    }
     onDragActiveChanged: {
         if (dragActive) {
             Drag.start();
+            mainContent.switchSelectedRegion(index);
         } else {
             Drag.drop();
             snapToGrid();
@@ -44,7 +44,7 @@ Rectangle {
         id: dragArea
 
         anchors.fill: parent
-        onClicked: mainContent.switchSelectedRegion(index)
+        onClicked: mainContent.switchSelectedRegion(mainContent.currRegionIndex === index ? -1 : index)
         drag.target: parent
         cursorShape: Qt.SizeAllCursor
     }

@@ -14,14 +14,16 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "Generator.h"
-#include <QDebug>
 
 #include <chrono>
 #include <QThread>
 #include <QDebug>
 
-Generator::Generator(int id) {
+Generator::Generator(int id, QString name, QString type, QString description) {
     this->id = id;
+    this->name = name;
+    this->type = type;
+    this->description = description;
 
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
@@ -105,6 +107,14 @@ QString Generator::getOscOutputAddressHost() {
 
 QString Generator::getOscOutputAddressTarget() {
     return oscOutputAddressTarget;
+}
+
+int Generator::getLatticeWidth() {
+    return latticeWidth;
+}
+
+int Generator::getLatticeHeight() {
+    return latticeHeight;
 }
 
 void Generator::writeName(QString name) {
@@ -269,6 +279,48 @@ void Generator::writeOscOutputAddressTarget(QString oscOutputAddressTarget) {
     emit oscOutputAddressTargetChanged(oscOutputAddressTarget);
 }
 
+void Generator::writeLatticeWidth(int latticeWidth) {
+    if(this->latticeWidth == latticeWidth) {
+        return;
+    }
+
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "writeLatticeWidth\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << latticeWidth;
+    }
+
+    // actually do the changes in the derived algorithm
+    writeLatticeWidthDelegate(latticeWidth);
+
+    this->latticeWidth = latticeWidth;
+    emit valueChanged("latticeWidth", latticeWidth);
+    emit latticeWidthChanged(latticeWidth);
+}
+
+void Generator::writeLatticeHeight(int latticeHeight) {
+    if(this->latticeHeight == latticeHeight) {
+        return;
+    }
+
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "writeLatticeHeight\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << latticeHeight;
+    }
+
+    // actually do the changes in the derived algorithm
+    writeLatticeHeightDelegate(latticeHeight);
+
+    this->latticeHeight = latticeHeight;
+    emit valueChanged("latticeHeight", latticeHeight);
+    emit latticeHeightChanged(latticeHeight);
+}
+
 void Generator::updateValue(const QString &key, const QVariant &value) {
     QByteArray keyArray = key.toLocal8Bit();
     char* keyBuffer = keyArray.data();
@@ -282,4 +334,38 @@ void Generator::updateValue(const QString &key, const QVariant &value) {
     }
 
     setProperty(keyBuffer, value);
+}
+
+void Generator::writeLatticeData(double* latticeData, int* allocatedWidth, int* allocatedHeight) {
+    // try to lock the lattice data mutex
+    bool lockSuccessful = latticeDataMutex.tryLock();
+
+    if(!lockSuccessful) {
+        // failed to get lock, wait for GeneratorLatticeRenderer to finish its render method and let any other task get completed in the mean time
+        emit writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
+    } else {
+        // succeded at getting lock
+
+        // check if the the right amount of memory is allocated
+        if((*allocatedWidth) * (*allocatedHeight) == latticeWidth * latticeHeight) {
+            // the same amount of data is allocated, but the aspect ratio could be different
+        } else {
+            // the amount of allocated memory mismatches the required amount, must reallocate
+            delete[] latticeData;
+            latticeData = new double[latticeWidth * latticeHeight];
+        }
+
+        // update the allocated width and height variables in any case
+        *allocatedWidth = latticeWidth;
+        *allocatedHeight = latticeHeight;
+
+        // we can now write to the lattice data. do it via the derived delegate
+        writeLatticeDataDelegate(latticeData);
+
+        // we are done; release the mutex
+        latticeDataMutex.unlock();
+
+        // we are done; tell the GeneratorLatticeRenderer
+        emit writeLatticeDataCompleted();
+    }
 }

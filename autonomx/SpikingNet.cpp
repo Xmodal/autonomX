@@ -21,7 +21,7 @@
 
 // ############################### initialization routines ###############################
 
-SpikingNet::SpikingNet(int id) : Generator(id) {
+SpikingNet::SpikingNet(int id) : Generator(id, "Spiking Neural Network", "SNN", "An interconnected network of biologically-modeled neurons.") {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
@@ -29,12 +29,6 @@ SpikingNet::SpikingNet(int id) : Generator(id) {
 
         qDebug() << "constructor (SpikingNet):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
-
-    // default values for descriptive properties
-    name = "Spiking Neural Network";
-    type = "SNN";
-    description = "An interconnected network of biologically-modeled neurons.";
-    outputMonitor = 0;
 
     initialize();
 }
@@ -759,6 +753,8 @@ void SpikingNet::writeNeuronSize(int neuronSize) {
         qDebug() << "writeNeuronSize:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
+    qDebug() << "WARNING: writeNeuronSize is currently disabled";
+
     // reset network, since these parameters only take effect when the network is created anew
     reset();
     // do the change
@@ -1033,4 +1029,23 @@ void SpikingNet::writeFlagDecay(bool flagDecay) {
     this->flagDecay = flagDecay;
     emit valueChanged("flagDecay", QVariant(flagDecay));
     emit flagDecayChanged(flagDecay);
+}
+
+void SpikingNet::writeLatticeWidthDelegate(int latticeWidth) {
+    qDebug() << "WARNING: writeLatticeWidthDelegate is unimplemented";
+}
+
+void SpikingNet::writeLatticeHeightDelegate(int latticeHeight) {
+    qDebug() << "WARNING: writeLatticeHeightDelegate is unimplemented";
+}
+
+void SpikingNet::writeLatticeDataDelegate(double *latticeData) {
+    int width = getLatticeWidth();
+    int height = getLatticeHeight();
+    for(int x = 0; x < width; x++) {
+        for(int y = 0; y < height; y++) {
+            int index = x % width + y * width;
+            latticeData[index] = (neurons[index].getV() - neurons[index].getC()) / (neurons[index].getPotentialThreshold() - neurons[index].getC());
+        }
+    }
 }

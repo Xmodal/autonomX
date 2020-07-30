@@ -20,11 +20,10 @@
 #include <QVariant>
 #include <QVector>
 #include <QSharedPointer>
-#include <QColor>
+#include <QMutex>
 #include <vector>
 
-class Generator : public QObject
-{
+class Generator : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString name READ getName WRITE writeName NOTIFY nameChanged)
     Q_PROPERTY(QString type READ getType NOTIFY typeChanged)
@@ -38,23 +37,11 @@ class Generator : public QObject
     Q_PROPERTY(int oscOutputPort READ getOscOutputPort WRITE writeOscOutputPort NOTIFY oscOutputPortChanged)
     Q_PROPERTY(QString oscOutputAddressHost READ getOscOutputAddressHost WRITE writeOscOutputAddressHost NOTIFY oscOutputAddressHostChanged)
     Q_PROPERTY(QString oscOutputAddressTarget READ getOscOutputAddressTarget WRITE writeOscOutputAddressTarget NOTIFY oscOutputAddressTargetChanged)
-protected:
-    int id;                         // generator id, generated automatically by ComputeEngine in constructor
 
-    // descriptive properties seen in the generators list panel
-    QString name;                   // generator name, assigned by user
-    QString type;                   // generator type, fixed
-    QString description;            // generator description, fixed
-    double outputMonitor;           // output monitor / indicator light, generated from output array automatically by ComputeEngine
-
-    int oscInputPort = 6668;                    // generator osc input port, assigned by user
-    QString oscInputAddress = "/input";         // generator osc input address, assigned by user (this is an osc destination)
-
-    int oscOutputPort = 6669;                   // generator osc output port, assigned by user
-    QString oscOutputAddressHost = "127.0.0.1"; // generator osc output address for host, assigned by user (this is an ip)
-    QString oscOutputAddressTarget = "/output"; // generator osc output address for target, assigned by user (this is an osc destination)
+    Q_PROPERTY(int latticeWidth READ getLatticeWidth WRITE writeLatticeWidth NOTIFY latticeWidthChanged)
+    Q_PROPERTY(int latticeHeight READ getLatticeHeight WRITE writeLatticeHeight NOTIFY latticeHeightChanged)
 public:
-    Generator(int id);
+    Generator(int id, QString name, QString type, QString description);
     ~Generator();
 
     // the generator class provides input and output buffers
@@ -68,8 +55,11 @@ public:
     int getInputSize();
     int getOutputSize();
 
-    // the method implemented by the derived class that computes the output
+    // method implemented by the derived class that computes the output
     virtual void computeOutput(double deltaTime) = 0;
+
+    // this is the mutex used by writeLatticeData. GeneratorLatticeRenderer will lock it while using *latticeData in its render method.
+    QMutex &getLatticeMutex();
 
     // methods to read properties
     QString getName();
@@ -85,6 +75,9 @@ public:
     QString getOscOutputAddressHost();
     QString getOscOutputAddressTarget();
 
+    int getLatticeWidth();
+    int getLatticeHeight();
+
     // methods to write properties
     void writeName(QString name);
     void writeType(QString type);
@@ -97,12 +90,76 @@ public:
     void writeOscOutputPort(int oscOutputPort);
     void writeOscOutputAddressHost(QString oscOutputAddressHost);
     void writeOscOutputAddressTarget(QString oscOutputAddressTarget);
+
+    // these only take care of doing the signaling
+    void writeLatticeWidth(int latticeWidth);
+    void writeLatticeHeight(int latticeHeight);
+
+    // these are implemented by the derived class and take care of any memory reallocation needed to change the size of the algorithm.
+    // this is called by writeLatticeWidth / writeLatticeHeight before the value is actually changed. the value passed is the new one.
+    // once this is done, writeLatticeWidth / writeLatticeHeight will take care of writing the proper value.
+    virtual void writeLatticeWidthDelegate(int latticeWidth) = 0;
+    virtual void writeLatticeHeightDelegate(int latticeHeight) = 0;
+
+    // this method actually does the data copy, implemented by the derived class. writeLatticeData calls this and takes care of all the crazy scheculing / mutex stuff.
+    //
+    // latticeData is written to by treating the memory as a flattened 2D double array
+    //
+    // the indexing scheme goes as follows:
+    //
+    //    latticeData[indexWidth, indexHeight] = flattenedData[indexWidth + indexHeight * latticeHeight]
+    //
+    // equivalent to (where / is integer round down division):
+    //
+    //    flattenedData[index] = latticeData[index % latticeWidth, index / latticeWidth]
+    //
+    virtual void writeLatticeDataDelegate(double* latticeData) = 0;
 private:
-    bool flagDebug = false;
+    int id;                                     // generator id, generated automatically by ComputeEngine in constructor
+
+    QString name;                               // generator name, assigned by user
+    QString type;                               // generator type, fixed
+    QString description;                        // generator description, fixed
+    double outputMonitor = 0;                   // output monitor / indicator light, generated from output array automatically by ComputeEngine
+
+    int oscInputPort = 6668;                    // generator osc input port, assigned by user
+    QString oscInputAddress = "/input";         // generator osc input address, assigned by user (this is an osc destination)
+
+    int oscOutputPort = 6669;                   // generator osc output port, assigned by user
+    QString oscOutputAddressHost = "127.0.0.1"; // generator osc output address for host, assigned by user (this is an ip)
+    QString oscOutputAddressTarget = "/output"; // generator osc output address for target, assigned by user (this is an osc destination)
+
+    int latticeWidth;                           // lattice width
+    int latticeHeight;                          // lattice height
+
+    bool flagDebug = false;                     // enables debug
+
+    QMutex latticeDataMutex;                    // mutex used by writeLatticeData
 public slots:
     // common slot allowing to update any property. allows the Facade class to work properly
     // (for connection from QQmlPropertyMap's valueChanged signal)
     void updateValue(const QString &key, const QVariant &value);
+
+    // slot used by GeneratorLatticeRenderer to get the lattice data.
+    //
+    // latticeData is a pointer to a pointer which designates the block of memory data is written to.
+    // preAllocatedSize represents the amount of allocated memory at *latticeData before the function call
+    // postAllocatedSize represents the amouunt of allocated memory at *latticeData after the function call
+    //
+    // why do allocatedWidth and allocatedHeight exist? because the size of the lattice may change, meaning that *latticeData mismatches the lattice's actual size.
+    // in that case, this function will delete *latticeData, and reallocate *latticeData to a new memory block that matches the true size.
+    // both are passed by pointer so that GeneratorLatticeRenderer can keep track of the new size after this method is executed.
+    // why not just use a getter before the method call? because we want this to be atomic; things could get changed between the getter call and the method call.
+    //
+    // the first call to this method is done with a null pointer. the method then allocates an initial block of memory.
+    //
+    // this method must never be executed while GeneratorLatticeRenderer's render method is using *latticeData. it uses latticeDataMutex to prevent this.
+    // if GeneratorLatticeRenderer's render has already locked latticeDataMutex, we schedule the method call to happen at a later time so that the ComputeEngine does not lock
+    // we need a mechanism to prevent duplicate requests that would happen if the method is unable to complete before the next render frame however...
+    // this is done by emitting writeLatticeDataCompleted once done, and only allowing GeneratorLatticeRenderer to emit writeLatticeData signals if the previous one did complete.
+    //
+    // the connection from GeneratorLatticeRenderer's writeLatticeData signal to Generator's writeLatticeData slot is created from GeneratorLatticeRenderer
+    void writeLatticeData(double* latticeData, int* allocatedWidth, int* allocatedHeight);
 signals:
     // common signal used alongside all other property change signals. allows the Facade class to work properly
     // (for connection to QQmlPropertyMap's updateValue slot)
@@ -120,4 +177,12 @@ signals:
     void oscOutputPortChanged(int oscOutputPort);
     void oscOutputAddressHostChanged(QString oscOutputAddressHost);
     void oscOutputAddressTargetChanged(QString oscOutputAddressTarget);
+
+    void latticeWidthChanged(int latticeWidth);
+    void latticeHeightChanged(int latticeHeight);
+
+    // tells the GeneratorLatticeRenderer that the previously created writeLatticeData request is completed, and that a new one can be started at the end of the current render frame.
+    //
+    // the connections from Generator's writeLatticeDataCompleted signal to GeneratorLatticeRenderer's writeLatticeDataCompleted slot is created from GeneratorLatticeRenderer
+    void writeLatticeDataCompleted();
 };

@@ -20,6 +20,21 @@ ApplicationWindow {
     height: 720
     title: qsTr("autonomX")
 
+    // code for adding / removing generators for testing
+    /*
+    Component.onCompleted: {
+        console.log("QML: creating generator")
+        appModel.createGenerator()
+    }
+    Timer {
+        running: true; repeat: false; interval: 3000
+        onTriggered: {
+            console.log("QML: deleting generator")
+            appModel.deleteGenerator(0)
+        }
+    }
+    */
+
     // TODO: move into appropriate Rack component
     function handleMessageReceived(oscPath, oscArguments) {
         console.log("QML-Received OSC: " + oscPath + " " + oscArguments);

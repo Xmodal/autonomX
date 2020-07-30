@@ -51,6 +51,14 @@ public:
     // this simply deletes then creates the connections. This is called by AppModel whenever the list changes.
     void relinkAliasConnections();
 
+    // these two functions must be called before and after a generator is added at the end of the list so that the model is updated properly
+    void beginInsertAtEnd();
+    void endInsertAtEnd();
+
+    // these two functions must be called before and after a generator is deleted at the end of the list so that the model is updated properly
+    void beginRemoveAtID(int id);
+    void endRemoveAtID();
+
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;

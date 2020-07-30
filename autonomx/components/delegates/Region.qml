@@ -1,4 +1,5 @@
 import QtQuick 2.9
+import QtQuick.Controls 2.3
 
 import "qrc:/stylesheet"
 
@@ -36,6 +37,24 @@ Rectangle {
         } else {
             Drag.drop();
             snapToGrid();
+        }
+    }
+
+    // index label
+    Rectangle {
+        width: mainContent.ppc; height: mainContent.ppc
+        anchors.left: parent.right
+        anchors.top: parent.top
+        color: type == 0 ? Stylesheet.colors.inputs[0] : Stylesheet.colors.outputs[0]
+        visible: selected
+
+        Label {
+            text: index + 1
+            anchors.centerIn: parent
+            font {
+                weight: Font.DemiBold
+                pixelSize: 13
+            }
         }
     }
 

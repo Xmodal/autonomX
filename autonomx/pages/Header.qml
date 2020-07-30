@@ -13,6 +13,8 @@ Item {
     // background
     Rectangle {
         anchors.fill: parent
+
+        // this doesn't work. move into shader
         color: Stylesheet.colors.white
         gradient: Gradient {
             GradientStop { position: 0; color: Stylesheet.setAlpha(Stylesheet.colors.darkGrey, 0.9) }

@@ -348,6 +348,8 @@ void Generator::writeLatticeData(double** latticeData, int* allocatedWidth, int*
 
         // check if anything is allocated
         if(latticeData == nullptr) {
+            // nothing is allocated yet
+            latticeData = new double*;
             *latticeData = new double[latticeWidth * latticeHeight];
         } else {
             // check if the the right amount of memory is allocated
@@ -371,7 +373,7 @@ void Generator::writeLatticeData(double** latticeData, int* allocatedWidth, int*
         // we are done; release the mutex
         latticeDataMutex.unlock();
 
-        // we are done; tell the GeneratorLatticeRenderer
+        // we are done; tell the GeneratorLatticeCommunicator
         emit writeLatticeDataCompleted();
     }
 }

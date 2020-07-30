@@ -15,17 +15,15 @@
 
 #pragma once
 
-#include <QObject>
 #include <QQuickFramebufferObject>
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLFramebufferObject>
 #include <QQuickWindow>
 #include "Generator.h"
+#include "GeneratorLatticeCommunicator.h"
 
-// multiple inheritance is gross, but needed to allow connections to work
-class GeneratorLatticeRenderer : public QQuickFramebufferObject::Renderer, public QObject {
-    Q_OBJECT
+class GeneratorLatticeRenderer : public QQuickFramebufferObject::Renderer {
 public:
     GeneratorLatticeRenderer();
     ~GeneratorLatticeRenderer();
@@ -46,13 +44,14 @@ private:
     bool flagDebug = true;                  // enables debug
     int generatorID;                        // associated generator id
     Generator* generator;                   // associated generator
-    double* latticeData = nullptr;          // the lattice data used to draw the graphics
-    int* allocatedWidth = nullptr;          // the width of allocated flattened array in the memory block pointed by latticeData
-    int* allocatedHeight = nullptr;         // the height of allocated flattened array in the memory block pointed by latticeData
+    double** latticeData = nullptr;         // the lattice data used to draw the graphics
+    int* allocatedWidth = new int(0);       // the width of allocated flattened array in the memory block pointed by latticeData
+    int* allocatedHeight = new int(0);      // the height of allocated flattened array in the memory block pointed by latticeData
     QMetaObject::Connection connectionWriteLatticeData;         // connection from GeneratorLatticeRenderer's writeLatticeData signal to Generator's writeLatticeData slot
     QMetaObject::Connection connectionWriteLatticeDataCompleted;// connection from Generator's writeLatticeDataCompleted signal to GeneratorLatticeRenderer's writeLatticeDataCompleted slot
     bool writeLatticeDataCurrentDone = true;// indicates if the current writeLatticeData call is done
     bool writeLatticeDataFirstDone = false; // indicates if a the first writeLatticeData call is done, meaning there is valid data to use
+    GeneratorLatticeCommunicator* communicator;
 signals:
     void writeLatticeData(double* latticeData, int* allocatedWidth, int* allocatedHeight);
 public slots:

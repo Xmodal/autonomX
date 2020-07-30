@@ -59,7 +59,8 @@ public:
     virtual void computeOutput(double deltaTime) = 0;
 
     // this is the mutex used by writeLatticeData. GeneratorLatticeRenderer will lock it while using *latticeData in its render method.
-    QMutex &getLatticeMutex();
+    void lockLatticeDataMutex();
+    void unlockLatticeDataMutex();
 
     // methods to read properties
     QString getName();
@@ -129,8 +130,8 @@ private:
     QString oscOutputAddressHost = "127.0.0.1"; // generator osc output address for host, assigned by user (this is an ip)
     QString oscOutputAddressTarget = "/output"; // generator osc output address for target, assigned by user (this is an osc destination)
 
-    int latticeWidth;                           // lattice width
-    int latticeHeight;                          // lattice height
+    int latticeWidth = 20;                      // lattice width
+    int latticeHeight = 20;                     // lattice height
 
     bool flagDebug = false;                     // enables debug
 
@@ -146,20 +147,20 @@ public slots:
     // preAllocatedSize represents the amount of allocated memory at *latticeData before the function call
     // postAllocatedSize represents the amouunt of allocated memory at *latticeData after the function call
     //
-    // why do allocatedWidth and allocatedHeight exist? because the size of the lattice may change, meaning that *latticeData mismatches the lattice's actual size.
+    // why do allocatedWidth and allocatedHeight exist? because the size of the lattice may change, meaning that **latticeData mismatches the lattice's actual size.
     // in that case, this function will delete *latticeData, and reallocate *latticeData to a new memory block that matches the true size.
     // both are passed by pointer so that GeneratorLatticeRenderer can keep track of the new size after this method is executed.
     // why not just use a getter before the method call? because we want this to be atomic; things could get changed between the getter call and the method call.
     //
     // the first call to this method is done with a null pointer. the method then allocates an initial block of memory.
     //
-    // this method must never be executed while GeneratorLatticeRenderer's render method is using *latticeData. it uses latticeDataMutex to prevent this.
+    // this method must never be executed while GeneratorLatticeRenderer's render method is using **latticeData. it uses latticeDataMutex to prevent this.
     // if GeneratorLatticeRenderer's render has already locked latticeDataMutex, we schedule the method call to happen at a later time so that the ComputeEngine does not lock
     // we need a mechanism to prevent duplicate requests that would happen if the method is unable to complete before the next render frame however...
     // this is done by emitting writeLatticeDataCompleted once done, and only allowing GeneratorLatticeRenderer to emit writeLatticeData signals if the previous one did complete.
     //
     // the connection from GeneratorLatticeRenderer's writeLatticeData signal to Generator's writeLatticeData slot is created from GeneratorLatticeRenderer
-    void writeLatticeData(double* latticeData, int* allocatedWidth, int* allocatedHeight);
+    void writeLatticeData(double** latticeData, int* allocatedWidth, int* allocatedHeight);
 signals:
     // common signal used alongside all other property change signals. allows the Facade class to work properly
     // (for connection to QQmlPropertyMap's updateValue slot)

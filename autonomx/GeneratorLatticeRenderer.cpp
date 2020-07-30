@@ -33,11 +33,16 @@ GeneratorLatticeRenderer::GeneratorLatticeRenderer() : QQuickFramebufferObject::
     if(flagDebug && log != "") {
         qDebug() << "constructor (GeneratorLatticeRenderer): Error in shader compilation or linking: " << log;
     }
+
+    // init communicator
+    communicator = new GeneratorLatticeCommunicator();
 }
 
 GeneratorLatticeRenderer::~GeneratorLatticeRenderer() {
     // delete shader program
     delete program;
+    // delete communicator
+    delete communicator;
     // delete supersampling framebuffer if it exists
     if(flagSuper) {
         if(framebufferSuper != nullptr) {
@@ -59,10 +64,34 @@ void GeneratorLatticeRenderer::render() {
         return;
     }
 
+    if(synchronized) {
+        // get the current framebuffer, which will have changed if the window was resized
+        framebuffer = this->framebufferObject();
+        if(flagSuper) {
+            // check to see if the framebuffer size changed
+            QSize sizeNew = framebuffer->size();
+            if(sizeNew != size) {
+                // the size changed, we need to update the supersampling framebuffer
+                size = sizeNew;
+                if(flagDebug) {
+                    qDebug() << "render (GeneratorLatticeRenderer): synchronization caused framebuffer size change, updating supersampling framebuffer";
+                }
+                if(framebufferSuper != nullptr) {
+                    // deallocate old supersampling framebuffer if it exists
+                    delete framebufferSuper;
+                }
+                // create a new supersampling framebuffer
+                sizeSuper = size * factorSuper;
+                framebufferSuper = new QOpenGLFramebufferObject(sizeSuper);
+            }
+        }
+    }
+
     // only render if lattice data is ready
-    if(writeLatticeDataFirstDone) {
+    //if(writeLatticeDataFirstDone) {
+    if(communicator->isFirstRequestDone()) {
         // lock the lattice data mutex since we want to use that data
-        generator->getLatticeMutex().lock();
+        generator->lockLatticeDataMutex();
 
         // Play nice with the RHI. Not strictly needed when the scenegraph uses
         // OpenGL directly.
@@ -104,13 +133,18 @@ void GeneratorLatticeRenderer::render() {
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
         // we can now release the lattice data mutex
-        generator->getLatticeMutex().unlock();
+        generator->unlockLatticeDataMutex();
 
         // we request an update of the lattice data (as soon as possible!) if the last request finished before this frame
+        if(communicator->isCurrentRequestDone()) {
+            communicator->requestLatticeData(latticeData, allocatedWidth, allocatedHeight);
+        }
+        /*
         if(writeLatticeDataCurrentDone) {
             writeLatticeDataCurrentDone = false;
             emit writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
         }
+        */
 
         // TODO: what does this do
         program->disableAttributeArray(0);
@@ -157,7 +191,12 @@ void GeneratorLatticeRenderer::synchronize(QQuickFramebufferObject *item) {
         // link generator
         generatorID = ((GeneratorLattice*) item)->getGeneratorID();
         generator = AppModel::getInstance().getGenerator(generatorID);
+        communicator->updateGenerator(generator);
 
+        // request lattice data
+        communicator->requestLatticeData(latticeData, allocatedWidth, allocatedHeight);
+
+        /*
         // connect new generator
         connectionWriteLatticeData = QObject::connect(this, &GeneratorLatticeRenderer::writeLatticeData, generator, &Generator::writeLatticeData);
         connectionWriteLatticeDataCompleted = QObject::connect(generator, &Generator::writeLatticeDataCompleted, this, &GeneratorLatticeRenderer::writeLatticeDataCompleted);
@@ -165,6 +204,7 @@ void GeneratorLatticeRenderer::synchronize(QQuickFramebufferObject *item) {
         // request the lattice data
         writeLatticeDataCurrentDone = false;
         emit writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
+        */
     } else {
         // check to see if the linked generator changed
         int generatorIDNew = ((GeneratorLattice*) item)->getGeneratorID();
@@ -172,7 +212,12 @@ void GeneratorLatticeRenderer::synchronize(QQuickFramebufferObject *item) {
             // link generator
             generatorID = generatorIDNew;
             generator = AppModel::getInstance().getGenerator(generatorID);
+            communicator->updateGenerator(generator);
 
+            // request lattice data
+            communicator->requestLatticeData(latticeData, allocatedWidth, allocatedHeight);
+
+            /*
             // disconnect old generator
             QObject::disconnect(connectionWriteLatticeData);
             QObject::disconnect(connectionWriteLatticeDataCompleted);
@@ -184,27 +229,7 @@ void GeneratorLatticeRenderer::synchronize(QQuickFramebufferObject *item) {
             // request the lattice data
             writeLatticeDataCurrentDone = false;
             emit writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
-        }
-    }
-
-    // get the current framebuffer, which will have changed if the window was resized
-    framebuffer = this->framebufferObject();
-    if(flagSuper) {
-        // check to see if the framebuffer size changed
-        QSize sizeNew = framebuffer->size();
-        if(sizeNew != size) {
-            // the size changed, we need to update the supersampling framebuffer
-            size = sizeNew;
-            if(flagDebug) {
-                qDebug() << "render (GeneratorLatticeRenderer): synchronization caused framebuffer size change, updating supersampling framebuffer";
-            }
-            if(framebufferSuper != nullptr) {
-                // deallocate old supersampling framebuffer if it exists
-                delete framebufferSuper;
-            }
-            // create a new supersampling framebuffer
-            sizeSuper = size * factorSuper;
-            framebufferSuper = new QOpenGLFramebufferObject(sizeSuper);
+            */
         }
     }
 

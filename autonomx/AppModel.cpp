@@ -144,9 +144,15 @@ void AppModel::createGenerator() {
     // this also takes care of creating the appropriate osc sender and receiver
     emit computeEngine->addGenerator(generator);
 
+    // tell the generatorModel we are about to insert a generator at the end of the list
+    generatorModel->beginInsertAtEnd();
+
     // create a GeneratorFacade and add it to the list
     QSharedPointer<GeneratorFacade> generatorFacade = QSharedPointer<GeneratorFacade>(new GeneratorFacade(generator.data()));
     generatorFacades->append(generatorFacade);
+
+    // tell the generatorModel we are done inserting a generator at the end of the list
+    generatorModel->endInsertAtEnd();
 
     // once the list is changed, update the GeneratorModel connections
     generatorModel->relinkAliasConnections();
@@ -161,6 +167,9 @@ void AppModel::deleteGenerator(int id) {
     // this also takes care of deleting the appropriate osc sender and receiver
     emit computeEngine->deleteGenerator(id);
 
+    // tell the generatorModel we are about to delete a generator with a specific ID
+    generatorModel->beginRemoveAtID(id);
+
     // delete the GeneratorFacade from the list
     for(QList<QSharedPointer<GeneratorFacade>>::iterator it = generatorFacades->begin(); it != generatorFacades->end(); it++) {
         if(id == (*it)->value("id").toInt()) {
@@ -169,6 +178,9 @@ void AppModel::deleteGenerator(int id) {
             break;
         }
     }
+
+    // tell the generatorModel we are done deleting a generator with a specific ID
+    generatorModel->endRemoveAtID();
 
     // once the list is changed, update the GeneratorModel connections
     generatorModel->relinkAliasConnections();

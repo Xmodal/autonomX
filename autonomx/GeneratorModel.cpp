@@ -109,6 +109,43 @@ void GeneratorModel::relinkAliasConnections() {
     createAliasConnections();
 }
 
+void GeneratorModel::beginInsertAtEnd() {
+    if(flagDebug) {
+        qDebug() << "beginInsertAtEnd (GeneratorModel)";
+    }
+    int indexAdded = generatorFacades->size();
+    beginInsertRows(QModelIndex(), indexAdded, indexAdded);
+}
+
+void GeneratorModel::endInsertAtEnd() {
+    if(flagDebug) {
+        qDebug() << "endInsertAtEnd (GeneratorModel)";
+    }
+    endInsertRows();
+}
+
+void GeneratorModel::beginRemoveAtID(int id) {
+    if(flagDebug) {
+        qDebug() << "beginRemoveAtID (GeneratorModel): " << id;
+    }
+    int indexRemoved = 0;
+    for(int i = 0; i < generatorFacades->count(); i++) {
+        GeneratorFacade* generatorFacade = generatorFacades->at(i).data();
+        if(id == generatorFacade->value("id").toInt()) {
+            indexRemoved = i;
+            break;
+        }
+    }
+    beginRemoveRows(QModelIndex(), indexRemoved, indexRemoved);
+}
+
+void GeneratorModel::endRemoveAtID() {
+    if(flagDebug) {
+        qDebug() << "endRemoveAtID (GeneratorModel)";
+    }
+    endRemoveRows();
+}
+
 int GeneratorModel::rowCount(const QModelIndex& parent) const {
     return generatorFacades->size();
 }

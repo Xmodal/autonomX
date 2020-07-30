@@ -336,7 +336,7 @@ void Generator::updateValue(const QString &key, const QVariant &value) {
     setProperty(keyBuffer, value);
 }
 
-void Generator::writeLatticeData(double* latticeData, int* allocatedWidth, int* allocatedHeight) {
+void Generator::writeLatticeData(double** latticeData, int* allocatedWidth, int* allocatedHeight) {
     // try to lock the lattice data mutex
     bool lockSuccessful = latticeDataMutex.tryLock();
 
@@ -346,13 +346,19 @@ void Generator::writeLatticeData(double* latticeData, int* allocatedWidth, int* 
     } else {
         // succeded at getting lock
 
-        // check if the the right amount of memory is allocated
-        if((*allocatedWidth) * (*allocatedHeight) == latticeWidth * latticeHeight) {
-            // the same amount of data is allocated, but the aspect ratio could be different
+        // check if anything is allocated
+        if(latticeData == nullptr) {
+            *latticeData = new double[latticeWidth * latticeHeight];
         } else {
-            // the amount of allocated memory mismatches the required amount, must reallocate
-            delete[] latticeData;
-            latticeData = new double[latticeWidth * latticeHeight];
+            // check if the the right amount of memory is allocated
+            if((*allocatedWidth) * (*allocatedHeight) == latticeWidth * latticeHeight) {
+                // the same amount of data is allocated, but the aspect ratio could be different
+            } else {
+                // the amount of allocated memory mismatches the required amount, must reallocate
+                delete[] *latticeData;
+                *latticeData = new double[latticeWidth * latticeHeight];
+            }
+
         }
 
         // update the allocated width and height variables in any case
@@ -360,7 +366,7 @@ void Generator::writeLatticeData(double* latticeData, int* allocatedWidth, int* 
         *allocatedHeight = latticeHeight;
 
         // we can now write to the lattice data. do it via the derived delegate
-        writeLatticeDataDelegate(latticeData);
+        writeLatticeDataDelegate(*latticeData);
 
         // we are done; release the mutex
         latticeDataMutex.unlock();
@@ -368,4 +374,12 @@ void Generator::writeLatticeData(double* latticeData, int* allocatedWidth, int* 
         // we are done; tell the GeneratorLatticeRenderer
         emit writeLatticeDataCompleted();
     }
+}
+
+void Generator::lockLatticeDataMutex() {
+    latticeDataMutex.lock();
+}
+
+void Generator::unlockLatticeDataMutex() {
+    latticeDataMutex.unlock();
 }

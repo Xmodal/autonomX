@@ -37,6 +37,7 @@ SOURCES += \
     Generator.cpp \
     GeneratorFacade.cpp \
     GeneratorLattice.cpp \
+    GeneratorLatticeCommunicator.cpp \
     GeneratorLatticeRenderer.cpp \
     GeneratorModel.cpp \
     Izhikevich.cpp \
@@ -74,6 +75,7 @@ HEADERS += \
     Generator.h \
     GeneratorFacade.h \
     GeneratorLattice.h \
+    GeneratorLatticeCommunicator.h \
     GeneratorLatticeRenderer.h \
     GeneratorModel.h \
     Izhikevich.h \

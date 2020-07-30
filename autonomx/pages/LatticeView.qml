@@ -25,7 +25,7 @@ ColumnLayout {
         // background
         Rectangle {
             anchors.fill: parent
-            color: genID < 0 ? Stylesheet.colors.white : Stylesheet.colors.generators[genID % Stylesheet.colors.generators.length]
+            color: genID < 0 ? Stylesheet.colors.white : Stylesheet.colors.outputs[genID % Stylesheet.colors.outputs.length]
         }
 
         // back arrow
@@ -101,6 +101,12 @@ ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
+            GeneratorLattice {
+                generatorID: 0
+                anchors.fill: parent
+            }
+
+            /*
             Rectangle {
                 anchors.fill: parent
                 color: Stylesheet.colors.black
@@ -141,11 +147,11 @@ ColumnLayout {
                 property real realHeight: mainContent.realHeight
 
                 // I/O
-                property color inputColor: Stylesheet.colors.input
+                property color inputColor: Stylesheet.colors.inputColor
                 property variant inputs: [
                     Qt.rect(2, 2, 4, 5)
                 ]
-                property color outputColor: Stylesheet.colors.output
+                property color outputColor: Stylesheet.colors.outputColor
                 property variant outputs: [
                     Qt.rect(10, 10, 2, 2)
                 ]
@@ -213,6 +219,7 @@ ColumnLayout {
                 }
                 opacity: 0.4
             }
+            */
         }
 
         // control zone

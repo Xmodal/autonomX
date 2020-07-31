@@ -141,7 +141,7 @@ public slots:
     // (for connection from QQmlPropertyMap's valueChanged signal)
     void updateValue(const QString &key, const QVariant &value);
 
-    // slot used by GeneratorLatticeRenderer to get the lattice data.
+    // slot used by GeneratorLatticeCommunicator to get the lattice data.
     //
     // latticeData is a pointer to a pointer which designates the block of memory data is written to.
     // preAllocatedSize represents the amount of allocated memory at *latticeData before the function call
@@ -159,7 +159,7 @@ public slots:
     // we need a mechanism to prevent duplicate requests that would happen if the method is unable to complete before the next render frame however...
     // this is done by emitting writeLatticeDataCompleted once done, and only allowing GeneratorLatticeRenderer to emit writeLatticeData signals if the previous one did complete.
     //
-    // the connection from GeneratorLatticeRenderer's writeLatticeData signal to Generator's writeLatticeData slot is created from GeneratorLatticeRenderer
+    // the connection from GeneratorLatticeCommunicator's requestLatticeData signal to Generator's writeLatticeData slot is created from GeneratorLatticeCommunicator
     void writeLatticeData(double** latticeData, int* allocatedWidth, int* allocatedHeight);
 signals:
     // common signal used alongside all other property change signals. allows the Facade class to work properly
@@ -182,8 +182,8 @@ signals:
     void latticeWidthChanged(int latticeWidth);
     void latticeHeightChanged(int latticeHeight);
 
-    // tells the GeneratorLatticeRenderer that the previously created writeLatticeData request is completed, and that a new one can be started at the end of the current render frame.
+    // tells the GeneratorLatticeCommunicator that the previously created writeLatticeData request is completed, and that a new one can be started at the end of the current render frame.
     //
-    // the connections from Generator's writeLatticeDataCompleted signal to GeneratorLatticeRenderer's writeLatticeDataCompleted slot is created from GeneratorLatticeRenderer
+    // the connections from Generator's writeLatticeDataCompleted signal to GeneratorLatticeCommunicator's requestLatticeDataCompleted slot is created from GeneratorLatticeCommunicator
     void writeLatticeDataCompleted();
 };

@@ -53,7 +53,7 @@ GeneratorLatticeRenderer::~GeneratorLatticeRenderer() {
 
 void GeneratorLatticeRenderer::render() {
     if(flagDebug) {
-        qDebug() << "render (GeneratorLatticeRenderer)";
+        qDebug() << "render (GeneratorLatticeRenderer)\tid = " << QThread::currentThreadId();
     }
 
     // exit loop if not visible
@@ -88,7 +88,6 @@ void GeneratorLatticeRenderer::render() {
     }
 
     // only render if lattice data is ready
-    //if(writeLatticeDataFirstDone) {
     if(communicator->isFirstRequestDone()) {
         // lock the lattice data mutex since we want to use that data
         generator->lockLatticeDataMutex();
@@ -139,12 +138,6 @@ void GeneratorLatticeRenderer::render() {
         if(communicator->isCurrentRequestDone()) {
             communicator->requestLatticeData(latticeData, allocatedWidth, allocatedHeight);
         }
-        /*
-        if(writeLatticeDataCurrentDone) {
-            writeLatticeDataCurrentDone = false;
-            emit writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
-        }
-        */
 
         // TODO: what does this do
         program->disableAttributeArray(0);
@@ -195,16 +188,6 @@ void GeneratorLatticeRenderer::synchronize(QQuickFramebufferObject *item) {
 
         // request lattice data
         communicator->requestLatticeData(latticeData, allocatedWidth, allocatedHeight);
-
-        /*
-        // connect new generator
-        connectionWriteLatticeData = QObject::connect(this, &GeneratorLatticeRenderer::writeLatticeData, generator, &Generator::writeLatticeData);
-        connectionWriteLatticeDataCompleted = QObject::connect(generator, &Generator::writeLatticeDataCompleted, this, &GeneratorLatticeRenderer::writeLatticeDataCompleted);
-
-        // request the lattice data
-        writeLatticeDataCurrentDone = false;
-        emit writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
-        */
     } else {
         // check to see if the linked generator changed
         int generatorIDNew = ((GeneratorLattice*) item)->getGeneratorID();
@@ -216,20 +199,6 @@ void GeneratorLatticeRenderer::synchronize(QQuickFramebufferObject *item) {
 
             // request lattice data
             communicator->requestLatticeData(latticeData, allocatedWidth, allocatedHeight);
-
-            /*
-            // disconnect old generator
-            QObject::disconnect(connectionWriteLatticeData);
-            QObject::disconnect(connectionWriteLatticeDataCompleted);
-
-            // connect new generator
-            connectionWriteLatticeData = QObject::connect(this, &GeneratorLatticeRenderer::writeLatticeData, generator, &Generator::writeLatticeData);
-            connectionWriteLatticeDataCompleted = QObject::connect(generator, &Generator::writeLatticeDataCompleted, this, &GeneratorLatticeRenderer::writeLatticeDataCompleted);
-
-            // request the lattice data
-            writeLatticeDataCurrentDone = false;
-            emit writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
-            */
         }
     }
 
@@ -238,9 +207,4 @@ void GeneratorLatticeRenderer::synchronize(QQuickFramebufferObject *item) {
     if(visible) {
         update();
     }
-}
-
-void GeneratorLatticeRenderer::writeLatticeDataCompleted() {
-    writeLatticeDataCurrentDone = false;
-    writeLatticeDataFirstDone = true;
 }

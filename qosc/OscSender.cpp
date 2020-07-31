@@ -25,6 +25,20 @@ OscSender::OscSender(const QString& hostAddress, quint16 port, QObject *parent) 
     m_udpSocket->connectToHost(QHostAddress(m_hostAddress) , m_port);
 }
 
+OscSender::~OscSender()
+{
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "destructor (OscSender):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+    }
+
+    m_udpSocket->close();
+    delete m_udpSocket;
+}
+
 void OscSender::setPort(quint16 port)
 {
     m_port = port;

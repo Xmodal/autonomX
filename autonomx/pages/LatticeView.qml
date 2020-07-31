@@ -32,23 +32,23 @@ ColumnLayout {
         property int ppc: 20            // pixels per cell, ie. how wide a cell square is in pixels. this is scaled by the zoom factor
         property int cols: 20
         property int rows: 20
-        property int currRegionIndex: -1
+        property QtObject currRegion: QtObject {
+            property int type: -1
+            property int index: -1
+        }
 
         // manage selected region
-        function switchSelectedRegion(index) {
-            currRegionIndex = index;
-            regions.rectSelected = index >= 0;
+        function switchSelectedRegion(type, index) {
+            currRegion.type = type;
+            currRegion.index = index;
+            regions.rectSelected = currRegion.index >= 0;
+
+            matrix.getRect();
         }
 
-        // convert ListElement to QRect
-        function elementToRect(element) {
-            return Qt.rect(element.colX, element.colY, element.colW, element.colH);
-        }
-
-        // model
-        RegionModel {
-            id: regionModel
-        }
+        // models
+        InputModel { id: inputModel }
+        OutputModel { id: outputModel }
 
         // matrix zone
         Item {
@@ -68,8 +68,22 @@ ColumnLayout {
 
             // neuron grid
             ShaderEffect {
+                id: matrix
+
                 anchors.fill: parent
                 visible: !(genID < 0)
+
+                // convert ListElement to QRect
+                function getRect() {
+                    var element;
+
+                    // auto cancel if type is signed
+                    if (mainContent.currRegion.type === -1) return selected = Qt.rect(-1, -1, -1, -1);
+                    // set selected rect depending on type (whether input or output)
+                    if (mainContent.currRegion.type === 0) element = inputModel.get(mainContent.currRegion.index);
+                    else if (mainContent.currRegion.type === 1) element = outputModel.get(mainContent.currRegion.index);
+                    selected = Qt.rect(element.colX, element.colY, element.colW, element.colH);
+                }
 
                 // uniforms
                 property real cw: width
@@ -77,11 +91,16 @@ ColumnLayout {
                 property int ppc: mainContent.ppc
                 property int cols: mainContent.cols
                 property int rows: mainContent.rows
-                property rect selected: mainContent.currRegionIndex < 0 ? Qt.rect(-1, -1, -1, -1) : mainContent.elementToRect(regionModel.get(mainContent.currRegionIndex))
+                property rect selected: Qt.rect(-1, -1, -1, -1)
                 property Image textureMap: Image { id: neuronGrid; source: "qrc:/assets/images/neurongrid_20x20.png" }
 
                 // fragment shader
                 fragmentShader: "qrc:/shaders/neuron_matrix.frag"
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: mainContent.switchSelectedRegion(-1, -1)
             }
 
             // I/O regions
@@ -96,14 +115,19 @@ ColumnLayout {
                 x: parent.width/2 - width/2
                 y: parent.height/2 - height/2
 
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: mainContent.switchSelectedRegion(-1)
-                }
-
+                // inputs
                 Repeater {
-                    model: regionModel
-                    Region {}
+                    model: inputModel
+                    Region {
+                        type: 0
+                    }
+                }
+                // outputs
+                Repeater {
+                    model: outputModel
+                    Region {
+                        type: 1
+                    }
                 }
             }
 

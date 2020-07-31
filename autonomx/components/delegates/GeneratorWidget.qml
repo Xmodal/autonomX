@@ -11,7 +11,7 @@ Button {
     // state props
     property bool selected: false
 
-    width: parent.width
+    width: parent ? parent.width : 0
     height: 55
     layer.enabled: false
 
@@ -38,9 +38,8 @@ Button {
     HistoryGraph {
         id: historyGraph
 
-        newValue: model ? model.outputMonitor : 0
-
-        strokeColor: Stylesheet.colors.generators[model.index % Stylesheet.colors.generators.length]
+        newValue: model.index >= 0 ? model.outputMonitor : 0
+        strokeColor: model.index >= 0 ? Stylesheet.colors.generators[model.index % Stylesheet.colors.generators.length] : "#000"
     }
 
     // text content
@@ -79,8 +78,8 @@ Button {
         OutputIndicator {
             id: outputIndicator
 
-            luminosity: model.outputMonitor
-            lightColor: Stylesheet.colors.generators[model.index % Stylesheet.colors.generators.length]
+            luminosity: model.index >= 0 ? model.outputMonitor : 0
+            lightColor: model.index >= 0 ? Stylesheet.colors.generators[model.index % Stylesheet.colors.generators.length] : "#000"
 
             Layout.rightMargin: 10
             Layout.alignment: Qt.AlignRight

@@ -4,6 +4,7 @@
         <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
         <file>assets/fonts/Overpass-Regular.ttf</file>
+        <file>assets/fonts/Overpass-SemiBold.ttf</file>
         <file>assets/fonts/Questrial-Regular.ttf</file>
         <file>assets/images/down-caret.svg</file>
         <file>assets/images/icon-collapse.svg</file>
@@ -28,12 +29,14 @@
         <file>components/racks/ParamsRack.qml</file>
         <file>components/racks/Rack.qml</file>
         <file>components/racks/RackView.qml</file>
-        <file>models/RegionModel.qml</file>
+        <file>models/InputModel.qml</file>
+        <file>models/OutputModel.qml</file>
         <file>pages/GeneratorView.qml</file>
         <file>pages/Header.qml</file>
         <file>pages/LatticeView.qml</file>
         <file>shaders/light_cue.frag</file>
         <file>shaders/neuron_matrix.frag</file>
+        <file>shaders/rack_bg.frag</file>
         <file>stylesheet/qmldir</file>
         <file>stylesheet/Stylesheet.qml</file>
         <file>shaders/lattice.frag</file>

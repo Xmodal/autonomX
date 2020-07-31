@@ -30,6 +30,7 @@ public:
      * @param parent
      */
     explicit OscSender(const QString& hostAddress, quint16 port, QObject* parent = nullptr);
+    ~OscSender();
     void setPort(quint16 port);
     void setHostAddress(const QString& hostAddress);
 

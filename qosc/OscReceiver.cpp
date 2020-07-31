@@ -22,6 +22,20 @@ OscReceiver::OscReceiver(quint16 port, QObject* parent) :
     connect(m_udpSocket, &QUdpSocket::readyRead, this, &OscReceiver::readyReadCb);
 }
 
+OscReceiver::~OscReceiver()
+{
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "destructor (OscReceiver):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+    }
+
+    m_udpSocket->close();
+    delete m_udpSocket;
+}
+
 void OscReceiver::setPort(quint16 port)
 {
     m_port = port;

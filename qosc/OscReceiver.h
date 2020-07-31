@@ -25,6 +25,7 @@ public:
      * @param receivePort Port number to listen to.
      */
     explicit OscReceiver(quint16 port, QObject *parent = nullptr);
+    ~OscReceiver();
     void setPort(quint16 port);
 
 signals:

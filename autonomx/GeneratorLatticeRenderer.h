@@ -41,19 +41,11 @@ private:
     bool synchronized = false;              // indicates if there was a call to synchronize since the last render call
     bool synchronizedFirstDone = false;     // indicates if the object was ever synchronized
     bool flagSuper = true;                  // enables supersampling
-    bool flagDebug = true;                  // enables debug
+    bool flagDebug = false;                 // enables debug
     int generatorID;                        // associated generator id
     Generator* generator;                   // associated generator
+    GeneratorLatticeCommunicator* communicator;
     double** latticeData = nullptr;         // the lattice data used to draw the graphics
     int* allocatedWidth = new int(0);       // the width of allocated flattened array in the memory block pointed by latticeData
     int* allocatedHeight = new int(0);      // the height of allocated flattened array in the memory block pointed by latticeData
-    QMetaObject::Connection connectionWriteLatticeData;         // connection from GeneratorLatticeRenderer's writeLatticeData signal to Generator's writeLatticeData slot
-    QMetaObject::Connection connectionWriteLatticeDataCompleted;// connection from Generator's writeLatticeDataCompleted signal to GeneratorLatticeRenderer's writeLatticeDataCompleted slot
-    bool writeLatticeDataCurrentDone = true;// indicates if the current writeLatticeData call is done
-    bool writeLatticeDataFirstDone = false; // indicates if a the first writeLatticeData call is done, meaning there is valid data to use
-    GeneratorLatticeCommunicator* communicator;
-signals:
-    void writeLatticeData(double* latticeData, int* allocatedWidth, int* allocatedHeight);
-public slots:
-    void writeLatticeDataCompleted();       // called once writeLatticeData is done, allows a new writeLatticeData signal to be emitted at the end of the next render cycle
 };

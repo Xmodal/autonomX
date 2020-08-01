@@ -13,25 +13,43 @@ Rectangle {
     property real intensity: 0.0            // r => [0.0, 1.0]
     property int resizeHitbox: 5            // zone padding
 
-    // snap to grid on drop
-    function snapToGrid() {
-        colX = Math.min(Math.max(Math.round(x / mainContent.ppc), 0), 20 - colW);
-        colY = Math.min(Math.max(Math.round(y / mainContent.ppc), 0), 20 - colH);
-        // TODO: find better way to reevaluate property binding for coords
-        x = regions.width * colX / 20.0;
-        y = regions.height * colY / 20.0;
-
-        // reevaluate matrix mask
-        matrix.getRect();
-    }
-
     antialiasing: true
 
     // position
-    width: regions.width * colW / 20.0
-    height: regions.height * colH / 20.0
-    x: regions.width * colX / 20.0
-    y: regions.height * colY / 20.0
+    width: regions.width * colW / mainContent.cols
+    height: regions.height * colH / mainContent.rows
+    x: regions.width * colX / mainContent.cols
+    y: regions.height * colY / mainContent.rows
+
+    // break x/y property bindings
+    Component.onCompleted: {
+        x = x;
+        y = y;
+    }
+
+    // manage auto mask follow
+    onXChanged: {
+        var newColX = Math.min(Math.max(Math.round(x / mainContent.ppc), 0), mainContent.cols - colW);
+
+        if (newColX !== colX) {
+            colX = newColX;
+            matrix.getRect();
+        }
+    }
+    onYChanged: {
+        var newColY = Math.min(Math.max(Math.round(y / mainContent.ppc), 0), mainContent.rows - colH);
+
+        if (newColY !== colY) {
+            colY = newColY;
+            matrix.getRect();
+        }
+    }
+
+    // snap to grid on drop
+    function snapToGrid() {
+        x = regions.width * colX / mainContent.cols;
+        y = regions.height * colY / mainContent.rows;
+    }
 
     // external region boundary
     color: "transparent"
@@ -80,12 +98,13 @@ Rectangle {
         }
     }
 
-    // drag area
+    // drag/select area
     MouseArea {
         id: dragArea
 
         anchors.fill: parent
         onClicked: mainContent.switchSelectedRegion(selected ? -1 : type, selected ? -1 : index)
+        propagateComposedEvents: true
         hoverEnabled: true
         drag.target: region
         cursorShape: Qt.SizeAllCursor

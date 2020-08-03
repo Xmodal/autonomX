@@ -33,7 +33,6 @@ public:
         static AppModel instance;
         return instance;
     }
-    void start();
     QThread*            getComputeThread() const;           // needed to exit the thread at app quit. we can only connect this from the main.
     QThread*            getOscThread() const;               // needed to exit the thread at app quit. we can only connect this from the main.
     ComputeEngine*      getComputeEngine() const;           // needed for connections
@@ -70,6 +69,17 @@ private:
     QSharedPointer<QThread> oscThread;
 
     // utility variables
-    bool started = false;
     bool flagDebug = false;
+signals:
+    // connects to ComputeEngine::addGenerator for safe addition of generators to data structures
+    void addGenerator(QSharedPointer<Generator> generator);
+
+    // connects to ComputeEngine::removeGenerator for safe removal of generators from data structures
+    void removeGenerator(QSharedPointer<Generator> generator);
+
+    // connects to OscEngine::startGeneratorOsc for safe start of osc processing
+    void startGeneratorOsc(QSharedPointer<Generator> generator);
+
+    // connects to OscEngine::stopGeneratorOsc for safe stop of osc processing
+    void stopGeneratorOsc(QSharedPointer<Generator> generator);
 };

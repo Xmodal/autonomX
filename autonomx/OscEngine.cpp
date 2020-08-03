@@ -54,17 +54,91 @@ void OscEngine::connectReceiver(int id) {
     QSharedPointer<OscReceiver> receiver = oscReceivers.value(id);
 
     QObject::connect(receiver.data(), &OscReceiver::messageReceived, this, [this, id](const QString& oscAddress, const QVariantList& message){
-        recieveOscDataHandler(id, oscAddress, message);
+        receiveOscDataHandler(id, oscAddress, message);
     });
 }
 
-void OscEngine::recieveOscDataHandler(int id, const QString& oscAddress, const QVariantList& message) {
+void OscEngine::startGeneratorOsc(QSharedPointer<Generator> generator) {
+    // get parameter values
+    int id = generator->getID();
+
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "recieveOscDataHandler (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\taddress = " << oscAddress << "\tmessage = " << message;
+        qDebug() << "startGeneratorOsc (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id;
+    }
+
+    QString addressReceiver = generator->getOscInputAddress();
+    QString addressSenderHost = generator->getOscOutputAddressHost();
+    QString addressSenderTarget = generator->getOscOutputAddressTarget();
+    int portReceiver = generator->getOscInputPort();
+    int portSender = generator->getOscOutputPort();
+
+    createOscReceiver(id, addressReceiver, portReceiver);
+    createOscSender(id, addressSenderHost, addressSenderTarget, portSender);
+
+    // connect input / receiver changes
+    QObject::connect(generator.data(), &Generator::oscInputAddressChanged, this, [this, generator](QString oscInputAddress){
+        if(flagDebug) {
+            qDebug() << "oscInputAddressChanged (lambda)";
+        }
+        emit updateOscReceiverAddress(generator->getID(), oscInputAddress);
+    });
+
+    QObject::connect(generator.data(), &Generator::oscInputPortChanged, this, [this, generator](int oscInputPort){
+        if(flagDebug) {
+            qDebug() << "oscInputPortChanged (lambda)";
+        }
+        emit updateOscReceiverPort(generator->getID(), oscInputPort);
+    });
+
+    // connect output / sender changes
+    QObject::connect(generator.data(), &Generator::oscOutputAddressHostChanged, this, [this, generator](QString oscOutputAddressHost){
+        if(flagDebug) {
+            qDebug() << "oscOutputAddressHostChanged (lambda)";
+        }
+        emit updateOscSenderAddressHost(generator->getID(), oscOutputAddressHost);
+    });
+
+    QObject::connect(generator.data(), &Generator::oscOutputAddressTargetChanged, this, [this, generator](QString oscOutputAddressTarget){
+        if(flagDebug) {
+            qDebug() << "oscOutputAddressTargetChanged (lambda)";
+        }
+        emit updateOscSenderAddressTarget(generator->getID(), oscOutputAddressTarget);
+    });
+
+    QObject::connect(generator.data(), &Generator::oscOutputPortChanged, this, [this, generator](int oscOutputPort){
+        if(flagDebug) {
+            qDebug() << "oscOutputAddressTargetChanged (lambda)";
+        }
+        emit updateOscSenderPort(generator->getID(), oscOutputPort);
+    });
+}
+
+void OscEngine::stopGeneratorOsc(QSharedPointer<Generator> generator) {
+    int id = generator->getID();
+
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "stopGeneratorOsc (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id;
+    }
+
+    deleteOscReceiver(id);
+    deleteOscSender(id);
+}
+
+void OscEngine::receiveOscDataHandler(int id, const QString& oscAddress, const QVariantList& message) {
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "receiveOscDataHandler (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\taddress = " << oscAddress << "\tmessage = " << message;
     }
 
     if(!oscReceivers.contains(id)) {
@@ -72,8 +146,8 @@ void OscEngine::recieveOscDataHandler(int id, const QString& oscAddress, const Q
     }
     QString oscAddressExpected = oscReceiverAddresses.value(id);
     if(oscAddress == oscAddressExpected) {
-        // message recieved with right address
-        emit recieveOscData(id, message);
+        // message received with right address
+        emit receiveOscData(id, message);
     }
 }
 
@@ -110,7 +184,7 @@ void OscEngine::createOscReceiver(int id, QString address, int port) {
     // update hash maps
     oscReceivers.insert(id, receiver);
     oscReceiverAddresses.insert(id, address);
-    // connect reciever
+    // connect receiver
     connectReceiver(id);
 }
 

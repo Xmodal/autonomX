@@ -44,21 +44,21 @@ public:
     ComputeEngine(QSharedPointer<QList<QSharedPointer<Generator>>> generatorsList, QSharedPointer<QHash<int, QSharedPointer<Generator>>> generatorsHashMap);
     ~ComputeEngine();
 signals:
+    // sends data through OscEngine::sendOscData
     void sendOscData(int id, QVariantList data);
-
-    void createOscReceiver(int id, QString address, int port);
-    void updateOscReceiver(int id, QString address, int port);
-    void deleteOscReceiver(int id);
-
-    void createOscSender(int id, QString addressHost, QString addressTarget, int port);
-    void updateOscSender(int id, QString addressHost, QString addressTarget, int port);
-    void deleteOscSender(int id);
 public slots:
+    // handles data received from OscEngine::receiveOscData
+    void receiveOscData(int id, QVariantList data);
+
+    // adds a generator to the list and hash map
+    void addGenerator(QSharedPointer<Generator> generator);
+
+    // removes a generator from the list and hash map
+    void removeGenerator(QSharedPointer<Generator> generator);
+
+    // starts the compute loop
     void start();
+
+    // does the computation and schedules itself for the next iteration
     void loop();
-
-    void recieveOscData(int id, QVariantList data);
-
-    void addGenerator(QSharedPointer<Generator>);
-    void deleteGenerator(int id);
 };

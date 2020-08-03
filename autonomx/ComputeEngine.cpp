@@ -181,6 +181,8 @@ void ComputeEngine::loop() {
 void ComputeEngine::addGenerator(QSharedPointer<Generator> generator) {
     // add to list
     generators->append(generator);
+    // add to hash map
+    generatorsHashMap->insert(generator->getID(), generator);
 
     int id = generator->getID();
     QString addressReceiver = generator->getOscInputAddress();
@@ -239,6 +241,11 @@ void ComputeEngine::deleteGenerator(int id) {
         if(id == (*it)->getID()) {
             // erase from the list
             generators->erase(it);
+            // erase from the hash map
+            bool success = generatorsHashMap->remove(id);
+            if(!success) {
+                throw std::runtime_error("generator does not exist");
+            }
             // delete osc sender and receiver
             emit deleteOscReceiver(id);
             emit deleteOscSender(id);

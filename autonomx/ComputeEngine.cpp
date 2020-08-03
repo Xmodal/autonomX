@@ -22,7 +22,7 @@
 #include <QThread>
 
 
-ComputeEngine::ComputeEngine(QSharedPointer<QList<QSharedPointer<Generator>>> generators) : randomUniform(0.0, 1.0) {
+ComputeEngine::ComputeEngine(QSharedPointer<QList<QSharedPointer<Generator>>> generatorsList, QSharedPointer<QHash<int, QSharedPointer<Generator>>> generatorsHashMap) : randomUniform(0.0, 1.0) {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
@@ -31,15 +31,8 @@ ComputeEngine::ComputeEngine(QSharedPointer<QList<QSharedPointer<Generator>>> ge
         qDebug() << "constructor (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    this->generators = generators;
-    generatorsHashMap = QSharedPointer<QHash<int, QSharedPointer<Generator>>>(new QHash<int, QSharedPointer<Generator>>);
-
-    for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
-        // get generator info
-        QSharedPointer<Generator> generator = *it;
-        // create hash map entry
-        generatorsHashMap->insert(generator->getID(), generator);
-    }
+    this->generatorsList = generatorsList;
+    this->generatorsHashMap = generatorsHashMap;
 }
 
 ComputeEngine::~ComputeEngine() {
@@ -51,7 +44,7 @@ ComputeEngine::~ComputeEngine() {
         qDebug() << "destructor (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
+    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
         // get generator info
         QSharedPointer<Generator> generator = *it;
         int id = generator->getID();
@@ -127,13 +120,13 @@ void ComputeEngine::loop() {
     elapsedTimer.start();
 
     // do the computation
-    for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
+    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
         // do the actual computation
         (*it)->computeOutput(1.0 / frequency);
     }
 
     // write to outputMonitor
-    for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
+    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
         double outputMonitor = 0;
         for(int i = 0; i < (*it)->getOutputSize(); i++) {
             outputMonitor += (*it)->readOutput(i);
@@ -149,7 +142,7 @@ void ComputeEngine::loop() {
     }
 
     // send output messages to osc engine
-    for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
+    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
         QList<QVariant> outputs;
         for(int i = 0; i < (*it)->getOutputSize(); i++) {
             double value = flagDummyOutputMonitor ? randomUniform(randomGenerator) : (*it)->readOutput(i);
@@ -180,7 +173,7 @@ void ComputeEngine::loop() {
 
 void ComputeEngine::addGenerator(QSharedPointer<Generator> generator) {
     // add to list
-    generators->append(generator);
+    generatorsList->append(generator);
     // add to hash map
     generatorsHashMap->insert(generator->getID(), generator);
 
@@ -237,10 +230,10 @@ void ComputeEngine::addGenerator(QSharedPointer<Generator> generator) {
 }
 
 void ComputeEngine::deleteGenerator(int id) {
-    for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
+    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
         if(id == (*it)->getID()) {
             // erase from the list
-            generators->erase(it);
+            generatorsList->erase(it);
             // erase from the hash map
             bool success = generatorsHashMap->remove(id);
             if(!success) {

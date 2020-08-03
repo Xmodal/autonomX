@@ -19,7 +19,7 @@
 #include <QVector>
 #include <QDebug>
 
-GeneratorModel::GeneratorModel(QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generatorFacades) : connections() {
+GeneratorModel::GeneratorModel(QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generatorFacadesList, QSharedPointer<QHash<int, QSharedPointer<GeneratorFacade>>> generatorFacadesHashMap) : connections() {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
             std::chrono::system_clock::now().time_since_epoch()
@@ -28,7 +28,8 @@ GeneratorModel::GeneratorModel(QSharedPointer<QList<QSharedPointer<GeneratorFaca
         qDebug() << "constructor (GeneratorModel)\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    this->generatorFacades = generatorFacades;
+    this->generatorFacadesList = generatorFacadesList;
+    this->generatorFacadesHashMap = generatorFacadesHashMap;
 
     createAliasConnections();
 }
@@ -76,8 +77,8 @@ void GeneratorModel::createAliasConnections() {
         qDebug() << "createAliasConnections (GeneratorModel)";
     }
 
-    for(int i = 0; i < generatorFacades->count(); i++) {
-        GeneratorFacade* generatorFacade = generatorFacades->at(i).data();
+    for(int i = 0; i < generatorFacadesList->count(); i++) {
+        GeneratorFacade* generatorFacade = generatorFacadesList->at(i).data();
 
         // create the connection
         QMetaObject::Connection connection = connect(generatorFacade, &GeneratorFacade::valueChangedFromAlias, this, [=](const QString &key, const QVariant &value) {
@@ -113,7 +114,7 @@ void GeneratorModel::beginInsertAtEnd() {
     if(flagDebug) {
         qDebug() << "beginInsertAtEnd (GeneratorModel)";
     }
-    int indexAdded = generatorFacades->size();
+    int indexAdded = generatorFacadesList->size();
     beginInsertRows(QModelIndex(), indexAdded, indexAdded);
 }
 
@@ -129,8 +130,8 @@ void GeneratorModel::beginRemoveAtID(int id) {
         qDebug() << "beginRemoveAtID (GeneratorModel): " << id;
     }
     int indexRemoved = 0;
-    for(int i = 0; i < generatorFacades->count(); i++) {
-        GeneratorFacade* generatorFacade = generatorFacades->at(i).data();
+    for(int i = 0; i < generatorFacadesList->count(); i++) {
+        GeneratorFacade* generatorFacade = generatorFacadesList->at(i).data();
         if(id == generatorFacade->value("id").toInt()) {
             indexRemoved = i;
             break;
@@ -147,7 +148,7 @@ void GeneratorModel::endRemoveAtID() {
 }
 
 int GeneratorModel::rowCount(const QModelIndex& parent) const {
-    return generatorFacades->size();
+    return generatorFacadesList->size();
 }
 
 int GeneratorModel::columnCount(const QModelIndex& parent) const {
@@ -159,10 +160,10 @@ QVariant GeneratorModel::data(const QModelIndex &index, int role) const {
         return QVariant();
 
     // check if the index is valid
-    if(index.column() == 0 && index.row() >= 0 && index.row() < generatorFacades->size()) {
+    if(index.column() == 0 && index.row() >= 0 && index.row() < generatorFacadesList->size()) {
         // check if the key exists in the hash map
         if(roleMap.contains(role))
-            return generatorFacades->at(index.row())->value(roleMap.value(role));
+            return generatorFacadesList->at(index.row())->value(roleMap.value(role));
     }
 
     return QVariant();
@@ -174,5 +175,5 @@ QHash<int, QByteArray> GeneratorModel::roleNames() const {
 
 GeneratorFacade * GeneratorModel::at(int index) {
     if (index < 0) return nullptr;
-    return generatorFacades->at(index).data();
+    return generatorFacadesList->at(index).data();
 }

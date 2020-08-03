@@ -51,8 +51,12 @@ private:
     void operator=(AppModel const&) = delete;   // prevent assignment
 
     // data (lists)
-    QSharedPointer<QList<QSharedPointer<Generator>>> generators;
-    QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generatorFacades;
+    QSharedPointer<QList<QSharedPointer<Generator>>> generatorsList;
+    QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generatorFacadesList;
+
+    // data (hash maps)
+    QSharedPointer<QHash<int, QSharedPointer<Generator>>> generatorsHashMap;
+    QSharedPointer<QHash<int, QSharedPointer<GeneratorFacade>>> generatorFacadesHashMap;
 
     // data (unique elements)
     QSharedPointer<GeneratorModel> generatorModel;

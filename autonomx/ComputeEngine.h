@@ -28,7 +28,7 @@
 class ComputeEngine : public QObject {
     Q_OBJECT
 private:
-    QSharedPointer<QList<QSharedPointer<Generator>>> generators;
+    QSharedPointer<QList<QSharedPointer<Generator>>> generatorsList;
     QSharedPointer<QHash<int, QSharedPointer<Generator>>> generatorsHashMap;
     QElapsedTimer elapsedTimer;
     double frequency = 60;
@@ -41,7 +41,7 @@ private:
     std::mt19937 randomGenerator;
 std::uniform_real_distribution<> randomUniform;
 public:
-    ComputeEngine(QSharedPointer<QList<QSharedPointer<Generator>>> generators);
+    ComputeEngine(QSharedPointer<QList<QSharedPointer<Generator>>> generatorsList, QSharedPointer<QHash<int, QSharedPointer<Generator>>> generatorsHashMap);
     ~ComputeEngine();
 signals:
     void sendOscData(int id, QVariantList data);

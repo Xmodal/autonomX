@@ -23,22 +23,30 @@ AppModel::AppModel() {
     }
 
     // init data (lists)
-    generators = QSharedPointer<QList<QSharedPointer<Generator>>>(new QList<QSharedPointer<Generator>>());
-    generatorFacades = QSharedPointer<QList<QSharedPointer<GeneratorFacade>>>(new QList<QSharedPointer<GeneratorFacade>>());
+    generatorsList = QSharedPointer<QList<QSharedPointer<Generator>>>(new QList<QSharedPointer<Generator>>());
+    generatorFacadesList = QSharedPointer<QList<QSharedPointer<GeneratorFacade>>>(new QList<QSharedPointer<GeneratorFacade>>());
+
+    if(flagDebug) {
+        qDebug() << "constructor (AppModel): initializing hash maps";
+    }
+
+    // init data (hash maps)
+    generatorsHashMap = QSharedPointer<QHash<int, QSharedPointer<Generator>>>(new QHash<int, QSharedPointer<Generator>>());
+    generatorFacadesHashMap = QSharedPointer<QHash<int, QSharedPointer<GeneratorFacade>>>(new QHash<int, QSharedPointer<GeneratorFacade>>());
 
     if(flagDebug) {
         qDebug() << "constructor (AppModel): initializing generatorModel";
     }
 
     // init data (unique elements)
-    generatorModel = QSharedPointer<GeneratorModel>(new GeneratorModel(generatorFacades));
+    generatorModel = QSharedPointer<GeneratorModel>(new GeneratorModel(generatorFacadesList, generatorFacadesHashMap));
 
     if(flagDebug) {
         qDebug() << "constructor (AppModel): initializing engines";
     }
 
     // init engines
-    computeEngine = QSharedPointer<ComputeEngine>(new ComputeEngine(generators));
+    computeEngine = QSharedPointer<ComputeEngine>(new ComputeEngine(generatorsList, generatorsHashMap));
     oscEngine = QSharedPointer<OscEngine>(new OscEngine());
 
     if(flagDebug) {
@@ -76,7 +84,7 @@ void AppModel::start() {
     computeEngine->moveToThread(computeThread.data());
 
     // we need to move all Generator instances to computeThread
-    for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
+    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
         (*it)->moveToThread(computeThread.data());
     }
 
@@ -116,7 +124,7 @@ void AppModel::createGenerator() {
     // create a temporary list of taken IDs
     // we do this instead of using generatorsList because we will want to sort it, and this is thread-unsafe since computeEngine might be iterating generators it at any time
     QList<int> takenIDs;
-    for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
+    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
         int takenID = (*it)->getID();
         takenIDs.append(takenID);
     }
@@ -149,7 +157,7 @@ void AppModel::createGenerator() {
 
     // create a GeneratorFacade and add it to the list
     QSharedPointer<GeneratorFacade> generatorFacade = QSharedPointer<GeneratorFacade>(new GeneratorFacade(generator.data()));
-    generatorFacades->append(generatorFacade);
+    generatorFacadesList->append(generatorFacade);
 
     // tell the generatorModel we are done inserting a generator at the end of the list
     generatorModel->endInsertAtEnd();
@@ -171,10 +179,10 @@ void AppModel::deleteGenerator(int id) {
     generatorModel->beginRemoveAtID(id);
 
     // delete the GeneratorFacade from the list
-    for(QList<QSharedPointer<GeneratorFacade>>::iterator it = generatorFacades->begin(); it != generatorFacades->end(); it++) {
+    for(QList<QSharedPointer<GeneratorFacade>>::iterator it = generatorFacadesList->begin(); it != generatorFacadesList->end(); it++) {
         if(id == (*it)->value("id").toInt()) {
             // erase from the list
-            generatorFacades->erase(it);
+            generatorFacadesList->erase(it);
             break;
         }
     }
@@ -188,14 +196,14 @@ void AppModel::deleteGenerator(int id) {
 
 bool AppModel::validateNewGeneratorName(QString name) {
     bool valid = true;
-    for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end() && valid; it++) {
+    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end() && valid; it++) {
         valid = name != it->data()->getName();
     }
     return valid;
 }
 
 Generator* AppModel::getGenerator(int id) const {
-    for(QList<QSharedPointer<Generator>>::iterator it = generators->begin(); it != generators->end(); it++) {
+    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
         if(id == (*it)->getID()) {
             return (*it).data();
         }
@@ -204,7 +212,7 @@ Generator* AppModel::getGenerator(int id) const {
 }
 
 GeneratorFacade* AppModel::getGeneratorFacade(int id) const {
-    for(QList<QSharedPointer<GeneratorFacade>>::iterator it = generatorFacades->begin(); it != generatorFacades->end(); it++) {
+    for(QList<QSharedPointer<GeneratorFacade>>::iterator it = generatorFacadesList->begin(); it != generatorFacadesList->end(); it++) {
         if(id == (*it)->value("id").toInt()) {
             return (*it).data();
         }

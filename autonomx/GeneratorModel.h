@@ -20,6 +20,7 @@
 #include <QModelIndex>
 #include <QSharedPointer>
 #include <QList>
+#include <QHash>
 #include <QMetaObject>
 #include <GeneratorFacade.h>
 
@@ -38,7 +39,7 @@ public:
         OutputMonitorHistorySizeValidRole
     };
 
-    GeneratorModel(QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generatorFacades);
+    GeneratorModel(QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generatorFacadesList, QSharedPointer<QHash<int, QSharedPointer<GeneratorFacade>>> generatorFacadesHashMap);
     ~GeneratorModel();
 
     // GeneratorModel is constructed from a GeneratorFacade list which is identical to the one found in AppModel. This is not a copy, this is the same memory location.
@@ -72,7 +73,8 @@ public slots:
 
 private:
     QList<QMetaObject::Connection> connections;
-    QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generatorFacades;
+    QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generatorFacadesList;
+    QSharedPointer<QHash<int, QSharedPointer<GeneratorFacade>>> generatorFacadesHashMap;
     bool flagDebug = false;
     const QHash<int, QByteArray> roleMap = {
         {NameRole, "name"},

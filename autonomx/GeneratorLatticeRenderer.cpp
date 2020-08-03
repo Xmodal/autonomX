@@ -43,6 +43,11 @@ GeneratorLatticeRenderer::~GeneratorLatticeRenderer() {
     delete program;
     // delete communicator
     delete communicator;
+    // delete lattice data if it exists
+    if(latticeData != nullptr) {
+        delete *latticeData;
+        delete latticeData;
+    }
     // delete supersampling framebuffer if it exists
     if(flagSuper) {
         if(framebufferSuper != nullptr) {

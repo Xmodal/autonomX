@@ -39,6 +39,11 @@
 bool flagDebug = false;
 
 int main(int argc, char *argv[]) {
+    // disable App Nap on macOS to prevent compute / osc thread from stalling
+    #ifdef Q_OS_MAC
+    disableAppNap();
+    #endif
+
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
@@ -56,17 +61,15 @@ int main(int argc, char *argv[]) {
     qDebug() << "GUI id = " << QThread::currentThreadId();
 
 
-    // make Generator virtual class recognizable to QML
-    // this line is apparently necessary for the QML engine to receive Generator pointers
-    // and retrieve a class instance's exposed properties by model index through said pointer
+    // expose custom types to QML and Qt's meta type system
     qmlRegisterUncreatableType<Generator>("ca.hexagram.xmodal.autonomx", 1, 0, "Generator", "Cannot instanciate Generator.");
     qmlRegisterUncreatableType<GeneratorFacade>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorFacade", "Cannot instanciate GeneratorFacade.");
     qmlRegisterUncreatableType<SpikingNet>("ca.hexagram.xmodal.autonomx", 1, 0, "SpikingNet", "Cannot instanciate SpikingNet.");
     qmlRegisterUncreatableType<NeuronType>("ca.hexagram.xmodal.autonomx", 1, 0, "NeuronType", "Cannot instanciate NeuronType.");
     qmlRegisterType<GeneratorLattice>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorLattice");
+    qRegisterMetaType<QSharedPointer<Generator>>();
 
     AppModel::getInstance().createGenerator();
-    AppModel::getInstance().start();
 
     QQmlApplicationEngine qmlEngine;
 
@@ -82,11 +85,6 @@ int main(int argc, char *argv[]) {
         AppModel::getInstance().getComputeThread()->exit();
         AppModel::getInstance().getOscThread()->exit();
     });
-
-    // disable App Nap on macOS to prevent compute / osc thread from stalling
-    #ifdef Q_OS_MAC
-    disableAppNap();
-    #endif
 
     // start QML application and return error code
     return app.exec();

@@ -61,23 +61,26 @@ AppModel::AppModel() {
         qDebug() << "constructor (AppModel): connecting engines";
     }
 
-    // connect compute engine setting changes to osc engine
-    connect(computeEngine.data(), &ComputeEngine::createOscReceiver, oscEngine.data(), &OscEngine::createOscReceiver, Qt::QueuedConnection);
-    connect(computeEngine.data(), &ComputeEngine::deleteOscReceiver, oscEngine.data(), &OscEngine::deleteOscReceiver, Qt::QueuedConnection);
-
-    connect(computeEngine.data(), &ComputeEngine::createOscSender, oscEngine.data(), &OscEngine::createOscSender, Qt::QueuedConnection);
-    connect(computeEngine.data(), &ComputeEngine::deleteOscSender, oscEngine.data(), &OscEngine::deleteOscSender, Qt::QueuedConnection);
-
     // connect compute engine data output to osc engine
     connect(computeEngine.data(), &ComputeEngine::sendOscData, oscEngine.data(), &OscEngine::sendOscData, Qt::QueuedConnection);
 
     // connect osc engine data reception to compute engine
-    connect(oscEngine.data(), &OscEngine::recieveOscData, computeEngine.data(), &ComputeEngine::recieveOscData, Qt::QueuedConnection);
-}
+    connect(oscEngine.data(), &OscEngine::receiveOscData, computeEngine.data(), &ComputeEngine::receiveOscData, Qt::QueuedConnection);
 
-void AppModel::start() {
+    // connect signal for adding a generator to the data structures
+    connect(this, &AppModel::addGenerator, computeEngine.data(), &ComputeEngine::addGenerator);
+
+    // connect signal for removing a generator from the data structures
+    connect(this, &AppModel::removeGenerator, computeEngine.data(), &ComputeEngine::removeGenerator);
+
+    // connect signal for starting osc processing
+    connect(this, &AppModel::startGeneratorOsc, oscEngine.data(), &OscEngine::startGeneratorOsc);
+
+    // connect signal for stopping osc processing
+    connect(this, &AppModel::stopGeneratorOsc, oscEngine.data(), &OscEngine::stopGeneratorOsc);
+
     if(flagDebug) {
-        qDebug() << "start (AppModel): starting computeThread";
+        qDebug() << "constructor (AppModel): starting computeThread";
     }
 
     computeThread->start(QThread::TimeCriticalPriority);
@@ -89,15 +92,13 @@ void AppModel::start() {
     }
 
     if(flagDebug) {
-        qDebug() << "start (AppModel): starting oscThread";
+        qDebug() << "constructor (AppModel): starting oscThread";
     }
 
     oscThread->start(QThread::TimeCriticalPriority);
     oscEngine->moveToThread(oscThread.data());
 
     computeEngine->start();
-
-    started = true;
 }
 
 QThread* AppModel::getComputeThread() const {
@@ -118,7 +119,7 @@ OscEngine* AppModel::getOscEngine() const {
 
 void AppModel::createGenerator() {
     if(flagDebug) {
-        qDebug() << "createGenerator (AppModel)";
+        qDebug() << "createGenerator (AppModel): finding a free id";
     }
     // find a free ID for the new generator
     // create a temporary list of taken IDs
@@ -139,28 +140,61 @@ void AppModel::createGenerator() {
         }
     }
 
+    if(flagDebug) {
+        qDebug() << "createGenerator (AppModel): creating a new generator";
+    }
+
     // create a new generator
     QSharedPointer<Generator> generator = QSharedPointer<Generator>(new SpikingNet(nextID));
 
-    // move the Generator to computeThread if it is started
-    if(started) {
-        generator->moveToThread(computeThread.data());
+    // move the Generator to computeThread
+    if(flagDebug) {
+        qDebug() << "createGenerator (AppModel): moving generator to computeThread";
+    }
+
+    generator->moveToThread(computeThread.data());
+
+    if(flagDebug) {
+        qDebug() << "createGenerator (AppModel): adding generator to data structures later on computeThread";
     }
 
     // we can't add to the Generator list directly because this could break things on the computeThread.
     // add it later on the computeThread thread once it is safe to do so
-    // this also takes care of creating the appropriate osc sender and receiver
-    emit computeEngine->addGenerator(generator);
+    emit addGenerator(generator);
+
+    if(flagDebug) {
+        qDebug() << "createGenerator (AppModel): starting OSC processing for generator later on oscThread";
+    }
+
+    // we setup the osc engine to process data for the generator
+    emit startGeneratorOsc(generator);
+
+    if(flagDebug) {
+        qDebug() << "createGenerator (AppModel): begin insertion at end of generatorModel";
+    }
 
     // tell the generatorModel we are about to insert a generator at the end of the list
     generatorModel->beginInsertAtEnd();
 
-    // create a GeneratorFacade and add it to the list
+    if(flagDebug) {
+        qDebug() << "createGenerator (AppModel): creating generatorFacade and adding to data structures";
+    }
+
+    // create a GeneratorFacade and add it to the list and hash map
     QSharedPointer<GeneratorFacade> generatorFacade = QSharedPointer<GeneratorFacade>(new GeneratorFacade(generator.data()));
     generatorFacadesList->append(generatorFacade);
+    generatorFacadesHashMap->insert(generator->getID(), generatorFacade);
+
+    if(flagDebug) {
+        qDebug() << "createGenerator (AppModel): end insertion at end of generatorModel";
+    }
 
     // tell the generatorModel we are done inserting a generator at the end of the list
     generatorModel->endInsertAtEnd();
+
+    if(flagDebug) {
+        qDebug() << "createGenerator (AppModel): relinking generatorModel connections";
+    }
 
     // once the list is changed, update the GeneratorModel connections
     generatorModel->relinkAliasConnections();
@@ -168,17 +202,37 @@ void AppModel::createGenerator() {
 
 void AppModel::deleteGenerator(int id) {
     if(flagDebug) {
-        qDebug() << "deleteGenerator (AppModel)";
+        qDebug() << "deleteGenerator (AppModel): getting generator by id: " << id;
     }
+    QSharedPointer<Generator> generator = generatorsHashMap->value(id);
+
+    if(flagDebug) {
+        qDebug() << "deleteGenerator (AppModel): removing generator from data structures later on computeThread";
+    }
+
     // we can't delete on the Generator list directly because this could break things on the computeThread.
     // delete it later on the computeThread thread once it is safe to do so
-    // this also takes care of deleting the appropriate osc sender and receiver
-    emit computeEngine->deleteGenerator(id);
+    emit removeGenerator(generator);
+
+    if(flagDebug) {
+        qDebug() << "createGenerator (AppModel): stopping OSC processing for generator later on oscThread";
+    }
+
+    // we ask the osc engine to stop processing data for this generator
+    emit stopGeneratorOsc(generator);
+
+    if(flagDebug) {
+        qDebug() << "createGenerator (AppModel): begin removal at specific id in generatorModel";
+    }
 
     // tell the generatorModel we are about to delete a generator with a specific ID
     generatorModel->beginRemoveAtID(id);
 
-    // delete the GeneratorFacade from the list
+    if(flagDebug) {
+        qDebug() << "createGenerator (AppModel): removing generatorFacade from data structures";
+    }
+
+    // delete the generatorFacade from the list
     for(QList<QSharedPointer<GeneratorFacade>>::iterator it = generatorFacadesList->begin(); it != generatorFacadesList->end(); it++) {
         if(id == (*it)->value("id").toInt()) {
             // erase from the list
@@ -186,9 +240,19 @@ void AppModel::deleteGenerator(int id) {
             break;
         }
     }
+    // delete the generatorFacade from the hash map
+    generatorFacadesHashMap->remove(generator->getID());
+
+    if(flagDebug) {
+        qDebug() << "createGenerator (AppModel): end removal at specific id in generatorModel";
+    }
 
     // tell the generatorModel we are done deleting a generator with a specific ID
     generatorModel->endRemoveAtID();
+
+    if(flagDebug) {
+        qDebug() << "createGenerator (AppModel): relinking generatorModel connections";
+    }
 
     // once the list is changed, update the GeneratorModel connections
     generatorModel->relinkAliasConnections();

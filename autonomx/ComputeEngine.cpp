@@ -43,18 +43,9 @@ ComputeEngine::~ComputeEngine() {
 
         qDebug() << "destructor (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
-
-    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
-        // get generator info
-        QSharedPointer<Generator> generator = *it;
-        int id = generator->getID();
-        // delete osc sender and receiver
-        emit deleteOscReceiver(id);
-        emit deleteOscSender(id);
-    }
 }
 
-void ComputeEngine::recieveOscData(int id, QVariantList data) {
+void ComputeEngine::receiveOscData(int id, QVariantList data) {
     if(!generatorsHashMap->contains(id)) {
         throw std::runtime_error("generator does not exist");
     }
@@ -86,8 +77,34 @@ void ComputeEngine::recieveOscData(int id, QVariantList data) {
                     std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "recieveOscData (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\tdata = " << data << "\t(" << argumentsValid << " of " << argumentsTotal << " valid)";
+        qDebug() << "receiveOscData (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\tdata = " << data << "\t(" << argumentsValid << " of " << argumentsTotal << " valid)";
     }
+}
+
+void ComputeEngine::addGenerator(QSharedPointer<Generator> generator) {
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+        );// get generator
+
+        qDebug() << "addGenerator (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+    }
+
+    generatorsList->append(generator);
+    generatorsHashMap->insert(generator->getID(), generator);
+}
+
+void ComputeEngine::removeGenerator(QSharedPointer<Generator> generator) {
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+        );// get generator
+
+        qDebug() << "removeGenerator (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+    }
+
+    generatorsList->removeOne(generator);
+    generatorsHashMap->remove(generator->getID());
 }
 
 void ComputeEngine::start() {
@@ -168,81 +185,5 @@ void ComputeEngine::loop() {
         );
 
         qDebug() << "loop (ComputeEngine):\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\trefresh (ms) = " << millisLastFrame << "\tcompute (ms) = " << millisCompute;
-    }
-}
-
-void ComputeEngine::addGenerator(QSharedPointer<Generator> generator) {
-    // add to list
-    generatorsList->append(generator);
-    // add to hash map
-    generatorsHashMap->insert(generator->getID(), generator);
-
-    int id = generator->getID();
-    QString addressReceiver = generator->getOscInputAddress();
-    QString addressSenderHost = generator->getOscOutputAddressHost();
-    QString addressSenderTarget = generator->getOscOutputAddressTarget();
-    int portReceiver = generator->getOscInputPort();
-    int portSender = generator->getOscOutputPort();
-
-    // create osc sender and receiver
-    emit createOscReceiver(id, addressReceiver, portReceiver);
-    emit createOscSender(id, addressSenderHost, addressSenderTarget, portSender);
-
-    // get a pointer to the osc engine to connect it
-    OscEngine* oscEngine = AppModel::getInstance().getOscEngine();
-
-    // connect input / receiver changes
-    QObject::connect(generator.data(), &Generator::oscInputAddressChanged, oscEngine, [this, oscEngine, generator](QString oscInputAddress){
-        if(flagDebug) {
-            qDebug() << "oscInputAddressChanged (lambda)";
-        }
-        emit oscEngine->updateOscReceiverAddress(generator->getID(), oscInputAddress);
-    });
-
-    QObject::connect(generator.data(), &Generator::oscInputPortChanged, oscEngine, [this, oscEngine, generator](int oscInputPort){
-        if(flagDebug) {
-            qDebug() << "oscInputPortChanged (lambda)";
-        }
-        emit oscEngine->updateOscReceiverPort(generator->getID(), oscInputPort);
-    });
-
-    // connect output / sender changes
-    QObject::connect(generator.data(), &Generator::oscOutputAddressHostChanged, oscEngine, [this, oscEngine, generator](QString oscOutputAddressHost){
-        if(flagDebug) {
-            qDebug() << "oscOutputAddressHostChanged (lambda)";
-        }
-        emit oscEngine->updateOscSenderAddressHost(generator->getID(), oscOutputAddressHost);
-    });
-
-    QObject::connect(generator.data(), &Generator::oscOutputAddressTargetChanged, oscEngine, [this, oscEngine, generator](QString oscOutputAddressTarget){
-        if(flagDebug) {
-            qDebug() << "oscOutputAddressTargetChanged (lambda)";
-        }
-        emit oscEngine->updateOscSenderAddressTarget(generator->getID(), oscOutputAddressTarget);
-    });
-
-    QObject::connect(generator.data(), &Generator::oscOutputPortChanged, oscEngine, [this, oscEngine, generator](int oscOutputPort){
-        if(flagDebug) {
-            qDebug() << "oscOutputAddressTargetChanged (lambda)";
-        }
-        emit oscEngine->updateOscSenderPort(generator->getID(), oscOutputPort);
-    });
-}
-
-void ComputeEngine::deleteGenerator(int id) {
-    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
-        if(id == (*it)->getID()) {
-            // erase from the list
-            generatorsList->erase(it);
-            // erase from the hash map
-            bool success = generatorsHashMap->remove(id);
-            if(!success) {
-                throw std::runtime_error("generator does not exist");
-            }
-            // delete osc sender and receiver
-            emit deleteOscReceiver(id);
-            emit deleteOscSender(id);
-            return;
-        }
     }
 }

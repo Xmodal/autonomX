@@ -20,6 +20,7 @@
 #include <QHash>
 #include "OscSender.h"
 #include "OscReceiver.h"
+#include "Generator.h"
 
 class OscEngine : public QObject {
     Q_OBJECT
@@ -32,22 +33,38 @@ private:
     QHash<int, QSharedPointer<OscReceiver>> oscReceivers;
     QHash<int, QString> oscReceiverAddresses;
 
+    // connects OscReceiver::messageReceived to OscEngine::receiveOscDataHandler through a lambda that captures the generator id
     void connectReceiver(int id);
+
+    // used internally by connectGenerator and disconnectGenerator
+    void createOscReceiver(int id, QString address, int port);
+    void deleteOscReceiver(int id);
+
+    // used internally by connectGenerator and disconnectGenerator
+    void createOscSender(int id, QString addressHost, QString addressTarget, int port);
+    void deleteOscSender(int id);
 
     bool flagDebug = false;
 signals:
-    void recieveOscData(int id, QVariantList data);
+    // relays updates to ComputeEngine::rec
+    void receiveOscData(int id, QVariantList data);
+private slots:
+    // bridges OscReceiver::messageReceived to OscEngine::receiveOscData
+    void receiveOscDataHandler(int id, const QString& oscAddress, const QVariantList& message);
 public slots:
-    void recieveOscDataHandler(int id, const QString& oscAddress, const QVariantList& message);
+    // starts processing for a generator using createOscReceiver and createOscSender and setups lambda connections from the generators to the updateOsc... methods. emitted from AppModel
+    void startGeneratorOsc(QSharedPointer<Generator> generator);
+    // stops processing for a generator using deleteOscReceiver and deleteOscSender. emitted by AppModel
+    void stopGeneratorOsc(QSharedPointer<Generator> generator);
+
+    // bridges ComputeEngine::sendOscData to OscSender::send
     void sendOscData(int id, QVariantList data);
 
-    void createOscReceiver(int id, QString address, int port);
-    void deleteOscReceiver(int id);
+    // updates receiver parameters
     void updateOscReceiverAddress(int id, QString address);
     void updateOscReceiverPort(int id, int port);
 
-    void createOscSender(int id, QString addressHost, QString addressTarget, int port);
-    void deleteOscSender(int id);
+    // updates receiver parameters
     void updateOscSenderAddressHost(int id, QString addressHost);
     void updateOscSenderAddressTarget(int id, QString addressHost);
     void updateOscSenderPort(int id, int port);

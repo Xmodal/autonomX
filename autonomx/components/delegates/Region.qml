@@ -36,12 +36,11 @@ Rectangle {
 
     // snap to grid on drop / resize
     function snapToGrid() {
-        // update model here
+        // clamp w/h when left corner/border dragged in the negatives
+        width += Math.min(x, 0);
+        height += Math.min(y, 0);
 
-        // TO FIX: when a left corner/border is dragged in the negative of either X/Y axis,
-        // the width/height is offset by the number of overflowing cells at the time of mouse release
-        // this is most definitely caused by the fact that colW/colH aren't properly clamped behind the scenes
-        // and instead directly referencing the visual state of said region without accounting for overflow.
+        // update model here
         colW = Math.min(Math.max(Math.round((width - 1) / mainContent.ppc), 0), mainContent.cols - colX);
         colH = Math.min(Math.max(Math.round((height - 1) / mainContent.ppc), 0), mainContent.rows - colY);
         colX = Math.min(Math.max(Math.round(x / mainContent.ppc), 0), mainContent.cols - colW);

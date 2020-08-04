@@ -365,7 +365,13 @@ void Generator::writeLatticeData(float** latticeData, int* allocatedWidth, int* 
         // check if the the right amount of memory is allocated
         if((*allocatedWidth) * (*allocatedHeight) != latticeWidth * latticeHeight) {
             // the amount of allocated memory mismatches the required amount, must reallocate
-            delete[] *latticeData;
+
+            // make sure this is not the first function call; in that case we can't safely delete since the pointer is uninitialized
+            if(*allocatedWidth != 0 && *allocatedHeight != 0) {
+                delete[] *latticeData;
+            }
+
+            // allocate the memory
             *latticeData = new float[latticeWidth * latticeHeight];
         }
 
@@ -397,13 +403,6 @@ void Generator::writeLatticeData(float** latticeData, int* allocatedWidth, int* 
 }
 
 void Generator::allocateInitialLatticeData(float** latticeData, int* allocatedWidth, int* allocatedHeight) {
-    latticeDataMutex.lock();
-
-    *latticeData = new float[latticeWidth * latticeHeight];
-
-    latticeDataMutex.unlock();
-}
-
 void Generator::lockLatticeDataMutex() {
     latticeDataMutex.lock();
 }

@@ -157,12 +157,10 @@ public slots:
     // we need a mechanism to prevent duplicate requests that would happen if the method is unable to complete before the next render frame however...
     // this is done by emitting writeLatticeDataCompleted once done, and only allowing GeneratorLatticeRenderer to emit writeLatticeData signals if the previous one did complete.
     //
+    // the first call to this function is done with latticeData as a new float pointer pointer that is not null, and with allocatedWidth and allocatedHeight as 0. the memory for the inner pointer will be allocated automatically
+    //
     // the connection from GeneratorLatticeCommunicator's requestLatticeData signal to Generator's writeLatticeData slot is created from GeneratorLatticeCommunicator
     void writeLatticeData(float** latticeData, int* allocatedWidth, int* allocatedHeight);
-
-    // this does the initial memory allocation for latticeData
-    void allocateInitialLatticeData(float** latticeData, int* allocatedWidth, int* allocatedHeight);
-
 signals:
     // common signal used alongside all other property change signals. allows the Facade class to work properly
     // (for connection to QQmlPropertyMap's updateValue slot)

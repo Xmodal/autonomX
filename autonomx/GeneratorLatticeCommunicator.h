@@ -33,12 +33,10 @@ private:
     bool currentRequestDone = true;
     bool firstRequestDone = false;
     bool flagDebug = false;
-    QMetaObject::Connection connectionAllocateInitialLatticeData;
     QMetaObject::Connection connectionWriteLatticeData;
     QMetaObject::Connection connectionWriteLatticeDataCompleted;
 signals:
-    // these shouldn't be used from the outside. these are emitted from writeLatticeData.
-    void allocateInitialLatticeDataHandler(float** latticeData, int* allocatedWidth, int* allocatedHeight);
+    // this shouldn't be used from the outside. this is emitted from writeLatticeData.
     void writeLatticeDataHandler(float** latticeData, int* allocatedWidth, int* allocatedHeight);
 public slots:
     void requestLatticeDataCompleted();

@@ -191,7 +191,7 @@ public:
 
     void writeLatticeWidthDelegate(int latticeWidth) override;
     void writeLatticeHeightDelegate(int latticeHeight) override;
-    void writeLatticeDataDelegate(double* latticeData) override;
+    void writeLatticeDataDelegate(float* latticeData) override;
 
 signals:
     void neuronSizeChanged(int neuronSize);

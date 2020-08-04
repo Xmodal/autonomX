@@ -45,7 +45,7 @@ private:
     int generatorID;                        // associated generator id
     Generator* generator;                   // associated generator
     GeneratorLatticeCommunicator* communicator;
-    double** latticeData = nullptr;         // the lattice data used to draw the graphics
+    float** latticeData = new float*;       // the lattice data used to draw the graphics
     int* allocatedWidth = new int(0);       // the width of allocated flattened array in the memory block pointed by latticeData
     int* allocatedHeight = new int(0);      // the height of allocated flattened array in the memory block pointed by latticeData
 };

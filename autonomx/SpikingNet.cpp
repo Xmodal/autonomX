@@ -1039,13 +1039,13 @@ void SpikingNet::writeLatticeHeightDelegate(int latticeHeight) {
     qDebug() << "WARNING: writeLatticeHeightDelegate is unimplemented";
 }
 
-void SpikingNet::writeLatticeDataDelegate(double *latticeData) {
+void SpikingNet::writeLatticeDataDelegate(float *latticeData) {
     int width = getLatticeWidth();
     int height = getLatticeHeight();
     for(int x = 0; x < width; x++) {
         for(int y = 0; y < height; y++) {
             int index = x % width + y * width;
-            latticeData[index] = (neurons[index].getV() - neurons[index].getC()) / (neurons[index].getPotentialThreshold() - neurons[index].getC());
+            latticeData[index] = (float) (neurons[index].getV() - neurons[index].getC()) / (neurons[index].getPotentialThreshold() - neurons[index].getC());
         }
     }
 }

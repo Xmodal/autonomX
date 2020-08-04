@@ -336,46 +336,72 @@ void Generator::updateValue(const QString &key, const QVariant &value) {
     setProperty(keyBuffer, value);
 }
 
-void Generator::writeLatticeData(double** latticeData, int* allocatedWidth, int* allocatedHeight) {
+void Generator::writeLatticeData(float** latticeData, int* allocatedWidth, int* allocatedHeight) {
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "writeLatticeData (Generator)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+    }
+
     // try to lock the lattice data mutex
     bool lockSuccessful = latticeDataMutex.tryLock();
 
     if(!lockSuccessful) {
+        if(flagDebug) {
+            qDebug() << "writeLatticeData (Generator): failed to lock";
+        }
+
         // failed to get lock, wait for GeneratorLatticeRenderer to finish its render method and let any other task get completed in the mean time
         emit writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
     } else {
+        if(flagDebug) {
+            qDebug() << "writeLatticeData (Generator): succeded at getting lock";
+        }
+
         // succeded at getting lock
 
-        // check if anything is allocated
-        if(latticeData == nullptr) {
-            // nothing is allocated yet
-            latticeData = new double*;
-            *latticeData = new double[latticeWidth * latticeHeight];
-        } else {
-            // check if the the right amount of memory is allocated
-            if((*allocatedWidth) * (*allocatedHeight) == latticeWidth * latticeHeight) {
-                // the same amount of data is allocated, but the aspect ratio could be different
-            } else {
-                // the amount of allocated memory mismatches the required amount, must reallocate
-                delete[] *latticeData;
-                *latticeData = new double[latticeWidth * latticeHeight];
-            }
-
+        // check if the the right amount of memory is allocated
+        if((*allocatedWidth) * (*allocatedHeight) != latticeWidth * latticeHeight) {
+            // the amount of allocated memory mismatches the required amount, must reallocate
+            delete[] *latticeData;
+            *latticeData = new float[latticeWidth * latticeHeight];
         }
 
         // update the allocated width and height variables in any case
         *allocatedWidth = latticeWidth;
         *allocatedHeight = latticeHeight;
 
+        if(flagDebug) {
+            qDebug() << "writeLatticeData (Generator): allocation done";
+        }
+
         // we can now write to the lattice data. do it via the derived delegate
         writeLatticeDataDelegate(*latticeData);
+
+        if(flagDebug) {
+            qDebug() << "writeLatticeData (Generator): delegate done";
+        }
 
         // we are done; release the mutex
         latticeDataMutex.unlock();
 
+        if(flagDebug) {
+            qDebug() << "writeLatticeData (Generator): unlocked";
+        }
+
         // we are done; tell the GeneratorLatticeCommunicator
         emit writeLatticeDataCompleted();
     }
+}
+
+void Generator::allocateInitialLatticeData(float** latticeData, int* allocatedWidth, int* allocatedHeight) {
+    latticeDataMutex.lock();
+
+    *latticeData = new float[latticeWidth * latticeHeight];
+
+    latticeDataMutex.unlock();
 }
 
 void Generator::lockLatticeDataMutex() {

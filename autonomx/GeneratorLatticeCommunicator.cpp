@@ -26,13 +26,11 @@ void GeneratorLatticeCommunicator::updateGenerator(Generator *generator) {
         // no previous connections to delete
     } else {
         // previous connections must be deleted
-        disconnect(connectionAllocateInitialLatticeData);
         disconnect(connectionWriteLatticeData);
         disconnect(connectionWriteLatticeDataCompleted);
     }
     this->generator = generator;
 
-    connectionAllocateInitialLatticeData = connect(this, &GeneratorLatticeCommunicator::allocateInitialLatticeDataHandler, generator, &Generator::allocateInitialLatticeData);
     connectionWriteLatticeData = connect(this, &GeneratorLatticeCommunicator::writeLatticeDataHandler, generator, &Generator::writeLatticeData);
     connectionWriteLatticeDataCompleted = connect(generator, &Generator::writeLatticeDataCompleted, this, &GeneratorLatticeCommunicator::requestLatticeDataCompleted);
 }
@@ -42,10 +40,6 @@ void GeneratorLatticeCommunicator::writeLatticeData(float** latticeData, int* al
         qDebug() << "writeLatticeData (GeneratorLatticeCommunicator)";
     }
     currentRequestDone = false;
-    if(!firstRequestDone) {
-        // first request, must allocate initial memory block
-        emit allocateInitialLatticeDataHandler(latticeData, allocatedWidth, allocatedHeight);
-    }
     emit writeLatticeDataHandler(latticeData, allocatedWidth, allocatedHeight);
 }
 

@@ -365,7 +365,7 @@ void Generator::writeLatticeData(float** latticeData, int* allocatedWidth, int* 
             // the amount of allocated memory mismatches the required amount, must reallocate
 
             // make sure this is not the first function call; in that case we can't safely delete since the pointer is uninitialized
-            if(*allocatedWidth != 0 && *allocatedHeight != 0) {
+            if(*latticeData != nullptr) {
                 delete[] *latticeData;
             }
 

@@ -111,12 +111,24 @@ void GeneratorLatticeRenderer::render() {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
+        // clear the default framebuffer
+        framebuffer->bind();
+
+        glClearColor(0.0, 0.0, 0.0, 0.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        framebuffer->release();
+
         if(flagSuper) {
             // bind supersampling framebuffer
             framebufferSuper->bind();
 
             // set viewport size to match supersampling framebuffer
             glViewport(0, 0, sizeSuper.width(), sizeSuper.height());
+
+            // clear the supersampling framebuffer
+            glClearColor(0.0, 0.0, 0.0, 0.0);
+            glClear(GL_COLOR_BUFFER_BIT);
         }
 
         // bind shaders

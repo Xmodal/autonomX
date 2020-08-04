@@ -292,10 +292,9 @@ void Generator::writeLatticeWidth(int latticeWidth) {
         qDebug() << "writeLatticeWidth\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << latticeWidth;
     }
 
-    // actually do the changes in the derived algorithm
+    // actually do the changes in the derived class
     writeLatticeWidthDelegate(latticeWidth);
 
-    this->latticeWidth = latticeWidth;
     emit valueChanged("latticeWidth", latticeWidth);
     emit latticeWidthChanged(latticeWidth);
 }
@@ -313,10 +312,9 @@ void Generator::writeLatticeHeight(int latticeHeight) {
         qDebug() << "writeLatticeHeight\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << latticeHeight;
     }
 
-    // actually do the changes in the derived algorithm
+    // actually do the changes in the derived class
     writeLatticeHeightDelegate(latticeHeight);
 
-    this->latticeHeight = latticeHeight;
     emit valueChanged("latticeHeight", latticeHeight);
     emit latticeHeightChanged(latticeHeight);
 }

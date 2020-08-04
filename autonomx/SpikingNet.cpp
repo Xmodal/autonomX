@@ -64,43 +64,43 @@ void SpikingNet::initialize() {
     }
 
     // setup vectors
-    neurons.resize(neuronSize);
+    neurons.resize(latticeWidth * latticeHeight);
 
     outputGroupSpiking.resize(outputGroupSize, 0);
     outputGroupActivation.resize(outputGroupSize, 0);
 
-    STDPTimes.resize(neuronSize, 0);
+    STDPTimes.resize(latticeWidth * latticeHeight, 0);
 
     input.resize(inputGroupSize, 0);
     output.resize(outputGroupSize, 0);
 
     // allocate memory for STP variables
-    STPu = new double[neuronSize];
-    STPx = new double[neuronSize];
-    STPw = new double[neuronSize];
+    STPu = new double[latticeWidth * latticeHeight];
+    STPx = new double[latticeWidth * latticeHeight];
+    STPw = new double[latticeWidth * latticeHeight];
 
     // initialize STP variables
-    for(int i = 0; i < neuronSize; ++i) {
+    for(int i = 0; i < latticeWidth * latticeHeight; ++i) {
         STPw[i] = 1.0;
         STPx[i] = 1.0;
         STPu[i] = 0.0;
     }
 
     // allocate memory for weights
-    weights = new double*[neuronSize];
-    for(int i = 0; i < neuronSize; ++i) {
-        weights[i] = new double[neuronSize];
+    weights = new double*[latticeWidth * latticeHeight];
+    for(int i = 0; i < latticeWidth * latticeHeight; ++i) {
+        weights[i] = new double[latticeWidth * latticeHeight];
     }
 
     // initialize weights
-    for(int i = 0; i < neuronSize; ++i) {
-        for(int j = 0; j < neuronSize; ++j) {
+    for(int i = 0; i < latticeWidth * latticeHeight; ++i) {
+        for(int j = 0; j < latticeWidth * latticeHeight; ++j) {
             weights[i][j] = 0.;
         }
     }
 
     // set neuron types
-    for(int i = 0; i < neuronSize; ++i) {
+    for(int i = 0; i < latticeWidth * latticeHeight; ++i) {
         if(i < inhibitorySize) {
             neurons[i].setNeuronType(inhibitoryNeuronType);
         } else{
@@ -143,7 +143,7 @@ void SpikingNet::reset() {
     STPw = 0;
 
     // delete weights
-    for(int i = 0; i < neuronSize; ++i) {
+    for(int i = 0; i < latticeWidth * latticeHeight; ++i) {
         delete[] weights[i];
         weights[i] = 0;
     }
@@ -179,15 +179,15 @@ int SpikingNet::indexOutputNeuron(int i) {
 
 void SpikingNet::setSparseNetwork() {
 
-    std::uniform_int_distribution<> randomNeurons(0, neuronSize - 1);
+    std::uniform_int_distribution<> randomNeurons(0, latticeWidth * latticeHeight - 1);
     std::uniform_real_distribution<> randomUniform(0.0, 1.0);
 
     int connectionSum = 0;
     int destinationArray[connectionsPerNeuron];
 
     // in case of non fully connected
-    if(connectionsPerNeuron != neuronSize) {
-        for(int source = 0; source < neuronSize; ++source) {
+    if(connectionsPerNeuron != latticeWidth * latticeHeight) {
+        for(int source = 0; source < latticeWidth * latticeHeight; ++source) {
             for(int n = 0; n < connectionsPerNeuron; n++) {
                 // initialize to something that won't be matched when we check if the candidate is already used
                 destinationArray[n] = -1;
@@ -215,7 +215,7 @@ void SpikingNet::setSparseNetwork() {
             for(int j = 0; j < connectionsPerNeuron; j++) {
                 int destination = destinationArray[j];
                 if(destination != source) {
-                    if(destination >= 0 && destination < neuronSize) {
+                    if(destination >= 0 && destination < latticeWidth * latticeHeight) {
                         if(source < inhibitorySize) {
                             weights[source][destination] = inhibitoryInitWeight * randomUniform(randomGenerator);
                         } else {
@@ -229,8 +229,8 @@ void SpikingNet::setSparseNetwork() {
 
     // in case of fully connected
     else {
-        for(int i = 0; i < neuronSize; ++i) {
-            for(int j = 0; j < neuronSize; j++) {
+        for(int i = 0; i < latticeWidth * latticeHeight; ++i) {
+            for(int j = 0; j < latticeWidth * latticeHeight; j++) {
                 if(i != j) {
                     if(i < inhibitorySize) {
                         weights[i][j] = inhibitoryInitWeight * randomUniform(randomGenerator);
@@ -259,8 +259,8 @@ void SpikingNet::setUniformNetwork() {
 
     int connectionSum = 0;
 
-    for(int i = 0; i < neuronSize; ++i) {
-        for(int j = 0; j < neuronSize; j++) {
+    for(int i = 0; i < latticeWidth * latticeHeight; ++i) {
+        for(int j = 0; j < latticeWidth * latticeHeight; j++) {
 
             if(i != j) {
                 if(i < inhibitorySize) {
@@ -282,8 +282,8 @@ void SpikingNet::setRandomNetwork() {
 
     int connectionSum = 0;
 
-    for(int i = 0; i < neuronSize; ++i) {
-        for(int j = 0; j < neuronSize; j++) {
+    for(int i = 0; i < latticeWidth * latticeHeight; ++i) {
+        for(int j = 0; j < latticeWidth * latticeHeight; j++) {
 
             if(i != j) {
                 if(i < inhibitorySize) {
@@ -304,12 +304,12 @@ void SpikingNet::setGridNetwork() {
 
     std::uniform_real_distribution<> randomUniform(0.0, 1.0);
 
-    for(int i = 0; i < neuronSize; ++i) {
-        int row = i / gridNetworkWidth;
-        int col = i % gridNetworkWidth;
-        for(int j = 0; j < neuronSize; j++) {
-            int row_target = j / gridNetworkWidth;
-            int col_target = j % gridNetworkWidth;
+    for(int i = 0; i < latticeWidth * latticeHeight; ++i) {
+        int row = i / latticeWidth;
+        int col = i % latticeWidth;
+        for(int j = 0; j < latticeWidth * latticeHeight; j++) {
+            int row_target = j / latticeWidth;
+            int col_target = j % latticeWidth;
             if(i < inhibitorySize) {
                 if(i != j && randomUniform(randomGenerator) < gridNetworkConnectionRate) {
                     weights[i][j] = inhibitoryInitWeight * randomUniform(randomGenerator); // HERE!!!
@@ -409,7 +409,7 @@ double softKneePositive(double value, double window) {
 
 void SpikingNet::applyFiring() {
     // apply firing status to neurons
-    for(int i = 0; i < neuronSize; i++) {
+    for(int i = 0; i < latticeWidth * latticeHeight; i++) {
         neurons[i].applyFiring();
     }
     // reset group output variables
@@ -459,7 +459,7 @@ void SpikingNet::updateInput() {
     std::normal_distribution<> randomUniform(0.0, 1.0);
 
     // pseudo thalamus noise-input
-    for(int i = 0; i < neuronSize; ++i) {
+    for(int i = 0; i < latticeWidth * latticeHeight; ++i) {
         if(i < inhibitorySize) {
             neurons[i].addToI(inhibitoryNoise * randomUniform(randomGenerator));
         }else{
@@ -468,9 +468,9 @@ void SpikingNet::updateInput() {
     }
 
     // input from connected neurons with STP
-    for(int i = 0; i < neuronSize; ++i) {
+    for(int i = 0; i < latticeWidth * latticeHeight; ++i) {
         if(neurons[i].isFiring()) {
-            for(int j = 0; j < neuronSize; ++j) {
+            for(int j = 0; j < latticeWidth * latticeHeight; ++j) {
                 if(i != j) {
                     if(i > inhibitorySize)
                         neurons[j].addToI((float) weights[i][j] * (float)STPw[i]);
@@ -486,7 +486,7 @@ void SpikingNet::updateInput() {
 void SpikingNet::updateNeurons(double deltaTime) {
 
     // update differential equation
-    for(int i = 0; i < neuronSize; ++i) {
+    for(int i = 0; i < latticeWidth * latticeHeight; ++i) {
         neurons[i].update(deltaTime);
         neurons[i].setI(0.0);
     }
@@ -523,7 +523,7 @@ void SpikingNet::computeSTDP(double deltaTime) {
     // each neuron has a STDPTimes[i] value that store how long ago it fired
     // the weight change is applied using the above function if the time difference between two neurons firing is smaller or equal to STDPWindow
 
-    for(int i = inhibitorySize; i < neuronSize; ++i) {
+    for(int i = inhibitorySize; i < latticeWidth * latticeHeight; ++i) {
         if(neurons[i].isFiring()) {
             // if the neuron is currently firing, set its STDPTimes to 0.
             STDPTimes[i] = 0;
@@ -536,9 +536,9 @@ void SpikingNet::computeSTDP(double deltaTime) {
 
     double deltaTimeMillis = deltaTime * 1000.0;
     double d;
-    for(int i = inhibitorySize; i < neuronSize; i++) {
+    for(int i = inhibitorySize; i < latticeWidth * latticeHeight; i++) {
         if(neurons[i].isFiring()) {
-            for(int j = inhibitorySize; j < neuronSize; j++) {
+            for(int j = inhibitorySize; j < latticeWidth * latticeHeight; j++) {
 
                 if(STDPTimes[j] <= STDPWindow && STDPTimes[j] != 0 && i != j) {
                     // another (uniquely different) neuron has fired in the last STDPTau frames (excluding the current frame)
@@ -566,7 +566,7 @@ void SpikingNet::computeSTDP(double deltaTime) {
 }
 
 void SpikingNet::computeSTP(double deltaTime) {
-    for(int i = inhibitorySize; i < neuronSize; ++i) {
+    for(int i = inhibitorySize; i < latticeWidth * latticeHeight; ++i) {
         STPw[i] = STPStrength * getSTPValue(i, neurons[i].isFiring(), deltaTime);
     }
 }
@@ -611,8 +611,8 @@ double SpikingNet::getSTPValue(int index, bool isFiring, double deltaTime) {
 void SpikingNet::decay(double deltaTime) {
     double decayConstantTimeCompensated = pow(decayConstant, deltaTime);
 
-    for(int i = inhibitorySize; i < neuronSize; i++) {
-        for(int j = inhibitorySize; j < neuronSize; j++) {
+    for(int i = inhibitorySize; i < latticeWidth * latticeHeight; i++) {
+        for(int j = inhibitorySize; j < latticeWidth * latticeHeight; j++) {
             weights[i][j] = weights[i][j] * decayConstantTimeCompensated;
         }
     }
@@ -667,23 +667,19 @@ void SpikingNet::wholeStimulation(double strength) {
 
 void SpikingNet::wholeNetworkStimulation() {
     //    external input
-    for(int i = 0; i < neuronSize; ++i) {
+    for(int i = 0; i < latticeWidth * latticeHeight; ++i) {
         neurons[i].addToI(stimStrength);
     }
 }
 
 void SpikingNet::wholeNetworkStimulation(double strength) {
     //    external input
-    for(int i = 0; i < neuronSize; ++i) {
+    for(int i = 0; i < latticeWidth * latticeHeight; ++i) {
             neurons[i].addToI(strength);
     }
 }
 
 // ############################### Qt read / write ###############################
-
-int SpikingNet::getNeuronSize() const {
-    return neuronSize;
-}
 
 double SpikingNet::getTimeScale() const {
     return this->timeScale;
@@ -741,31 +737,6 @@ bool SpikingNet::getFlagDecay() const {
     return this->flagDecay;
 }
 
-void SpikingNet::writeNeuronSize(int neuronSize) {
-    if(this->neuronSize == neuronSize)
-        return;
-
-    if(flagDebug) {
-        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()
-        );
-
-        qDebug() << "writeNeuronSize:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
-    }
-
-    qDebug() << "WARNING: writeNeuronSize is currently disabled";
-
-    // reset network, since these parameters only take effect when the network is created anew
-    reset();
-    // do the change
-    this->neuronSize = neuronSize;
-    // re-initialize
-    initialize();
-    // signal
-    emit valueChanged("neuronSize", QVariant(neuronSize));
-    emit neuronSizeChanged(neuronSize);
-}
-
 void SpikingNet::writeTimeScale(double timeScale) {
     if(this->timeScale == timeScale)
         return;
@@ -820,7 +791,7 @@ void SpikingNet::writeInputPortion(double inputPortion) {
     }
 
     // update input size
-    inputSize = (neuronSize - inhibitorySize) * inputPortion;
+    inputSize = (latticeWidth * latticeHeight - inhibitorySize) * inputPortion;
 
     this->inputPortion = inputPortion;
     emit valueChanged("inputPortion", QVariant(inputPortion));
@@ -840,7 +811,7 @@ void SpikingNet::writeOutputPortion(double outputPortion) {
     }
 
     // update output size
-    outputSize = (neuronSize - inhibitorySize) * outputPortion;
+    outputSize = (latticeWidth * latticeHeight - inhibitorySize) * outputPortion;
 
     this->outputPortion = outputPortion;
     emit valueChanged("outputPortion", QVariant(outputPortion));
@@ -1032,16 +1003,46 @@ void SpikingNet::writeFlagDecay(bool flagDecay) {
 }
 
 void SpikingNet::writeLatticeWidthDelegate(int latticeWidth) {
-    qDebug() << "WARNING: writeLatticeWidthDelegate is unimplemented";
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "writeLatticeWidthDelegate:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+    }
+
+    // reset network, since memory has to be reallocated
+    reset();
+    // do the change
+    this->latticeWidth = latticeWidth;
+    // re-initialize
+    initialize();
+
+    // signals are emitted from Generator::writeLatticeWidth once this is done
 }
 
 void SpikingNet::writeLatticeHeightDelegate(int latticeHeight) {
-    qDebug() << "WARNING: writeLatticeHeightDelegate is unimplemented";
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "writeLatticeHeightDelegate:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+    }
+
+    // reset network, since memory has to be reallocated
+    reset();
+    // do the change
+    this->latticeHeight = latticeHeight;
+    // re-initialize
+    initialize();
+
+    // signals are emitted from Generator::writeLatticeWidth once this is done
 }
 
 void SpikingNet::writeLatticeDataDelegate(float *latticeData) {
-    int width = getLatticeWidth();
-    int height = getLatticeHeight();
+    int width = latticeWidth;
+    int height = latticeHeight;
     for(int x = 0; x < width; x++) {
         for(int y = 0; y < height; y++) {
             int index = x % width + y * width;

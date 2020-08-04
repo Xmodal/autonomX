@@ -27,11 +27,19 @@ Rack {
                 spacing: Stylesheet.field.spacing
 
                 NumberField {
-                    labelText: "Neurons"
+                    labelText: "Width"
                     unsigned: true
 
-                    defaultNum: generatorModel.at(genID).neuronSize
-                    onValueChanged: generatorModel.at(genID).neuronSize = newValue
+                    defaultNum: generatorModel.at(genID).latticeWidth
+                    onValueChanged: generatorModel.at(genID).latticeWidth = newValue
+                }
+
+                NumberField {
+                    labelText: "Height"
+                    unsigned: true
+
+                    defaultNum: generatorModel.at(genID).latticeHeight
+                    onValueChanged: generatorModel.at(genID).latticeHeight = newValue
                 }
 
                 SliderField {

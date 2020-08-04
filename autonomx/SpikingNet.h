@@ -24,7 +24,6 @@
 class SpikingNet : public Generator {
     // TODO: figure out how we decide to add / remove inputs. this should probably be a property that belongs to the Generator abstract class, rather than this.
     Q_OBJECT
-    Q_PROPERTY(int neuronSize READ getNeuronSize WRITE writeNeuronSize NOTIFY neuronSizeChanged)
     Q_PROPERTY(double timeScale READ getTimeScale WRITE writeTimeScale NOTIFY timeScaleChanged)
     Q_PROPERTY(double inhibitoryPortion READ getInhibitoryPortion WRITE writeInhibitoryPortion NOTIFY inhibitoryPortionChanged)
     Q_PROPERTY(double inputPortion READ getInputPortion WRITE writeInputPortion NOTIFY inputPortionChanged)
@@ -55,14 +54,12 @@ public:
 
 private:
     NetworkType networkType = NetworkType::GridNetwork;
-    int         neuronSize = 400;
     int         connectionsPerNeuron = 20; // this is used in any non-grid network
     int         randomSeed = 0;
-    int         gridNetworkWidth = 20;
     double      gridNetworkConnectionRate = 0.01; // this is used in the grid network
 
     double      inhibitoryPortion = 0.2;
-    int         inhibitorySize = neuronSize * inhibitoryPortion;
+    int         inhibitorySize = latticeWidth * latticeHeight * inhibitoryPortion;
     NeuronType::Enum  inhibitoryNeuronType = NeuronType::ChatteringNeuron;
     double      inhibitoryInitWeight = -5.0;
     double      inhibitoryNoise = 3.0;
@@ -72,11 +69,11 @@ private:
     double      excitatoryNoise = 5.0;
 
     double      inputPortion = 0.2;
-    int         inputSize = (neuronSize - inhibitorySize) * inputPortion;
+    int         inputSize = (latticeWidth * latticeHeight - inhibitorySize) * inputPortion;
     int         inputGroupSize = 1;
 
     double      outputPortion = 0.2;
-    int         outputSize = (neuronSize - inhibitorySize) * outputPortion;
+    int         outputSize = (latticeWidth * latticeHeight - inhibitorySize) * outputPortion;
     int         outputGroupSize = 1;
 
     double      weightMax = 20.0;

@@ -97,8 +97,7 @@ public:
     void writeLatticeHeight(int latticeHeight);
 
     // these are implemented by the derived class and take care of any memory reallocation needed to change the size of the algorithm.
-    // this is called by writeLatticeWidth / writeLatticeHeight before the value is actually changed. the value passed is the new one.
-    // once this is done, writeLatticeWidth / writeLatticeHeight will take care of writing the proper value.
+    // this is called by writeLatticeWidth / writeLatticeHeight. this must set the variable to the passed value.
     virtual void writeLatticeWidthDelegate(int latticeWidth) = 0;
     virtual void writeLatticeHeightDelegate(int latticeHeight) = 0;
 
@@ -115,6 +114,9 @@ public:
     //    flattenedData[index] = latticeData[index % latticeWidth, index / latticeWidth]
     //
     virtual void writeLatticeDataDelegate(float* latticeData) = 0;
+protected:
+    int latticeWidth = 20;                      // lattice width
+    int latticeHeight = 20;                     // lattice height
 private:
     int id;                                     // generator id, generated automatically by ComputeEngine in constructor
 
@@ -129,9 +131,6 @@ private:
     int oscOutputPort = 6669;                   // generator osc output port, assigned by user
     QString oscOutputAddressHost = "127.0.0.1"; // generator osc output address for host, assigned by user (this is an ip)
     QString oscOutputAddressTarget = "/output"; // generator osc output address for target, assigned by user (this is an osc destination)
-
-    int latticeWidth = 20;                      // lattice width
-    int latticeHeight = 20;                     // lattice height
 
     bool flagDebug = false;                     // enables debug
 

@@ -1,6 +1,8 @@
 varying highp vec2 coords;
 
+uniform sampler2D texture;
+
 void main() {
-    float inside = coords.x + coords.y < 0.0 ? 1.0 : 0.0;
-    gl_FragColor = vec4(coords.x, coords.y, inside, 1.0);
+    float intensity = texture2D(texture, coords * 0.25 + vec2(0.5, 0.5)).r;
+    gl_FragColor = vec4(vec3(intensity), 1.0);
 }

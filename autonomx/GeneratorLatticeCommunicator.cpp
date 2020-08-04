@@ -14,29 +14,45 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "GeneratorLatticeCommunicator.h"
+#include <QDebug>
 
 GeneratorLatticeCommunicator::GeneratorLatticeCommunicator() {}
 
 void GeneratorLatticeCommunicator::updateGenerator(Generator *generator) {
+    if(flagDebug) {
+        qDebug() << "updateGenerator (GeneratorLatticeCommunicator)";
+    }
     if(this->generator == nullptr) {
         // no previous connections to delete
     } else {
         // previous connections must be deleted
-        disconnect(connectionRequestLatticeData);
-        disconnect(connectionRequestLatticeDataCompleted);
+        disconnect(connectionAllocateInitialLatticeData);
+        disconnect(connectionWriteLatticeData);
+        disconnect(connectionWriteLatticeDataCompleted);
     }
     this->generator = generator;
 
-    connectionRequestLatticeData = connect(this, &GeneratorLatticeCommunicator::requestLatticeData, generator, &Generator::writeLatticeData);
-    connectionRequestLatticeDataCompleted = connect(generator, &Generator::writeLatticeDataCompleted, this, &GeneratorLatticeCommunicator::requestLatticeDataCompleted);
+    connectionAllocateInitialLatticeData = connect(this, &GeneratorLatticeCommunicator::allocateInitialLatticeDataHandler, generator, &Generator::allocateInitialLatticeData);
+    connectionWriteLatticeData = connect(this, &GeneratorLatticeCommunicator::writeLatticeDataHandler, generator, &Generator::writeLatticeData);
+    connectionWriteLatticeDataCompleted = connect(generator, &Generator::writeLatticeDataCompleted, this, &GeneratorLatticeCommunicator::requestLatticeDataCompleted);
 }
 
-void GeneratorLatticeCommunicator::writeLatticeData(double** latticeData, int* allocatedWidth, int* allocatedHeight) {
+void GeneratorLatticeCommunicator::writeLatticeData(float** latticeData, int* allocatedWidth, int* allocatedHeight) {
+    if(flagDebug) {
+        qDebug() << "writeLatticeData (GeneratorLatticeCommunicator)";
+    }
     currentRequestDone = false;
-    emit requestLatticeData(latticeData, allocatedWidth, allocatedHeight);
+    if(!firstRequestDone) {
+        // first request, must allocate initial memory block
+        emit allocateInitialLatticeDataHandler(latticeData, allocatedWidth, allocatedHeight);
+    }
+    emit writeLatticeDataHandler(latticeData, allocatedWidth, allocatedHeight);
 }
 
 void GeneratorLatticeCommunicator::requestLatticeDataCompleted() {
+    if(flagDebug) {
+        qDebug() << "requestLatticeDataCompleted (GeneratorLatticeCommunicator)";
+    }
     currentRequestDone = true;
     firstRequestDone = true;
 }

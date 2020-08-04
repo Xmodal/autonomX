@@ -114,7 +114,7 @@ public:
     //
     //    flattenedData[index] = latticeData[index % latticeWidth, index / latticeWidth]
     //
-    virtual void writeLatticeDataDelegate(double* latticeData) = 0;
+    virtual void writeLatticeDataDelegate(float* latticeData) = 0;
 private:
     int id;                                     // generator id, generated automatically by ComputeEngine in constructor
 
@@ -152,15 +152,17 @@ public slots:
     // both are passed by pointer so that GeneratorLatticeRenderer can keep track of the new size after this method is executed.
     // why not just use a getter before the method call? because we want this to be atomic; things could get changed between the getter call and the method call.
     //
-    // the first call to this method is done with a null pointer. the method then allocates an initial block of memory.
-    //
     // this method must never be executed while GeneratorLatticeRenderer's render method is using **latticeData. it uses latticeDataMutex to prevent this.
     // if GeneratorLatticeRenderer's render has already locked latticeDataMutex, we schedule the method call to happen at a later time so that the ComputeEngine does not lock
     // we need a mechanism to prevent duplicate requests that would happen if the method is unable to complete before the next render frame however...
     // this is done by emitting writeLatticeDataCompleted once done, and only allowing GeneratorLatticeRenderer to emit writeLatticeData signals if the previous one did complete.
     //
     // the connection from GeneratorLatticeCommunicator's requestLatticeData signal to Generator's writeLatticeData slot is created from GeneratorLatticeCommunicator
-    void writeLatticeData(double** latticeData, int* allocatedWidth, int* allocatedHeight);
+    void writeLatticeData(float** latticeData, int* allocatedWidth, int* allocatedHeight);
+
+    // this does the initial memory allocation for latticeData
+    void allocateInitialLatticeData(float** latticeData, int* allocatedWidth, int* allocatedHeight);
+
 signals:
     // common signal used alongside all other property change signals. allows the Facade class to work properly
     // (for connection to QQmlPropertyMap's updateValue slot)

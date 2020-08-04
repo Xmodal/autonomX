@@ -24,7 +24,7 @@ class GeneratorLatticeCommunicator : public QObject {
 public:
     GeneratorLatticeCommunicator();
     void updateGenerator(Generator* generator);
-    void writeLatticeData(double** latticeData, int* allocatedWidth, int* allocatedHeight);
+    void writeLatticeData(float** latticeData, int* allocatedWidth, int* allocatedHeight);
 
     bool isCurrentRequestDone();
     bool isFirstRequestDone();
@@ -32,11 +32,14 @@ private:
     Generator* generator = nullptr;
     bool currentRequestDone = true;
     bool firstRequestDone = false;
-    QMetaObject::Connection connectionRequestLatticeData;
-    QMetaObject::Connection connectionRequestLatticeDataCompleted;
+    bool flagDebug = false;
+    QMetaObject::Connection connectionAllocateInitialLatticeData;
+    QMetaObject::Connection connectionWriteLatticeData;
+    QMetaObject::Connection connectionWriteLatticeDataCompleted;
 signals:
-    // this shouldn't be used from the outside. this is emitted from writeLatticeData, which also sets some important state variables.
-    void requestLatticeData(double** latticeData, int* allocatedWidth, int* allocatedHeight);
+    // these shouldn't be used from the outside. these are emitted from writeLatticeData.
+    void allocateInitialLatticeDataHandler(float** latticeData, int* allocatedWidth, int* allocatedHeight);
+    void writeLatticeDataHandler(float** latticeData, int* allocatedWidth, int* allocatedHeight);
 public slots:
     void requestLatticeDataCompleted();
 };

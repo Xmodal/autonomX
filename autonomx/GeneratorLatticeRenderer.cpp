@@ -30,8 +30,8 @@ GeneratorLatticeRenderer::GeneratorLatticeRenderer() : QQuickFramebufferObject::
     program->link();
 
     QString log = program->log();
-    if(flagDebug && log != "") {
-        qDebug() << "constructor (GeneratorLatticeRenderer): Error in shader compilation or linking: " << log;
+    if(log != "") {
+        throw std::runtime_error(QString(QString("constructor (GeneratorLatticeRenderer): Error in shader compilation or linking: ") + log).toUtf8().constData());
     }
 
     // init communicator
@@ -101,6 +101,16 @@ void GeneratorLatticeRenderer::render() {
         // OpenGL directly.
         window->beginExternalCommands();
 
+        // bind the texture
+        GLuint texture;
+        glActiveTexture(GL_TEXTURE0);
+        glUniform1i(glGetUniformLocation(program->programId(), "texture"), 0);
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, *allocatedWidth, *allocatedHeight, 0, GL_RED, GL_FLOAT, *latticeData);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
         if(flagSuper) {
             // bind supersampling framebuffer
             framebufferSuper->bind();
@@ -141,7 +151,7 @@ void GeneratorLatticeRenderer::render() {
 
         // we request an update of the lattice data (as soon as possible!) if the last request finished before this frame
         if(communicator->isCurrentRequestDone()) {
-            communicator->requestLatticeData(latticeData, allocatedWidth, allocatedHeight);
+            communicator->writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
         }
 
         // TODO: what does this do
@@ -158,10 +168,24 @@ void GeneratorLatticeRenderer::render() {
             QOpenGLFramebufferObject::blitFramebuffer(framebuffer, QRect(0, 0, size.width(), size.height()), framebufferSuper, QRect(0, 0, sizeSuper.width(), sizeSuper.height()), GL_COLOR_BUFFER_BIT, GL_LINEAR);
         }
 
+        glClearColor(0.0, 1.0, 0.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+
         // restore previous OpenGL state
         window->resetOpenGLState();
 
         // TODO: what does this do
+        window->endExternalCommands();
+    } else {
+        // TODO: this doesn't work, a blue frame still appears on startup
+
+        window->beginExternalCommands();
+
+        glClearColor(0.0, 0.0, 0.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        window->resetOpenGLState();
+
         window->endExternalCommands();
     }
 
@@ -192,7 +216,7 @@ void GeneratorLatticeRenderer::synchronize(QQuickFramebufferObject *item) {
         communicator->updateGenerator(generator);
 
         // request lattice data
-        communicator->requestLatticeData(latticeData, allocatedWidth, allocatedHeight);
+        communicator->writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
     } else {
         // check to see if the linked generator changed
         int generatorIDNew = ((GeneratorLattice*) item)->getGeneratorID();
@@ -203,7 +227,7 @@ void GeneratorLatticeRenderer::synchronize(QQuickFramebufferObject *item) {
             communicator->updateGenerator(generator);
 
             // request lattice data
-            communicator->requestLatticeData(latticeData, allocatedWidth, allocatedHeight);
+            communicator->writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
         }
     }
 

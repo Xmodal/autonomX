@@ -39,15 +39,19 @@ GeneratorLatticeRenderer::GeneratorLatticeRenderer() : QQuickFramebufferObject::
 }
 
 GeneratorLatticeRenderer::~GeneratorLatticeRenderer() {
+    if(flagDebug) {
+        qDebug() << "destructor (GeneratorLatticeRenderer)\tid = " << QThread::currentThreadId();
+    }
     // delete shader program
     delete program;
     // delete communicator
     delete communicator;
-    // delete lattice data if it exists
-    if(latticeData != nullptr) {
+    // delete lattice data (inner pointer) if it exists
+    if(*allocatedWidth != 0 && *allocatedHeight != 0) {
         delete *latticeData;
-        delete latticeData;
     }
+    // delete lattice data (outer pointer)
+    delete latticeData;
     // delete supersampling framebuffer if it exists
     if(flagSuper) {
         if(framebufferSuper != nullptr) {
@@ -92,8 +96,8 @@ void GeneratorLatticeRenderer::render() {
         }
     }
 
-    // only render if lattice data is ready
-    if(communicator->isFirstRequestDone()) {
+    // only render if generator is valid and lattice data is ready
+    if(generator != nullptr && communicator->isFirstRequestDone()) {
         // lock the lattice data mutex since we want to use that data
         generator->lockLatticeDataMutex();
 
@@ -215,26 +219,37 @@ void GeneratorLatticeRenderer::synchronize(QQuickFramebufferObject *item) {
     // remember we are synchronizing now
     synchronized = true;
 
+    bool generatorRefresh = false;
+
     // check if this is the first synchronization
     if(!synchronizedFirstDone) {
         synchronizedFirstDone = true;
         // update window
         window = item->window();
-
-        // link generator
+        // get generator id
         generatorID = ((GeneratorLattice*) item)->getGeneratorID();
-        generator = AppModel::getInstance().getGenerator(generatorID);
-        communicator->updateGenerator(generator);
-
-        // request lattice data
-        communicator->writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
+        // mark the generator for a refresh
+        generatorRefresh = true;
     } else {
-        // check to see if the linked generator changed
+        // check to see if the generator id changed
         int generatorIDNew = ((GeneratorLattice*) item)->getGeneratorID();
         if(generatorIDNew != generatorID) {
-            // link generator
+            // update id
             generatorID = generatorIDNew;
-            generator = AppModel::getInstance().getGenerator(generatorID);
+            // mark the generator for a refresh
+            generatorRefresh = true;
+        }
+    }
+
+    // update the generator pointer and communicator if needed
+    if(generatorRefresh) {
+        // update pointer
+        generator = AppModel::getInstance().getGenerator(generatorID);
+
+        // check if the generator exists to see if we can update the communicator
+        if(generator != nullptr) {
+
+            // update communicator
             communicator->updateGenerator(generator);
 
             // request lattice data

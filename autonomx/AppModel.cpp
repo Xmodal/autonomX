@@ -267,21 +267,11 @@ bool AppModel::validateNewGeneratorName(QString name) {
 }
 
 Generator* AppModel::getGenerator(int id) const {
-    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
-        if(id == (*it)->getID()) {
-            return (*it).data();
-        }
-     }
-    return nullptr;
+    return generatorsHashMap->value(id).data();
 }
 
 GeneratorFacade* AppModel::getGeneratorFacade(int id) const {
-    for(QList<QSharedPointer<GeneratorFacade>>::iterator it = generatorFacadesList->begin(); it != generatorFacadesList->end(); it++) {
-        if(id == (*it)->value("id").toInt()) {
-            return (*it).data();
-        }
-     }
-    return nullptr;
+    return generatorFacadesHashMap->value(id).data();
 }
 
 GeneratorModel* AppModel::getGeneratorModel() const {

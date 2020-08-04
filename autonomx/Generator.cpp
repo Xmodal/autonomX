@@ -402,7 +402,6 @@ void Generator::writeLatticeData(float** latticeData, int* allocatedWidth, int* 
     }
 }
 
-void Generator::allocateInitialLatticeData(float** latticeData, int* allocatedWidth, int* allocatedHeight) {
 void Generator::lockLatticeDataMutex() {
     latticeDataMutex.lock();
 }

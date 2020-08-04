@@ -36,6 +36,9 @@ GeneratorLatticeRenderer::GeneratorLatticeRenderer() : QQuickFramebufferObject::
 
     // init communicator
     communicator = new GeneratorLatticeCommunicator();
+
+    // init latticeData
+    *latticeData = nullptr;
 }
 
 GeneratorLatticeRenderer::~GeneratorLatticeRenderer() {
@@ -47,7 +50,7 @@ GeneratorLatticeRenderer::~GeneratorLatticeRenderer() {
     // delete communicator
     delete communicator;
     // delete lattice data (inner pointer) if it exists
-    if(*allocatedWidth != 0 && *allocatedHeight != 0) {
+    if(*latticeData != nullptr) {
         delete *latticeData;
     }
     // delete lattice data (outer pointer)

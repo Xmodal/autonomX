@@ -168,9 +168,6 @@ void GeneratorLatticeRenderer::render() {
             QOpenGLFramebufferObject::blitFramebuffer(framebuffer, QRect(0, 0, size.width(), size.height()), framebufferSuper, QRect(0, 0, sizeSuper.width(), sizeSuper.height()), GL_COLOR_BUFFER_BIT, GL_LINEAR);
         }
 
-        glClearColor(0.0, 1.0, 0.0, 1.0);
-        glClear(GL_COLOR_BUFFER_BIT);
-
         // restore previous OpenGL state
         window->resetOpenGLState();
 
@@ -181,7 +178,9 @@ void GeneratorLatticeRenderer::render() {
 
         window->beginExternalCommands();
 
-        glClearColor(0.0, 0.0, 0.0, 1.0);
+        framebuffer->bind();
+
+        glClearColor(0.0, 0.0, 0.0, 0.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
         window->resetOpenGLState();

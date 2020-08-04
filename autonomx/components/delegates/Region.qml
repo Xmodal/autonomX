@@ -20,6 +20,7 @@ Rectangle {
     height: regions.height * colH / mainContent.rows
     x: regions.width * colX / mainContent.cols
     y: regions.height * colY / mainContent.rows
+    z: selected ? 3 : 0;
 
     // break x/y property bindings
     Component.onCompleted: {
@@ -35,12 +36,25 @@ Rectangle {
 
     // snap to grid on drop / resize
     function snapToGrid() {
+        // update model here
+
+        // TO FIX: when a left corner/border is dragged in the negative of either X/Y axis,
+        // the width/height is offset by the number of overflowing cells at the time of mouse release
+        // this is most definitely caused by the fact that colW/colH aren't properly clamped behind the scenes
+        // and instead directly referencing the visual state of said region without accounting for overflow.
+        colW = Math.min(Math.max(Math.round((width - 1) / mainContent.ppc), 0), mainContent.cols - colX);
+        colH = Math.min(Math.max(Math.round((height - 1) / mainContent.ppc), 0), mainContent.rows - colY);
+        colX = Math.min(Math.max(Math.round(x / mainContent.ppc), 0), mainContent.cols - colW);
+        colY = Math.min(Math.max(Math.round(y / mainContent.ppc), 0), mainContent.rows - colH);
+
+        // then reevaluate region coordinates
         x = regions.width * colX / mainContent.cols;
         y = regions.height * colY / mainContent.rows;
         width = regions.width * colW / mainContent.cols;
         height = regions.height * colH / mainContent.rows;
 
-        // TODO: update model here
+        // THEN reevaluate the matrix mask rectangle
+        matrix.getRect();
     }
 
     // update region bounds
@@ -48,17 +62,19 @@ Rectangle {
     // to limit calculation rate to what's necessary to calculate
     // (also find a way to only call matrix.getRect() once per mouse interaction)
     function updateBounds() {
-        var newColX = Math.min(Math.max(Math.round(x / mainContent.ppc), 0), mainContent.cols - colW);
-        var newColY = Math.min(Math.max(Math.round(y / mainContent.ppc), 0), mainContent.rows - colH);
-        var newColW = Math.min(Math.max(Math.round((width - 1) / mainContent.ppc), 0), mainContent.cols - colX);
-        var newColH = Math.min(Math.max(Math.round((height - 1) / mainContent.ppc), 0), mainContent.rows - colY);
+        var newColX = Math.round(x / mainContent.ppc);
+        var newColY = Math.round(y / mainContent.ppc);
+        var newColW = Math.round((width - 1) / mainContent.ppc);
+        var newColH = Math.round((height - 1) / mainContent.ppc);
 
-        if (newColX !== colX) colX = newColX;
-        if (newColY !== colY) colY = newColY;
-        if (newColW !== colW) colW = newColW;
-        if (newColH !== colH) colH = newColH;
+        matrix.getRect(newColX, newColY, newColW, newColH);
+    }
 
-        matrix.getRect();
+    // force cursor on event
+    // this modifies properties on a MouseArea component over in LatticeView
+    function changeCursor(cursorShape) {
+        matrixMouseBg.z = cursorShape ? 5 : 0;
+        matrixMouseBg.cursorShape = cursorShape || Qt.ArrowCursor;
     }
 
     // external region boundary
@@ -82,9 +98,11 @@ Rectangle {
         if (dragActive) {
             Drag.start();
             mainContent.switchSelectedRegion(type, index);
+            changeCursor(Qt.SizeAllCursor);
         } else {
             Drag.drop();
             snapToGrid();
+            changeCursor();
         }
     }
 
@@ -148,9 +166,11 @@ Rectangle {
             }
 
             onPressedChanged: {
-                if (!pressed) {
-                    snapToGrid();
-                }
+                // unified cursor change on press/release
+                changeCursor(pressed ? cursorShape : null);
+
+                // on mouse release
+                if (!pressed) snapToGrid();
             }
 
             onMouseXChanged: {

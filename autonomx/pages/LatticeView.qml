@@ -74,12 +74,16 @@ ColumnLayout {
                 visible: !(genID < 0)
 
                 // convert ListElement to QRect
-                function getRect() {
+                function getRect(colX, colY, colW, colH) {
                     var element;
 
                     // auto cancel if type is signed
                     if (mainContent.currRegion.type === -1) return selected = Qt.rect(-1, -1, -1, -1);
-                    // set selected rect depending on type (whether input or output)
+
+                    // set selected to function arguments if applicable
+                    if (colX !== undefined) return selected = Qt.rect(colX, colY, colW, colH);
+
+                    // otherwise, retrieve automatically from global properties
                     if (mainContent.currRegion.type === 0) element = inputModel.get(mainContent.currRegion.index);
                     else if (mainContent.currRegion.type === 1) element = outputModel.get(mainContent.currRegion.index);
                     selected = Qt.rect(element.colX, element.colY, element.colW, element.colH);
@@ -99,6 +103,7 @@ ColumnLayout {
             }
 
             MouseArea {
+                id: matrixMouseBg
                 anchors.fill: parent
                 onClicked: mainContent.switchSelectedRegion(-1, -1)
             }

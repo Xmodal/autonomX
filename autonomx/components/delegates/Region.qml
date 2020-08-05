@@ -49,16 +49,17 @@ Rectangle {
     // snap to grid on drop / resize
     function snapToGrid(evtType) {
         // clamp w/h when left corner/border dragged in the negatives
+        var offsetW = 0, offsetH = 0;
         if (evtType === "resize") {
-            width += Math.min(x, 0);
-            height += Math.min(y, 0);
+            offsetW = Math.min(x, 0);
+            offsetH = Math.min(y, 0);
         }
 
         // calculate unsigned cell coordinates
         var newColX = Math.max(Math.round(x / mainContent.ppc), 0);
         var newColY = Math.max(Math.round(y / mainContent.ppc), 0);
-        var newColW = Math.max(Math.round((width - 1) / mainContent.ppc), 0);
-        var newColH = Math.max(Math.round((height - 1) / mainContent.ppc), 0);
+        var newColW = Math.max(Math.round((width - 1 + offsetW) / mainContent.ppc), 0);
+        var newColH = Math.max(Math.round((height - 1 + offsetH) / mainContent.ppc), 0);
 
         // clamp depending on event type
         if (evtType === "resize") {
@@ -92,12 +93,12 @@ Rectangle {
     // to limit calculation rate to what's necessary to calculate
     // (also find a way to only call matrix.setMask() once per mouse interaction)
     function updateBounds() {
-        var newColX = Math.round(x / mainContent.ppc);
-        var newColY = Math.round(y / mainContent.ppc);
-        var newColW = Math.round((width - 1) / mainContent.ppc);
-        var newColH = Math.round((height - 1) / mainContent.ppc);
-
-        matrix.setMask(newColX, newColY, newColW, newColH);
+        matrix.setMask(
+            x / mainContent.ppc,
+            y / mainContent.ppc,
+            (width - 1) / mainContent.ppc,
+            (height - 1) / mainContent.ppc
+        );
     }
 
     // force cursor on event

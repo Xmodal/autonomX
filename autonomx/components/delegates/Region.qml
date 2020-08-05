@@ -12,6 +12,7 @@ Rectangle {
     property int type                       // 0 = input; 1 = output
     property real intensity: 0.0            // r => [0.0, 1.0]
     property int resizeHitbox: 5            // zone padding
+    property int area
 
     antialiasing: true
 
@@ -20,7 +21,7 @@ Rectangle {
     height: regions.height * colH / mainContent.rows
     x: regions.width * colX / mainContent.cols
     y: regions.height * colY / mainContent.rows
-    z: selected ? 3 : 0;
+    z: selected ? 10 : 10 / area;
 
     // break x/y property bindings
     Component.onCompleted: {
@@ -28,6 +29,9 @@ Rectangle {
         y = y;
         width = width;
         height = height;
+
+        area = colW * colH;
+        area = area;
     }
     onXChanged: updateBounds()
     onYChanged: updateBounds()
@@ -35,18 +39,36 @@ Rectangle {
     onHeightChanged: updateBounds()
 
     // snap to grid on drop / resize
-    function snapToGrid() {
+    function snapToGrid(evtType) {
         // clamp w/h when left corner/border dragged in the negatives
-        width += Math.min(x, 0);
-        height += Math.min(y, 0);
+        if (evtType === "resize") {
+            width += Math.min(x, 0);
+            height += Math.min(y, 0);
+        }
+
+        // calculate unsigned cell coordinates
+        var newColX = Math.max(Math.round(x / mainContent.ppc), 0);
+        var newColY = Math.max(Math.round(y / mainContent.ppc), 0);
+        var newColW = Math.max(Math.round((width - 1) / mainContent.ppc), 0);
+        var newColH = Math.max(Math.round((height - 1) / mainContent.ppc), 0);
+
+        // clamp depending on event type
+        if (evtType === "resize") {
+            if (newColX + newColW > mainContent.cols) newColW = mainContent.cols - newColX;
+            if (newColY + newColH > mainContent.rows) newColH = mainContent.rows - newColY;
+        } else if (evtType === "drag") {
+            if (newColX + newColW > mainContent.cols) newColX = mainContent.cols - newColW;
+            if (newColY + newColH > mainContent.rows) newColY = mainContent.rows - newColH;
+        }
 
         // update model here
-        colW = Math.min(Math.max(Math.round((width - 1) / mainContent.ppc), 0), mainContent.cols - colX);
-        colH = Math.min(Math.max(Math.round((height - 1) / mainContent.ppc), 0), mainContent.rows - colY);
-        colX = Math.min(Math.max(Math.round(x / mainContent.ppc), 0), mainContent.cols - colW);
-        colY = Math.min(Math.max(Math.round(y / mainContent.ppc), 0), mainContent.rows - colH);
+        colX = newColX;
+        colY = newColY
+        colW = newColW;
+        colH = newColH;
+        area = colW * colH;
 
-        // then reevaluate region coordinates
+        // then reevaluate pixel coordinates
         x = regions.width * colX / mainContent.cols;
         y = regions.height * colY / mainContent.rows;
         width = regions.width * colW / mainContent.cols;
@@ -100,7 +122,7 @@ Rectangle {
             changeCursor(Qt.SizeAllCursor);
         } else {
             Drag.drop();
-            snapToGrid();
+            snapToGrid("drag");
             changeCursor();
         }
     }
@@ -169,7 +191,7 @@ Rectangle {
                 changeCursor(pressed ? cursorShape : null);
 
                 // on mouse release
-                if (!pressed) snapToGrid();
+                if (!pressed) snapToGrid("resize");
             }
 
             onMouseXChanged: {

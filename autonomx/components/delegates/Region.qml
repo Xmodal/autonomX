@@ -33,10 +33,18 @@ Rectangle {
         area = colW * colH;
         area = area;
     }
+
+    // matrix.getRect() update slots
     onXChanged: updateBounds()
     onYChanged: updateBounds()
     onWidthChanged: updateBounds()
     onHeightChanged: updateBounds()
+
+    // animation triggers
+    NumberAnimation on x { id: snapX; running: false; duration: 250; easing.type: Easing.OutCirc; }
+    NumberAnimation on y { id: snapY; running: false; duration: 250; easing.type: Easing.OutCirc; }
+    NumberAnimation on width { id: snapWidth; running: false; duration: 250; easing.type: Easing.OutCirc; }
+    NumberAnimation on height { id: snapHeight; running: false; duration: 250; easing.type: Easing.OutCirc; }
 
     // snap to grid on drop / resize
     function snapToGrid(evtType) {
@@ -68,11 +76,15 @@ Rectangle {
         colH = newColH;
         area = colW * colH;
 
-        // then reevaluate pixel coordinates
-        x = regions.width * colX / mainContent.cols;
-        y = regions.height * colY / mainContent.rows;
-        width = regions.width * colW / mainContent.cols;
-        height = regions.height * colH / mainContent.rows;
+        // then reevaluate pixel coordinates by animating them
+        snapX.to = regions.width * colX / mainContent.cols;
+        snapY.to = regions.height * colY / mainContent.rows;
+        snapWidth.to = regions.width * colW / mainContent.cols;
+        snapHeight.to = regions.height * colH / mainContent.rows;
+        snapX.restart();
+        snapY.restart();
+        snapWidth.restart();
+        snapHeight.restart();
 
         // THEN reevaluate the matrix mask rectangle
         matrix.getRect();

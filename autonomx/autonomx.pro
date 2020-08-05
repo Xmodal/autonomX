@@ -1,6 +1,7 @@
 QT += quick
 QT += core
 QT += qml
+QT += gui
 # QT += serialport
 CONFIG += c++11
 

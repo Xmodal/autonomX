@@ -22,6 +22,12 @@ GeneratorLatticeRenderer::GeneratorLatticeRenderer() : QQuickFramebufferObject::
     if(flagDebug) {
         qDebug() << "constructor (GeneratorLatticeRenderer)";
     }
+
+
+    // init the function set
+    functions = QOpenGLContext::currentContext()->functions();
+    functions->initializeOpenGLFunctions();
+
     // init the shader program
     program = new QOpenGLShaderProgram();
     program->addCacheableShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/lattice.vert");
@@ -38,13 +44,20 @@ GeneratorLatticeRenderer::GeneratorLatticeRenderer() : QQuickFramebufferObject::
     communicator = new GeneratorLatticeCommunicator();
 
     // init latticeData
+    latticeData = new float*;
     *latticeData = nullptr;
+
+    // init allocated width / height
+    allocatedWidth = new int(0);
+    allocatedHeight = new int(0);
 }
 
 GeneratorLatticeRenderer::~GeneratorLatticeRenderer() {
     if(flagDebug) {
         qDebug() << "destructor (GeneratorLatticeRenderer)\tid = " << QThread::currentThreadId();
     }
+    // delete function set
+    delete functions;
     // delete shader program
     delete program;
     // delete communicator
@@ -110,19 +123,19 @@ void GeneratorLatticeRenderer::render() {
 
         // bind the texture
         GLuint texture;
-        glActiveTexture(GL_TEXTURE0);
-        glUniform1i(glGetUniformLocation(program->programId(), "texture"), 0);
-        glGenTextures(1, &texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, *allocatedWidth, *allocatedHeight, 0, GL_RED, GL_FLOAT, *latticeData);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        functions->glActiveTexture(GL_TEXTURE0);
+        functions->glUniform1i(glGetUniformLocation(program->programId(), "texture"), 0);
+        functions->glGenTextures(1, &texture);
+        functions->glBindTexture(GL_TEXTURE_2D, texture);
+        functions->glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, *allocatedWidth, *allocatedHeight, 0, GL_RED, GL_FLOAT, *latticeData);
+        functions->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        functions->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
         // clear the default framebuffer
         framebuffer->bind();
 
-        glClearColor(0.0, 0.0, 0.0, 0.0);
-        glClear(GL_COLOR_BUFFER_BIT);
+        functions->glClearColor(0.0, 0.0, 0.0, 0.0);
+        functions->glClear(GL_COLOR_BUFFER_BIT);
 
         framebuffer->release();
 
@@ -131,11 +144,11 @@ void GeneratorLatticeRenderer::render() {
             framebufferSuper->bind();
 
             // set viewport size to match supersampling framebuffer
-            glViewport(0, 0, sizeSuper.width(), sizeSuper.height());
+            functions->glViewport(0, 0, sizeSuper.width(), sizeSuper.height());
 
             // clear the supersampling framebuffer
-            glClearColor(0.0, 0.0, 0.0, 0.0);
-            glClear(GL_COLOR_BUFFER_BIT);
+            functions->glClearColor(0.0, 0.0, 0.0, 0.0);
+            functions->glClear(GL_COLOR_BUFFER_BIT);
         }
 
         // bind shaders
@@ -154,16 +167,16 @@ void GeneratorLatticeRenderer::render() {
 
         // This example relies on (deprecated) client-side pointers for the vertex
         // input. Therefore, we have to make sure no vertex buffer is bound.
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        functions->glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         // TODO: what does this do
         program->setAttributeArray(0, GL_FLOAT, values, 2);
 
         // disable depth test
-        glDisable(GL_DEPTH_TEST);
+        functions->glDisable(GL_DEPTH_TEST);
 
         // draw
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        functions->glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
         // we can now release the lattice data mutex
         generator->unlockLatticeDataMutex();
@@ -193,14 +206,12 @@ void GeneratorLatticeRenderer::render() {
         // TODO: what does this do
         window->endExternalCommands();
     } else {
-        // TODO: this doesn't work, a blue frame still appears on startup
-
         window->beginExternalCommands();
 
         framebuffer->bind();
 
-        glClearColor(0.0, 0.0, 0.0, 0.0);
-        glClear(GL_COLOR_BUFFER_BIT);
+        functions->glClearColor(0.0, 0.0, 0.0, 0.0);
+        functions->glClear(GL_COLOR_BUFFER_BIT);
 
         window->resetOpenGLState();
 

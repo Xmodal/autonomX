@@ -16,6 +16,7 @@
 #pragma once
 
 #include <QQuickFramebufferObject>
+#include <QOpenGLContext>
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLFramebufferObject>
@@ -30,6 +31,7 @@ public:
     void render();
     void synchronize(QQuickFramebufferObject *item);
 private:
+    QOpenGLFunctions* functions;            // pointer to OpenGL function set
     QOpenGLShaderProgram *program;          // pointer to shader
     QQuickWindow *window;                   // pointer to window
     QOpenGLFramebufferObject *framebuffer = nullptr;        // pointer to the assigned framebuffer that is displayed in QML
@@ -45,7 +47,7 @@ private:
     int generatorID;                        // associated generator id
     Generator* generator;                   // associated generator
     GeneratorLatticeCommunicator* communicator;
-    float** latticeData = new float*;       // the lattice data used to draw the graphics
-    int* allocatedWidth = new int(0);       // the width of allocated flattened array in the memory block pointed by latticeData
-    int* allocatedHeight = new int(0);      // the height of allocated flattened array in the memory block pointed by latticeData
+    float** latticeData;       // the lattice data used to draw the graphics
+    int* allocatedWidth;       // the width of allocated flattened array in the memory block pointed by latticeData
+    int* allocatedHeight;      // the height of allocated flattened array in the memory block pointed by latticeData
 };

@@ -34,14 +34,12 @@
         <file>pages/GeneratorView.qml</file>
         <file>pages/Header.qml</file>
         <file>pages/LatticeView.qml</file>
+        <file>shaders/lattice.frag</file>
+        <file>shaders/lattice.vert</file>
         <file>shaders/light_cue.frag</file>
         <file>shaders/neuron_matrix.frag</file>
         <file>shaders/rack_bg.frag</file>
         <file>stylesheet/qmldir</file>
         <file>stylesheet/Stylesheet.qml</file>
-        <file>shaders/lattice.frag</file>
-        <file>shaders/lattice.vert</file>
-        <file>assets/fonts/Overpass-SemiBold.ttf</file>
-        <file>shaders/rack_bg.frag</file>
     </qresource>
 </RCC>

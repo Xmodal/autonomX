@@ -21,7 +21,7 @@ jobs:
         host: 'windows'
         target: 'desktop'
         arch: 'win64_mingw73'
-        modules: 'quick core'
+        modules: 'quick core qml gui'
     - name: qmake
       run: qmake .
     - name: make

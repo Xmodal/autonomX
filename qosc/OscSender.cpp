@@ -11,7 +11,7 @@
 OscSender::OscSender(const QString& hostAddress, quint16 port, QObject *parent) :
         QObject(parent),
         m_udpSocket(new QUdpSocket(this)),
-        m_hostAddress(hostAddress),
+        m_hostAddress(QHostAddress(hostAddress)),
         m_port(port)
 {
     if(flagDebug) {
@@ -22,7 +22,7 @@ OscSender::OscSender(const QString& hostAddress, quint16 port, QObject *parent) 
         qDebug() << "constructor (OscSender):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    m_udpSocket->connectToHost(QHostAddress(m_hostAddress) , m_port);
+    m_udpSocket->connectToHost(m_hostAddress , m_port);
 }
 
 OscSender::~OscSender()
@@ -43,14 +43,14 @@ void OscSender::setPort(quint16 port)
 {
     m_port = port;
     m_udpSocket->disconnectFromHost();
-    m_udpSocket->connectToHost(QHostAddress(m_hostAddress) , m_port);
+    m_udpSocket->connectToHost(m_hostAddress , m_port);
 }
 
 void OscSender::setHostAddress(const QString& hostAddress)
 {
-    m_hostAddress = hostAddress;
+    m_hostAddress = QHostAddress(hostAddress);
     m_udpSocket->disconnectFromHost();
-    m_udpSocket->connectToHost(QHostAddress(m_hostAddress) , m_port);
+    m_udpSocket->connectToHost(m_hostAddress , m_port);
 }
 
 void OscSender::send(const QString& oscAddress, const QVariantList& arguments) {

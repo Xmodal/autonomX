@@ -63,7 +63,7 @@ void ComputeEngine::receiveOscData(int id, QVariantList data) {
         if(i < data.size()) {
             // check the message's type can be cast to double
             QMetaType::Type type = (QMetaType::Type) dataAsList.at(i).type();
-            if(type == QMetaType::Float || QMetaType::Double || QMetaType::Int || QMetaType::Long) {
+            if(type == QMetaType::Float || type == QMetaType::Double || type == QMetaType::Int || type == QMetaType::Long) {
                 input = dataAsList.at(i).toDouble();
                 argumentsValid++;
             }

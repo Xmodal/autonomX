@@ -20,7 +20,6 @@
 
 class GeneratorLattice : public QQuickFramebufferObject {
     Q_OBJECT
-    QML_ELEMENT
     Q_PROPERTY(int generatorID READ getGeneratorID WRITE writeGeneratorID NOTIFY generatorIDChanged)
 public:
     QQuickFramebufferObject::Renderer * createRenderer() const;

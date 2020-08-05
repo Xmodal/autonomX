@@ -56,8 +56,6 @@ GeneratorLatticeRenderer::~GeneratorLatticeRenderer() {
     if(flagDebug) {
         qDebug() << "destructor (GeneratorLatticeRenderer)\tid = " << QThread::currentThreadId();
     }
-    // delete function set
-    delete functions;
     // delete shader program
     delete program;
     // delete communicator

@@ -10,7 +10,8 @@ uniform int rows;
 uniform int ppc;
 uniform float cw;
 uniform float ch;
-uniform vec4 selected;
+uniform vec4 mask;
+// uniform float maskAlpha;
 
 void main(void)
 {
@@ -34,9 +35,10 @@ void main(void)
     c *= (st.x < 0.0 || st.y < 0.0 || st.x >= 1.0 || st.y >= 1.0) ? 0.0 : 1.0;
 
     // highlight selected zone if applicable
+    // TODO: add float "maskAlpha" - animated in QML
     if (selected.w >= 0) {
-        vec2 selp = selected.xy / cr;
-        vec2 seld = selected.zw / cr;
+        vec2 selp = mask.xy / cr;
+        vec2 seld = mask.zw / cr;
         c *= (st.x < selp.x || st.y < selp.y || st.x >= selp.x + seld.x || st.y >= selp.y + seld.y) ? 0.3 : 1.0;
     }
 

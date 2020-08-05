@@ -36,13 +36,6 @@
 #include "AppNap.h"
 #endif
 
-// only include OpenGL header if platform is Windows
-#ifdef Q_OS_WIN
-#include "gl/GLU.h"
-#else
-#include <glu.h>
-#endif
-
 bool flagDebug = false;
 
 int main(int argc, char *argv[]) {

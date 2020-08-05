@@ -124,7 +124,7 @@ void GeneratorLatticeRenderer::render() {
         // bind the texture
         GLuint texture;
         functions->glActiveTexture(GL_TEXTURE0);
-        functions->glUniform1i(glGetUniformLocation(program->programId(), "texture"), 0);
+        functions->glUniform1i(functions->glGetUniformLocation(program->programId(), "texture"), 0);
         functions->glGenTextures(1, &texture);
         functions->glBindTexture(GL_TEXTURE_2D, texture);
         functions->glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, *allocatedWidth, *allocatedHeight, 0, GL_RED, GL_FLOAT, *latticeData);

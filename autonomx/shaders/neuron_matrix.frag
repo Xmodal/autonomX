@@ -36,7 +36,7 @@ void main(void)
 
     // highlight selected zone if applicable
     // TODO: add float "maskAlpha" - animated in QML
-    if (selected.w >= 0) {
+    if (mask.w >= 0.0) {
         vec2 selp = mask.xy / cr;
         vec2 seld = mask.zw / cr;
         c *= (st.x < selp.x || st.y < selp.y || st.x >= selp.x + seld.x || st.y >= selp.y + seld.y) ? 0.3 : 1.0;

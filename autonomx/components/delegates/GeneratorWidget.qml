@@ -79,7 +79,7 @@ Button {
         VuMeter {
             id: vuMeter
 
-            luminosity: model.index >= 0 ? model.outputMonitor : 0
+            intensity: model.index >= 0 ? model.outputMonitor : 0
             barColor: Stylesheet.colors.white
 
             Layout.alignment: Qt.AlignRight

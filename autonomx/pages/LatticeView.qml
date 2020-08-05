@@ -43,7 +43,7 @@ ColumnLayout {
             currRegion.index = index;
             regions.rectSelected = currRegion.index >= 0;
 
-            matrix.getRect();
+            matrix.setMask();
         }
 
         // models
@@ -74,19 +74,20 @@ ColumnLayout {
                 visible: !(genID < 0)
 
                 // convert ListElement to QRect
-                function getRect(colX, colY, colW, colH) {
+                function setMask(colX, colY, colW, colH) {
                     var element;
 
                     // auto cancel if type is signed
-                    if (mainContent.currRegion.type === -1) return selected = Qt.rect(-1, -1, -1, -1);
+                    if (mainContent.currRegion.type === -1) return mask = Qt.rect(-1, -1, -1, -1);
 
                     // set selected to function arguments if applicable
-                    if (colX !== undefined) return selected = Qt.rect(colX, colY, colW, colH);
+                    if (colX !== undefined) return mask = Qt.rect(colX, colY, colW, colH);
 
                     // otherwise, retrieve automatically from global properties
+                    // TODO: clean up function calls so that this block can be removed, instead directly using arguments every time
                     if (mainContent.currRegion.type === 0) element = inputModel.get(mainContent.currRegion.index);
                     else if (mainContent.currRegion.type === 1) element = outputModel.get(mainContent.currRegion.index);
-                    selected = Qt.rect(element.colX, element.colY, element.colW, element.colH);
+                    mask = Qt.rect(element.colX, element.colY, element.colW, element.colH);
                 }
 
                 // uniforms
@@ -95,7 +96,7 @@ ColumnLayout {
                 property int ppc: mainContent.ppc
                 property int cols: mainContent.cols
                 property int rows: mainContent.rows
-                property rect selected: Qt.rect(-1, -1, -1, -1)
+                property rect mask: Qt.rect(-1, -1, -1, -1)
                 property Image textureMap: Image { id: neuronGrid; source: "qrc:/assets/images/neurongrid_20x20.png" }
 
                 // fragment shader

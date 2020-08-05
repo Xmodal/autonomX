@@ -34,7 +34,7 @@ Rectangle {
         area = area;
     }
 
-    // matrix.getRect() update slots
+    // matrix.setMask() update slots
     onXChanged: updateBounds()
     onYChanged: updateBounds()
     onWidthChanged: updateBounds()
@@ -85,22 +85,19 @@ Rectangle {
         snapY.restart();
         snapWidth.restart();
         snapHeight.restart();
-
-        // THEN reevaluate the matrix mask rectangle
-        matrix.getRect();
     }
 
     // update region bounds
     // TODO: segment this into different functions
     // to limit calculation rate to what's necessary to calculate
-    // (also find a way to only call matrix.getRect() once per mouse interaction)
+    // (also find a way to only call matrix.setMask() once per mouse interaction)
     function updateBounds() {
         var newColX = Math.round(x / mainContent.ppc);
         var newColY = Math.round(y / mainContent.ppc);
         var newColW = Math.round((width - 1) / mainContent.ppc);
         var newColH = Math.round((height - 1) / mainContent.ppc);
 
-        matrix.getRect(newColX, newColY, newColW, newColH);
+        matrix.setMask(newColX, newColY, newColW, newColH);
     }
 
     // force cursor on event

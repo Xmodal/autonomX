@@ -20,7 +20,7 @@ jobs:
         version: '5.12.8'
         host: 'mac'
         target: 'desktop'
-        modules: 'quick core'
+        modules: 'quick core qml gui'
     - name: qmake
       run: qmake .
     - name: make

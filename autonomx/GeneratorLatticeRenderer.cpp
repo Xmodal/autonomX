@@ -109,7 +109,6 @@ void GeneratorLatticeRenderer::render() {
             }
         }
 
-        // update synchronized status
         synchronized = false;
     }
 
@@ -173,17 +172,17 @@ void GeneratorLatticeRenderer::render() {
         // TODO: what does this do
         program->setAttributeArray(0, GL_FLOAT, values, 2);
 
-        // the uniforms corner
-        program->setUniformValue("latticeWidthInSquares", *allocatedWidth);
-        program->setUniformValue("latticeHeightInSquares", *allocatedHeight);
-        program->setUniformValue("squareInPixels", 20.0f);
-        program->setUniformValue("containerWidthInPixels", 640);
-        program->setUniformValue("containerHeightInPixels", 680);
-        program->setUniformValue("mask", QVector4D(-1.0, -1.0, -1.0, -1.0));
-        program->setUniformValue("maskAlpha", 0.3f);
-
         // disable depth test
         functions->glDisable(GL_DEPTH_TEST);
+
+        // update uniforms
+        program->setUniformValue("squareInPixels", squareInPixels);
+        program->setUniformValue("containerWidthInPixels", containerWidthInPixels);
+        program->setUniformValue("containerHeightInPixels", containerHeightInPixels);
+        program->setUniformValue("mask", mask);
+        program->setUniformValue("maskAlpha", maskAlpha);
+        program->setUniformValue("latticeWidthInSquares", *allocatedWidth);
+        program->setUniformValue("latticeHeightInSquares", *allocatedHeight);
 
         // draw
         functions->glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -240,6 +239,8 @@ void GeneratorLatticeRenderer::synchronize(QQuickFramebufferObject *item) {
         qDebug() << "synchronize (GeneratorLatticeRenderer)";
     }
 
+    GeneratorLattice* generatorLattice = ((GeneratorLattice*) item);
+
     // remember we are synchronizing now
     synchronized = true;
 
@@ -251,12 +252,12 @@ void GeneratorLatticeRenderer::synchronize(QQuickFramebufferObject *item) {
         // update window
         window = item->window();
         // get generator id
-        generatorID = ((GeneratorLattice*) item)->getGeneratorID();
+        generatorID = generatorLattice->getGeneratorID();
         // mark the generator for a refresh
         generatorRefresh = true;
     } else {
         // check to see if the generator id changed
-        int generatorIDNew = ((GeneratorLattice*) item)->getGeneratorID();
+        int generatorIDNew = generatorLattice->getGeneratorID();
         if(generatorIDNew != generatorID) {
             // update id
             generatorID = generatorIDNew;
@@ -280,6 +281,13 @@ void GeneratorLatticeRenderer::synchronize(QQuickFramebufferObject *item) {
             communicator->writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
         }
     }
+
+    // update values for uniforms
+    squareInPixels = generatorLattice->getSquareInPixels();
+    containerWidthInPixels = generatorLattice->getContainerWidthInPixels();
+    containerHeightInPixels = generatorLattice->getContainerHeightInPixels();
+    mask = generatorLattice->getMask();
+    maskAlpha = generatorLattice->getMaskAlpha();
 
     // update visible
     visible = item->isVisible();

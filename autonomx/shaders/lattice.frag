@@ -18,15 +18,15 @@ void main() {
     float padding = squareInPixels * 0.10;
 
     // container width and height vector, in pixels
-    ivec2 containerSizeInPixels = ivec2(containerWidthInPixels, containerHeightInPixels);                                   // container size, in pixels
-    ivec2 latticeSizeInSquares = ivec2(latticeWidthInSquares, latticeHeightInSquares);                                      // lattice size, in squares
-    vec2 latticeSizeInPixels = vec2(squareInPixels * float(latticeWidthInSquares), squareInPixels * float(latticeHeightInSquares));      // lattice size, in pixels
+    ivec2 containerSizeInPixels = ivec2(containerWidthInPixels, containerHeightInPixels);                                               // container size, in pixels
+    ivec2 latticeSizeInSquares = ivec2(latticeWidthInSquares, latticeHeightInSquares);                                                  // lattice size, in squares
+    vec2 latticeSizeInPixels = vec2(squareInPixels * float(latticeWidthInSquares), squareInPixels * float(latticeHeightInSquares));     // lattice size, in pixels
 
-    vec2 latticeScaleInverse = vec2(containerSizeInPixels) / latticeSizeInPixels;     // inverse of the scale of the lattice relative to the container
+    vec2 latticeScaleInverse = vec2(containerSizeInPixels) / latticeSizeInPixels;   // inverse of the scale of the lattice relative to the container
 
-    vec2 pixelInCentered = vec2(1.0) / vec2(containerSizeInPixels);                   // pixel unit in centered space
-    vec2 pixelInLattice = pixelInCentered * latticeScaleInverse;                // pixel unit in lattice space
-    vec2 squareInLattice = vec2(1.0) / vec2(latticeSizeInSquares);                    // size of a square (including padding) in lattice space
+    vec2 pixelInCentered = vec2(1.0) / vec2(containerSizeInPixels);                 // pixel unit in centered space
+    vec2 pixelInLattice = pixelInCentered * latticeScaleInverse;                    // pixel unit in lattice space
+    vec2 squareInLattice = vec2(1.0) / vec2(latticeSizeInSquares);                  // size of a square (including padding) in lattice space
 
     // map NDC coordinates to UV coordinates ([-1, 1] -> [0, 1])
     vec2 coordinatesCentered = coordinates * 0.5 + vec2(0.5, 0.5);

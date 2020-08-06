@@ -176,7 +176,8 @@ void GeneratorLatticeRenderer::render() {
         program->setUniformValue("squareInPixels", 20.0f);
         program->setUniformValue("containerWidthInPixels", 640.0f);
         program->setUniformValue("containerHeightInPixels", 680.0f);
-        // program->setUniformValue("mask", generator->mask);
+        program->setUniformValue("mask", QVector4D(-1.0, -1.0, -1.0, -1.0));
+        program->setUniformValue("maskAlpha", 0.3f);
 
         // disable depth test
         functions->glDisable(GL_DEPTH_TEST);

@@ -50,7 +50,8 @@ void main() {
         !(coordinatesInSquare.x > padding && coordinatesInSquare.x < (1.0 - padding)) ||
         !(coordinatesInSquare.y > padding && coordinatesInSquare.y < (1.0 - padding))
     ) {
-        discard;
+        gl_FragColor = vec4(vec3(1.0), 0.1);
+        return;
     }
 
     // get floored texture coordinate
@@ -73,5 +74,5 @@ void main() {
     }
 
     // export color
-    gl_FragColor = vec4(intensity);
+    gl_FragColor = vec4(vec3(1.0), intensity);
 }

@@ -179,6 +179,10 @@ void GeneratorLatticeRenderer::render() {
         // disable depth test
         functions->glDisable(GL_DEPTH_TEST);
 
+        // enable blending
+        functions->glEnable(GL_BLEND);
+        functions->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         // update uniforms
 
         if(flagSuper) {
@@ -196,6 +200,7 @@ void GeneratorLatticeRenderer::render() {
 
         program->setUniformValue("latticeWidthInSquares", *allocatedWidth);
         program->setUniformValue("latticeHeightInSquares", *allocatedHeight);
+
 
         // draw
         functions->glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

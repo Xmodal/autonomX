@@ -5,17 +5,17 @@ varying highp vec2 coordinates;
 uniform sampler2D texture;
 
 // uniform props
-uniform float latticeWidthInSquares;
-uniform float latticeHeightInSquares;
-uniform float squareInPixels;
-uniform float containerWidthInPixels;
-uniform float containerHeightInPixels;
-// uniform vec4 mask;
-// uniform float maskAlpha;
+uniform float   latticeWidthInSquares;
+uniform float   latticeHeightInSquares;
+uniform float   squareInPixels;
+uniform float   containerWidthInPixels;
+uniform float   containerHeightInPixels;
+uniform vec4    mask;
+uniform float   maskAlpha;
 
 void main() {
     // padding between cells, in pixels (defined relative to square size)
-    float padding = squareInPixels * 0.15;
+    float padding = squareInPixels * 0.10;
 
     // container width and height vector, in pixels
     vec2 containerSizeInPixels = vec2(containerWidthInPixels, containerHeightInPixels);                                 // container size, in pixels
@@ -61,7 +61,6 @@ void main() {
     // sample intensity
     float intensity = texture2D(texture, coordinatesInLatticeFloored).r;
 
-    /*
     // highlight selected zone if applicable
     // TODO: add float "maskAlpha" - animated in QML
     if (mask.w >= 0.0) {
@@ -72,9 +71,8 @@ void main() {
             coordinatesInLattice.y < maskCornerInLattice.y ||
             coordinatesInLattice.x >= maskCornerInLattice.x + maskSizeInLattice.x ||
             coordinatesInLattice.y >= maskCornerInLattice.y + maskSizeInLattice.y
-        ) ? 0.3 : 1.0;
+        ) ? maskAlpha : 1.0;
     }
-    */
 
     // export color
     gl_FragColor = vec4(intensity);

@@ -26,13 +26,20 @@ void main() {
     // map tex coord to centered grid
     vec2 st = coords * 0.5 + vec2(0.5, 0.5);
     st = (st * diff) - ((diff - 1.0) / 2.0);
-    // retrieve pixel color and upscale
-    vec2 fst = floor(st * cr) / cr + (0.5 / cr);
 
-    // set to color
-    float c = texture2D(texture, fst).r;
     // hide pixels outside drawing zone
-    c *= (st.x < 0.0 || st.y < 0.0 || st.x >= 1.0 || st.y >= 1.0) ? 0.0 : 1.0;
+    if(st.x < 0.0 || st.y < 0.0 || st.x >= 1.0 || st.y >= 1.0) {
+        discard;
+    }
+
+    // set padding
+    vec2 value = vec2(mod(st.x, pxl.x * float(cols)), mod(st.y, pxl.y * float(rows)));
+
+    // hide pixels inside padding
+    if(!(value.x > pxl.x * pad && value.x < pxl.x * float(cols) - (pxl.x * (pad + 1.0))) ||
+       !(value.y > pxl.y * pad && value.y < pxl.y * float(rows) - (pxl.y * (pad + 1.0)))) {
+        discard;
+    }
 
     // highlight selected zone if applicable
     // TODO: add float "maskAlpha" - animated in QML
@@ -44,10 +51,11 @@ void main() {
     }
     */
 
-    // set padding
-    vec2 value = vec2(mod(st.x, pxl.x * float(cols)), mod(st.y, pxl.y * float(rows)));
-    c *= value.x > pxl.x * pad && value.x < pxl.x * float(cols) - (pxl.x * (pad + 1.0)) ? 1.0 : 0.0;
-    c *= value.y > pxl.y * pad && value.y < pxl.y * float(rows) - (pxl.y * (pad + 1.0)) ? 1.0 : 0.0;
+    // get floored texture coordinate
+    vec2 fst = floor(st * cr) / cr + (0.5 / cr);
+
+    // sample color
+    float c = texture2D(texture, fst).r;
 
     // export color
     gl_FragColor = vec4(c);

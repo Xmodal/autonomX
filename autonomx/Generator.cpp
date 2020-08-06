@@ -17,6 +17,7 @@
 
 #include <chrono>
 #include <QThread>
+#include <QTimer>
 #include <QDebug>
 
 Generator::Generator(int id, QString name, QString type, QString description) {
@@ -352,7 +353,11 @@ void Generator::writeLatticeData(float** latticeData, int* allocatedWidth, int* 
         }
 
         // failed to get lock, wait for GeneratorLatticeRenderer to finish its render method and let any other task get completed in the mean time
-        emit writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
+        QTimer timer;
+        timer.setTimerType(Qt::CoarseTimer);
+        timer.singleShot(0, this, [this, latticeData, allocatedWidth, allocatedHeight](){
+            emit writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
+        });
     } else {
         if(flagDebug) {
             qDebug() << "writeLatticeData (Generator): succeded at getting lock";

@@ -30,7 +30,7 @@ void main() {
     vec2 fst = floor(st * cr) / cr + (0.5 / cr);
 
     // set to color
-    vec4 c = vec4(1.0, 1.0, 1.0, 1.0) * texture2D(texture, fst).rrrr;
+    float c = texture2D(texture, fst).r;
     // hide pixels outside drawing zone
     c *= (st.x < 0.0 || st.y < 0.0 || st.x >= 1.0 || st.y >= 1.0) ? 0.0 : 1.0;
 
@@ -50,5 +50,5 @@ void main() {
     c *= value.y > pxl.y * pad && value.y < pxl.y * float(rows) - (pxl.y * (pad + 1.0)) ? 1.0 : 0.0;
 
     // export color
-    gl_FragColor = c;
+    gl_FragColor = vec4(c);
 }

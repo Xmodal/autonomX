@@ -69,20 +69,15 @@ ColumnLayout {
                 // uniforms
                 property real cw: width
                 property real ch: height
+                // property real cols
+                // property real rows
                 property int ppc: mainContent.ppc
                 property rect mask: Qt.rect(-1, -1, -1, -1)
-            }
+                // property real maskAlpha
 
-            /*
-            // neuron grid
-            ShaderEffect {
-                id: matrix
-
-                anchors.fill: parent
-                visible: !(genID < 0)
-
-                // convert ListElement to QRect
+                // TODO in lattice.frag
                 function setMask(colX, colY, colW, colH) {
+                    /*
                     var element;
 
                     // auto cancel if type is signed
@@ -96,21 +91,9 @@ ColumnLayout {
                     if (mainContent.currRegion.type === 0) element = inputModel.get(mainContent.currRegion.index);
                     else if (mainContent.currRegion.type === 1) element = outputModel.get(mainContent.currRegion.index);
                     mask = Qt.rect(element.colX, element.colY, element.colW, element.colH);
+                    */
                 }
-
-                // uniforms
-                property real cw: width
-                property real ch: height
-                property int ppc: mainContent.ppc
-                property int cols: mainContent.cols
-                property int rows: mainContent.rows
-                property rect mask: Qt.rect(-1, -1, -1, -1)
-                property Image textureMap: Image { id: neuronGrid; source: "qrc:/assets/images/neurongrid_20x20.png" }
-
-                // fragment shader
-                fragmentShader: "qrc:/shaders/neuron_matrix.frag"
             }
-            */
 
             MouseArea {
                 id: matrixMouseBg

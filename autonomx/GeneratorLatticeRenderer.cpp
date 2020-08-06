@@ -171,11 +171,11 @@ void GeneratorLatticeRenderer::render() {
         program->setAttributeArray(0, GL_FLOAT, values, 2);
 
         // the uniforms corner
-        program->setUniformValue("cols", 20.0f);
-        program->setUniformValue("rows", 20.0f);
-        program->setUniformValue("ppc", 20.0f);
-        program->setUniformValue("cw", 640.0f);
-        program->setUniformValue("ch", 680.0f);
+        program->setUniformValue("latticeWidthInSquares", 20.0f);
+        program->setUniformValue("latticeHeightInSquares", 20.0f);
+        program->setUniformValue("squareInPixels", 20.0f);
+        program->setUniformValue("containerWidthInPixels", 640.0f);
+        program->setUniformValue("containerHeightInPixels", 680.0f);
         // program->setUniformValue("mask", generator->mask);
 
         // disable depth test

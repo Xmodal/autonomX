@@ -1,7 +1,7 @@
 attribute highp vec4 vertices;
-varying highp vec2 coords;
+varying highp vec2 coordinates;
 
 void main() {
     gl_Position = vertices;
-    coords = vertices.xy;
+    coordinates = vertices.xy;
 }

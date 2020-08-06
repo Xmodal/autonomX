@@ -14,7 +14,7 @@ uniform vec4    mask;
 uniform float   maskAlpha;
 
 // padding between cells, in pixels (defined relative to square size)
-float padding = squareInPixels * 0.10;
+float padding = 0.10;
 
 // container width and height vector, in pixels
 ivec2 containerSizeInPixels = ivec2(containerWidthInPixels, containerHeightInPixels);                                               // container size, in pixels
@@ -22,17 +22,15 @@ ivec2 latticeSizeInSquares = ivec2(latticeWidthInSquares, latticeHeightInSquares
 vec2 latticeSizeInPixels = vec2(squareInPixels * float(latticeWidthInSquares), squareInPixels * float(latticeHeightInSquares));     // lattice size, in pixels
 
 vec2 latticeScaleInverse = vec2(containerSizeInPixels) / latticeSizeInPixels;   // inverse of the scale of the lattice relative to the container
+vec2 latticeScale = latticeSizeInPixels / vec2(containerSizeInPixels);
 
 vec2 pixelInCentered = vec2(1.0) / vec2(containerSizeInPixels);                 // pixel unit in centered space
 vec2 pixelInLattice = pixelInCentered * latticeScaleInverse;                    // pixel unit in lattice space
 vec2 squareInLattice = vec2(1.0) / vec2(latticeSizeInSquares);                  // size of a square (including padding) in lattice space
 
 void main() {
-    // map NDC coordinates to UV coordinates ([-1, 1] -> [0, 1])
-    vec2 coordinatesUnipolar = coordinates * 0.5 + vec2(0.5, 0.5);
-
-    // map UV coordinates to UV coordinates inside lattice
-    vec2 coordinatesInLattice = (coordinatesUnipolar * latticeScaleInverse) - ((latticeScaleInverse - 1.0) / 2.0);
+    // map to coordinates inside lattice
+    vec2 coordinatesInLattice = (coordinates * latticeScaleInverse) * 0.25 + 0.5;
 
     // hide pixels outside lattice
     if(
@@ -45,12 +43,12 @@ void main() {
     }
 
     // compute location of the pixel in one of the lattice's square, in range [0, 1]
-    vec2 coordinatesInSquare = vec2(mod(coordinatesInLattice.x, squareInLattice.x), mod(coordinatesInLattice.y, squareInLattice.y));
+    vec2 coordinatesInSquare = vec2(mod(coordinatesInLattice.x, squareInLattice.x), mod(coordinatesInLattice.y, squareInLattice.y)) / squareInLattice;
 
     // hide pixels inside padding
     if(
-        !(coordinatesInSquare.x > pixelInLattice.x * padding && coordinatesInSquare.x < pixelInLattice.x * float(latticeWidthInSquares) - (pixelInLattice.x * (padding + 1.0))) ||
-        !(coordinatesInSquare.y > pixelInLattice.y * padding && coordinatesInSquare.y < pixelInLattice.y * float(latticeHeightInSquares) - (pixelInLattice.y * (padding + 1.0)))
+        !(coordinatesInSquare.x > padding && coordinatesInSquare.x < (1.0 - padding)) ||
+        !(coordinatesInSquare.y > padding && coordinatesInSquare.y < (1.0 - padding))
     ) {
         discard;
     }

@@ -30,14 +30,6 @@ float GeneratorLattice::getSquareInPixels() {
     return squareInPixels;
 }
 
-int GeneratorLattice::getContainerWidthInPixels() {
-    return containerWidthInPixels;
-}
-
-int GeneratorLattice::getContainerHeightInPixels() {
-    return containerHeightInPixels;
-}
-
 QVector4D GeneratorLattice::getMask() {
     return mask;
 }
@@ -53,32 +45,6 @@ void GeneratorLattice::writeSquareInPixels(float squareInPixels) {
 
     this->squareInPixels = squareInPixels;
     emit squareInPixelsChanged(squareInPixels);
-}
-
-void GeneratorLattice::writeContainerWidthInPixels(int containerWidthInPixels) {
-    if(this->containerWidthInPixels == containerWidthInPixels) {
-        return;
-    }
-
-    if(flagDebug) {
-        qDebug() << "writeContainerWidthInPixels (GeneratorLattice):\t" << containerWidthInPixels;
-    }
-
-    this->containerWidthInPixels = containerWidthInPixels;
-    emit containerWidthInPixelsChanged(containerWidthInPixels);
-}
-
-void GeneratorLattice::writeContainerHeightInPixels(int containerHeightInPixels) {
-    if(this->containerHeightInPixels == containerHeightInPixels) {
-        return;
-    }
-
-    if(flagDebug) {
-        qDebug() << "writeContainerHeightInPixels (GeneratorLattice):\t" << containerHeightInPixels;
-    }
-
-    this->containerHeightInPixels = containerWidthInPixels;
-    emit containerHeightInPixelsChanged(containerWidthInPixels);
 }
 
 void GeneratorLattice::writeMask(QVector4D mask) {

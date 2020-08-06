@@ -14,8 +14,8 @@ uniform float containerHeightInPixels;
 // uniform float maskAlpha;
 
 void main() {
-    // padding between cells, in pixels
-    float padding = 3.0;
+    // padding between cells, in pixels (defined relative to square size)
+    float padding = squareInPixels * 0.15;
 
     // container width and height vector, in pixels
     vec2 containerSizeInPixels = vec2(containerWidthInPixels, containerHeightInPixels);                                 // container size, in pixels

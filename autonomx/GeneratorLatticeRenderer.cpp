@@ -108,6 +108,9 @@ void GeneratorLatticeRenderer::render() {
                 framebufferSuper = new QOpenGLFramebufferObject(sizeSuper);
             }
         }
+
+        // update synchronized status
+        synchronized = false;
     }
 
     // only render if generator is valid and lattice data is ready

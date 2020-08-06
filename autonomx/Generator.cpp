@@ -354,7 +354,7 @@ void Generator::writeLatticeData(float** latticeData, int* allocatedWidth, int* 
 
         // failed to get lock, wait for GeneratorLatticeRenderer to finish its render method and let any other task get completed in the mean time
         QTimer timer;
-        timer.setTimerType(Qt::CoarseTimer);
+        timer.setTimerType(Qt::PreciseTimer);
         timer.singleShot(0, this, [this, latticeData, allocatedWidth, allocatedHeight](){
             emit writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
         });

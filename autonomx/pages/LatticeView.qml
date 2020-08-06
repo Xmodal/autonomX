@@ -67,13 +67,11 @@ ColumnLayout {
                 anchors.fill: parent
 
                 // uniforms
-                property real cw: width
-                property real ch: height
-                // property real cols
-                // property real rows
-                property int ppc: mainContent.ppc
-                property rect mask: Qt.rect(-1, -1, -1, -1)
-                // property real maskAlpha
+                containerWidthInPixels: width;
+                containerHeightInPixels: height;
+                squareInPixels: mainContent.ppc
+                mask: Qt.vector4d(-1, -1, -1, -1)
+                maskAlpha: 0.3
 
                 // TODO in lattice.frag
                 function setMask(colX, colY, colW, colH) {

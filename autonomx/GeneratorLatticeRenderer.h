@@ -47,7 +47,12 @@ private:
     int generatorID;                        // associated generator id
     Generator* generator;                   // associated generator
     GeneratorLatticeCommunicator* communicator;
-    float** latticeData;       // the lattice data used to draw the graphics
-    int* allocatedWidth;       // the width of allocated flattened array in the memory block pointed by latticeData
-    int* allocatedHeight;      // the height of allocated flattened array in the memory block pointed by latticeData
+    float** latticeData;        // the lattice data used to draw the graphics
+    int* allocatedWidth;        // the width of allocated flattened array in the memory block pointed by latticeData
+    int* allocatedHeight;       // the height of allocated flattened array in the memory block pointed by latticeData
+    float squareInPixels;       // uniform for pixel size of a lattice square
+    int containerWidthInPixels; // uniform for container width in pixels
+    int containerHeightInPixels;// uniform for container height in pixels
+    QVector4D mask;             // uniform for mask shape (leftmost x, topmost y, width, height)
+    float maskAlpha;            // uniform for mask alpha
 };

@@ -26,13 +26,97 @@ int GeneratorLattice::getGeneratorID() {
     return generatorID;
 }
 
+float GeneratorLattice::getSquareInPixels() {
+    return squareInPixels;
+}
+
+int GeneratorLattice::getContainerWidthInPixels() {
+    return containerWidthInPixels;
+}
+
+int GeneratorLattice::getContainerHeightInPixels() {
+    return containerHeightInPixels;
+}
+
+QVector4D GeneratorLattice::getMask() {
+    return mask;
+}
+
+float GeneratorLattice::getMaskAlpha() {
+    return maskAlpha;
+}
+
+void GeneratorLattice::writeSquareInPixels(float squareInPixels) {
+    if(this->squareInPixels == squareInPixels) {
+        return;
+    }
+
+    this->squareInPixels = squareInPixels;
+    emit squareInPixelsChanged(squareInPixels);
+}
+
+void GeneratorLattice::writeContainerWidthInPixels(int containerWidthInPixels) {
+    if(this->containerWidthInPixels == containerWidthInPixels) {
+        return;
+    }
+
+    if(flagDebug) {
+        qDebug() << "writeContainerWidthInPixels (GeneratorLattice):\t" << containerWidthInPixels;
+    }
+
+    this->containerWidthInPixels = containerWidthInPixels;
+    emit containerWidthInPixelsChanged(containerWidthInPixels);
+}
+
+void GeneratorLattice::writeContainerHeightInPixels(int containerHeightInPixels) {
+    if(this->containerHeightInPixels == containerHeightInPixels) {
+        return;
+    }
+
+    if(flagDebug) {
+        qDebug() << "writeContainerHeightInPixels (GeneratorLattice):\t" << containerHeightInPixels;
+    }
+
+    this->containerHeightInPixels = containerWidthInPixels;
+    emit containerHeightInPixelsChanged(containerWidthInPixels);
+}
+
+void GeneratorLattice::writeMask(QVector4D mask) {
+    if(this->mask == mask) {
+        return;
+    }
+
+    if(flagDebug) {
+        qDebug() << "writeMask (GeneratorLattice):\t" << mask;
+    }
+
+    this->mask = mask;
+    emit maskChanged(mask);
+}
+
+void GeneratorLattice::writeMaskAlpha(float maskAlpha) {
+    if(this->maskAlpha == maskAlpha) {
+        return;
+    }
+
+    if(flagDebug) {
+        qDebug() << "writeMaskAlpha (GeneratorLattice):\t" << maskAlpha;
+    }
+
+    this->maskAlpha = maskAlpha;
+    emit maskAlphaChanged(maskAlpha);
+}
+
 void GeneratorLattice::writeGeneratorID(int generatorID) {
     if(this->generatorID == generatorID) {
         return;
     }
 
-    qDebug() << "generator ID changed: " << generatorID;
+    if(flagDebug) {
+        qDebug() << "writeGeneratorID (GeneratorLattice):\t" << generatorID;
+    }
 
     this->generatorID = generatorID;
     emit generatorIDChanged(generatorID);
 }
+

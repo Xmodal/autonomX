@@ -21,12 +21,39 @@
 class GeneratorLattice : public QQuickFramebufferObject {
     Q_OBJECT
     Q_PROPERTY(int generatorID READ getGeneratorID WRITE writeGeneratorID NOTIFY generatorIDChanged)
+    Q_PROPERTY(float squareInPixels READ getSquareInPixels WRITE writeSquareInPixels NOTIFY squareInPixelsChanged)
+    Q_PROPERTY(int containerWidthInPixels READ getContainerWidthInPixels WRITE writeContainerWidthInPixels NOTIFY containerWidthInPixelsChanged)
+    Q_PROPERTY(int containerHeightInPixels READ getContainerHeightInPixels WRITE writeContainerHeightInPixels NOTIFY containerHeightInPixelsChanged)
+    Q_PROPERTY(QVector4D mask READ getMask WRITE writeMask NOTIFY maskChanged)
+    Q_PROPERTY(float maskAlpha READ getMaskAlpha WRITE writeMaskAlpha NOTIFY maskAlphaChanged)
 public:
     QQuickFramebufferObject::Renderer * createRenderer() const;
     int getGeneratorID();
+    float getSquareInPixels();
+    int getContainerWidthInPixels();
+    int getContainerHeightInPixels();
+    QVector4D getMask();
+    float getMaskAlpha();
+
     void writeGeneratorID(int generatorID);
+    void writeSquareInPixels(float squareInPixels);
+    void writeContainerWidthInPixels(int containerWidthInPixels);
+    void writeContainerHeightInPixels(int containerHeightInPixels);
+    void writeMask(QVector4D mask);
+    void writeMaskAlpha(float maskAlpha);
 signals:
     void generatorIDChanged(int generatorID);
+    void squareInPixelsChanged(float squareInPixels);
+    void containerWidthInPixelsChanged(int containerWidthInPixels);
+    void containerHeightInPixelsChanged(int containerHeightInPixels);
+    void maskChanged(QVector4D mask);
+    void maskAlphaChanged(float maskAlpha);
 private:
     int generatorID;
+    float squareInPixels;       // uniform for pixel size of a lattice square
+    int containerWidthInPixels; // uniform for container width in pixels
+    int containerHeightInPixels;// uniform for container height in pixels
+    QVector4D mask;             // uniform for mask shape (leftmost x, topmost y, width, height)
+    float maskAlpha;            // uniform for mask alpha
+    bool flagDebug = false;
 };

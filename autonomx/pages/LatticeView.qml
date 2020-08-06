@@ -67,8 +67,6 @@ ColumnLayout {
                 anchors.fill: parent
 
                 // uniforms
-                containerWidthInPixels: width;
-                containerHeightInPixels: height;
                 squareInPixels: mainContent.ppc
                 mask: Qt.vector4d(-1, -1, -1, -1)
                 maskAlpha: 0.3

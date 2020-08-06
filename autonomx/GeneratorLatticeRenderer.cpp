@@ -90,12 +90,14 @@ void GeneratorLatticeRenderer::render() {
     if(synchronized) {
         // get the current framebuffer, which will have changed if the window was resized
         framebuffer = this->framebufferObject();
-        if(flagSuper) {
-            // check to see if the framebuffer size changed
-            QSize sizeNew = framebuffer->size();
-            if(sizeNew != size) {
-                // the size changed, we need to update the supersampling framebuffer
-                size = sizeNew;
+
+        // check to see if the framebuffer size changed
+        QSize sizeNew = framebuffer->size();
+        if(sizeNew != size) {
+            // the size changed
+            size = sizeNew;
+            // if supersampling is enabled, we need to update the supersampling framebuffer
+            if(flagSuper) {
                 if(flagDebug) {
                     qDebug() << "render (GeneratorLatticeRenderer): synchronization caused framebuffer size change, updating supersampling framebuffer";
                 }
@@ -131,15 +133,17 @@ void GeneratorLatticeRenderer::render() {
         functions->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         functions->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-        // clear the default framebuffer
+        // bind the standard framebuffer
         framebuffer->bind();
 
+        // clear the standard framebuffer
         functions->glClearColor(0.0, 0.0, 0.0, 0.0);
         functions->glClear(GL_COLOR_BUFFER_BIT);
 
-        framebuffer->release();
-
         if(flagSuper) {
+            // unbind standard framebuffer
+            framebuffer->release();
+
             // bind supersampling framebuffer
             framebufferSuper->bind();
 
@@ -176,11 +180,20 @@ void GeneratorLatticeRenderer::render() {
         functions->glDisable(GL_DEPTH_TEST);
 
         // update uniforms
-        program->setUniformValue("squareInPixels", squareInPixels);
-        program->setUniformValue("containerWidthInPixels", containerWidthInPixels);
-        program->setUniformValue("containerHeightInPixels", containerHeightInPixels);
+
+        if(flagSuper) {
+            program->setUniformValue("squareInPixels", squareInPixels * factorSuper);
+            program->setUniformValue("containerWidthInPixels", sizeSuper.width());
+            program->setUniformValue("containerHeightInPixels", sizeSuper.height());
+        } else {
+            program->setUniformValue("squareInPixels", squareInPixels);
+            program->setUniformValue("containerWidthInPixels", size.width());
+            program->setUniformValue("containerHeightInPixels", size.height());
+        }
+
         program->setUniformValue("mask", mask);
         program->setUniformValue("maskAlpha", maskAlpha);
+
         program->setUniformValue("latticeWidthInSquares", *allocatedWidth);
         program->setUniformValue("latticeHeightInSquares", *allocatedHeight);
 
@@ -207,6 +220,9 @@ void GeneratorLatticeRenderer::render() {
 
             // blit supersampling framebuffer onto real framebuffer, performing downsampling
             QOpenGLFramebufferObject::blitFramebuffer(framebuffer, QRect(0, 0, size.width(), size.height()), framebufferSuper, QRect(0, 0, sizeSuper.width(), sizeSuper.height()), GL_COLOR_BUFFER_BIT, GL_LINEAR);
+        } else {
+            // unbind the standard framebuffer
+            framebuffer->release();
         }
 
         // restore previous OpenGL state
@@ -284,8 +300,6 @@ void GeneratorLatticeRenderer::synchronize(QQuickFramebufferObject *item) {
 
     // update values for uniforms
     squareInPixels = generatorLattice->getSquareInPixels();
-    containerWidthInPixels = generatorLattice->getContainerWidthInPixels();
-    containerHeightInPixels = generatorLattice->getContainerHeightInPixels();
     mask = generatorLattice->getMask();
     maskAlpha = generatorLattice->getMaskAlpha();
 

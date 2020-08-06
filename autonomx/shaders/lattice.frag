@@ -41,6 +41,12 @@ void main() {
         discard;
     }
 
+    // get floored texture coordinate
+    vec2 fst = floor(st * cr) / cr + (0.5 / cr);
+
+    // sample color
+    float c = texture2D(texture, fst).r;
+
     // highlight selected zone if applicable
     // TODO: add float "maskAlpha" - animated in QML
     /*
@@ -50,12 +56,6 @@ void main() {
         c *= (st.x < selp.x || st.y < selp.y || st.x >= selp.x + seld.x || st.y >= selp.y + seld.y) ? 0.3 : 1.0;
     }
     */
-
-    // get floored texture coordinate
-    vec2 fst = floor(st * cr) / cr + (0.5 / cr);
-
-    // sample color
-    float c = texture2D(texture, fst).r;
 
     // export color
     gl_FragColor = vec4(c);

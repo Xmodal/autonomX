@@ -55,17 +55,25 @@ ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            GeneratorLattice {
-                generatorID: 0
-                anchors.fill: parent
-            }
-
-            /*
             Rectangle {
                 anchors.fill: parent
                 color: Stylesheet.colors.black
             }
 
+            GeneratorLattice {
+                id: matrix
+
+                generatorID: 0
+                anchors.fill: parent
+
+                // uniforms
+                property real cw: width
+                property real ch: height
+                property int ppc: mainContent.ppc
+                property rect mask: Qt.rect(-1, -1, -1, -1)
+            }
+
+            /*
             // neuron grid
             ShaderEffect {
                 id: matrix
@@ -102,6 +110,7 @@ ColumnLayout {
                 // fragment shader
                 fragmentShader: "qrc:/shaders/neuron_matrix.frag"
             }
+            */
 
             MouseArea {
                 id: matrixMouseBg
@@ -154,7 +163,6 @@ ColumnLayout {
                 }
                 opacity: 0.4
             }
-            */
         }
 
         // control zone

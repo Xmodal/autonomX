@@ -1,62 +1,81 @@
-// input pixel coords
-varying highp vec2 coords;
+// input pixel coordinates
+varying highp vec2 coordinates;
 
 // source neuron grid
 uniform sampler2D texture;
 
 // uniform props
-uniform float cols;
-uniform float rows;
-uniform float ppc;
-uniform float cw;
-uniform float ch;
+uniform float latticeWidthInSquares;
+uniform float latticeHeightInSquares;
+uniform float squareInPixels;
+uniform float containerWidthInPixels;
+uniform float containerHeightInPixels;
 // uniform vec4 mask;
 // uniform float maskAlpha;
 
 void main() {
-    // props
-    float pad = 3.0;                            // pixel padding between cells
-    vec2 s = vec2(ppc*cols, ppc*rows);          // 100% size in pixels
-    vec2 wh = vec2(cw, ch);                     // container width/height
-    vec2 cr = vec2(cols, rows);                 // cols/rows vector
+    // padding between cells, in pixels
+    float padding = 3.0;
 
-    vec2 diff = wh / s;                         // offset value to map grid to center
-    vec2 pxl = diff / wh;                       // pixel unit relative to GLSL's [0, 1] coord system
+    // container width and height vector, in pixels
+    vec2 containerSizeInPixels = vec2(containerWidthInPixels, containerHeightInPixels);                                 // container size, in pixels
+    vec2 latticeSizeInSquares = vec2(latticeWidthInSquares, latticeHeightInSquares);                                    // lattice size, in squares
+    vec2 latticeSizeInPixels = vec2(squareInPixels * latticeWidthInSquares, squareInPixels * latticeHeightInSquares);   // lattice size, in pixels
 
-    // map tex coord to centered grid
-    vec2 st = coords * 0.5 + vec2(0.5, 0.5);
-    st = (st * diff) - ((diff - 1.0) / 2.0);
+    vec2 latticeScaleInverse = containerSizeInPixels / latticeSizeInPixels;     // inverse of the scale of the lattice relative to the container
 
-    // hide pixels outside drawing zone
-    if(st.x < 0.0 || st.y < 0.0 || st.x >= 1.0 || st.y >= 1.0) {
+    vec2 pixelInCentered = vec2(1.0) / containerSizeInPixels;                   // pixel unit in centered space
+    vec2 pixelInLattice = pixelInCentered * latticeScaleInverse;                // pixel unit in lattice space
+    vec2 squareInLattice = vec2(1.0) / latticeSizeInSquares;                    // size of a square (including padding) in lattice space
+
+    // map NDC coordinates to UV coordinates ([-1, 1] -> [0, 1])
+    vec2 coordinatesCentered = coordinates * 0.5 + vec2(0.5, 0.5);
+
+    // map UV coordinates to UV coordinates inside lattice
+    vec2 coordinatesInLattice = (coordinatesCentered * latticeScaleInverse) - ((latticeScaleInverse - 1.0) / 2.0);
+
+    // hide pixels outside lattice
+    if(
+        coordinatesInLattice.x < 0.0 ||
+        coordinatesInLattice.y < 0.0 ||
+        coordinatesInLattice.x >= 1.0 ||
+        coordinatesInLattice.y >= 1.0
+    ) {
         discard;
     }
 
-    // set padding
-    vec2 value = vec2(mod(st.x, pxl.x * float(cols)), mod(st.y, pxl.y * float(rows)));
+    // compute location of the pixel in one of the lattice's square, in range [0, 1]
+    vec2 coordinatesInSquare = vec2(mod(coordinatesInLattice.x, squareInLattice.x), mod(coordinatesInLattice.y, squareInLattice.y));
 
     // hide pixels inside padding
-    if(!(value.x > pxl.x * pad && value.x < pxl.x * float(cols) - (pxl.x * (pad + 1.0))) ||
-       !(value.y > pxl.y * pad && value.y < pxl.y * float(rows) - (pxl.y * (pad + 1.0)))) {
+    if(
+        !(coordinatesInSquare.x > pixelInLattice.x * padding && coordinatesInSquare.x < pixelInLattice.x * float(latticeWidthInSquares) - (pixelInLattice.x * (padding + 1.0))) ||
+        !(coordinatesInSquare.y > pixelInLattice.y * padding && coordinatesInSquare.y < pixelInLattice.y * float(latticeHeightInSquares) - (pixelInLattice.y * (padding + 1.0)))
+    ) {
         discard;
     }
 
     // get floored texture coordinate
-    vec2 fst = floor(st * cr) / cr + (0.5 / cr);
+    vec2 coordinatesInLatticeFloored = floor(coordinatesInLattice * latticeSizeInSquares) / latticeSizeInSquares + (0.5 / latticeSizeInSquares);
 
-    // sample color
-    float c = texture2D(texture, fst).r;
+    // sample intensity
+    float intensity = texture2D(texture, coordinatesInLatticeFloored).r;
 
+    /*
     // highlight selected zone if applicable
     // TODO: add float "maskAlpha" - animated in QML
-    /*
     if (mask.w >= 0.0) {
-        vec2 selp = mask.xy / cr;
-        vec2 seld = mask.zw / cr;
-        c *= (st.x < selp.x || st.y < selp.y || st.x >= selp.x + seld.x || st.y >= selp.y + seld.y) ? 0.3 : 1.0;
+        vec2 maskCornerInLattice = mask.xy / latticeSizeInSquares;   // upper left corner of the mask in lattice space
+        vec2 maskSizeInLattice = mask.zw / latticeSizeInSquares;     // width and height of the mask in lattice space
+        intensity *= (
+            coordinatesInLattice.x < maskCornerInLattice.x ||
+            coordinatesInLattice.y < maskCornerInLattice.y ||
+            coordinatesInLattice.x >= maskCornerInLattice.x + maskSizeInLattice.x ||
+            coordinatesInLattice.y >= maskCornerInLattice.y + maskSizeInLattice.y
+        ) ? 0.3 : 1.0;
     }
     */
 
     // export color
-    gl_FragColor = vec4(c);
+    gl_FragColor = vec4(intensity);
 }

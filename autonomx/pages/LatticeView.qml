@@ -71,23 +71,20 @@ ColumnLayout {
                 mask: Qt.vector4d(-1, -1, -1, -1)
                 maskAlpha: 0.3
 
-                // TODO in lattice.frag
                 function setMask(colX, colY, colW, colH) {
-                    /*
                     var element;
 
                     // auto cancel if type is signed
-                    if (mainContent.currRegion.type === -1) return mask = Qt.rect(-1, -1, -1, -1);
+                    if (mainContent.currRegion.type === -1) return mask = Qt.vector4d(-1, -1, -1, -1);
 
                     // set selected to function arguments if applicable
-                    if (colX !== undefined) return mask = Qt.rect(colX, colY, colW, colH);
+                    if (colX !== undefined) return mask = Qt.vector4d(colX, colY, colW, colH);
 
                     // otherwise, retrieve automatically from global properties
                     // TODO: clean up function calls so that this block can be removed, instead directly using arguments every time
                     if (mainContent.currRegion.type === 0) element = inputModel.get(mainContent.currRegion.index);
                     else if (mainContent.currRegion.type === 1) element = outputModel.get(mainContent.currRegion.index);
-                    mask = Qt.rect(element.colX, element.colY, element.colW, element.colH);
-                    */
+                    mask = Qt.vector4d(element.colX, element.colY, element.colW, element.colH);
                 }
             }
 

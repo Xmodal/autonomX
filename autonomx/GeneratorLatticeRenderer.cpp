@@ -184,15 +184,16 @@ void GeneratorLatticeRenderer::render() {
         functions->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         // update uniforms
+        float pixelRatio = (float) window->devicePixelRatio();
 
         if(flagSuper) {
             program->setUniformValue("squareInPixels", squareInPixels * factorSuper);
-            program->setUniformValue("containerWidthInPixels", sizeSuper.width());
-            program->setUniformValue("containerHeightInPixels", sizeSuper.height());
+            program->setUniformValue("containerWidthInPixels", sizeSuper.width() / pixelRatio);
+            program->setUniformValue("containerHeightInPixels", sizeSuper.height() / pixelRatio);
         } else {
             program->setUniformValue("squareInPixels", squareInPixels);
-            program->setUniformValue("containerWidthInPixels", size.width());
-            program->setUniformValue("containerHeightInPixels", size.height());
+            program->setUniformValue("containerWidthInPixels", size.width() / pixelRatio);
+            program->setUniformValue("containerHeightInPixels", size.height() / pixelRatio);
         }
 
         program->setUniformValue("mask", mask);

@@ -8,8 +8,8 @@ uniform sampler2D texture;
 uniform int     latticeWidthInSquares;
 uniform int     latticeHeightInSquares;
 uniform float   squareInPixels;
-uniform int     containerWidthInPixels;
-uniform int     containerHeightInPixels;
+uniform float   containerWidthInPixels;
+uniform float   containerHeightInPixels;
 uniform vec4    mask;
 uniform float   maskAlpha;
 
@@ -17,20 +17,19 @@ uniform float   maskAlpha;
 float padding = 0.10;
 
 // container width and height vector, in pixels
-ivec2 containerSizeInPixels = ivec2(containerWidthInPixels, containerHeightInPixels);                                               // container size, in pixels
+vec2 containerSizeInPixels = vec2(containerWidthInPixels, containerHeightInPixels);                                                 // container size, in pixels
 ivec2 latticeSizeInSquares = ivec2(latticeWidthInSquares, latticeHeightInSquares);                                                  // lattice size, in squares
 vec2 latticeSizeInPixels = vec2(squareInPixels * float(latticeWidthInSquares), squareInPixels * float(latticeHeightInSquares));     // lattice size, in pixels
 
-vec2 latticeScaleInverse = vec2(containerSizeInPixels) / latticeSizeInPixels;   // inverse of the scale of the lattice relative to the container
-vec2 latticeScale = latticeSizeInPixels / vec2(containerSizeInPixels);
+vec2 latticeScaleInverse = containerSizeInPixels / latticeSizeInPixels;     // inverse of the scale of the lattice relative to the container
 
-vec2 pixelInCentered = vec2(1.0) / vec2(containerSizeInPixels);                 // pixel unit in centered space
-vec2 pixelInLattice = pixelInCentered * latticeScaleInverse;                    // pixel unit in lattice space
-vec2 squareInLattice = vec2(1.0) / vec2(latticeSizeInSquares);                  // size of a square (including padding) in lattice space
+vec2 pixelInCentered = vec2(1.0) / containerSizeInPixels;                   // pixel unit in centered space
+vec2 pixelInLattice = pixelInCentered * latticeScaleInverse;                // pixel unit in lattice space
+vec2 squareInLattice = vec2(1.0) / vec2(latticeSizeInSquares);              // size of a square (including padding) in lattice space
 
 void main() {
     // map to coordinates inside lattice
-    vec2 coordinatesInLattice = (coordinates * latticeScaleInverse) * 0.25 + 0.5;
+    vec2 coordinatesInLattice = (coordinates * latticeScaleInverse) * 0.5 + 0.5;
 
     // hide pixels outside lattice
     if(

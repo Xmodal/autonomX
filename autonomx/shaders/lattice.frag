@@ -49,8 +49,9 @@ void main() {
         !(coordinatesInSquare.x > padding && coordinatesInSquare.x < (1.0 - padding)) ||
         !(coordinatesInSquare.y > padding && coordinatesInSquare.y < (1.0 - padding))
     ) {
-        gl_FragColor = vec4(vec3(1.0), 0.1);
-        return;
+        discard;
+        //gl_FragColor = vec4(vec3(1.0), 0.1);
+        //return;
     }
 
     // get floored texture coordinate
@@ -60,8 +61,7 @@ void main() {
     float intensity = texture2D(texture, coordinatesInLatticeFloored).r;
 
     // highlight selected zone if applicable
-    // TODO: add float "maskAlpha" - animated in QML
-    if (mask.w >= 0.0) {
+    if (mask.w > 0.0) {
         vec2 maskCornerInLattice = mask.xy / vec2(latticeSizeInSquares);   // upper left corner of the mask in lattice space
         vec2 maskSizeInLattice = mask.zw / vec2(latticeSizeInSquares);     // width and height of the mask in lattice space
         intensity *= (

@@ -45,6 +45,9 @@ void GeneratorLattice::writeSquareInPixels(float squareInPixels) {
 
     this->squareInPixels = squareInPixels;
     emit squareInPixelsChanged(squareInPixels);
+
+    // request a syncrhonize call to GeneratorLatticeRenderer
+    update();
 }
 
 void GeneratorLattice::writeMask(QVector4D mask) {
@@ -58,6 +61,9 @@ void GeneratorLattice::writeMask(QVector4D mask) {
 
     this->mask = mask;
     emit maskChanged(mask);
+
+    // request a syncrhonize call to GeneratorLatticeRenderer
+    update();
 }
 
 void GeneratorLattice::writeMaskAlpha(float maskAlpha) {
@@ -71,6 +77,9 @@ void GeneratorLattice::writeMaskAlpha(float maskAlpha) {
 
     this->maskAlpha = maskAlpha;
     emit maskAlphaChanged(maskAlpha);
+
+    // request a syncrhonize call to GeneratorLatticeRenderer
+    update();
 }
 
 void GeneratorLattice::writeGeneratorID(int generatorID) {
@@ -84,5 +93,8 @@ void GeneratorLattice::writeGeneratorID(int generatorID) {
 
     this->generatorID = generatorID;
     emit generatorIDChanged(generatorID);
+
+    // request a syncrhonize call to GeneratorLatticeRenderer
+    update();
 }
 

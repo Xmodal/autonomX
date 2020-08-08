@@ -151,16 +151,5 @@ ColumnLayout {
                 opacity: 0.4
             }
         }
-
-        // control zone
-        Item {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-
-            Rectangle {
-                anchors.fill: parent
-                color: Stylesheet.colors.darkGrey
-            }
-        }
     }
 }

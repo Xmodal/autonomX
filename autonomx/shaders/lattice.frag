@@ -14,7 +14,7 @@ uniform vec4    mask;
 uniform float   maskAlpha;
 
 // padding between cells, in pixels (defined relative to square size)
-float padding = 0.10;
+float padding = 0.15;
 
 // container width and height vector, in pixels
 vec2 containerSizeInPixels = vec2(containerWidthInPixels, containerHeightInPixels);                                                 // container size, in pixels
@@ -49,9 +49,12 @@ void main() {
         !(coordinatesInSquare.x > padding && coordinatesInSquare.x < (1.0 - padding)) ||
         !(coordinatesInSquare.y > padding && coordinatesInSquare.y < (1.0 - padding))
     ) {
+        vec2 mirrored = -abs((2.0 * coordinatesInSquare) - 1.0) + 1.0;
+        if (mirrored.x > 0.20 && mirrored.x <= 0.30 && mirrored.y > 0.20 && mirrored.y <= 0.30) {
+            gl_FragColor = vec4(vec3(1.0), 0.2);
+            return;
+        }
         discard;
-        //gl_FragColor = vec4(vec3(1.0), 0.1);
-        //return;
     }
 
     // get floored texture coordinate

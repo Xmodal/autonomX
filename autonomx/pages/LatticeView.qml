@@ -29,9 +29,7 @@ ColumnLayout {
         spacing: 0
 
         // props
-        property int ppc: 20            // pixels per cell, ie. how wide a cell square is in pixels. this is scaled by the zoom factor
-        property int cols: 20
-        property int rows: 20
+        property int ppc: 20            // pixels per cell, ie. how wide a cell square is in pixels. this is animated within QML (scaled by the zoom factor)
         property QtObject currRegion: QtObject {
             property int type: -1
             property int index: -1
@@ -86,6 +84,14 @@ ColumnLayout {
                     else if (mainContent.currRegion.type === 1) element = outputModel.get(mainContent.currRegion.index);
                     mask = Qt.vector4d(element.colX, element.colY, element.colW, element.colH);
                 }
+
+                // TODO
+                /*
+                NumberAnimation on maskAlpha {
+                    duration: 300
+                    easing.type: Easing.InOutQuad
+                }
+                */
             }
 
             MouseArea {
@@ -99,10 +105,13 @@ ColumnLayout {
                 id: regions
                 visible: !(genID < 0)
 
+                property int ppc: mainContent.ppc
+                property int latticeWidth: genID < 0 ? 20 : generatorModel.at(genID).latticeWidth
+                property int latticeHeight: genID < 0 ? 20 : generatorModel.at(genID).latticeHeight
                 property bool rectSelected: false
 
-                width: mainContent.ppc * mainContent.cols
-                height: mainContent.ppc * mainContent.rows
+                width: ppc * latticeWidth
+                height: ppc * latticeHeight
                 x: parent.width/2 - width/2
                 y: parent.height/2 - height/2
 
@@ -111,6 +120,7 @@ ColumnLayout {
                     model: inputModel
                     Region {
                         type: 0
+                        ppc: regions.ppc
                     }
                 }
                 // outputs
@@ -118,6 +128,7 @@ ColumnLayout {
                     model: outputModel
                     Region {
                         type: 1
+                        ppc: regions.ppc
                     }
                 }
             }

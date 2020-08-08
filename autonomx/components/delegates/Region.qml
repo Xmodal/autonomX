@@ -9,18 +9,20 @@ Rectangle {
     // props
     property bool selected: type === mainContent.currRegion.type && index === mainContent.currRegion.index
     property bool dragActive: dragArea.drag.active
+    property bool inEdit: false
     property int type                       // 0 = input; 1 = output
     property real intensity: 0.0            // r => [0.0, 1.0]
     property int resizeHitbox: 5            // zone padding
     property int area
+    property int ppc
 
     antialiasing: true
 
     // position
-    width: regions.width * colW / mainContent.cols
-    height: regions.height * colH / mainContent.rows
-    x: regions.width * colX / mainContent.cols
-    y: regions.height * colY / mainContent.rows
+    width: regions.width * colW / regions.latticeWidth
+    height: regions.height * colH / regions.latticeHeight
+    x: regions.width * colX / regions.latticeWidth
+    y: regions.height * colY / regions.latticeHeight
     z: selected ? 10 : 10 / area;
 
     // break x/y property bindings
@@ -56,18 +58,18 @@ Rectangle {
         }
 
         // calculate unsigned cell coordinates
-        var newColX = Math.max(Math.round(x / mainContent.ppc), 0);
-        var newColY = Math.max(Math.round(y / mainContent.ppc), 0);
-        var newColW = Math.max(Math.round((width - 1 + offsetW) / mainContent.ppc), 0);
-        var newColH = Math.max(Math.round((height - 1 + offsetH) / mainContent.ppc), 0);
+        var newColX = Math.max(Math.round(x / ppc), 0);
+        var newColY = Math.max(Math.round(y / ppc), 0);
+        var newColW = Math.max(Math.round((width - 1 + offsetW) / ppc), 0);
+        var newColH = Math.max(Math.round((height - 1 + offsetH) / ppc), 0);
 
         // clamp depending on event type
         if (evtType === "resize") {
-            if (newColX + newColW > mainContent.cols) newColW = mainContent.cols - newColX;
-            if (newColY + newColH > mainContent.rows) newColH = mainContent.rows - newColY;
+            if (newColX + newColW > regions.latticeWidth)  newColW = regions.latticeWidth - newColX;
+            if (newColY + newColH > regions.latticeHeight) newColH = regions.latticeHeight - newColY;
         } else if (evtType === "drag") {
-            if (newColX + newColW > mainContent.cols) newColX = mainContent.cols - newColW;
-            if (newColY + newColH > mainContent.rows) newColY = mainContent.rows - newColH;
+            if (newColX + newColW > regions.latticeWidth)  newColX = regions.latticeWidth - newColW;
+            if (newColY + newColH > regions.latticeHeight) newColY = regions.latticeHeight - newColH;
         }
 
         // update model here
@@ -78,10 +80,10 @@ Rectangle {
         area = colW * colH;
 
         // then reevaluate pixel coordinates by animating them
-        snapX.to = regions.width * colX / mainContent.cols;
-        snapY.to = regions.height * colY / mainContent.rows;
-        snapWidth.to = regions.width * colW / mainContent.cols;
-        snapHeight.to = regions.height * colH / mainContent.rows;
+        snapX.to = regions.width * colX / regions.latticeWidth;
+        snapY.to = regions.height * colY / regions.latticeHeight;
+        snapWidth.to = regions.width * colW / regions.latticeWidth;
+        snapHeight.to = regions.height * colH / regions.latticeHeight;
         snapX.restart();
         snapY.restart();
         snapWidth.restart();
@@ -94,10 +96,10 @@ Rectangle {
     // (also find a way to only call matrix.setMask() once per mouse interaction)
     function updateBounds() {
         matrix.setMask(
-            x / mainContent.ppc,
-            y / mainContent.ppc,
-            (width - 1) / mainContent.ppc,
-            (height - 1) / mainContent.ppc
+            x / ppc,
+            y / ppc,
+            (width - 1) / ppc,
+            (height - 1) / ppc
         );
     }
 
@@ -115,13 +117,13 @@ Rectangle {
         width: 1
     }
     // border opacity
-    opacity: regions.rectSelected && !selected && !dragArea.containsMouse && mainContent.currRegion.type !== type ? 0.4 : 1
+    opacity: regions.rectSelected && !selected && !dragArea.containsMouse ? (mainContent.currRegion.type !== type ? 0.4 : 0.6) : 1
 
     // fill rectangle
     Rectangle {
         anchors.fill: parent
         color: Stylesheet.colors[type == 0 ? "inputs" : "outputs"][index]
-        opacity: dragArea.containsMouse && !selected ? 0.5 : intensity / 2
+        opacity: dragArea.containsMouse && (!selected || inEdit) ? 0.5 : intensity / 2
     }
 
     // drag configuration
@@ -129,17 +131,19 @@ Rectangle {
         if (dragActive) {
             Drag.start();
             mainContent.switchSelectedRegion(type, index);
+            inEdit = true;
             changeCursor(Qt.SizeAllCursor);
         } else {
             Drag.drop();
             snapToGrid("drag");
+            inEdit = false;
             changeCursor();
         }
     }
 
     // index label
     Rectangle {
-        width: mainContent.ppc; height: mainContent.ppc
+        width: ppc; height: ppc
         anchors.left: parent.right
         anchors.top: parent.top
         color: type == 0 ? Stylesheet.colors.inputs[index] : Stylesheet.colors.outputs[index]
@@ -200,6 +204,7 @@ Rectangle {
             onPressedChanged: {
                 // unified cursor change on press/release
                 changeCursor(pressed ? cursorShape : null);
+                inEdit = pressed;
 
                 // on mouse release
                 if (!pressed) snapToGrid("resize");
@@ -213,9 +218,9 @@ Rectangle {
                 newWidth -= modelData.charAt(1) === "l" ? mouseX : -mouseX;
 
                 // clamp width
-                if (newWidth < mainContent.ppc) {
-                    newWidth = mainContent.ppc;
-                    if (mouseX > 0 && region.width !== mainContent.ppc) region.x += region.width - mainContent.ppc;
+                if (newWidth < ppc) {
+                    newWidth = ppc;
+                    if (mouseX > 0 && region.width !== ppc) region.x += region.width - ppc;
                 }
 
                 // update X
@@ -235,9 +240,9 @@ Rectangle {
                 newHeight -= modelData.charAt(0) === "t" ? mouseY : -mouseY;
 
                 // clamp height
-                if (newHeight < mainContent.ppc) {
-                    newHeight = mainContent.ppc;
-                    if (mouseY > 0 && region.height !== mainContent.ppc) region.y += region.height - mainContent.ppc;
+                if (newHeight < ppc) {
+                    newHeight = ppc;
+                    if (mouseY > 0 && region.height !== ppc) region.y += region.height - ppc;
                 // update Y
                 } else if (modelData.charAt(0) === "t") {
                     region.y += mouseY;

@@ -166,6 +166,7 @@ Rectangle {
         propagateComposedEvents: true
         hoverEnabled: true
         drag.target: region
+        drag.threshold: 0
         cursorShape: selected ? Qt.SizeAllCursor : Qt.PointingHandCursor
     }
 
@@ -205,31 +206,45 @@ Rectangle {
             }
 
             onMouseXChanged: {
-                if (!pressed) return;
+                if (!pressed || !"lr".includes(modelData.charAt(1))) return;
 
-                // update width
-                if ("lr".includes(modelData.charAt(1))) {
-                    region.width -= modelData.charAt(1) === "l" ? mouseX : -mouseX;
-                }
+                // set new width
+                var newWidth = region.width;
+                newWidth -= modelData.charAt(1) === "l" ? mouseX : -mouseX;
 
                 // clamp width
-                if (region.width < mainContent.ppc) region.width = mainContent.ppc;
+                if (newWidth < mainContent.ppc) {
+                    newWidth = mainContent.ppc;
+                    if (mouseX > 0 && region.width !== mainContent.ppc) region.x += region.width - mainContent.ppc;
+                }
+
                 // update X
-                else if (modelData.charAt(1) === "l") region.x += mouseX;
+                else if (modelData.charAt(1) === "l") {
+                    region.x += mouseX;
+                }
+
+                // update width
+                region.width = newWidth;
             }
 
             onMouseYChanged: {
-                if (!pressed) return;
+                if (!pressed || !"tb".includes(modelData.charAt(0))) return;
 
-                // update height
-                if ("tb".includes(modelData.charAt(0))) {
-                    region.height -= modelData.charAt(0) === "t" ? mouseY : -mouseY;
-                }
+                // set new height
+                var newHeight = region.height;
+                newHeight -= modelData.charAt(0) === "t" ? mouseY : -mouseY;
 
                 // clamp height
-                if (region.height < mainContent.ppc) region.height = mainContent.ppc;
+                if (newHeight < mainContent.ppc) {
+                    newHeight = mainContent.ppc;
+                    if (mouseY > 0 && region.height !== mainContent.ppc) region.y += region.height - mainContent.ppc;
                 // update Y
-                else if (modelData.charAt(0) === "t") region.y += mouseY;
+                } else if (modelData.charAt(0) === "t") {
+                    region.y += mouseY;
+                }
+
+                // update height
+                region.height = newHeight;
             }
         }
     }

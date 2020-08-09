@@ -18,67 +18,40 @@ Rack {
         spacing: 50
 
         // --= BASIC =--
-        ColumnLayout {
+        RowLayout {
             Layout.fillWidth: true
             spacing: Stylesheet.field.spacing
 
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: Stylesheet.field.spacing
+            NumberField {
+                labelText: "Width"
+                unsigned: true
 
-                NumberField {
-                    labelText: "Width"
-                    unsigned: true
-
-                    defaultNum: generatorModel.at(genID).latticeWidth
-                    onValueChanged: generatorModel.at(genID).latticeWidth = newValue
-                }
-
-                NumberField {
-                    labelText: "Height"
-                    unsigned: true
-
-                    defaultNum: generatorModel.at(genID).latticeHeight
-                    onValueChanged: generatorModel.at(genID).latticeHeight = newValue
-                }
-
-                SliderField {
-                    labelText: "Time scale"
-
-                    currVal: generatorModel.at(genID).timeScale
-                    onValueChanged: generatorModel.at(genID).timeScale = newValue
-                }
+                defaultNum: generatorModel.at(genID).latticeWidth
+                onValueChanged: generatorModel.at(genID).latticeWidth = newValue
             }
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: Stylesheet.field.spacing
 
-                SliderField {
-                    labelText: "Inh. portion"
+            NumberField {
+                labelText: "Height"
+                unsigned: true
 
-                    updateLag: 70
+                defaultNum: generatorModel.at(genID).latticeHeight
+                onValueChanged: generatorModel.at(genID).latticeHeight = newValue
+            }
 
-                    currVal: generatorModel.at(genID).inhibitoryPortion
-                    onValueChanged: generatorModel.at(genID).inhibitoryPortion = newValue
-                }
+            SliderField {
+                labelText: "Time scale"
 
-                SliderField {
-                    labelText: "Input portion"
+                currVal: generatorModel.at(genID).timeScale
+                onValueChanged: generatorModel.at(genID).timeScale = newValue
+            }
 
-                    updateLag: 70
+            SliderField {
+                labelText: "Inh. portion"
 
-                    currVal: generatorModel.at(genID).inputPortion
-                    onValueChanged: generatorModel.at(genID).inputPortion = newValue
-                }
+                updateLag: 70
 
-                SliderField {
-                    labelText: "Output portion"
-
-                    updateLag: 70
-
-                    currVal: generatorModel.at(genID).outputPortion
-                    onValueChanged: generatorModel.at(genID).outputPortion = newValue
-                }
+                currVal: generatorModel.at(genID).inhibitoryPortion
+                onValueChanged: generatorModel.at(genID).inhibitoryPortion = newValue
             }
         }
 

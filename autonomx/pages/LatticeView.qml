@@ -105,9 +105,9 @@ ColumnLayout {
                 id: regions
                 visible: !(genID < 0)
 
-                property int ppc: mainContent.ppc
                 property int latticeWidth: genID < 0 ? 20 : generatorModel.at(genID).latticeWidth
                 property int latticeHeight: genID < 0 ? 20 : generatorModel.at(genID).latticeHeight
+                property int ppc: mainContent.ppc
                 property bool rectSelected: false
 
                 width: ppc * latticeWidth
@@ -120,6 +120,8 @@ ColumnLayout {
                     model: inputModel
                     Region {
                         type: 0
+                        latticeWidth: regions.latticeWidth
+                        latticeHeight: regions.latticeHeight
                         ppc: regions.ppc
                     }
                 }
@@ -128,6 +130,8 @@ ColumnLayout {
                     model: outputModel
                     Region {
                         type: 1
+                        latticeWidth: regions.latticeWidth
+                        latticeHeight: regions.latticeHeight
                         ppc: regions.ppc
                     }
                 }

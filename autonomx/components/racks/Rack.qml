@@ -18,7 +18,6 @@ Item {
     // state flags
     property bool collapsed: false
     property bool removable: true
-    property color rackColor: Stylesheet.colors.generator
     // content component
     property Component content
 
@@ -51,12 +50,15 @@ Item {
             // background
             Rectangle {
                 anchors.fill: parent
-                color: Stylesheet.colors.darkGrey
+                color: Stylesheet.colors.generator
 
                 layer.enabled: true
                 layer.effect: ShaderEffect {
-                    property color bg: rack.rackColor
-                    fragmentShader: "qrc:/shaders/rack_bg.frag"
+                    property color overlayColor: Stylesheet.colors.darkGrey
+                    property real minAlpha: 0.95
+                    property real maxAlpha: 0.75
+                    property bool vertical: false
+                    fragmentShader: "qrc:/shaders/gradient_overlay.frag"
                 }
             }
 

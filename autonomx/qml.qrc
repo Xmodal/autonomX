@@ -34,10 +34,9 @@
         <file>pages/GeneratorView.qml</file>
         <file>pages/Header.qml</file>
         <file>pages/LatticeView.qml</file>
+        <file>shaders/gradient_overlay.frag</file>
         <file>shaders/lattice.frag</file>
         <file>shaders/lattice.vert</file>
-        <file>shaders/light_cue.frag</file>
-        <file>shaders/rack_bg.frag</file>
         <file>stylesheet/qmldir</file>
         <file>stylesheet/Stylesheet.qml</file>
     </qresource>

@@ -14,11 +14,16 @@ Item {
     Rectangle {
         anchors.fill: parent
 
-        // this doesn't work. move into shader
         color: Stylesheet.colors.white
-        gradient: Gradient {
-            GradientStop { position: 0; color: Stylesheet.setAlpha(Stylesheet.colors.darkGrey, 0.9) }
-            GradientStop { position: 1; color: Stylesheet.setAlpha(Stylesheet.colors.darkGrey, 0.8) }
+
+        layer.enabled: true
+        layer.effect: ShaderEffect {
+            property real minAlpha: 0.85
+            property real maxAlpha: 0.95
+            property bool vertical: true
+            property bool overlayColor: Stylesheet.colors.black
+
+            fragmentShader: "qrc:/shaders/gradient_overlay.frag"
         }
     }
 

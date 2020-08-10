@@ -10,8 +10,9 @@ Rectangle {
     property bool selected: type === mainContent.currRegion.type && index === mainContent.currRegion.index
     property bool dragActive: dragArea.drag.active
     property bool inEdit: false
+    property int latticeWidth
+    property int latticeHeight
     property int type                       // 0 = input; 1 = output
-    property real intensity: 0.0            // r => [0.0, 1.0]
     property int resizeHitbox: 5            // zone padding
     property int area
     property int ppc
@@ -41,6 +42,10 @@ Rectangle {
     onYChanged: updateBounds()
     onWidthChanged: updateBounds()
     onHeightChanged: updateBounds()
+
+    // reposition region if out of bounds
+    onLatticeWidthChanged: snapToGrid("drag")
+    onLatticeHeightChanged: snapToGrid("drag")
 
     // animation triggers
     NumberAnimation on x { id: snapX; running: false; duration: 250; easing.type: Easing.OutCirc; }

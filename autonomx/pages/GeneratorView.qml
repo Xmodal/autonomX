@@ -28,6 +28,7 @@ RowLayout {
             anchors.fill: parent
             orientation: Qt.Vertical
             model: generatorModel
+            boundsBehavior: Flickable.StopAtBounds
             delegate: GeneratorWidget {
                 onClicked: window.activeGeneratorIndex = model.index
             }

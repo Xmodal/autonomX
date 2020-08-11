@@ -70,12 +70,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 leftPadding: 20
 
-                font {
-                    family: Stylesheet.fonts.sub
-                    pixelSize: 16
-                    letterSpacing: 0.8
-                    capitalization: Font.AllUppercase
-                }
+                font: Stylesheet.fonts.rackLabel
             }
 
             // collapse rack button

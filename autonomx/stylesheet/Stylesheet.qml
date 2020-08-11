@@ -18,8 +18,9 @@ QtObject {
 
     // FONTS
     property QtObject fonts: QtObject {
-        readonly property string main: "Overpass"
-        readonly property string sub: "Questrial"
+        readonly property font label: Qt.font({ family: "Questrial", pixelSize: 13, letterSpacing: 13 * 0.05, capitalization: Font.AllUppercase })
+        readonly property font rackLabel: Qt.font({ family: "Questrial", pixelSize: 16, letterSpacing: 16 * 0.05, capitalization: Font.AllUppercase })
+        readonly property font text: Qt.font({ family: "Overpass", pixelSize: 16, weight: Font.DemiBold })
     }
 
     // SPACINGS

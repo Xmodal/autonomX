@@ -148,10 +148,7 @@ ColumnLayout {
                 text: qsTr("Please select a generator from the Generator View to edit its I/O zones.")
                 wrapMode: Text.WordWrap
                 horizontalAlignment: Text.AlignHCenter
-                font {
-                    family: Stylesheet.fonts.main
-                    pixelSize: 14
-                }
+                font.pixelSize: 14
                 opacity: 0.4
             }
         }

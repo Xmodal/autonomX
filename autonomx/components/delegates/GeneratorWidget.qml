@@ -45,7 +45,7 @@ Button {
     // text content
     RowLayout {
         spacing: 0
-        anchors.leftMargin: 10
+        anchors.leftMargin: 12
         anchors.fill: parent
         Layout.alignment: Qt.AlignVCenter
 
@@ -53,13 +53,12 @@ Button {
         Label {
             id: labelIndex
 
+            width: 10
             text: model.index + 1
             color: Stylesheet.colors[selected ? 'darkGrey' : 'white']
-            font {
-                weight: Font.DemiBold
-                pixelSize: 11
-            }
+            font { weight: Font.DemiBold; pixelSize: 11 }
             opacity: selected ? 1 : (hovered ? 1 : 0.5)
+            horizontalAlignment: Text.AlignHCenter
         }
 
         // generator name
@@ -69,9 +68,7 @@ Button {
             Layout.leftMargin: 30
             text: model.name
             color: Stylesheet.colors.white
-            font {
-                weight: Font.DemiBold
-            }
+            font.weight: Font.DemiBold
             opacity: selected ? 1 : (hovered ? 1 : 0.5)
         }
 

@@ -11,6 +11,7 @@ QtObject {
         readonly property color darkGrey: "#212121"
 
         readonly property color generator: "#437C61"
+        readonly property color cancel: "#C52D2D"
 
         readonly property variant inputs:  [ "#3BB3E7", "#3B9FE7", "#3582F5", "#3B4CE7" ]
         readonly property variant outputs: [ "#C53412", "#D65B16", "#E7961D", "#EEBE16" ]

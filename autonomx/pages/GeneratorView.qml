@@ -34,6 +34,27 @@ RowLayout {
         }
 
         // TODO: new generator button here
+        RowLayout {
+            anchors.bottom: parent.bottom
+            width: parent.width
+            spacing: 0
+
+            GeneratorButton {
+                id: addGenerator
+                text: "Add"
+                iconSource: "qrc:/assets/images/add-icon.svg"
+                Layout.fillWidth: true
+                backgroundColor: Stylesheet.colors.generator
+            }
+
+            GeneratorButton {
+                id: deleteGenerator
+                text: "Delete"
+                Layout.fillWidth: true
+                backgroundColor: Stylesheet.colors.cancel
+                iconSource: "qrc:/assets/images/delete-icon.svg"
+            }
+        }
     }
 
     // list of racks for currently selected generator

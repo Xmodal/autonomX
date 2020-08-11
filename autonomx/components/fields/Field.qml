@@ -26,12 +26,7 @@ ColumnLayout {
         visible: showLabel
 
         text: labelText
-        font {
-            family: Stylesheet.fonts.sub
-            pixelSize: 13
-            letterSpacing: 13 * 0.05
-            capitalization: Font.AllUppercase
-        }
+        font: Stylesheet.fonts.label
     }
 
     // animations

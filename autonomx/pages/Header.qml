@@ -34,12 +34,7 @@ Item {
         anchors.rightMargin: 20
 
         text: "Lattice view"
-        font {
-            family: Stylesheet.fonts.sub
-            pixelSize: 13
-            letterSpacing: 13 * 0.05
-            capitalization: Font.AllUppercase
-        }
+        font: Stylesheet.fonts.label
     }
 
     // Generator name label
@@ -48,10 +43,7 @@ Item {
         anchors.left: parent.horizontalCenter
         anchors.leftMargin: 20
 
-        font {
-            weight: Font.DemiBold
-        }
-
         text: genID < 0 ? "<no generator selected>" : generatorModel.at(genID).name
+        font: Stylesheet.fonts.text
     }
 }

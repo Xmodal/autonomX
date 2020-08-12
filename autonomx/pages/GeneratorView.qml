@@ -24,12 +24,19 @@ RowLayout {
             anchors.fill: parent
         }
 
+        MouseArea {
+            anchors.fill: parent
+            onClicked: window.activeGeneratorIndex = -1
+        }
+
         ListView {
             id: generatorList
 
-            property int prevCount: 1;
+            property int prevCount: 0;
 
-            anchors.fill: parent
+            //anchors.fill: parent
+            width: parent.width
+            height: 55 * count
             orientation: Qt.Vertical
             model: generatorModel
             boundsBehavior: Flickable.StopAtBounds
@@ -41,12 +48,16 @@ RowLayout {
 
             // go to previous
             onCountChanged: {
+                if (prevCount === 0 || count === prevCount) return prevCount = count;
+
                 if (prevCount < count) window.activeGeneratorIndex = count - 1;
                 else window.activeGeneratorIndex = count === window.activeGeneratorIndex ? window.activeGeneratorIndex - 1 : window.activeGeneratorIndex
 
                 prevCount = count;
             }
         }
+
+
 
         // TODO: new generator button here
         RowLayout {

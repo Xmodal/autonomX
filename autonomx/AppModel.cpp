@@ -197,7 +197,7 @@ void AppModel::createGenerator() {
     }
 
     // once the list is changed, update the GeneratorModel connections
-    generatorModel->relinkAliasConnections();
+    generatorModel->relinkConnections();
 }
 
 void AppModel::deleteGenerator(int id) {
@@ -255,7 +255,7 @@ void AppModel::deleteGenerator(int id) {
     }
 
     // once the list is changed, update the GeneratorModel connections
-    generatorModel->relinkAliasConnections();
+    generatorModel->relinkConnections();
 }
 
 bool AppModel::validateNewGeneratorName(QString name) {

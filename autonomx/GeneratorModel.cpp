@@ -31,7 +31,7 @@ GeneratorModel::GeneratorModel(QSharedPointer<QList<QSharedPointer<GeneratorFaca
     this->generatorFacadesList = generatorFacadesList;
     this->generatorFacadesHashMap = generatorFacadesHashMap;
 
-    createAliasConnections();
+    createConnections();
 }
 
 GeneratorModel::~GeneratorModel() {
@@ -44,7 +44,7 @@ GeneratorModel::~GeneratorModel() {
     }
 }
 
-void GeneratorModel::updateValueFromAlias(const QString &key, const QVariant &value, int modelIndex) {
+void GeneratorModel::updateValue(const QString &key, const QVariant &value, int modelIndex) {
     QVector<int> roles;
     bool unrecognized = false;
 
@@ -72,26 +72,31 @@ void GeneratorModel::updateValueFromAlias(const QString &key, const QVariant &va
     }
 }
 
-void GeneratorModel::createAliasConnections() {
+void GeneratorModel::createConnections() {
     if(flagDebug) {
-        qDebug() << "createAliasConnections (GeneratorModel)";
+        qDebug() << "createConnections (GeneratorModel)";
     }
 
     for(int i = 0; i < generatorFacadesList->count(); i++) {
         GeneratorFacade* generatorFacade = generatorFacadesList->at(i).data();
 
-        // create the connection
-        QMetaObject::Connection connection = connect(generatorFacade, &GeneratorFacade::valueChangedFromAlias, this, [=](const QString &key, const QVariant &value) {
-            emit updateValueFromAlias(key, value, i);
+        // create the connections
+        QMetaObject::Connection connection = connect(generatorFacade, &GeneratorFacade::valueChanged, this, [=](const QString &key, const QVariant &value) {
+            emit updateValue(key, value, i);
+        });
+
+        QMetaObject::Connection connectionFromAlias = connect(generatorFacade, &GeneratorFacade::valueChangedFromAlias, this, [=](const QString &key, const QVariant &value) {
+            emit updateValue(key, value, i);
         });
 
         connections.append(connection);
+        connections.append(connectionFromAlias);
     }
 }
 
-void GeneratorModel::deleteAliasConnections() {
+void GeneratorModel::deleteConnections() {
     if(flagDebug) {
-        qDebug() << "deleteAliasConnections (GeneratorModel)";
+        qDebug() << "deleteConnections (GeneratorModel)";
     }
 
     // delete the alias contexts, destroying connections as a result
@@ -102,12 +107,12 @@ void GeneratorModel::deleteAliasConnections() {
 }
 
 
-void GeneratorModel::relinkAliasConnections() {
+void GeneratorModel::relinkConnections() {
     if(flagDebug) {
-        qDebug() << "relinkAliasConnections (GeneratorModel)";
+        qDebug() << "relinkConnections (GeneratorModel)";
     }
-    deleteAliasConnections();
-    createAliasConnections();
+    deleteConnections();
+    createConnections();
 }
 
 void GeneratorModel::beginInsertAtEnd() {

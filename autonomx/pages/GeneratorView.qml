@@ -25,6 +25,10 @@ RowLayout {
         }
 
         ListView {
+            id: generatorList
+
+            property int prevCount: 1;
+
             anchors.fill: parent
             orientation: Qt.Vertical
             model: generatorModel
@@ -35,9 +39,12 @@ RowLayout {
                 }
             }
 
+            // go to previous
             onCountChanged: {
-                // NICE TO HAVE: index set to lowest existing generator index
-                window.activeGeneratorIndex = -1;
+                if (prevCount < count) window.activeGeneratorIndex = count - 1;
+                else window.activeGeneratorIndex = count === window.activeGeneratorIndex ? window.activeGeneratorIndex - 1 : window.activeGeneratorIndex
+
+                prevCount = count;
             }
         }
 
@@ -50,9 +57,12 @@ RowLayout {
             GeneratorButton {
                 id: addGenerator
                 text: "Add"
+
                 iconSource: "qrc:/assets/images/add-icon.svg"
-                Layout.fillWidth: true
                 backgroundColor: Stylesheet.colors.generator
+
+                Layout.fillWidth: true
+                implicitWidth: parent.width * 0.5
 
                 onClicked: appModel.createGenerator()
             }
@@ -60,11 +70,14 @@ RowLayout {
             GeneratorButton {
                 id: deleteGenerator
                 text: "Delete"
-                Layout.fillWidth: true
+
                 backgroundColor: Stylesheet.colors.cancel
                 iconSource: "qrc:/assets/images/delete-icon.svg"
 
+                implicitWidth: parent.width * 0.5
+
                 onClicked: appModel.deleteGenerator(generatorModel.at(window.activeGeneratorIndex).id)
+                state: window.activeGeneratorIndex < 0 || generatorList.count === 1 ? "hidden" : ""
             }
         }
     }

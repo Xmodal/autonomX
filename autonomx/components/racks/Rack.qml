@@ -14,7 +14,7 @@ Item {
 
     // metadata
     property string rackName: "Rack"
-    property int genID: window.activeGeneratorIndex // -1: no assigned generator ID
+    property int generatorIndex: window.activeGeneratorIndex // -1: no assigned generator ID
     // state flags
     property bool collapsed: false
     property bool removable: true

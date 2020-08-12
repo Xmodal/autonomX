@@ -9,11 +9,16 @@ import "qrc:/stylesheet"
  */
 Button {
     // state props
-    property bool selected: false
+    property bool selected: index === window.activeGeneratorIndex
 
     width: parent ? parent.width : 0
     height: 55
     layer.enabled: false
+
+    // delete shortcut
+    Keys.onPressed: {
+        if (activeFocus && selected) appModel.deleteGenerator(generatorModel.at(window.activeGeneratorIndex).id)
+    }
 
     // background
     background: Item {
@@ -34,12 +39,13 @@ Button {
     }
 
 
-    // TODO: graph
+    // history graph
+    // TODO: refactor into OpenGL component
     HistoryGraph {
         id: historyGraph
 
-        newValue: model.index >= 0 ? model.outputMonitor : 0
-        strokeColor: model.index >= 0 ? (selected ? Stylesheet.colors.white : Stylesheet.colors.generator) : "#000"
+        newValue: model.outputMonitor
+        strokeColor: selected ? Stylesheet.colors.white : Stylesheet.colors.generator
     }
 
     // text content
@@ -76,7 +82,7 @@ Button {
         VuMeter {
             id: vuMeter
 
-            intensity: model.index >= 0 ? model.outputMonitor : 0
+            intensity: model.outputMonitor
             barColor: Stylesheet.colors.white
 
             Layout.alignment: Qt.AlignRight
@@ -92,6 +98,4 @@ Button {
         color: Stylesheet.colors.white
         opacity: 0.1
     }
-
-    onClicked: selected = !selected
 }

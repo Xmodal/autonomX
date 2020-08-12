@@ -22,8 +22,8 @@ Rack {
 
                 // TODO: softcode this
                 // ("softcode" loosely defined here as the opposite of "hardcode")
-                defaultText: genID < 0 ? "" : generatorModel.at(genID).name
-                onValueChanged: generatorModel.at(genID).name = newValue
+                defaultText: generatorIndex < 0 ? "" : generatorModel.at(generatorIndex).name
+                onValueChanged: generatorModel.at(generatorIndex).name = newValue
             }
 
             SelectField {
@@ -38,8 +38,8 @@ Rack {
             labelText: "Description"
             placeholder: "Enter description here"
 
-            defaultText: genID < 0 ? "" : generatorModel.at(genID).description
-            onValueChanged: generatorModel.at(genID).description = newValue
+            defaultText: generatorIndex < 0 ? "" : generatorModel.at(generatorIndex).description
+            onValueChanged: generatorModel.at(generatorIndex).description = newValue
 
             fieldWidth: (Stylesheet.field.initialWidth * 2) + Stylesheet.field.spacing
         }

@@ -30,7 +30,14 @@ RowLayout {
             model: generatorModel
             boundsBehavior: Flickable.StopAtBounds
             delegate: GeneratorWidget {
-                onClicked: window.activeGeneratorIndex = model.index
+                onClicked: {
+                    window.activeGeneratorIndex = selected ? -1 : model.index
+                }
+            }
+
+            onCountChanged: {
+                // NICE TO HAVE: index set to lowest existing generator index
+                window.activeGeneratorIndex = -1;
             }
         }
 
@@ -46,6 +53,8 @@ RowLayout {
                 iconSource: "qrc:/assets/images/add-icon.svg"
                 Layout.fillWidth: true
                 backgroundColor: Stylesheet.colors.generator
+
+                onClicked: appModel.createGenerator()
             }
 
             GeneratorButton {
@@ -54,6 +63,8 @@ RowLayout {
                 Layout.fillWidth: true
                 backgroundColor: Stylesheet.colors.cancel
                 iconSource: "qrc:/assets/images/delete-icon.svg"
+
+                onClicked: appModel.deleteGenerator(generatorModel.at(window.activeGeneratorIndex).id)
             }
         }
     }
@@ -65,8 +76,6 @@ RowLayout {
         Layout.fillHeight: true
         Layout.alignment: Qt.AlignLeft | Qt.AlignTop
 
-        property int genID: window.activeGeneratorIndex
-
-        source: genID < 0 ? "" : "qrc:/components/racks/RackView.qml"
+        source: window.activeGeneratorIndex < 0 ? "" : "qrc:/components/racks/RackView.qml"
     }
 }

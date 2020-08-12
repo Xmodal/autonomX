@@ -17,7 +17,7 @@ Button {
 
     // delete shortcut
     Keys.onPressed: {
-        if (activeFocus && selected && event.key === Qt.Key_Delete) appModel.deleteGenerator(generatorModel.at(window.activeGeneratorIndex).id)
+        if (activeFocus && selected && event.key === Qt.Key_Delete && generatorList.count > 1) appModel.deleteGenerator(generatorModel.at(window.activeGeneratorIndex).id)
     }
 
     // background

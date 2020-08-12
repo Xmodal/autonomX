@@ -6,8 +6,8 @@ uniform float minAlpha;
 uniform float maxAlpha;
 uniform bool vertical;
 
-float map(float input, float inputRangeMin, float inputRangeMax, float outputRangeMin, float outputRangeMax) {
-    return outputRangeMin + (input - inputRangeMin) * (outputRangeMax - outputRangeMin) / (inputRangeMax - inputRangeMin);
+float map(float inputValue, float inputRangeMin, float inputRangeMax, float outputRangeMin, float outputRangeMax) {
+    return outputRangeMin + (inputValue - inputRangeMin) * (outputRangeMax - outputRangeMin) / (inputRangeMax - inputRangeMin);
 }
 
 void main(void)

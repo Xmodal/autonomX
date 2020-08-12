@@ -11,7 +11,7 @@ import "../components/delegates"
 ColumnLayout {
     id: latticeView
 
-    property int genID: window.activeGeneratorIndex
+    property int generatorIndex: window.activeGeneratorIndex
 
     Layout.fillWidth: true
     Layout.fillHeight: true
@@ -61,7 +61,7 @@ ColumnLayout {
             GeneratorLattice {
                 id: matrix
 
-                generatorID: 0
+                generatorID: generatorIndex < 0 ? -1 : generatorModel.at(generatorIndex).id
                 anchors.fill: parent
 
                 // uniforms
@@ -103,10 +103,10 @@ ColumnLayout {
             // I/O regions
             Item {
                 id: regions
-                visible: !(genID < 0)
+                visible: !(generatorIndex < 0)
 
-                property int latticeWidth: genID < 0 ? 20 : generatorModel.at(genID).latticeWidth
-                property int latticeHeight: genID < 0 ? 20 : generatorModel.at(genID).latticeHeight
+                property int latticeWidth: generatorIndex < 0 ? 20 : generatorModel.at(generatorIndex).latticeWidth
+                property int latticeHeight: generatorIndex < 0 ? 20 : generatorModel.at(generatorIndex).latticeHeight
                 property int ppc: mainContent.ppc
                 property bool rectSelected: false
 
@@ -143,7 +143,7 @@ ColumnLayout {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: 320
 
-                visible: genID < 0
+                visible: generatorIndex < 0
 
                 text: qsTr("Please select a generator from the Generator View to edit its I/O zones.")
                 wrapMode: Text.WordWrap

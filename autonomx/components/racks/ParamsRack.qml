@@ -26,23 +26,23 @@ Rack {
                 labelText: "Width"
                 unsigned: true
 
-                defaultNum: generatorModel.at(genID).latticeWidth
-                onValueChanged: generatorModel.at(genID).latticeWidth = newValue
+                defaultNum: generatorModel.at(generatorIndex).latticeWidth
+                onValueChanged: generatorModel.at(generatorIndex).latticeWidth = newValue
             }
 
             NumberField {
                 labelText: "Height"
                 unsigned: true
 
-                defaultNum: generatorModel.at(genID).latticeHeight
-                onValueChanged: generatorModel.at(genID).latticeHeight = newValue
+                defaultNum: generatorModel.at(generatorIndex).latticeHeight
+                onValueChanged: generatorModel.at(generatorIndex).latticeHeight = newValue
             }
 
             SliderField {
                 labelText: "Time scale"
 
-                currVal: generatorModel.at(genID).timeScale
-                onValueChanged: generatorModel.at(genID).timeScale = newValue
+                currVal: generatorModel.at(generatorIndex).timeScale
+                onValueChanged: generatorModel.at(generatorIndex).timeScale = newValue
             }
 
             SliderField {
@@ -50,8 +50,8 @@ Rack {
 
                 updateLag: 70
 
-                currVal: generatorModel.at(genID).inhibitoryPortion
-                onValueChanged: generatorModel.at(genID).inhibitoryPortion = newValue
+                currVal: generatorModel.at(generatorIndex).inhibitoryPortion
+                onValueChanged: generatorModel.at(generatorIndex).inhibitoryPortion = newValue
             }
         }
 
@@ -65,8 +65,8 @@ Rack {
 
                 options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
 
-                index: generatorModel.at(genID).inhibitoryNeuronType
-                onValueChanged: generatorModel.at(genID).inhibitoryNeuronType = newValue
+                index: generatorModel.at(generatorIndex).inhibitoryNeuronType
+                onValueChanged: generatorModel.at(generatorIndex).inhibitoryNeuronType = newValue
             }
 
             SliderField {
@@ -76,8 +76,8 @@ Rack {
                 maxVal: 20.0
                 updateLag: 70
 
-                currVal: generatorModel.at(genID).inhibitoryNoise
-                onValueChanged: generatorModel.at(genID).inhibitoryNoise = newValue
+                currVal: generatorModel.at(generatorIndex).inhibitoryNoise
+                onValueChanged: generatorModel.at(generatorIndex).inhibitoryNoise = newValue
             }
 
             SelectField {
@@ -85,8 +85,8 @@ Rack {
 
                 options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
 
-                index: generatorModel.at(genID).excitatoryNeuronType
-                onValueChanged: generatorModel.at(genID).excitatoryNeuronType = newValue
+                index: generatorModel.at(generatorIndex).excitatoryNeuronType
+                onValueChanged: generatorModel.at(generatorIndex).excitatoryNeuronType = newValue
             }
 
             SliderField {
@@ -96,8 +96,8 @@ Rack {
                 maxVal: 20.0
                 updateLag: 70
 
-                currVal: generatorModel.at(genID).excitatoryNoise
-                onValueChanged: generatorModel.at(genID).excitatoryNoise = newValue
+                currVal: generatorModel.at(generatorIndex).excitatoryNoise
+                onValueChanged: generatorModel.at(generatorIndex).excitatoryNoise = newValue
             }
         }
 
@@ -112,16 +112,16 @@ Rack {
                 CheckField {
                     id: stpFlag
 
-                    on: generatorModel.at(genID).flagSTP
-                    onValueChanged: generatorModel.at(genID).flagSTP = newValue
+                    on: generatorModel.at(generatorIndex).flagSTP
+                    onValueChanged: generatorModel.at(generatorIndex).flagSTP = newValue
                 }
 
                 SliderField {
                     labelText: "STP strength"
                     updateLag: 70
 
-                    currVal: generatorModel.at(genID).STPStrength
-                    onValueChanged: generatorModel.at(genID).STPStrength = newValue
+                    currVal: generatorModel.at(generatorIndex).STPStrength
+                    onValueChanged: generatorModel.at(generatorIndex).STPStrength = newValue
                     deactivated: !stpFlag.on
                 }
             }
@@ -132,16 +132,16 @@ Rack {
                 CheckField {
                     id: stdpFlag
 
-                    on: generatorModel.at(genID).flagSTDP
-                    onValueChanged: generatorModel.at(genID).flagSTDP = newValue
+                    on: generatorModel.at(generatorIndex).flagSTDP
+                    onValueChanged: generatorModel.at(generatorIndex).flagSTDP = newValue
                 }
 
                 SliderField {
                     labelText: "STDP strength"
                     updateLag: 70
 
-                    currVal: generatorModel.at(genID).STDPStrength
-                    onValueChanged: generatorModel.at(genID).STDPStrength = newValue
+                    currVal: generatorModel.at(generatorIndex).STDPStrength
+                    onValueChanged: generatorModel.at(generatorIndex).STDPStrength = newValue
                     deactivated: !stdpFlag.on
                 }
             }
@@ -152,16 +152,16 @@ Rack {
                 CheckField {
                     id: decayFlag
 
-                    on: generatorModel.at(genID).flagDecay
-                    onValueChanged: generatorModel.at(genID).flagDecay = newValue
+                    on: generatorModel.at(generatorIndex).flagDecay
+                    onValueChanged: generatorModel.at(generatorIndex).flagDecay = newValue
                 }
 
                 SliderField {
                     labelText: "Decay constant"
                     updateLag: 70
 
-                    currVal: generatorModel.at(genID).decayConstant
-                    onValueChanged: generatorModel.at(genID).decayConstant = newValue
+                    currVal: generatorModel.at(generatorIndex).decayConstant
+                    onValueChanged: generatorModel.at(generatorIndex).decayConstant = newValue
                     deactivated: !decayFlag.on
                 }
             }

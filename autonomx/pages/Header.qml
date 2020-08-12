@@ -43,7 +43,7 @@ Item {
         anchors.left: parent.horizontalCenter
         anchors.leftMargin: 20
 
-        text: genID < 0 ? "<no generator selected>" : generatorModel.at(genID).name
+        text: generatorIndex < 0 ? "<no generator selected>" : generatorModel.at(generatorIndex).name
         font: Stylesheet.fonts.text
     }
 }

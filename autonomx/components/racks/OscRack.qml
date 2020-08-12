@@ -28,15 +28,15 @@ Rack {
                 labelText: "Address"
                 deactivated: !enableOscIn.on
 
-                defaultText: generatorModel.at(genID).oscInputAddress
-                onValueChanged: generatorModel.at(genID).oscInputAddress = newValue
+                defaultText: generatorModel.at(generatorIndex).oscInputAddress
+                onValueChanged: generatorModel.at(generatorIndex).oscInputAddress = newValue
             }
             NumberField {
                 labelText: "Port"
                 deactivated: !enableOscIn.on
 
-                defaultNum: generatorModel.at(genID).oscInputPort
-                onValueChanged: generatorModel.at(genID).oscInputPort = newValue
+                defaultNum: generatorModel.at(generatorIndex).oscInputPort
+                onValueChanged: generatorModel.at(generatorIndex).oscInputPort = newValue
             }
         }
 
@@ -54,23 +54,23 @@ Rack {
                 labelText: "Address"
                 deactivated: !enableOscOut.on
 
-                defaultText: generatorModel.at(genID).oscOutputAddressTarget
-                onValueChanged: generatorModel.at(genID).oscOutputAddressTarget = newValue
+                defaultText: generatorModel.at(generatorIndex).oscOutputAddressTarget
+                onValueChanged: generatorModel.at(generatorIndex).oscOutputAddressTarget = newValue
             }
             TextField {
                 labelText: "Host"
                 deactivated: !enableOscOut.on
                 // TODO: input masking to only allow a standard IP address format
 
-                defaultText: generatorModel.at(genID).oscOutputAddressHost
-                onValueChanged: generatorModel.at(genID).oscOutputAddressHost = newValue
+                defaultText: generatorModel.at(generatorIndex).oscOutputAddressHost
+                onValueChanged: generatorModel.at(generatorIndex).oscOutputAddressHost = newValue
             }
             NumberField {
                 labelText: "Port"
                 deactivated: !enableOscOut.on
 
-                defaultNum: generatorModel.at(genID).oscOutputPort
-                onValueChanged: generatorModel.at(genID).oscOutputPort = newValue
+                defaultNum: generatorModel.at(generatorIndex).oscOutputPort
+                onValueChanged: generatorModel.at(generatorIndex).oscOutputPort = newValue
             }
         }
     }

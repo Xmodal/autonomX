@@ -13,11 +13,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "GeneratorModel.h"
 #include <chrono>
 #include <QThread>
 #include <QVector>
 #include <QDebug>
+
+#include "GeneratorModel.h"
 
 GeneratorModel::GeneratorModel(QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generatorFacadesList, QSharedPointer<QHash<int, QSharedPointer<GeneratorFacade>>> generatorFacadesHashMap) : connections() {
     if(flagDebug) {

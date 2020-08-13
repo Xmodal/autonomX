@@ -16,6 +16,7 @@
 #pragma once
 
 #include <QQuickFramebufferObject>
+
 #include "GeneratorLatticeRenderer.h"
 
 class GeneratorLattice : public QQuickFramebufferObject {

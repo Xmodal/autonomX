@@ -22,7 +22,8 @@
 #include <QList>
 #include <QHash>
 #include <QMetaObject>
-#include <GeneratorFacade.h>
+
+#include "GeneratorFacade.h"
 
 class GeneratorModel : public QAbstractListModel {
     Q_OBJECT

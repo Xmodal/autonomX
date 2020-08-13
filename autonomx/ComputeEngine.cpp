@@ -13,14 +13,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "ComputeEngine.h"
-#include "AppModel.h"
-
 #include <algorithm>
 #include <chrono>
 #include <QDebug>
 #include <QThread>
 
+#include "ComputeEngine.h"
+#include "AppModel.h"
 
 ComputeEngine::ComputeEngine(QSharedPointer<QList<QSharedPointer<Generator>>> generatorsList, QSharedPointer<QHash<int, QSharedPointer<Generator>>> generatorsHashMap) : randomUniform(0.0, 1.0) {
     if(flagDebug) {

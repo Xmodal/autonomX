@@ -13,11 +13,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "OscEngine.h"
-
 #include <chrono>
 #include <QDebug>
 #include <QThread>
+
+#include "OscEngine.h"
 
 OscEngine::OscEngine() {
     if(flagDebug) {

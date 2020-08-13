@@ -13,8 +13,27 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "GeneratorRegionsModel.h"
+#pragma once
 
-GeneratorRegionsModel::GeneratorRegionsModel() {
+#include <QObject>
+#include <QAbstractListModel>
+#include <QModelIndex>
+#include <QList>
 
-}
+#include "GeneratorRegion.h"
+
+class GeneratorRegionModel : public QAbstractListModel {
+    Q_OBJECT
+public:
+    GeneratorRegionModel();
+
+    int rowCount(const QModelIndex& parent = QModelIndex()) const;
+    int columnCount(const QModelIndex& parent = QModelIndex()) const;
+    QVariant data(const QModelIndex &index, int role) const;
+    void populate();
+    QHash<int, QByteArray> roleNames() const;
+
+    Q_INVOKABLE GeneratorRegion* at(int index);
+private:
+    QList<GeneratorRegion> regionList;
+};

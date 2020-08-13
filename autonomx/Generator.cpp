@@ -13,12 +13,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "Generator.h"
-
 #include <chrono>
 #include <QThread>
 #include <QTimer>
 #include <QDebug>
+
+#include "Generator.h"
 
 Generator::Generator(int id, QString name, QString type, QString description) {
     this->id = id;

@@ -14,6 +14,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <QDebug>
+
 #include "GeneratorLatticeRenderer.h"
 #include "GeneratorLattice.h"
 #include "AppModel.h"

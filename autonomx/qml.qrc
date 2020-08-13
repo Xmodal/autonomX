@@ -14,7 +14,6 @@
         <file>assets/images/icon-collapse.svg</file>
         <file>assets/images/icon-expand.svg</file>
         <file>assets/images/index-bg.svg</file>
-        <file>assets/images/neurongrid_20x20.png</file>
         <file>assets/images/wrench.svg</file>
         <file>components/fields/AreaField.qml</file>
         <file>components/fields/CheckField.qml</file>

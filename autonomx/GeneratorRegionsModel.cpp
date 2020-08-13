@@ -13,26 +13,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#pragma once
-
-#include <QObject>
-#include <QQmlPropertyMap>
-#include "Generator.h"
 #include "GeneratorRegionsModel.h"
 
-class GeneratorFacade : public QQmlPropertyMap
-{
-    Q_OBJECT
-public:
-    GeneratorFacade(Generator *alias);
-    ~GeneratorFacade();
-private:
-    GeneratorRegionsModel inputRegionsModel;
-    GeneratorRegionsModel outputRegionsModel;
-    bool flagDebug = false;
-public slots:
-    void updateValueFromAlias(const QString &key, const QVariant &value);
-signals:
-    // this is fired when a value is changed from a call to the updateValueFromAlias function, in contrast to valueChanged, which fires when the underlying QQmlPropertyMap is updated from QML
-    void valueChangedFromAlias(const QString &key, const QVariant &value);
-};
+GeneratorRegionsModel::GeneratorRegionsModel() {
+
+}

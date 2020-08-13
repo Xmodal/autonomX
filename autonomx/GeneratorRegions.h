@@ -16,23 +16,24 @@
 #pragma once
 
 #include <QObject>
-#include <QQmlPropertyMap>
-#include "Generator.h"
-#include "GeneratorRegionsModel.h"
+#include <QList>
+#include <QRect>
 
-class GeneratorFacade : public QQmlPropertyMap
-{
+class GeneratorRegions : public QObject{
     Q_OBJECT
 public:
-    GeneratorFacade(Generator *alias);
-    ~GeneratorFacade();
+    GeneratorRegions();
+
+    QRect getRect(int index);
+    float getIntensity(int index);
 private:
-    GeneratorRegionsModel inputRegionsModel;
-    GeneratorRegionsModel outputRegionsModel;
-    bool flagDebug = false;
+    QList<QRect> rectList;
+    QList<float> intensityList;
 public slots:
-    void updateValueFromAlias(const QString &key, const QVariant &value);
-signals:
-    // this is fired when a value is changed from a call to the updateValueFromAlias function, in contrast to valueChanged, which fires when the underlying QQmlPropertyMap is updated from QML
-    void valueChangedFromAlias(const QString &key, const QVariant &value);
+    void createRegion();
+    void deleteRegion(int index);
+
+    void writeRect(QRect rect, int index);
+    void writeIntensity(float intensity, int index);
 };
+

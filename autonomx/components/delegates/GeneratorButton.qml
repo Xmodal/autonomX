@@ -38,14 +38,33 @@ Button {
         color: Stylesheet.colors.black
 
         Rectangle {
+            id: bg
             anchors.fill: parent
             color: backgroundColor
-            opacity: hovered && !pressed ? 1 : 0.5
+            opacity: hovered ? 1 : 0.5
 
-            NumberAnimation on opacity {
-                duration: 150
-                easing.type: Easing.Linear
+            states: State {
+                name: "pressed"; when: pressed
+                PropertyChanges { target: bg; opacity: 0.5 }
             }
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: pressed ? 0 : 150
+                    easing.type: Easing.Linear
+                }
+            }
+
+            transitions: [
+                Transition {
+                    from: ""; to: "pressed"
+                    NumberAnimation { target: bg; property: "opacity"; duration: 0 }
+                },
+                Transition {
+                    from: "pressed"; to: ""
+                    NumberAnimation { target: bg; property: "opacity"; duration: 0 }
+                }
+            ]
         }
     }
 

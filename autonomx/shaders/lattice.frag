@@ -13,8 +13,8 @@ uniform float   containerHeightInPixels;
 uniform vec4    mask;
 uniform float   maskAlpha;
 
-// padding between cells, in pixels (defined relative to square size)
-float padding = 0.15;
+// padding between cells, in pixels
+float padding = 2.0;
 
 // container width and height vector, in pixels
 vec2 containerSizeInPixels = vec2(containerWidthInPixels, containerHeightInPixels);                                                 // container size, in pixels
@@ -44,17 +44,20 @@ void main() {
     // compute location of the pixel in one of the lattice's square, in range [0, 1]
     vec2 coordinatesInSquare = vec2(mod(coordinatesInLattice.x, squareInLattice.x), mod(coordinatesInLattice.y, squareInLattice.y)) / squareInLattice;
 
+    float paddingInSquare = padding / squareInPixels;
+
+    /*
+    gl_FragColor = vec4(coordinatesInSquare, coordinatesInSquare.x < 1.0 - paddingInSquare ? 0.0 : 1.0, 1.0);
+    return;
+    */
+
     // hide pixels inside padding
     if(
-        !(coordinatesInSquare.x > padding && coordinatesInSquare.x < (1.0 - padding)) ||
-        !(coordinatesInSquare.y > padding && coordinatesInSquare.y < (1.0 - padding))
+        !(coordinatesInSquare.x > paddingInSquare * 0.5 && coordinatesInSquare.x < (1.0 - paddingInSquare * 0.5)) ||
+        !(coordinatesInSquare.y > paddingInSquare * 0.5 && coordinatesInSquare.y < (1.0 - paddingInSquare * 0.5))
     ) {
-        vec2 mirrored = -abs((2.0 * coordinatesInSquare) - 1.0) + 1.0;
-        if (mirrored.x > 0.20 && mirrored.x <= 0.30 && mirrored.y > 0.20 && mirrored.y <= 0.30) {
-            gl_FragColor = vec4(vec3(1.0), 0.2);
-            return;
-        }
-        discard;
+        gl_FragColor = vec4(0.0);
+        return;
     }
 
     // get floored texture coordinate
@@ -76,5 +79,5 @@ void main() {
     }
 
     // export color
-    gl_FragColor = vec4(vec3(1.0), intensity);
+    gl_FragColor = vec4(vec3(intensity), 1.0);
 }

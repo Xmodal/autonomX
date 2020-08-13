@@ -27,20 +27,22 @@ Button {
 
     indicator: Image {
         source: iconSource
-        anchors.right: bg.right
+        anchors.right: parent.right
         anchors.rightMargin: 15
         anchors.verticalCenter: parent.verticalCenter
     }
 
     background: Rectangle {
-        id: bg
         implicitWidth: 100
         implicitHeight: 40
-        color: parent.backgroundColor
-        opacity: hovered && !pressed ? 1 : 0.5
+        color: Stylesheet.colors.black
 
-        Behavior on opacity {
-            NumberAnimation {
+        Rectangle {
+            anchors.fill: parent
+            color: backgroundColor
+            opacity: hovered && !pressed ? 1 : 0.5
+
+            NumberAnimation on opacity {
                 duration: 150
                 easing.type: Easing.Linear
             }

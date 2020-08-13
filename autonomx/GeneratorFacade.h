@@ -17,8 +17,9 @@
 
 #include <QObject>
 #include <QQmlPropertyMap>
+
 #include "Generator.h"
-#include "GeneratorRegionsModel.h"
+#include "GeneratorRegionModel.h"
 
 class GeneratorFacade : public QQmlPropertyMap
 {
@@ -27,8 +28,8 @@ public:
     GeneratorFacade(Generator *alias);
     ~GeneratorFacade();
 private:
-    GeneratorRegionsModel inputRegionsModel;
-    GeneratorRegionsModel outputRegionsModel;
+    GeneratorRegionModel inputRegionsModel;
+    GeneratorRegionModel outputRegionsModel;
     bool flagDebug = false;
 public slots:
     void updateValueFromAlias(const QString &key, const QVariant &value);

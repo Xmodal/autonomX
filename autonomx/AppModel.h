@@ -20,6 +20,7 @@
 #include <QHash>
 #include <QSharedPointer>
 #include <QThread>
+
 #include "ComputeEngine.h"
 #include "OscEngine.h"
 #include "Generator.h"

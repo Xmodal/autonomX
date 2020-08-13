@@ -41,8 +41,8 @@ SOURCES += \
     GeneratorLatticeCommunicator.cpp \
     GeneratorLatticeRenderer.cpp \
     GeneratorModel.cpp \
-    GeneratorRegions.cpp \
-    GeneratorRegionsModel.cpp \
+    GeneratorRegionModel.cpp \
+    GeneratorRegionSet.cpp \
     Izhikevich.cpp \
     OscEngine.cpp \
     SpikingNet.cpp \
@@ -81,8 +81,9 @@ HEADERS += \
     GeneratorLatticeCommunicator.h \
     GeneratorLatticeRenderer.h \
     GeneratorModel.h \
-    GeneratorRegions.h \
-    GeneratorRegionsModel.h \
+    GeneratorRegion.h \
+    GeneratorRegionModel.h \
+    GeneratorRegionSet.h \
     Izhikevich.h \
     NeuronType.h \
     OscEngine.h \

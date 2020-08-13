@@ -15,11 +15,11 @@
 
 #pragma once
 
-#include "Generator.h"
-#include "Izhikevich.h"
-
 #include <random>
 #include <vector>
+
+#include "Generator.h"
+#include "Izhikevich.h"
 
 class SpikingNet : public Generator {
     // TODO: figure out how we decide to add / remove inputs. this should probably be a property that belongs to the Generator abstract class, rather than this.

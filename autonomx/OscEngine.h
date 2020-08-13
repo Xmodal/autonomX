@@ -18,6 +18,7 @@
 #include <QObject>
 #include <QSharedPointer>
 #include <QHash>
+
 #include "OscSender.h"
 #include "OscReceiver.h"
 #include "Generator.h"

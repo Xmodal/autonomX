@@ -21,6 +21,7 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLFramebufferObject>
 #include <QQuickWindow>
+
 #include "Generator.h"
 #include "GeneratorLatticeCommunicator.h"
 

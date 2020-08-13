@@ -13,16 +13,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include <Foundation/Foundation.h>
+#pragma once
 
-#include "AppNap.h"
+#include <QRect>
 
-static id activity;
-
-void disableAppNap() {
-    activity = [[NSProcessInfo processInfo] beginActivityWithOptions:NSActivityLatencyCritical | NSActivityUserInitiated reason:@"Disable App Nap"];
-}
-
-void enableAppNap() {
-    [[NSProcessInfo processInfo] endActivity:activity];
-}
+struct GeneratorRegion {
+    QRect rect;
+    double intensity;
+};

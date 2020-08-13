@@ -13,8 +13,26 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "GeneratorRegions.h"
+#pragma once
 
-GeneratorRegions::GeneratorRegions() {
+#include <QObject>
+#include <QList>
 
-}
+#include "GeneratorRegion.h"
+
+class GeneratorRegionSet : public QObject{
+    Q_OBJECT
+public:
+    GeneratorRegionSet();
+
+    GeneratorRegion getRegion(int index);
+    int getRegionCount();
+private:
+    QList<GeneratorRegion> regionList;
+public slots:
+    void createRegion(GeneratorRegion region);
+    void deleteRegion(int index);
+
+    void writeRegion(GeneratorRegion region, int index);
+};
+

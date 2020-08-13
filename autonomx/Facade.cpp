@@ -13,13 +13,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "Facade.h"
-
 #include <chrono>
 #include <QThread>
 #include <QDebug>
 #include <QMetaProperty>
 #include <QQmlEngine>
+
+#include "Facade.h"
 
 Facade::Facade(QObject *alias) : QQmlPropertyMap(this, nullptr) {
     // set ownership of the Facade to C++ so that there is no duplicate deletion attempt when the app quits

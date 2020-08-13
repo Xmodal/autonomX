@@ -13,8 +13,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "GeneratorLattice.h"
 #include <QDebug>
+
+#include "GeneratorLattice.h"
 
 QQuickFramebufferObject::Renderer * GeneratorLattice::createRenderer() const {
     connect(this, &GeneratorLattice::visibleChanged, this, &QQuickFramebufferObject::update);

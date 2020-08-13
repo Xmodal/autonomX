@@ -13,13 +13,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "GeneratorFacade.h"
-
 #include <chrono>
 #include <QThread>
 #include <QDebug>
 #include <QMetaProperty>
 #include <QQmlEngine>
+
+#include "GeneratorFacade.h"
 
 GeneratorFacade::GeneratorFacade(Generator *generator) : QQmlPropertyMap(this, nullptr) {
     // set ownership of the GeneratorFacade to C++ so that there is no duplicate deletion attempt when the app quits

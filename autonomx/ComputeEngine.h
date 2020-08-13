@@ -22,6 +22,7 @@
 #include <QHash>
 #include <QSharedPointer>
 #include <random>
+
 #include "Generator.h"
 
 

@@ -13,11 +13,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "SpikingNet.h"
-
 #include <chrono>
 #include <QThread>
 #include <QDebug>
+
+#include "SpikingNet.h"
 
 // ############################### initialization routines ###############################
 

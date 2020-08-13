@@ -13,27 +13,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#pragma once
+#include "GeneratorRegionModel.h"
 
-#include <QObject>
-#include <QList>
-#include <QRect>
+GeneratorRegionModel::GeneratorRegionModel() {
 
-class GeneratorRegions : public QObject{
-    Q_OBJECT
-public:
-    GeneratorRegions();
-
-    QRect getRect(int index);
-    float getIntensity(int index);
-private:
-    QList<QRect> rectList;
-    QList<float> intensityList;
-public slots:
-    void createRegion();
-    void deleteRegion(int index);
-
-    void writeRect(QRect rect, int index);
-    void writeIntensity(float intensity, int index);
-};
-
+}

@@ -18,7 +18,7 @@
 #include <iostream>
 #include <vector>
 
-#include <NeuronType.h>
+#include "NeuronType.h"
 
 class Izhikevich {
 private:

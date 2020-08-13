@@ -51,15 +51,15 @@ Button {
     // text content
     RowLayout {
         spacing: 0
-        anchors.leftMargin: 12
         anchors.fill: parent
-        Layout.alignment: Qt.AlignVCenter
 
         // index
         Label {
             id: labelIndex
 
-            width: 10
+            Layout.leftMargin: 12
+            Layout.preferredWidth: 10
+
             text: model.index + 1
             color: Stylesheet.colors[selected ? 'darkGrey' : 'white']
             font { weight: Font.DemiBold; pixelSize: 11 }
@@ -71,8 +71,9 @@ Button {
         Label {
             id: labelName
 
-            Layout.leftMargin: 30
             text: model.name
+            Layout.leftMargin: 30
+            Layout.fillWidth: true
             color: Stylesheet.colors.white
             font.weight: Font.DemiBold
             opacity: selected ? 1 : (hovered ? 1 : 0.5)

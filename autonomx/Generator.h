@@ -22,6 +22,7 @@
 #include <QSharedPointer>
 #include <QMutex>
 #include <vector>
+#include <GeneratorRegions.h>
 
 class Generator : public QObject {
     Q_OBJECT
@@ -135,6 +136,9 @@ private:
     bool flagDebug = false;                     // enables debug
 
     QMutex latticeDataMutex;                    // mutex used by writeLatticeData
+
+    GeneratorRegions inputRegions;
+    GeneratorRegions outputRegions;
 public slots:
     // common slot allowing to update any property. allows the Facade class to work properly
     // (for connection from QQmlPropertyMap's valueChanged signal)

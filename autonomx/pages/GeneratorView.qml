@@ -55,16 +55,6 @@ RowLayout {
                     onClicked: window.activeGeneratorIndex = -1
                     z: -1
                 }
-
-                // update active index when generator count changes
-                onCountChanged: {
-                    if (prevCount === 0 || count === prevCount) return prevCount = count;
-
-                    if (prevCount < count) window.activeGeneratorIndex = count - 1;
-                    else window.activeGeneratorIndex = count === window.activeGeneratorIndex ? window.activeGeneratorIndex - 1 : window.activeGeneratorIndex
-
-                    prevCount = count;
-                }
             }
 
             // add/delete generator buttons
@@ -83,7 +73,7 @@ RowLayout {
                     backgroundColor: Stylesheet.colors.generator
                     iconSource: "qrc:/assets/images/add-icon.svg"
 
-                    onClicked: appModel.createGenerator()
+                    onClicked: window.addGenerator()
                 }
 
                 GeneratorButton {
@@ -95,7 +85,7 @@ RowLayout {
                     backgroundColor: Stylesheet.colors.cancel
                     iconSource: "qrc:/assets/images/delete-icon.svg"
 
-                    onClicked: appModel.deleteGenerator(generatorModel.at(window.activeGeneratorIndex).id)
+                    onClicked: window.deleteGenerator()
                     state: window.activeGeneratorIndex < 0 || generatorList.count === 1 ? "hidden" : ""
                 }
             }

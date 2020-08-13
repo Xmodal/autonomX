@@ -770,7 +770,9 @@ void SpikingNet::writeInhibitoryPortion(double inhibitoryPortion) {
     // TODO: this isn't as efficient as it could be since it's not necessary to deallocate and reallocate memory for weights / STP
     reset();
     // do the change
-    this->inhibitoryPortion = inhibitoryPortion;
+    this->inhibitoryPortion = inhibitoryPortion;    
+    // update inhibitory size
+    inhibitorySize = latticeWidth * latticeHeight * inhibitoryPortion;
     // re-initialize
     initialize();
     // signal

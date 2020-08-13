@@ -8,26 +8,27 @@ import "qrc:/stylesheet"
  * Widget to control a generator.
  */
 Button {
+    id: generatorWidget
+
     // state props
     property bool selected: index === window.activeGeneratorIndex
 
-    width: parent ? parent.width : 0
-    height: 55
-    layer.enabled: false
+    // autofocus on selected
+    onSelectedChanged: if (selected) forceActiveFocus()
+
+    // dimensions
+    implicitWidth: parent ? parent.width : 0
+    implicitHeight: 55
 
     // delete shortcut
     Keys.onPressed: {
-        if (activeFocus && selected && event.key === Qt.Key_Delete && generatorList.count > 1) appModel.deleteGenerator(generatorModel.at(window.activeGeneratorIndex).id)
+        if (activeFocus && selected && event.key === Qt.Key_Delete && generatorModel.rowCount() > 1) window.deleteGenerator()
     }
 
     // background
-    background: Item {
+    background: Rectangle {
+        color: selected ? Stylesheet.colors.generator : Stylesheet.colors.black
         anchors.fill: parent
-
-        Rectangle {
-            color: selected ? Stylesheet.colors.generator : Stylesheet.colors.black
-            anchors.fill: parent
-        }
 
         // index background
         Image {
@@ -88,6 +89,42 @@ Button {
 
             Layout.alignment: Qt.AlignRight
         }
+    }
+
+    // delete button
+    Button {
+        id: deleteButton
+
+        anchors.left: parent.left
+        anchors.leftMargin: generatorList.count > 1 ? (hovered ? 0 : (generatorWidget.hovered ? -30 : -35)) : -35
+        implicitWidth: 35
+        implicitHeight: parent.height
+        z: 1
+        enabled: generatorList.count > 1
+
+        Behavior on anchors.leftMargin {
+            NumberAnimation { duration: 300; easing.type: Easing.OutCubic }
+        }
+
+        background: Rectangle {
+            anchors.fill: parent
+            color: Stylesheet.colors.black
+            antialiasing: true
+
+            Rectangle {
+                anchors.fill: parent
+                color: Stylesheet.colors.cancel
+                opacity: deleteButton.pressed ? 0.7 : 1
+                antialiasing: true
+            }
+        }
+
+        indicator: Image {
+            anchors.centerIn: parent
+            source: "qrc:/assets/images/delete-icon.svg"
+        }
+
+        onClicked: window.deleteGenerator()
     }
 
     // inferior border

@@ -20,21 +20,6 @@ ApplicationWindow {
     height: 720
     title: qsTr("autonomX")
 
-    // code for adding / removing generators for testing
-    /*
-    Component.onCompleted: {
-        console.log("QML: creating generator")
-        appModel.createGenerator()
-    }
-    Timer {
-        running: true; repeat: false; interval: 3000
-        onTriggered: {
-            console.log("QML: deleting generator")
-            appModel.deleteGenerator(0)
-        }
-    }
-    */
-
     // TODO: move into appropriate Rack component
     function handleMessageReceived(oscPath, oscArguments) {
         console.log("QML-Received OSC: " + oscPath + " " + oscArguments);
@@ -55,6 +40,16 @@ ApplicationWindow {
 
     function toggleLatticeView() {
         router.currentIndex = (router.currentIndex + 1) % 2;
+    }
+
+    // add/delete generators
+    function addGenerator() {
+        appModel.createGenerator();
+        activeGeneratorIndex = generatorModel.rowCount() - 1;
+    }
+    function deleteGenerator() {
+        appModel.deleteGenerator(generatorModel.at(activeGeneratorIndex).id);
+        if (activeGeneratorIndex === generatorModel.rowCount()) activeGeneratorIndex--;
     }
 
     // background

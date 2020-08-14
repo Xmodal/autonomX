@@ -14,7 +14,12 @@ Button {
     property bool selected: index === window.activeGeneratorIndex
 
     // autofocus on selected
-    onSelectedChanged: if (selected) forceActiveFocus()
+    onSelectedChanged: {
+        if (selected) {
+            forceActiveFocus();
+            generatorList.positionViewAtIndex(window.activeGeneratorIndex, ListView.SnapPosition)
+        }
+    }
 
     // dimensions
     implicitWidth: parent ? parent.width : 0
@@ -124,7 +129,7 @@ Button {
             source: "qrc:/assets/images/delete-icon.svg"
         }
 
-        onClicked: window.deleteGenerator()
+        onClicked: window.deleteGenerator(index)
     }
 
     // inferior border

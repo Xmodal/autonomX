@@ -27,6 +27,8 @@ class GeneratorFacade : public QQmlPropertyMap
 public:
     GeneratorFacade(Generator *alias);
     ~GeneratorFacade();
+
+    Q_INVOKABLE GeneratorRegionModel* getRegionModel();
 private:
     GeneratorRegionModel inputRegionsModel;
     GeneratorRegionModel outputRegionsModel;

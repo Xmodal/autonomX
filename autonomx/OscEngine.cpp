@@ -161,7 +161,10 @@ void OscEngine::sendOscData(int id, QVariantList data) {
     }
 
     if(!oscSenders.contains(id)) {
-        throw std::runtime_error("osc sender does not exist");
+        // we allow this to happen without an exception because this can occur when deleting a generator.
+        // there is a race condition between the deletion of the Generator and its associated OscSender when AppModel orders their respective threads (computeThread and oscThread) to delete them later.
+        // if the OscSender is deleted first and the ComputeEngine renders an iteration before it deletes the Generator, it will attempt to send a message through an OscSender that doesn't exist.
+        return;
     }
     QSharedPointer<OscSender> sender = oscSenders.value(id);
     QString address = oscSenderAddresses.value(id);
@@ -215,7 +218,10 @@ void OscEngine::updateOscReceiverAddress(int id, QString address) {
     }
 
     if(!oscReceivers.contains(id)) {
-        throw std::runtime_error("osc receiver does not exist");
+        // we allow this to happen without an exception because this can occur when deleting a generator.
+        // there is a race condition between the deletion of the Generator and its associated OscReceiver when AppModel orders their respective threads (computeThread and oscThread) to delete them later.
+        // this makes it possible to attempt to edit the properties of an OscReceiver that doesn't exist.
+        return;
     }
     oscReceiverAddresses.insert(id, address);
 }
@@ -230,7 +236,10 @@ void OscEngine::updateOscReceiverPort(int id, int port) {
     }
 
     if(!oscReceivers.contains(id)) {
-        throw std::runtime_error("osc receiver does not exist");
+        // we allow this to happen without an exception because this can occur when deleting a generator.
+        // there is a race condition between the deletion of the Generator and its associated OscReceiver when AppModel orders their respective threads (computeThread and oscThread) to delete them later.
+        // this makes it possible to attempt to edit the properties of an OscReceiver that doesn't exist.
+        return;
     }
     oscReceivers.value(id)->setPort(port);
 }
@@ -280,7 +289,10 @@ void OscEngine::updateOscSenderAddressHost(int id, QString addressHost) {
     }
 
     if(!oscSenders.contains(id)) {
-        throw std::runtime_error("osc sender does not exist");
+        // we allow this to happen without an exception because this can occur when deleting a generator.
+        // there is a race condition between the deletion of the Generator and its associated OscSender when AppModel orders their respective threads (computeThread and oscThread) to delete them later.
+        // this makes it possible to attempt to edit the properties of an OscSender that doesn't exist.
+        return;
     }
     oscSenders.value(id)->setHostAddress(addressHost);
 }
@@ -295,7 +307,10 @@ void OscEngine::updateOscSenderAddressTarget(int id, QString addressTarget) {
     }
 
     if(!oscSenders.contains(id)) {
-        throw std::runtime_error("osc sender does not exist");
+        // we allow this to happen without an exception because this can occur when deleting a generator.
+        // there is a race condition between the deletion of the Generator and its associated OscSender when AppModel orders their respective threads (computeThread and oscThread) to delete them later.
+        // this makes it possible to attempt to edit the properties of an OscSender that doesn't exist.
+        return;
     }
     oscSenderAddresses.insert(id, addressTarget);
 }
@@ -310,7 +325,10 @@ void OscEngine::updateOscSenderPort(int id, int port) {
     }
 
     if(!oscSenders.contains(id)) {
-        throw std::runtime_error("osc receiver does not exist");
+        // we allow this to happen without an exception because this can occur when deleting a generator.
+        // there is a race condition between the deletion of the Generator and its associated OscSender when AppModel orders their respective threads (computeThread and oscThread) to delete them later.
+        // this makes it possible to attempt to edit the properties of an OscSender that doesn't exist.
+        return;
     }
     oscSenders.value(id)->setPort(port);
 }

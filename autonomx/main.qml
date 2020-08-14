@@ -47,8 +47,8 @@ ApplicationWindow {
         appModel.createGenerator();
         activeGeneratorIndex = generatorModel.rowCount() - 1;
     }
-    function deleteGenerator() {
-        appModel.deleteGenerator(generatorModel.at(activeGeneratorIndex).id);
+    function deleteGenerator(index) {
+        appModel.deleteGenerator(generatorModel.at(activeGeneratorIndex > 0 ? activeGeneratorIndex : index).id);
         if (activeGeneratorIndex === generatorModel.rowCount()) activeGeneratorIndex--;
     }
 

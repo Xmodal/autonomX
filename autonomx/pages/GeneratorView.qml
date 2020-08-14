@@ -3,7 +3,7 @@ import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
 
 import "qrc:/stylesheet"
-import "qrc:/components/ui"
+import "../components/ui"
 
 // Main two-column layout
 RowLayout {
@@ -37,7 +37,10 @@ RowLayout {
                 Layout.fillHeight: true
 
                 orientation: Qt.Vertical
-                boundsBehavior: Flickable.StopAtBounds
+                //boundsBehavior: Flickable.StopAtBounds
+                highlightRangeMode: ListView.ApplyRange
+                preferredHighlightBegin: 40
+                preferredHighlightEnd: height - 40
                 ScrollBar.vertical: ScrollBar {
                     interactive: false
                 }
@@ -90,8 +93,6 @@ RowLayout {
                 }
             }
         }
-
-
     }
 
     // list of racks for currently selected generator

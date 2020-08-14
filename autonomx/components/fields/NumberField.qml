@@ -42,7 +42,7 @@ Field {
 
     // this is essentially just a TextField with Int/Double validation
     // and fancy increment/decrement controls :)
-    TextField {
+    fieldContent: TextField {
         id: fieldInput
 
         enabled: !deactivated
@@ -90,7 +90,7 @@ Field {
                 Image {
                     id: caret
                     source: "qrc:/assets/images/down-caret.svg"
-                    opacity: 0.25
+                    opacity: caretMouse.containsMouse ? 1 : 0.25
 
                     anchors {
                         right: parent.right
@@ -110,11 +110,6 @@ Field {
                         anchors.fill: parent
                         hoverEnabled: true
                         onClicked: index % 2 === 0 ? increment() : decrement()
-                    }
-
-                    states: State {
-                        name: "hovered"; when: caretMouse.containsMouse
-                        PropertyChanges { target: caret; opacity: 1 }
                     }
 
                     Behavior on opacity {

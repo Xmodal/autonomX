@@ -20,8 +20,6 @@ Rack {
                 labelText: "Name"
                 placeholder: "Name"
 
-                // TODO: softcode this
-                // ("softcode" loosely defined here as the opposite of "hardcode")
                 defaultText: generatorIndex < 0 ? "" : generatorModel.at(generatorIndex).name
                 onValueChanged: generatorModel.at(generatorIndex).name = newValue
             }
@@ -34,7 +32,7 @@ Rack {
         }
 
         AreaField {
-            Layout.fillHeight: true
+            fillHeight: true
             labelText: "Description"
             placeholder: "Enter description here"
 
@@ -45,9 +43,3 @@ Rack {
         }
     }
 }
-
-/*##^##
-Designer {
-    D{i:0;autoSize:true;height:480;width:640}
-}
-##^##*/

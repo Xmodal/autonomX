@@ -12,7 +12,7 @@ Field {
 
     spacing: 5
 
-    Switch {
+    fieldContent: Switch {
         id: switchObj
 
         enabled: !deactivated

@@ -6,7 +6,7 @@ import ca.hexagram.xmodal.autonomx 1.0
 
 import "qrc:/stylesheet"
 import "../models"
-import "../components/delegates"
+import "../components/ui"
 
 ColumnLayout {
     id: latticeView

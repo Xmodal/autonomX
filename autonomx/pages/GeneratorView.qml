@@ -3,7 +3,7 @@ import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.2
 
 import "qrc:/stylesheet"
-import "qrc:/components/delegates"
+import "qrc:/components/ui"
 
 // Main two-column layout
 RowLayout {

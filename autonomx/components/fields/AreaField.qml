@@ -59,7 +59,9 @@ Field {
                 onEditingFinished: valueChanged(text)
             }
 
-            ScrollBar.vertical: ScrollBar {}
+            ScrollBar.vertical: ScrollBar {
+                interactive: false
+            }
         }
     }
 }

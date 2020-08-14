@@ -40,6 +40,7 @@
         <file>shaders/gradient_overlay.frag</file>
         <file>shaders/lattice.frag</file>
         <file>shaders/lattice.vert</file>
+        <file>shaders/slider_frame.frag</file>
         <file>stylesheet/qmldir</file>
         <file>stylesheet/Stylesheet.qml</file>
     </qresource>

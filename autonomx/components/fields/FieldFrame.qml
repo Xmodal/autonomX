@@ -22,18 +22,11 @@ Item {
             anchors.top: modelData == "top" ? parent.top : undefined
             anchors.bottom: modelData == "bottom" ? parent.bottom : undefined
             color: Stylesheet.colors.white
-            opacity: 0.5
-
-            // states
-            states: State {
-                name: "active"; when: isHovered || isFocused
-                PropertyChanges { target: line; opacity: 1 }
-            }
+            opacity: isHovered || isFocused ? 1 : 0.3
 
             // animations
             Behavior on opacity {
                 NumberAnimation {
-                    property: "opacity"
                     duration: 150
                     easing.type: Easing.Linear
                 }

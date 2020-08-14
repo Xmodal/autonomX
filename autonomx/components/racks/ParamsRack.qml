@@ -106,64 +106,31 @@ Rack {
             Layout.fillWidth: true
             spacing: Stylesheet.field.spacing
 
-            RowLayout {
-                spacing: 15
+            SliderField {
+                labelText: "STP strength"
+                updateLag: 70
 
-                CheckField {
-                    id: stpFlag
-
-                    on: generatorModel.at(generatorIndex).flagSTP
-                    onValueChanged: generatorModel.at(generatorIndex).flagSTP = newValue
-                }
-
-                SliderField {
-                    labelText: "STP strength"
-                    updateLag: 70
-
-                    currVal: generatorModel.at(generatorIndex).STPStrength
-                    onValueChanged: generatorModel.at(generatorIndex).STPStrength = newValue
-                    deactivated: !stpFlag.on
-                }
+                currVal: generatorModel.at(generatorIndex).STPStrength
+                onValueChanged: generatorModel.at(generatorIndex).STPStrength = newValue
+                //deactivated: !stpFlag.on
             }
 
-            RowLayout {
-                spacing: 15
+            SliderField {
+                labelText: "STDP strength"
+                updateLag: 70
 
-                CheckField {
-                    id: stdpFlag
-
-                    on: generatorModel.at(generatorIndex).flagSTDP
-                    onValueChanged: generatorModel.at(generatorIndex).flagSTDP = newValue
-                }
-
-                SliderField {
-                    labelText: "STDP strength"
-                    updateLag: 70
-
-                    currVal: generatorModel.at(generatorIndex).STDPStrength
-                    onValueChanged: generatorModel.at(generatorIndex).STDPStrength = newValue
-                    deactivated: !stdpFlag.on
-                }
+                currVal: generatorModel.at(generatorIndex).STDPStrength
+                onValueChanged: generatorModel.at(generatorIndex).STDPStrength = newValue
+                //deactivated: !stdpFlag.on
             }
 
-            RowLayout {
-                spacing: 15
+            SliderField {
+                labelText: "Decay constant"
+                updateLag: 70
 
-                CheckField {
-                    id: decayFlag
-
-                    on: generatorModel.at(generatorIndex).flagDecay
-                    onValueChanged: generatorModel.at(generatorIndex).flagDecay = newValue
-                }
-
-                SliderField {
-                    labelText: "Decay constant"
-                    updateLag: 70
-
-                    currVal: generatorModel.at(generatorIndex).decayConstant
-                    onValueChanged: generatorModel.at(generatorIndex).decayConstant = newValue
-                    deactivated: !decayFlag.on
-                }
+                currVal: generatorModel.at(generatorIndex).decayConstant
+                onValueChanged: generatorModel.at(generatorIndex).decayConstant = newValue
+                //deactivated: !decayFlag.on
             }
         }
     }

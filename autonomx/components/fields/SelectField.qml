@@ -10,7 +10,7 @@ Field {
     property int index
     property variant options
 
-    ComboBox {
+    fieldContent: ComboBox {
         id: comboBox
 
         // root settings

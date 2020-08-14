@@ -19,20 +19,19 @@ Field {
         return Number(v.toFixed(precision))
     }
 
-    // value update lag timer
-    Timer {
-        id: sliderLagTimer
-        interval: updateLag; repeat: false; running: false
-        triggeredOnStart: false
-
-        onTriggered: sliderField.valueChanged(slider.value)
-    }
-
     // main slider area
-    ColumnLayout {
+    fieldContent: ColumnLayout {
         id: sliderContainer
-        Layout.preferredHeight: 40
         spacing: 3
+
+        // value update lag timer
+        Timer {
+            id: sliderLagTimer
+            interval: updateLag; repeat: false; running: false
+            triggeredOnStart: false
+
+            onTriggered: sliderField.valueChanged(slider.value)
+        }
 
         // slider
         Slider {
@@ -41,7 +40,7 @@ Field {
             enabled: !deactivated
 
             // alignment
-            Layout.fillWidth: true
+            Layout.preferredWidth: fieldWidth
             Layout.preferredHeight: 10 + trueHandle.height
             padding: 0
 
@@ -113,7 +112,7 @@ Field {
 
             // alignment
             padding: 0
-            Layout.fillWidth: true
+            Layout.preferredWidth: fieldWidth
             Layout.alignment: Qt.AlignCenter
 
             // text

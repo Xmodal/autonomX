@@ -10,15 +10,15 @@ Field {
     property string placeholder: ""
     property string defaultText: "Text Field"
 
-    TextField {
+    fieldContent: TextField {
         id: fieldInput
 
         enabled: !deactivated
 
         // alignment
         leftPadding: 0
-        Layout.fillWidth: true
-        Layout.preferredHeight: 40
+//        Layout.fillWidth: true
+//        Layout.preferredHeight: 40
 
         // text
         text: activeFocus ? defaultText : metrics.elidedText

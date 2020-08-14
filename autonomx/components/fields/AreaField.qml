@@ -12,7 +12,7 @@ Field {
 
     Layout.fillHeight: true
 
-    Item {
+    fieldContent: Item {
         Layout.fillWidth: true
         Layout.fillHeight: true
 

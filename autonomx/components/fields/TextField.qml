@@ -17,8 +17,6 @@ Field {
 
         // alignment
         leftPadding: 0
-//        Layout.fillWidth: true
-//        Layout.preferredHeight: 40
 
         // text
         text: activeFocus ? defaultText : metrics.elidedText
@@ -39,9 +37,6 @@ Field {
             isHovered: fieldInput.hovered
             isFocused: fieldInput.activeFocus
         }
-
-        // TODO: add validator
-        // eg. no empty values allowed flag as widget property
 
         // interactivity
         selectByMouse: true

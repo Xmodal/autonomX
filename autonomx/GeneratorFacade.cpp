@@ -22,7 +22,7 @@
 #include "GeneratorFacade.h"
 
 GeneratorFacade::GeneratorFacade(Generator *generator) : QQmlPropertyMap(this, nullptr) {
-    // set ownership of the GeneratorFacade to C++ so that there is no duplicate deletion attempt when the app quits
+    // set ownership of the GeneratorFacade to C++ so that QML doesn't try to take over garbage collection duties, resulting in a double free
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 
     if(flagDebug) {
@@ -50,8 +50,8 @@ GeneratorFacade::GeneratorFacade(Generator *generator) : QQmlPropertyMap(this, n
     }
 
     // init region models
-    inputRegionsModel = QSharedPointer<GeneratorRegionModel>(new GeneratorRegionModel);
-    outputRegionsModel = QSharedPointer<GeneratorRegionModel>(new GeneratorRegionModel);
+    inputRegionModel = QSharedPointer<GeneratorRegionModel>(new GeneratorRegionModel());
+    outputRegionModel = QSharedPointer<GeneratorRegionModel>(new GeneratorRegionModel());
 
     // connect generator changes to facade
     QObject::connect(generator, &Generator::valueChanged, this, &GeneratorFacade::updateValueFromAlias, Qt::QueuedConnection);
@@ -59,14 +59,14 @@ GeneratorFacade::GeneratorFacade(Generator *generator) : QQmlPropertyMap(this, n
     QObject::connect(this, &GeneratorFacade::valueChanged, generator, &Generator::updateValue, Qt::QueuedConnection);
 
     // connect facade region model changes to region set
-    QObject::connect(inputRegionsModel.data(), &GeneratorRegionModel::addRegion, generator->getInputRegionSet(), &GeneratorRegionSet::addRegion);
-    QObject::connect(outputRegionsModel.data(), &GeneratorRegionModel::addRegion, generator->getOutputRegionSet(), &GeneratorRegionSet::addRegion);
+    QObject::connect(inputRegionModel.data(), &GeneratorRegionModel::addRegion, generator->getInputRegionSet(), &GeneratorRegionSet::addRegion);
+    QObject::connect(outputRegionModel.data(), &GeneratorRegionModel::addRegion, generator->getOutputRegionSet(), &GeneratorRegionSet::addRegion);
 
-    QObject::connect(inputRegionsModel.data(), &GeneratorRegionModel::deleteRegion, generator->getInputRegionSet(), &GeneratorRegionSet::deleteRegion);
-    QObject::connect(outputRegionsModel.data(), &GeneratorRegionModel::deleteRegion, generator->getOutputRegionSet(), &GeneratorRegionSet::deleteRegion);
+    QObject::connect(inputRegionModel.data(), &GeneratorRegionModel::deleteRegion, generator->getInputRegionSet(), &GeneratorRegionSet::deleteRegion);
+    QObject::connect(outputRegionModel.data(), &GeneratorRegionModel::deleteRegion, generator->getOutputRegionSet(), &GeneratorRegionSet::deleteRegion);
 
-    QObject::connect(inputRegionsModel.data(), &GeneratorRegionModel::writeRegion, generator->getInputRegionSet(), &GeneratorRegionSet::writeRegion);
-    QObject::connect(outputRegionsModel.data(), &GeneratorRegionModel::writeRegion, generator->getOutputRegionSet(), &GeneratorRegionSet::writeRegion);
+    QObject::connect(inputRegionModel.data(), &GeneratorRegionModel::writeRegion, generator->getInputRegionSet(), &GeneratorRegionSet::writeRegion);
+    QObject::connect(outputRegionModel.data(), &GeneratorRegionModel::writeRegion, generator->getOutputRegionSet(), &GeneratorRegionSet::writeRegion);
 }
 
 GeneratorFacade::~GeneratorFacade() {
@@ -78,6 +78,7 @@ GeneratorFacade::~GeneratorFacade() {
         qDebug() << "destructor (GeneratorFacade)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 }
+
 
 void GeneratorFacade::updateValueFromAlias(const QString &key, const QVariant &value) {
     if(flagDebug) {
@@ -102,9 +103,9 @@ void GeneratorFacade::updateValueFromAlias(const QString &key, const QVariant &v
 }
 
 GeneratorRegionModel* GeneratorFacade::getInputRegionModel() {
-    return inputRegionsModel.data();
+    return inputRegionModel.data();
 }
 
 GeneratorRegionModel* GeneratorFacade::getOutputRegionModel() {
-    return outputRegionsModel.data();
+    return outputRegionModel.data();
 }

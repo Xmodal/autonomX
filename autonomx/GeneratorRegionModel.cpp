@@ -13,10 +13,35 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+#include <QDebug>
+#include <QThread>
+#include <QQmlEngine>
+
 #include "GeneratorRegionModel.h"
 
 GeneratorRegionModel::GeneratorRegionModel() {
+    // set ownership of the GeneratorFacade to C++ so that QML doesn't try to take over garbage collection duties, resulting in a double free
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "constructor (GeneratorRegionModel)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+
+    }
+}
+
+GeneratorRegionModel::~GeneratorRegionModel() {
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "destructor (GeneratorRegionModel)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+
+    }
 }
 
 int GeneratorRegionModel::rowCount(const QModelIndex& parent) const {

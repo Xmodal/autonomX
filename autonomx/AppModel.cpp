@@ -154,6 +154,8 @@ void AppModel::createGenerator() {
     }
 
     generator->moveToThread(computeThread.data());
+    generator->getInputRegionSet()->moveToThread(computeThread.data());
+    generator->getOutputRegionSet()->moveToThread(computeThread.data());
 
     if(flagDebug) {
         qDebug() << "createGenerator (AppModel): adding generator to data structures later on computeThread";

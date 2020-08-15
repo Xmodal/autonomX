@@ -12,6 +12,8 @@ ColumnLayout {
     id: latticeView
 
     property int generatorIndex: window.activeGeneratorIndex
+    property GeneratorRegionModel inputModelLive: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).getInputRegionModel()
+    property GeneratorRegionModel outputModelLive: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).getOutputRegionModel()
 
     Layout.fillWidth: true
     Layout.fillHeight: true
@@ -45,8 +47,8 @@ ColumnLayout {
         }
 
         // models
-        InputModel { id: inputModel }
-        OutputModel { id: outputModel }
+        InputModel { id: inputModelLive }
+        OutputModel { id: outputModelLive }
 
         // matrix zone
         Item {

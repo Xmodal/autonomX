@@ -41,6 +41,7 @@ SOURCES += \
     GeneratorLatticeCommunicator.cpp \
     GeneratorLatticeRenderer.cpp \
     GeneratorModel.cpp \
+    GeneratorRegion.cpp \
     GeneratorRegionModel.cpp \
     GeneratorRegionSet.cpp \
     Izhikevich.cpp \

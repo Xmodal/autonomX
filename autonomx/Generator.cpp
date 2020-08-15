@@ -33,6 +33,9 @@ Generator::Generator(int id, QString name, QString type, QString description) {
 
         qDebug() << "constructor (Generator)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id;
     }
+
+    inputRegionSet = QSharedPointer<GeneratorRegionSet>(new GeneratorRegionSet);
+    outputRegionSet = QSharedPointer<GeneratorRegionSet>(new GeneratorRegionSet);
 }
 
 
@@ -411,4 +414,12 @@ void Generator::lockLatticeDataMutex() {
 
 void Generator::unlockLatticeDataMutex() {
     latticeDataMutex.unlock();
+}
+
+GeneratorRegionSet* Generator::getInputRegionSet() {
+    return inputRegionSet.data();
+}
+
+GeneratorRegionSet* Generator::getOutputRegionSet() {
+    return outputRegionSet.data();
 }

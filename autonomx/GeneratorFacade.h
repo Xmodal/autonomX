@@ -17,6 +17,7 @@
 
 #include <QObject>
 #include <QQmlPropertyMap>
+#include <QSharedPointer>
 
 #include "Generator.h"
 #include "GeneratorRegionModel.h"
@@ -28,10 +29,11 @@ public:
     GeneratorFacade(Generator *alias);
     ~GeneratorFacade();
 
-    Q_INVOKABLE GeneratorRegionModel* getRegionModel();
+    Q_INVOKABLE GeneratorRegionModel* getInputRegionModel();
+    Q_INVOKABLE GeneratorRegionModel* getOutputRegionModel();
 private:
-    GeneratorRegionModel inputRegionsModel;
-    GeneratorRegionModel outputRegionsModel;
+    QSharedPointer<GeneratorRegionModel> inputRegionsModel;
+    QSharedPointer<GeneratorRegionModel> outputRegionsModel;
     bool flagDebug = false;
 public slots:
     void updateValueFromAlias(const QString &key, const QVariant &value);

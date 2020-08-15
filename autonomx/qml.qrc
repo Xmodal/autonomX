@@ -6,6 +6,7 @@
         <file>assets/fonts/Overpass-Regular.ttf</file>
         <file>assets/fonts/Overpass-SemiBold.ttf</file>
         <file>assets/fonts/Questrial-Regular.ttf</file>
+        <file>assets/images/check-frame.svg</file>
         <file>assets/images/down-caret.svg</file>
         <file>assets/images/add-icon.svg</file>
         <file>assets/images/delete-icon.svg</file>
@@ -27,6 +28,7 @@
         <file>components/racks/ParamsRack.qml</file>
         <file>components/racks/Rack.qml</file>
         <file>components/racks/RackView.qml</file>
+        <file>components/ui/CheckBox.qml</file>
         <file>components/ui/GeneratorButton.qml</file>
         <file>components/ui/GeneratorWidget.qml</file>
         <file>components/ui/HistoryGraph.qml</file>

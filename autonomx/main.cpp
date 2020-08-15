@@ -27,6 +27,8 @@
 #include "Generator.h"
 #include "GeneratorFacade.h"
 #include "GeneratorModel.h"
+#include "GeneratorRegion.h"
+#include "GeneratorRegionModel.h"
 #include "GeneratorLattice.h"
 #include "SpikingNet.h"
 #include "AppModel.h"

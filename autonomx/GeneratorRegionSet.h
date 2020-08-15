@@ -17,22 +17,24 @@
 
 #include <QObject>
 #include <QList>
+#include <QSharedPointer>
 
 #include "GeneratorRegion.h"
+#include "GeneratorRegionModel.h"
 
 class GeneratorRegionSet : public QObject{
     Q_OBJECT
 public:
     GeneratorRegionSet();
 
-    GeneratorRegion getRegion(int index);
+    GeneratorRegion* getRegion(int index);
     int getRegionCount();
 private:
-    QList<GeneratorRegion> regionList;
+    QList<QSharedPointer<GeneratorRegion>> regionList;
 public slots:
-    void createRegion(GeneratorRegion region);
+    void addRegion(GeneratorRegion region);
     void deleteRegion(int index);
 
-    void writeRegion(GeneratorRegion region, int index);
+    void writeRegion(QVariant value, GeneratorRegionModel::GeneratorRegionRoles role, int index);
 };
 

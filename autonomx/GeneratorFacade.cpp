@@ -34,6 +34,7 @@ GeneratorFacade::GeneratorFacade(Generator *generator) : QQmlPropertyMap(this, n
 
     }
 
+    // init properties
     const QMetaObject *metaObject = generator->metaObject();
 
     for (int i = 0; i < metaObject->propertyCount(); ++i) {
@@ -48,10 +49,24 @@ GeneratorFacade::GeneratorFacade(Generator *generator) : QQmlPropertyMap(this, n
         }
     }
 
+    // init region models
+    inputRegionsModel = QSharedPointer<GeneratorRegionModel>(new GeneratorRegionModel);
+    outputRegionsModel = QSharedPointer<GeneratorRegionModel>(new GeneratorRegionModel);
+
     // connect generator changes to facade
     QObject::connect(generator, &Generator::valueChanged, this, &GeneratorFacade::updateValueFromAlias, Qt::QueuedConnection);
     // connect facade changes to generator
     QObject::connect(this, &GeneratorFacade::valueChanged, generator, &Generator::updateValue, Qt::QueuedConnection);
+
+    // connect facade region model changes to region set
+    QObject::connect(inputRegionsModel.data(), &GeneratorRegionModel::addRegion, generator->getInputRegionSet(), &GeneratorRegionSet::addRegion);
+    QObject::connect(outputRegionsModel.data(), &GeneratorRegionModel::addRegion, generator->getOutputRegionSet(), &GeneratorRegionSet::addRegion);
+
+    QObject::connect(inputRegionsModel.data(), &GeneratorRegionModel::deleteRegion, generator->getInputRegionSet(), &GeneratorRegionSet::deleteRegion);
+    QObject::connect(outputRegionsModel.data(), &GeneratorRegionModel::deleteRegion, generator->getOutputRegionSet(), &GeneratorRegionSet::deleteRegion);
+
+    QObject::connect(inputRegionsModel.data(), &GeneratorRegionModel::writeRegion, generator->getInputRegionSet(), &GeneratorRegionSet::writeRegion);
+    QObject::connect(outputRegionsModel.data(), &GeneratorRegionModel::writeRegion, generator->getOutputRegionSet(), &GeneratorRegionSet::writeRegion);
 }
 
 GeneratorFacade::~GeneratorFacade() {
@@ -84,4 +99,12 @@ void GeneratorFacade::updateValueFromAlias(const QString &key, const QVariant &v
         insert(key, value);
         emit valueChangedFromAlias(key, value);
     }
+}
+
+GeneratorRegionModel* GeneratorFacade::getInputRegionModel() {
+    return inputRegionsModel.data();
+}
+
+GeneratorRegionModel* GeneratorFacade::getOutputRegionModel() {
+    return outputRegionsModel.data();
 }

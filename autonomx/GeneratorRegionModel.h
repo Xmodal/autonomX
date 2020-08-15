@@ -37,6 +37,7 @@ public:
     };
 
     GeneratorRegionModel();
+    ~GeneratorRegionModel();
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
@@ -50,6 +51,7 @@ public:
     Q_INVOKABLE GeneratorRegion* at(int index);
 private:
     QList<QSharedPointer<GeneratorRegion>> regionList;
+    bool flagDebug = false;
 signals:
     void addRegion(GeneratorRegion region);
     void deleteRegion(int index);

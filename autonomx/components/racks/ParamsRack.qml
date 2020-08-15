@@ -110,27 +110,42 @@ Rack {
                 labelText: "STP strength"
                 updateLag: 70
 
+                // value
                 currVal: generatorModel.at(generatorIndex).STPStrength
                 onValueChanged: generatorModel.at(generatorIndex).STPStrength = newValue
-                //deactivated: !stpFlag.on
+
+                // flag
+                enableFlag: true
+                flagValue: generatorModel.at(generatorIndex).flagSTP
+                onFlagChanged: generatorModel.at(generatorIndex).flagSTP = newFlag
             }
 
             SliderField {
                 labelText: "STDP strength"
                 updateLag: 70
 
+                // value
                 currVal: generatorModel.at(generatorIndex).STDPStrength
                 onValueChanged: generatorModel.at(generatorIndex).STDPStrength = newValue
-                //deactivated: !stdpFlag.on
+
+                // flag
+                enableFlag: true
+                flagValue: generatorModel.at(generatorIndex).flagSTDP
+                onFlagChanged: generatorModel.at(generatorIndex).flagSTDP = newFlag
             }
 
             SliderField {
                 labelText: "Decay constant"
                 updateLag: 70
 
+                // value
                 currVal: generatorModel.at(generatorIndex).decayConstant
                 onValueChanged: generatorModel.at(generatorIndex).decayConstant = newValue
-                //deactivated: !decayFlag.on
+
+                // flag
+                enableFlag: true
+                flagValue: generatorModel.at(generatorIndex).flagDecay
+                onFlagChanged: generatorModel.at(generatorIndex).flagDecay = newFlag
             }
         }
     }

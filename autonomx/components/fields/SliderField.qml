@@ -51,7 +51,7 @@ Field {
         }
 
         ColumnLayout {
-            spacing: 4
+            spacing: 3
             anchors.fill: parent
 
             // slider
@@ -63,7 +63,7 @@ Field {
                 // alignment
                 Layout.fillWidth: true
                 Layout.preferredHeight: 10
-                Layout.topMargin: 8
+                Layout.topMargin: 10
                 padding: 0
 
                 // slider params

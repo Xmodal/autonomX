@@ -18,6 +18,7 @@
 #include <QObject>
 #include <QAbstractListModel>
 #include <QModelIndex>
+#include <QSharedPointer>
 #include <QList>
 
 #include "GeneratorRegion.h"
@@ -25,15 +26,33 @@
 class GeneratorRegionModel : public QAbstractListModel {
     Q_OBJECT
 public:
+    enum GeneratorRegionRoles {
+        RectRole = Qt::UserRole + 1,
+        IntensityRole
+    };
+
+    static inline const QHash<int, QByteArray> roleMap = {
+        {RectRole, "rect"},
+        {IntensityRole, "intensity"},
+    };
+
     GeneratorRegionModel();
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
+
     QVariant data(const QModelIndex &index, int role) const;
+    bool setData(const QModelIndex &index, const QVariant &value, int role);
+
     void populate();
     QHash<int, QByteArray> roleNames() const;
 
     Q_INVOKABLE GeneratorRegion* at(int index);
 private:
-    QList<GeneratorRegion> regionList;
+    QList<QSharedPointer<GeneratorRegion>> regionList;
+signals:
+    void addRegion(GeneratorRegion region);
+    void deleteRegion(int index);
+
+    void writeRegion(QVariant value, GeneratorRegionRoles role, int index);
 };

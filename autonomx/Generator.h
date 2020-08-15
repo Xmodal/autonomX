@@ -116,6 +116,9 @@ public:
     //    flattenedData[index] = latticeData[index % latticeWidth, index / latticeWidth]
     //
     virtual void writeLatticeDataDelegate(float* latticeData) = 0;
+
+    GeneratorRegionSet* getInputRegionSet();
+    GeneratorRegionSet* getOutputRegionSet();
 protected:
     int latticeWidth = 20;                      // lattice width
     int latticeHeight = 20;                     // lattice height
@@ -138,8 +141,8 @@ private:
 
     QMutex latticeDataMutex;                    // mutex used by writeLatticeData
 
-    GeneratorRegionSet inputRegions;
-    GeneratorRegionSet outputRegions;
+    QSharedPointer<GeneratorRegionSet> inputRegionSet;
+    QSharedPointer<GeneratorRegionSet> outputRegionSet;
 public slots:
     // common slot allowing to update any property. allows the Facade class to work properly
     // (for connection from QQmlPropertyMap's valueChanged signal)

@@ -40,6 +40,18 @@ public:
         OutputMonitorHistorySizeValidRole
     };
 
+    static inline const QHash<int, QByteArray> roleMap = {
+        {NameRole, "name"},
+        {TypeRole, "type"},
+        {IDRole, "id"},
+        {DescriptionRole, "description"},
+        {OutputMonitorRole, "outputMonitor"},
+        {OutputMonitorHistoryRole, "outputMonitorHistory"},
+        {OutputMonitorHistoryStartIndexRole, "outputMonitorHistoryStartIndex"},
+        {OutputMonitorHistorySizeMaxRole, "outputMonitorHistorySizeMax"},
+        {OutputMonitorHistorySizeValidRole,"outputMonitorHistorySizeValid"}
+    };
+
     GeneratorModel(QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generatorFacadesList, QSharedPointer<QHash<int, QSharedPointer<GeneratorFacade>>> generatorFacadesHashMap);
     ~GeneratorModel();
 
@@ -68,7 +80,6 @@ public:
     QHash<int, QByteArray> roleNames() const;
 
     Q_INVOKABLE GeneratorFacade * at(int index);
-
 public slots:
     void updateValue(const QString &key, const QVariant &value, int modelIndex);
 
@@ -77,15 +88,4 @@ private:
     QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generatorFacadesList;
     QSharedPointer<QHash<int, QSharedPointer<GeneratorFacade>>> generatorFacadesHashMap;
     bool flagDebug = false;
-    const QHash<int, QByteArray> roleMap = {
-        {NameRole, "name"},
-        {TypeRole, "type"},
-        {IDRole, "id"},
-        {DescriptionRole, "description"},
-        {OutputMonitorRole, "outputMonitor"},
-        {OutputMonitorHistoryRole, "outputMonitorHistory"},
-        {OutputMonitorHistoryStartIndexRole, "outputMonitorHistoryStartIndex"},
-        {OutputMonitorHistorySizeMaxRole, "outputMonitorHistorySizeMax"},
-        {OutputMonitorHistorySizeValidRole,"outputMonitorHistorySizeValid"}
-    };
 };

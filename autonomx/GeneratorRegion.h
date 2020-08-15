@@ -15,9 +15,26 @@
 
 #pragma once
 
+#include <QObject>
 #include <QRect>
 
-struct GeneratorRegion {
+class GeneratorRegion : public QObject {
+    Q_OBJECT
+    Q_PROPERTY(QRect rect READ getRect WRITE writeRect NOTIFY rectChanged)
+    Q_PROPERTY(double intensity READ getIntensity WRITE writeIntensity NOTIFY intensityChanged)
+public:
+    GeneratorRegion(QRect rect, double intensity);
+    GeneratorRegion(const GeneratorRegion& region);
+
+    QRect getRect() const;
+    double getIntensity() const;
+
+    void writeRect(QRect rect);
+    void writeIntensity(double intensity);
+private:
     QRect rect;
     double intensity;
+signals:
+    void rectChanged(QRect rect);
+    void intensityChanged(double intensity);
 };

@@ -18,3 +18,28 @@
 GeneratorRegionSet::GeneratorRegionSet() {
 
 }
+
+GeneratorRegion* GeneratorRegionSet::getRegion(int index) {
+    return regionList.at(index).data();
+}
+
+int GeneratorRegionSet::getRegionCount() {
+    return regionList.size();
+}
+
+void GeneratorRegionSet::addRegion(GeneratorRegion region) {
+    // something about this feels wrong
+    regionList.append(QSharedPointer<GeneratorRegion>(&region));
+}
+
+void GeneratorRegionSet::deleteRegion(int index) {
+    regionList.removeAt(index);
+}
+
+void GeneratorRegionSet::writeRegion(QVariant value, GeneratorRegionModel::GeneratorRegionRoles role, int index) {
+    // check if the key exists in the hash map
+    if(GeneratorRegionModel::roleMap.contains(role)) {
+        QSharedPointer<GeneratorRegion> region = regionList.at(index);
+        region->setProperty(GeneratorRegionModel::roleMap.value(role), value);
+    }
+}

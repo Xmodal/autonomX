@@ -122,7 +122,9 @@ void GeneratorLatticeRenderer::render() {
 
         // Play nice with the RHI. Not strictly needed when the scenegraph uses
         // OpenGL directly.
+        #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 4)
         window->beginExternalCommands();
+        #endif
 
         // bind the texture
         GLuint texture;
@@ -235,10 +237,13 @@ void GeneratorLatticeRenderer::render() {
         // restore previous OpenGL state
         window->resetOpenGLState();
 
-        // TODO: what does this do
+        #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 4)
         window->endExternalCommands();
+        #endif
     } else {
+        #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 4)
         window->beginExternalCommands();
+        #endif
 
         framebuffer->bind();
 
@@ -247,7 +252,9 @@ void GeneratorLatticeRenderer::render() {
 
         window->resetOpenGLState();
 
+        #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 4)
         window->endExternalCommands();
+        #endif
     }
 
     // render again if visible

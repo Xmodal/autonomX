@@ -150,7 +150,7 @@ void AppModel::createGenerator() {
 
     // move the Generator to computeThread
     if(flagDebug) {
-        qDebug() << "createGenerator (AppModel): moving generator to computeThread";
+        qDebug() << "createGenerator (AppModel): moving generator and region sets to computeThread";
     }
 
     generator->moveToThread(computeThread.data());
@@ -180,11 +180,28 @@ void AppModel::createGenerator() {
     generatorModel->beginInsertAtEnd();
 
     if(flagDebug) {
-        qDebug() << "createGenerator (AppModel): creating generatorFacade and adding to data structures";
+        qDebug() << "createGenerator (AppModel): creating generatorFacade";
     }
 
-    // create a GeneratorFacade and add it to the list and hash map
+    // create a GeneratorFacade
     QSharedPointer<GeneratorFacade> generatorFacade = QSharedPointer<GeneratorFacade>(new GeneratorFacade(generator.data()));
+
+    if(flagDebug) {
+        qDebug() << "createGenerator (AppModel): linking region models with region sets";
+    }
+
+    connect(generatorFacade->getInputRegionModel(), &GeneratorRegionModel::addRegion, generator->getInputRegionSet(), &GeneratorRegionSet::addRegion);
+    connect(generatorFacade->getInputRegionModel(), &GeneratorRegionModel::deleteRegion, generator->getInputRegionSet(), &GeneratorRegionSet::deleteRegion);
+    connect(generatorFacade->getInputRegionModel(), &GeneratorRegionModel::writeRegion, generator->getInputRegionSet(), &GeneratorRegionSet::writeRegion);
+
+    connect(generatorFacade->getOutputRegionModel(), &GeneratorRegionModel::addRegion, generator->getOutputRegionSet(), &GeneratorRegionSet::addRegion);
+    connect(generatorFacade->getOutputRegionModel(), &GeneratorRegionModel::deleteRegion, generator->getOutputRegionSet(), &GeneratorRegionSet::deleteRegion);
+    connect(generatorFacade->getOutputRegionModel(), &GeneratorRegionModel::writeRegion, generator->getOutputRegionSet(), &GeneratorRegionSet::writeRegion);
+
+    if(flagDebug) {
+        qDebug() << "createGenerator (AppModel): adding generatorFacade to data structures";
+    }
+
     generatorFacadesList->append(generatorFacade);
     generatorFacadesHashMap->insert(generator->getID(), generatorFacade);
 

@@ -117,6 +117,9 @@ public:
     //
     virtual void writeLatticeDataDelegate(float* latticeData) = 0;
 
+    //virtual double getLatticeValue(int x, int y);
+    //virtual void setLatticeValue(int x, int y);
+
     GeneratorRegionSet* getInputRegionSet();
     GeneratorRegionSet* getOutputRegionSet();
 protected:

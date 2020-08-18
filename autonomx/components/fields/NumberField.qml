@@ -45,23 +45,15 @@ Field {
     fieldContent: TextField {
         id: fieldInput
 
-        enabled: !deactivated
-
         // alignment
         leftPadding: 0
-        Layout.fillWidth: true
-        Layout.preferredHeight: 40
 
         // text
         text: defaultNum
         placeholderText: placeholder
 
         // background
-        background: FieldFrame {
-            enabled: !deactivated
-            isHovered: fieldInput.hovered
-            isFocused: fieldInput.activeFocus
-        }
+        background: Item {}
 
         validator: type === 0 ? intValidator : doubleValidator
 
@@ -69,7 +61,14 @@ Field {
         selectByMouse: true
 
         // signal hooks
-        onEditingFinished: numberField.valueChanged(type === 0 ? parseInt(text, 10) : parseFloat(text, 10))
+        onEditingFinished: {
+            numberField.valueChanged(type === 0 ? parseInt(text, 10) : parseFloat(text, 10));
+            focus = false;
+        }
+
+        // field frame
+        onHoveredChanged: fieldHovered = hovered
+        onActiveFocusChanged: fieldFocused = activeFocus
 
         // inc/dec widget
         Item {
@@ -90,7 +89,7 @@ Field {
                 Image {
                     id: caret
                     source: "qrc:/assets/images/down-caret.svg"
-                    opacity: caretMouse.containsMouse ? 1 : 0.25
+                    opacity: caretMouse.containsMouse && !caretMouse.pressed ? 1 : 0.25
 
                     anchors {
                         right: parent.right
@@ -110,13 +109,6 @@ Field {
                         anchors.fill: parent
                         hoverEnabled: true
                         onClicked: index % 2 === 0 ? increment() : decrement()
-                    }
-
-                    Behavior on opacity {
-                        NumberAnimation {
-                            duration: 250
-                            easing.type: Easing.InOutQuad
-                        }
                     }
                 }
             }

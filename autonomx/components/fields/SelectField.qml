@@ -17,16 +17,11 @@ Field {
         currentIndex: selectField.index
         model: options
 
-        enabled: !deactivated
-
         onCurrentIndexChanged: selectField.valueChanged(currentIndex)
+        onHoveredChanged: fieldHovered = hovered
+        onDownChanged: fieldFocused = down
 
-        // background
-        background: FieldFrame {
-            enabled: !deactivated
-            isHovered: comboBox.hovered
-            isFocused: comboBox.down
-        }
+        background: Item {}
 
         // options delegate
         delegate: ItemDelegate {
@@ -50,6 +45,8 @@ Field {
                 opacity: hovered ? 0.1 : 0
                 border.width: 0
             }
+
+
         }
 
         // selected item contents
@@ -93,24 +90,16 @@ Field {
                 id: indicatorRot
                 origin.x: indicator.width / 2
                 origin.y: indicator.height / 2
-            }
-        }
+                angle: comboBox.down ? 180 : 0
 
-        // animations
-        states: State {
-            name: "down"; when: comboBox.down
-            PropertyChanges {
-                target: indicatorRot
-                angle: 180
-            }
-        }
-
-        transitions: Transition {
-            NumberAnimation {
-                target: indicatorRot
-                property: "angle"
-                duration: 400
-                easing.type: Easing.OutCubic
+                Behavior on angle {
+                    NumberAnimation {
+                        target: indicatorRot
+                        property: "angle"
+                        duration: 400
+                        easing.type: Easing.OutCubic
+                    }
+                }
             }
         }
     }

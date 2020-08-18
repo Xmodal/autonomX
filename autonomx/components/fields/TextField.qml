@@ -13,35 +13,36 @@ Field {
     fieldContent: TextField {
         id: fieldInput
 
-        enabled: !deactivated
-
         // alignment
         leftPadding: 0
 
         // text
-        text: activeFocus ? defaultText : metrics.elidedText
+        //text: activeFocus ? defaultText : metrics.elidedText
+        text: defaultText
         placeholderText: placeholder
 
-        // text metrics (used to elide text)
-        TextMetrics {
-            id: metrics
-            font: fieldInput.font
-            text: textField.defaultText
-            elide: Text.ElideRight
-            elideWidth: fieldInput.width
-        }
+        // field frame events
+        onHoveredChanged: fieldHovered = hovered
+        onActiveFocusChanged: fieldFocused = activeFocus
 
-        // background
-        background: FieldFrame {
-            enabled: !deactivated
-            isHovered: fieldInput.hovered
-            isFocused: fieldInput.activeFocus
-        }
+        // text metrics (used to elide text)
+//        TextMetrics {
+//            id: metrics
+//            font: fieldInput.font
+//            text: textField.defaultText
+//            elide: Text.ElideRight
+//            elideWidth: fieldInput.width
+//        }
+
+        background: Item {}
 
         // interactivity
         selectByMouse: true
 
         // signal hooks
-        onEditingFinished: textField.valueChanged(text)
+        onEditingFinished: {
+            valueChanged(text);
+            focus = false;
+        }
     }
 }

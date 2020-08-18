@@ -15,8 +15,6 @@ Field {
     fieldContent: Switch {
         id: switchObj
 
-        enabled: !deactivated
-
         checked: switchField.on
         onToggled: switchField.valueChanged(checked)
 

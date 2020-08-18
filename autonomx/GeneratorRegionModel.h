@@ -51,12 +51,10 @@ public:
     Q_INVOKABLE GeneratorRegion* at(int index);
 private:
     QList<QSharedPointer<GeneratorRegion>> regionList;
-    bool flagDebug = false;
+    bool flagDebug = true;
 signals:
     void addRegion(GeneratorRegion region);
     void deleteRegion(int index);
 
-    void writeRegion(QVariant value, GeneratorRegionRoles role, int index);
+    void writeRegion(QVariant value, int role, int index);
 };
-
-Q_DECLARE_METATYPE(GeneratorRegionModel::GeneratorRegionRoles)

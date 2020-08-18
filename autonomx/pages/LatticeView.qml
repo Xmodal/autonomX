@@ -45,14 +45,6 @@ ColumnLayout {
             matrix.setMask();
         }
 
-        Timer {
-            running: true; repeat: false; interval: 3000
-            onTriggered: {
-                console.log("QML: adding input region")
-
-            }
-        }
-
         // matrix zone
         Item {
             Layout.fillWidth: true

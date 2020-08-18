@@ -31,10 +31,11 @@ public:
     int getRegionCount();
 private:
     QList<QSharedPointer<GeneratorRegion>> regionList;
+    bool flagDebug = true;
 public slots:
     void addRegion(GeneratorRegion region);
     void deleteRegion(int index);
 
-    void writeRegion(QVariant value, GeneratorRegionModel::GeneratorRegionRoles role, int index);
+    void writeRegion(QVariant value, int role, int index);
 };
 

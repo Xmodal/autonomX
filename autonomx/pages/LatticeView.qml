@@ -77,8 +77,8 @@ ColumnLayout {
 
                     // otherwise, retrieve automatically from global properties
                     // TODO: clean up function calls so that this block can be removed, instead directly using arguments every time
-                    if (mainContent.currRegion.type === 0) element = inputModel.get(mainContent.currRegion.index);
-                    else if (mainContent.currRegion.type === 1) element = outputModel.get(mainContent.currRegion.index);
+                    if (mainContent.currRegion.type === 0) element = inputModel.at(mainContent.currRegion.index);
+                    else if (mainContent.currRegion.type === 1) element = outputModel.at(mainContent.currRegion.index);
                     mask = Qt.vector4d(element.rect.x, element.rect.y, element.rect.width, element.rect.height);
                 }
 

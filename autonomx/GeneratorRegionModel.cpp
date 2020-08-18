@@ -69,6 +69,10 @@ QVariant GeneratorRegionModel::data(const QModelIndex &index, int role) const {
 }
 
 bool GeneratorRegionModel::setData(const QModelIndex &index, const QVariant &value, int role) {
+    if(flagDebug) {
+        qDebug() << "setData (GeneratorRegionModel)";
+    }
+
     if(!index.isValid())
         return false;
 
@@ -77,7 +81,10 @@ bool GeneratorRegionModel::setData(const QModelIndex &index, const QVariant &val
         // check if the key exists in the hash map
         if(roleMap.contains(role)) {
             regionList.at(index.row())->setProperty(roleMap.value(role), value);
-            emit writeRegion(value, (GeneratorRegionRoles) role, index.row());
+            emit writeRegion(value, role, index.row());
+            if(flagDebug) {
+                qDebug() << "setData (GeneratorRegionModel): signal emitted";
+            }
             return true;
         }
     }

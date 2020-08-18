@@ -72,7 +72,6 @@ int main(int argc, char *argv[]) {
     qmlRegisterUncreatableType<NeuronType>("ca.hexagram.xmodal.autonomx", 1, 0, "NeuronType", "Cannot instanciate NeuronType.");
     qmlRegisterType<GeneratorLattice>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorLattice");
     qRegisterMetaType<QSharedPointer<Generator>>();
-    qRegisterMetaType<GeneratorRegionModel::GeneratorRegionRoles>();
 
     AppModel::getInstance().createGenerator();
 

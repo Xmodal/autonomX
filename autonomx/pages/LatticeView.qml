@@ -5,15 +5,14 @@ import QtQuick.Layouts 1.3
 import ca.hexagram.xmodal.autonomx 1.0
 
 import "qrc:/stylesheet"
-import "../models"
 import "../components/ui"
 
 ColumnLayout {
     id: latticeView
 
     property int generatorIndex: window.activeGeneratorIndex
-    property GeneratorRegionModel inputModelLive: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).getInputRegionModel()
-    property GeneratorRegionModel outputModelLive: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).getOutputRegionModel()
+    property GeneratorRegionModel inputModel: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).getInputRegionModel()
+    property GeneratorRegionModel outputModel: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).getOutputRegionModel()
 
     Layout.fillWidth: true
     Layout.fillHeight: true
@@ -46,9 +45,13 @@ ColumnLayout {
             matrix.setMask();
         }
 
-        // models
-        InputModel { id: inputModelLive }
-        OutputModel { id: outputModelLive }
+        Timer {
+            running: true; repeat: false; interval: 3000
+            onTriggered: {
+                console.log("QML: adding input region")
+
+            }
+        }
 
         // matrix zone
         Item {
@@ -71,20 +74,20 @@ ColumnLayout {
                 mask: Qt.vector4d(-1, -1, -1, -1)
                 maskAlpha: 0.3
 
-                function setMask(colX, colY, colW, colH) {
+                function setMask(rect) {
                     var element;
 
                     // auto cancel if type is signed
                     if (mainContent.currRegion.type === -1) return mask = Qt.vector4d(-1, -1, -1, -1);
 
                     // set selected to function arguments if applicable
-                    if (colX !== undefined) return mask = Qt.vector4d(colX, colY, colW, colH);
+                    if (rect.x !== undefined) return mask = Qt.vector4d(rect.x, rect.y, rect.width, rect.height);
 
                     // otherwise, retrieve automatically from global properties
                     // TODO: clean up function calls so that this block can be removed, instead directly using arguments every time
                     if (mainContent.currRegion.type === 0) element = inputModel.get(mainContent.currRegion.index);
                     else if (mainContent.currRegion.type === 1) element = outputModel.get(mainContent.currRegion.index);
-                    mask = Qt.vector4d(element.colX, element.colY, element.colW, element.colH);
+                    mask = Qt.vector4d(element.rect.x, element.rect.y, element.rect.width, element.rect.height);
                 }
 
                 // TODO

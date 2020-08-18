@@ -20,10 +20,10 @@ Rectangle {
     antialiasing: true
 
     // position
-    width: regions.width * colW / regions.latticeWidth
-    height: regions.height * colH / regions.latticeHeight
-    x: regions.width * colX / regions.latticeWidth
-    y: regions.height * colY / regions.latticeHeight
+    width: regions.width * rect.width / regions.latticeWidth
+    height: regions.height * rect.height / regions.latticeHeight
+    x: regions.width * rect.x / regions.latticeWidth
+    y: regions.height * rect.y / regions.latticeHeight
     z: selected ? 10 : 10 / area;
 
     // break x/y property bindings
@@ -33,7 +33,7 @@ Rectangle {
         width = width;
         height = height;
 
-        area = colW * colH;
+        area = rect.width * rect.height;
         area = area;
     }
 
@@ -63,32 +63,31 @@ Rectangle {
         }
 
         // calculate unsigned cell coordinates
-        var newColX = Math.max(Math.round(x / ppc), 0);
-        var newColY = Math.max(Math.round(y / ppc), 0);
-        var newColW = Math.max(Math.round((width - 1 + offsetW) / ppc), 0);
-        var newColH = Math.max(Math.round((height - 1 + offsetH) / ppc), 0);
+        var newRect = Qt.rect(
+                    Math.max(Math.round(x / ppc), 0),
+                    Math.max(Math.round(y / ppc), 0),
+                    Math.max(Math.round((width - 1 + offsetW) / ppc), 0),
+                    Math.max(Math.round((height - 1 + offsetH) / ppc), 0)
+                    );
 
         // clamp depending on event type
         if (evtType === "resize") {
-            if (newColX + newColW > regions.latticeWidth)  newColW = regions.latticeWidth - newColX;
-            if (newColY + newColH > regions.latticeHeight) newColH = regions.latticeHeight - newColY;
+            if (newRect.x + newRect.width > regions.latticeWidth)  newRect.width = regions.latticeWidth - newRect.x;
+            if (newRect.y + newRect.height > regions.latticeHeight) newRect.height = regions.latticeHeight - newRect.y;
         } else if (evtType === "drag") {
-            if (newColX + newColW > regions.latticeWidth)  newColX = regions.latticeWidth - newColW;
-            if (newColY + newColH > regions.latticeHeight) newColY = regions.latticeHeight - newColH;
+            if (newRect.x + newRect.width > regions.latticeWidth)  newRect.x = regions.latticeWidth - newRect.width;
+            if (newRect.y + newRect.height > regions.latticeHeight) newRect.y = regions.latticeHeight - newRect.height;
         }
 
         // update model here
-        colX = newColX;
-        colY = newColY
-        colW = newColW;
-        colH = newColH;
-        area = colW * colH;
+        rect = newRect;
+        area = rect.width * rect.height;
 
         // then reevaluate pixel coordinates by animating them
-        snapX.to = regions.width * colX / regions.latticeWidth;
-        snapY.to = regions.height * colY / regions.latticeHeight;
-        snapWidth.to = regions.width * colW / regions.latticeWidth;
-        snapHeight.to = regions.height * colH / regions.latticeHeight;
+        snapX.to = regions.width * rect.x / regions.latticeWidth;
+        snapY.to = regions.height * rect.y / regions.latticeHeight;
+        snapWidth.to = regions.width * rect.width / regions.latticeWidth;
+        snapHeight.to = regions.height * rect.height / regions.latticeHeight;
         snapX.restart();
         snapY.restart();
         snapWidth.restart();
@@ -100,12 +99,12 @@ Rectangle {
     // to limit calculation rate to what's necessary to calculate
     // (also find a way to only call matrix.setMask() once per mouse interaction)
     function updateBounds() {
-        matrix.setMask(
+        matrix.setMask(Qt.rect(
             x / ppc,
             y / ppc,
             (width - 1) / ppc,
             (height - 1) / ppc
-        );
+        ));
     }
 
     // force cursor on event

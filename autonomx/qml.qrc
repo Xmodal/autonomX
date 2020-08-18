@@ -33,8 +33,6 @@
         <file>components/ui/HistoryGraph.qml</file>
         <file>components/ui/Region.qml</file>
         <file>components/ui/VuMeter.qml</file>
-        <file>models/InputModel.qml</file>
-        <file>models/OutputModel.qml</file>
         <file>pages/GeneratorView.qml</file>
         <file>pages/Header.qml</file>
         <file>pages/LatticeView.qml</file>

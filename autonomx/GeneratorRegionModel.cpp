@@ -31,6 +31,8 @@ GeneratorRegionModel::GeneratorRegionModel() {
         qDebug() << "constructor (GeneratorRegionModel)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
 
     }
+
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(0, 0, 10, 10), 0.0));
 }
 
 GeneratorRegionModel::~GeneratorRegionModel() {

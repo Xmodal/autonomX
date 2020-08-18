@@ -81,7 +81,7 @@ ColumnLayout {
                     if (mainContent.currRegion.type === -1) return mask = Qt.vector4d(-1, -1, -1, -1);
 
                     // set selected to function arguments if applicable
-                    if (rect.x !== undefined) return mask = Qt.vector4d(rect.x, rect.y, rect.width, rect.height);
+                    if (rect !== undefined) return mask = Qt.vector4d(rect.x, rect.y, rect.width, rect.height);
 
                     // otherwise, retrieve automatically from global properties
                     // TODO: clean up function calls so that this block can be removed, instead directly using arguments every time

@@ -36,8 +36,6 @@
         <file>components/ui/IconButton.qml</file>
         <file>components/ui/Region.qml</file>
         <file>components/ui/VuMeter.qml</file>
-        <file>models/InputModel.qml</file>
-        <file>models/OutputModel.qml</file>
         <file>layout/GeneratorList.qml</file>
         <file>layout/Header.qml</file>
         <file>layout/LatticeView.qml</file>

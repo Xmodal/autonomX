@@ -17,8 +17,7 @@ Field {
         leftPadding: 0
 
         // text
-        //text: activeFocus ? defaultText : metrics.elidedText
-        text: defaultText
+        text: activeFocus ? defaultText : metrics.elidedText
         placeholderText: placeholder
 
         // field frame events
@@ -26,13 +25,13 @@ Field {
         onActiveFocusChanged: fieldFocused = activeFocus
 
         // text metrics (used to elide text)
-//        TextMetrics {
-//            id: metrics
-//            font: fieldInput.font
-//            text: textField.defaultText
-//            elide: Text.ElideRight
-//            elideWidth: fieldInput.width
-//        }
+        TextMetrics {
+            id: metrics
+            font: fieldInput.font
+            text: textField.defaultText
+            elide: Text.ElideRight
+            elideWidth: fieldWidth - 10
+        }
 
         background: Item {}
 

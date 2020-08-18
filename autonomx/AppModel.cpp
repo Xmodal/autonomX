@@ -190,13 +190,13 @@ void AppModel::createGenerator() {
         qDebug() << "createGenerator (AppModel): linking region models with region sets";
     }
 
-    connect(generatorFacade->getInputRegionModel(), &GeneratorRegionModel::addRegion, generator->getInputRegionSet(), &GeneratorRegionSet::addRegion);
-    connect(generatorFacade->getInputRegionModel(), &GeneratorRegionModel::deleteRegion, generator->getInputRegionSet(), &GeneratorRegionSet::deleteRegion);
-    connect(generatorFacade->getInputRegionModel(), &GeneratorRegionModel::writeRegion, generator->getInputRegionSet(), &GeneratorRegionSet::writeRegion);
+    connect(generatorFacade->getInputRegionModel(), &GeneratorRegionModel::addRegion, generator->getInputRegionSet(), &GeneratorRegionSet::addRegion, Qt::QueuedConnection);
+    connect(generatorFacade->getInputRegionModel(), &GeneratorRegionModel::deleteRegion, generator->getInputRegionSet(), &GeneratorRegionSet::deleteRegion, Qt::QueuedConnection);
+    connect(generatorFacade->getInputRegionModel(), &GeneratorRegionModel::writeRegion, generator->getInputRegionSet(), &GeneratorRegionSet::writeRegion, Qt::QueuedConnection);
 
-    connect(generatorFacade->getOutputRegionModel(), &GeneratorRegionModel::addRegion, generator->getOutputRegionSet(), &GeneratorRegionSet::addRegion);
-    connect(generatorFacade->getOutputRegionModel(), &GeneratorRegionModel::deleteRegion, generator->getOutputRegionSet(), &GeneratorRegionSet::deleteRegion);
-    connect(generatorFacade->getOutputRegionModel(), &GeneratorRegionModel::writeRegion, generator->getOutputRegionSet(), &GeneratorRegionSet::writeRegion);
+    connect(generatorFacade->getOutputRegionModel(), &GeneratorRegionModel::addRegion, generator->getOutputRegionSet(), &GeneratorRegionSet::addRegion, Qt::QueuedConnection);
+    connect(generatorFacade->getOutputRegionModel(), &GeneratorRegionModel::deleteRegion, generator->getOutputRegionSet(), &GeneratorRegionSet::deleteRegion, Qt::QueuedConnection);
+    connect(generatorFacade->getOutputRegionModel(), &GeneratorRegionModel::writeRegion, generator->getOutputRegionSet(), &GeneratorRegionSet::writeRegion, Qt::QueuedConnection);
 
     if(flagDebug) {
         qDebug() << "createGenerator (AppModel): adding generatorFacade to data structures";

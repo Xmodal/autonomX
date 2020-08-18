@@ -23,6 +23,9 @@ Field {
     fieldContent: Item {
         id: sliderContainer
 
+        property real innerMaskWidth: Math.max((sliderValue.contentWidth + 14) / width, 0.3)
+        onInnerMaskWidthChanged: frameMaskWidth = innerMaskWidth
+
         // value update lag timer
         Timer {
             id: sliderLagTimer
@@ -30,24 +33,6 @@ Field {
             triggeredOnStart: false
 
             onTriggered: sliderField.valueChanged(slider.value)
-        }
-
-        FieldFrame {
-            anchors.fill: parent
-            isHovered: slider.hovered || sliderValue.hovered || sliderBackdrop.containsMouse
-            isFocused: sliderValue.activeFocus
-
-            layer.enabled: true
-            layer.effect: ShaderEffect {
-                property real maskWidth: Math.max((sliderValue.contentWidth + 14) / width, 0.3)
-                fragmentShader: "qrc:/shaders/slider_frame.frag"
-            }
-        }
-
-        MouseArea {
-            id: sliderBackdrop
-            anchors.fill: parent
-            hoverEnabled: true
         }
 
         ColumnLayout {
@@ -58,13 +43,14 @@ Field {
             Slider {
                 id: slider
 
-                enabled: !deactivated
-
                 // alignment
                 Layout.fillWidth: true
                 Layout.preferredHeight: 10
                 Layout.topMargin: 10
                 padding: 0
+
+                onHoveredChanged: fieldHovered = hovered
+                onPressedChanged: fieldFocused = pressed
 
                 // slider params
                 from: minVal
@@ -82,7 +68,6 @@ Field {
                         width: parent.width * slider.visualPosition
                         anchors.left: parent.left
                         height: parent.height
-                        // TODO: change 0 to generator index
                         color: Stylesheet.colors.generator
                     }
                 }
@@ -103,8 +88,6 @@ Field {
             TextField {
                 id: sliderValue
 
-                enabled: !deactivated
-
                 // alignment
                 padding: 0
                 Layout.fillWidth: true
@@ -115,6 +98,10 @@ Field {
                 horizontalAlignment: Text.AlignHCenter
                 validator: DoubleValidator { bottom: minVal; top: maxVal }
                 selectByMouse: true
+
+                // field frame
+                onHoveredChanged: fieldHovered = hovered
+                onActiveFocusChanged: fieldFocused = activeFocus
 
                 // background (none)
                 background: Item {}
@@ -128,6 +115,8 @@ Field {
                     else if (displayText > maxVal) currVal = maxVal;
                     else if (displayText < minVal) currVal = minVal;
                     else currVal = displayText;
+
+                    focus = false;
                 }
             }
 

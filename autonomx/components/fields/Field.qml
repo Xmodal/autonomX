@@ -9,12 +9,21 @@ ColumnLayout {
     id: field
 
     property string labelText: "Label"
-    property int fieldWidth: Stylesheet.field.initialWidth
-    property bool showLabel: true
+    property real fieldWidth: 150
+    property real fieldHeight: 40
     property bool fillHeight: false
+
+    property bool showLabel: true
+    property bool showFrame: true
+    property bool fieldHovered: false
+    property bool fieldFocused: false
+    property bool backdropHovered: false
+    property real frameMaskWidth: 0
+
     property bool enableFlag: false
     property bool flagValue
-    property bool deactivated: false
+    property bool activated: enableFlag ? flag.checked : true
+
     property Component fieldContent
 
     signal valueChanged(variant newValue)
@@ -26,8 +35,6 @@ ColumnLayout {
 
     spacing: 5
 
-    opacity: deactivated ? 0.25 : 1
-
     // top label
     Label {
         id: fieldLabel
@@ -37,42 +44,75 @@ ColumnLayout {
         font: Stylesheet.fonts.label
     }
 
-    RowLayout {
-        spacing: 0
+    Item {
         Layout.maximumWidth: fieldWidth
-        Layout.preferredHeight: 40
+        Layout.preferredWidth: fieldWidth
+        Layout.maximumHeight: fieldHeight
+        Layout.preferredHeight: fieldHeight
         Layout.fillWidth: true
-        Layout.fillHeight: fillHeight
+        Layout.fillHeight: true
 
-        // flag
-        Item {
-            visible: enableFlag
-            Layout.preferredWidth: 30
-            Layout.fillHeight: true
+        FieldFrame {
+            id: fieldFrame
+            enabled: activated
+            isHovered: fieldHovered
+            isFocused: fieldFocused
+            flagEnabled: enableFlag
+            maskWidth: field.frameMaskWidth
 
-            CheckBox {}
-            Image {
-                anchors.bottom: parent.bottom
-                anchors.right: parent.right
-                source: "qrc:/assets/images/check-frame.svg"
-                opacity: 0.3
+            // necessary to properly update flag border corner
+            onBackdropHoveredChanged: field.backdropHovered = fieldFrame.backdropHovered
+        }
+
+        RowLayout {
+            spacing: 0
+            anchors.fill: parent
+
+            // flag
+            Item {
+                visible: enableFlag
+                Layout.preferredWidth: 30
+                Layout.fillHeight: true
+
+                CheckBox {
+                    id: flag
+                    checked: flagValue
+                    onCheckedChanged: flagChanged(checked)
+                }
+
+                Image {
+                    anchors.bottom: parent.bottom
+                    anchors.right: parent.right
+                    source: "qrc:/assets/images/check-frame.svg"
+                    opacity: backdropHovered || fieldHovered || fieldFocused ? 1 : 0.3
+
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: 150
+                            easing.type: Easing.Linear
+                        }
+                    }
+                }
             }
-        }
 
-        // field
-        Loader {
-            sourceComponent: fieldContent
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-        }
-    }
+            // field
+            Loader {
+                sourceComponent: fieldContent
+                Layout.fillWidth: true
+                Layout.fillHeight: true
 
-    // animations
-    Behavior on opacity {
-        NumberAnimation {
-            property: "opacity"
-            duration: 250
-            easing.type: Easing.InOutQuad
+                enabled: field.activated
+                opacity: field.activated ? 1 : 0.25
+
+                // animations
+                Behavior on opacity {
+                    NumberAnimation {
+                        property: "opacity"
+                        duration: 250
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+            }
         }
     }
 }

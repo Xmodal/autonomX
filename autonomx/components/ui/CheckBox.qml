@@ -50,6 +50,6 @@ CheckBox {
     }
 
     Behavior on scaleValue {
-        NumberAnimation { duration: 350; easing.type: Easing.OutCubic }
+        NumberAnimation { duration: 350; easing.type: Easing.OutQuart }
     }
 }

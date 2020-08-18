@@ -26,14 +26,14 @@ Rack {
 
             TextField {
                 labelText: "Address"
-                deactivated: !enableOscIn.on
+                activated: enableOscIn.on
 
                 defaultText: generatorModel.at(generatorIndex).oscInputAddress
                 onValueChanged: generatorModel.at(generatorIndex).oscInputAddress = newValue
             }
             NumberField {
                 labelText: "Port"
-                deactivated: !enableOscIn.on
+                activated: enableOscIn.on
 
                 defaultNum: generatorModel.at(generatorIndex).oscInputPort
                 onValueChanged: generatorModel.at(generatorIndex).oscInputPort = newValue
@@ -52,14 +52,14 @@ Rack {
 
             TextField {
                 labelText: "Address"
-                deactivated: !enableOscOut.on
+                activated: enableOscOut.on
 
                 defaultText: generatorModel.at(generatorIndex).oscOutputAddressTarget
                 onValueChanged: generatorModel.at(generatorIndex).oscOutputAddressTarget = newValue
             }
             TextField {
                 labelText: "Host"
-                deactivated: !enableOscOut.on
+                activated: enableOscOut.on
                 // TODO: input masking to only allow a standard IP address format
 
                 defaultText: generatorModel.at(generatorIndex).oscOutputAddressHost
@@ -67,7 +67,7 @@ Rack {
             }
             NumberField {
                 labelText: "Port"
-                deactivated: !enableOscOut.on
+                activated: enableOscOut.on
 
                 defaultNum: generatorModel.at(generatorIndex).oscOutputPort
                 onValueChanged: generatorModel.at(generatorIndex).oscOutputPort = newValue

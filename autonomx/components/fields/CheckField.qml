@@ -13,9 +13,10 @@ Field {
     property color controlColor: Stylesheet.colors.white
 
     showLabel: false
+    showFrame: false
     fieldWidth: 20
+    fieldHeight: 20
 
-    Layout.preferredHeight: 20
     Layout.alignment: Qt.AlignBottom
     Layout.bottomMargin: 10
     spacing: 0

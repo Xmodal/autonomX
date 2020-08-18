@@ -3,21 +3,41 @@ import QtQuick.Controls 2.3
 
 import "qrc:/stylesheet"
 
-Button {
+Control {
     id: generatorButton
 
     // props
     property color backgroundColor
     property string iconSource
     property bool collapsed: false
+    property string text
+
+    signal clicked()
 
     font: Stylesheet.fonts.label
-    leftPadding: 15
     clip: true
+
+    implicitWidth: 100
+    implicitHeight: 40
 
     enabled: state !== "hidden"
 
-    contentItem: Text {
+    Rectangle {
+        anchors.fill: parent
+        color: Stylesheet.colors.black
+
+        Rectangle {
+            id: bg
+            anchors.fill: parent
+            color: backgroundColor
+            opacity: mouseArea.containsMouse && !mouseArea.pressed ? 1 : 0.5
+        }
+    }
+
+    Text {
+        id: contentItem
+        leftPadding: 15
+        anchors.fill: parent
         text: generatorButton.text
         font: generatorButton.font
         color: Stylesheet.colors.white
@@ -25,24 +45,12 @@ Button {
         verticalAlignment: Text.AlignVCenter
     }
 
-    indicator: Image {
+    Image {
+        id: indicator
         source: iconSource
         anchors.right: parent.right
         anchors.rightMargin: 15
         anchors.verticalCenter: parent.verticalCenter
-    }
-
-    background: Rectangle {
-        implicitWidth: 100
-        implicitHeight: 40
-        color: Stylesheet.colors.black
-
-        Rectangle {
-            id: bg
-            anchors.fill: parent
-            color: backgroundColor
-            opacity: hovered && !pressed ? 1 : 0.5
-        }
     }
 
     states: State {
@@ -67,5 +75,13 @@ Button {
             duration: 150
             easing.type: Easing.Linear
         }
+    }
+
+    MouseArea {
+        id: mouseArea
+        anchors.fill: parent
+        hoverEnabled: true
+
+        onReleased: if (containsMouse) generatorButton.clicked()
     }
 }

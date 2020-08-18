@@ -101,7 +101,7 @@ Button {
         id: deleteButton
 
         anchors.left: parent.left
-        anchors.leftMargin: generatorList.count > 1 ? (hovered ? 0 : (generatorWidget.hovered ? -30 : -35)) : -35
+        anchors.leftMargin: generatorList.count > 1 ? (hovered ? 0 : (generatorWidget.hovered ? -25 : -35)) : -35
         implicitWidth: 35
         implicitHeight: parent.height
         z: 1

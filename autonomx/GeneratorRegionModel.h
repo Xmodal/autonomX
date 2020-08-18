@@ -58,3 +58,5 @@ signals:
 
     void writeRegion(QVariant value, GeneratorRegionRoles role, int index);
 };
+
+Q_DECLARE_METATYPE(GeneratorRegionModel::GeneratorRegionRoles)

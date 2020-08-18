@@ -23,6 +23,7 @@ class GeneratorRegion : public QObject {
     Q_PROPERTY(QRect rect READ getRect WRITE writeRect NOTIFY rectChanged)
     Q_PROPERTY(double intensity READ getIntensity WRITE writeIntensity NOTIFY intensityChanged)
 public:
+    GeneratorRegion();
     GeneratorRegion(QRect rect, double intensity);
     GeneratorRegion(const GeneratorRegion& region);
 

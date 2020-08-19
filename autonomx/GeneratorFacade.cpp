@@ -59,14 +59,14 @@ GeneratorFacade::GeneratorFacade(Generator *generator) : QQmlPropertyMap(this, n
     QObject::connect(this, &GeneratorFacade::valueChanged, generator, &Generator::updateValue, Qt::QueuedConnection);
 
     // connect facade region model changes to region set
-    QObject::connect(inputRegionModel.data(), &GeneratorRegionModel::addRegion, generator->getInputRegionSet(), &GeneratorRegionSet::addRegion);
-    QObject::connect(outputRegionModel.data(), &GeneratorRegionModel::addRegion, generator->getOutputRegionSet(), &GeneratorRegionSet::addRegion);
+    QObject::connect(inputRegionModel.data(), &GeneratorRegionModel::addRegionRequest, generator->getInputRegionSet(), &GeneratorRegionSet::addRegion);
+    QObject::connect(outputRegionModel.data(), &GeneratorRegionModel::addRegionRequest, generator->getOutputRegionSet(), &GeneratorRegionSet::addRegion);
 
-    QObject::connect(inputRegionModel.data(), &GeneratorRegionModel::deleteRegion, generator->getInputRegionSet(), &GeneratorRegionSet::deleteRegion);
-    QObject::connect(outputRegionModel.data(), &GeneratorRegionModel::deleteRegion, generator->getOutputRegionSet(), &GeneratorRegionSet::deleteRegion);
+    QObject::connect(inputRegionModel.data(), &GeneratorRegionModel::deleteRegionRequest, generator->getInputRegionSet(), &GeneratorRegionSet::deleteRegion);
+    QObject::connect(outputRegionModel.data(), &GeneratorRegionModel::deleteRegionRequest, generator->getOutputRegionSet(), &GeneratorRegionSet::deleteRegion);
 
-    QObject::connect(inputRegionModel.data(), &GeneratorRegionModel::writeRegion, generator->getInputRegionSet(), &GeneratorRegionSet::writeRegion);
-    QObject::connect(outputRegionModel.data(), &GeneratorRegionModel::writeRegion, generator->getOutputRegionSet(), &GeneratorRegionSet::writeRegion);
+    QObject::connect(inputRegionModel.data(), &GeneratorRegionModel::writeRegionRequest, generator->getInputRegionSet(), &GeneratorRegionSet::writeRegion);
+    QObject::connect(outputRegionModel.data(), &GeneratorRegionModel::writeRegionRequest, generator->getOutputRegionSet(), &GeneratorRegionSet::writeRegion);
 }
 
 GeneratorFacade::~GeneratorFacade() {

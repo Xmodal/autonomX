@@ -25,6 +25,7 @@ class GeneratorRegion : public QObject {
 public:
     GeneratorRegion();
     GeneratorRegion(QRect rect, double intensity);
+    GeneratorRegion(QRectF rect, double intensity);
     GeneratorRegion(const GeneratorRegion& region);
 
     QRect getRect() const;

@@ -87,7 +87,7 @@ bool GeneratorRegionModel::setData(const QModelIndex &index, const QVariant &val
             if(roleMap.contains(role)) {
                 // ctash here at setProperty
                 regionList.at(index.row())->setProperty(roleMap.value(role), value);
-                emit writeRegion(value, role, index.row());
+                emit writeRegionRequest(value, role, index.row());
                 if(flagDebug) {
                     qDebug() << "setData (GeneratorRegionModel): signal emitted";
                 }
@@ -111,4 +111,42 @@ QHash<int, QByteArray> GeneratorRegionModel::roleNames() const {
 GeneratorRegion* GeneratorRegionModel::at(int index) {
     if (index < 0) return nullptr;
     return regionList.at(index).data();
+}
+
+void GeneratorRegionModel::addRegion(int x, int y, int width, int height) {
+    if(flagDebug) {
+        qDebug() << "addRegion (GeneratorRegionModel)";
+    }
+
+    // tell the model we are about to add a row at the end of the list
+    int index = regionList.size();
+    beginInsertRows(QModelIndex(), index, index);
+
+    // create the region and add it to the list
+    QSharedPointer<GeneratorRegion> region = QSharedPointer<GeneratorRegion>(new GeneratorRegion(QRect(x, y, width, height), 0.0));
+    regionList.append(region);
+
+    // tell the model we are done adding rows
+    endInsertRows();
+
+    // emit signal so that backend updates
+    emit addRegionRequest(x, y, width, height);
+}
+
+void GeneratorRegionModel::deleteRegion(int index) {
+    if(flagDebug) {
+        qDebug() << "deleteRegion (GeneratorRegionModel)";
+    }
+
+    // tell the model we are about to remove a row
+    beginRemoveRows(QModelIndex(), index, index);
+
+    // remove from list
+    regionList.removeAt(index);
+
+    // tell the model we are done removing rows
+    endRemoveRows();
+
+    // emit signal so that backend updates
+    emit deleteRegionRequest(index);
 }

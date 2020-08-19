@@ -29,13 +29,14 @@ int GeneratorRegionSet::getRegionCount() {
     return regionList.size();
 }
 
-void GeneratorRegionSet::addRegion(GeneratorRegion region) {
+void GeneratorRegionSet::addRegion(int x, int y, int width, int height) {
     if(flagDebug) {
         qDebug() << "addRegion (GeneratorRegionSet)";
     }
 
-    // something about this feels wrong
-    regionList.append(QSharedPointer<GeneratorRegion>(&region));
+    // create copy of the region as a shared pointer and add to list
+    QSharedPointer<GeneratorRegion> region = QSharedPointer<GeneratorRegion>(new GeneratorRegion(QRect(x, y, width, height), 0.0));
+    regionList.append(QSharedPointer<GeneratorRegion>(region));
 }
 
 void GeneratorRegionSet::deleteRegion(int index) {
@@ -51,16 +52,20 @@ void GeneratorRegionSet::writeRegion(QVariant value, int role, int index) {
         qDebug() << "writeRegion (GeneratorRegionSet) value: " << value;
     }
 
-    // check if the key exists in the hash map
-    if(GeneratorRegionModel::roleMap.contains((GeneratorRegionModel::GeneratorRegionRoles) role)) {
-        QSharedPointer<GeneratorRegion> region = regionList.at(index);
-        region->setProperty(GeneratorRegionModel::roleMap.value((GeneratorRegionModel::GeneratorRegionRoles) role), value);
-        if(flagDebug) {
-            qDebug() << "writeRegion (GeneratorRegionSet) successful";
+    // check if index is valid
+    if(index >= 0 && index < regionList.size()) {
+        // check if the key exists in the hash map
+        if(GeneratorRegionModel::roleMap.contains((GeneratorRegionModel::GeneratorRegionRoles) role)) {
+            QSharedPointer<GeneratorRegion> region = regionList.at(index);
+            region->setProperty(GeneratorRegionModel::roleMap.value((GeneratorRegionModel::GeneratorRegionRoles) role), value);
+            if(flagDebug) {
+                qDebug() << "writeRegion (GeneratorRegionSet) successful";
+            }
+            return;
         }
-    } else {
-        if(flagDebug) {
-            qDebug() << "writeRegion (GeneratorRegionSet) failed";
-        }
+    }
+
+    if(flagDebug) {
+        qDebug() << "writeRegion (GeneratorRegionSet) failed";
     }
 }

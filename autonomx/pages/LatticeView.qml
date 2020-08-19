@@ -21,6 +21,17 @@ ColumnLayout {
     // header
     Header {}
 
+    /*
+    Timer {
+        interval: 3000; running: true; repeat: false
+        onTriggered: {
+            console.log("QML: timer triggered");
+            inputModel.deleteRegion(0);
+            outputModel.addRegion(4, 4, 4, 4)
+        }
+    }
+    */
+
     // main content
     RowLayout {
         id: mainContent

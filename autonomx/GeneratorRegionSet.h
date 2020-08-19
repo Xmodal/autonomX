@@ -33,7 +33,7 @@ private:
     QList<QSharedPointer<GeneratorRegion>> regionList;
     bool flagDebug = true;
 public slots:
-    void addRegion(GeneratorRegion region);
+    void addRegion(int x, int y, int width, int height);
     void deleteRegion(int index);
 
     void writeRegion(QVariant value, int role, int index);

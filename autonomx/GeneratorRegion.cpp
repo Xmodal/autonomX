@@ -13,9 +13,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+#include <QQmlEngine>
+
 #include "GeneratorRegion.h"
 
 GeneratorRegion::GeneratorRegion(QRect rect, double intensity) {
+    // set ownership of the GeneratorRegion to C++ so that QML doesn't try to take over garbage collection duties, resulting in a double free
+    // this is necessary because GeneratorModel will return pointers to GeneratorRegion
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+
     this->rect = rect;
     this->intensity = intensity;
 }

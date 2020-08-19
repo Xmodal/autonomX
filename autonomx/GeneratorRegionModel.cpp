@@ -55,14 +55,21 @@ int GeneratorRegionModel::columnCount(const QModelIndex& parent) const {
 }
 
 QVariant GeneratorRegionModel::data(const QModelIndex &index, int role) const {
-    if(!index.isValid())
-        return QVariant();
+    if(flagDebug) {
+        qDebug() << "data (GeneratorRegionModel)";
+    }
 
-    // check if the index is valid
-    if(index.column() == 0 && index.row() >= 0 && index.row() < regionList.size()) {
-        // check if the key exists in the hash map
-        if(roleMap.contains(role))
-            return regionList.at(index.row())->property(roleMap.value(role));
+    if(index.isValid()) {
+        // check if the index is valid
+        if(index.column() == 0 && index.row() >= 0 && index.row() < regionList.size()) {
+            // check if the key exists in the hash map
+            if(roleMap.contains(role))
+                return regionList.at(index.row())->property(roleMap.value(role));
+        }
+    }
+
+    if(flagDebug) {
+        qDebug() << "data (GeneratorRegionModel) failed to find valid entry";
     }
 
     return QVariant();
@@ -70,23 +77,27 @@ QVariant GeneratorRegionModel::data(const QModelIndex &index, int role) const {
 
 bool GeneratorRegionModel::setData(const QModelIndex &index, const QVariant &value, int role) {
     if(flagDebug) {
-        qDebug() << "setData (GeneratorRegionModel)";
+        qDebug() << "setData (GeneratorRegionModel) value: " << value;
     }
 
-    if(!index.isValid())
-        return false;
-
-    // check if the index is valid
-    if(index.column() == 0 && index.row() >= 0 && index.row() < regionList.size()) {
-        // check if the key exists in the hash map
-        if(roleMap.contains(role)) {
-            regionList.at(index.row())->setProperty(roleMap.value(role), value);
-            emit writeRegion(value, role, index.row());
-            if(flagDebug) {
-                qDebug() << "setData (GeneratorRegionModel): signal emitted";
+    if(index.isValid()) {
+        // check if the index is valid
+        if(index.column() == 0 && index.row() >= 0 && index.row() < regionList.size()) {
+            // check if the key exists in the hash map
+            if(roleMap.contains(role)) {
+                // ctash here at setProperty
+                regionList.at(index.row())->setProperty(roleMap.value(role), value);
+                emit writeRegion(value, role, index.row());
+                if(flagDebug) {
+                    qDebug() << "setData (GeneratorRegionModel): signal emitted";
+                }
+                return true;
             }
-            return true;
         }
+    }
+
+    if(flagDebug) {
+        qDebug() << "setData (GeneratorRegionModel) failed to find valid entry";
     }
 
     return false;

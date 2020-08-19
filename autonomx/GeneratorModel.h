@@ -56,6 +56,7 @@ public:
     ~GeneratorModel();
 
     // GeneratorModel is constructed from a GeneratorFacade list which is identical to the one found in AppModel. This is not a copy, this is the same memory location.
+    // management of the GeneratorFacade list is done through AppModel. GeneratorModel has a few extra functions that are called from AppModel to assist changes to the list and make sure QML is understanding these changes properly.
     // whenever AppModel adds or removes a GeneratorFacade, all connections between each GeneratorFacade's valueChangedFromAlias / valueChanged and the GeneratorModel's updateValue must be reset, because the order of the list might have changed, which breaks the indexing system used by the dataChanged signal eventually emitted by updateValue.
 
     // iterates over all members of the GeneratorFacade list and creates connections for them.

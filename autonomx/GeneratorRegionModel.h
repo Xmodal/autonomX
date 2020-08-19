@@ -49,12 +49,15 @@ public:
     QHash<int, QByteArray> roleNames() const;
 
     Q_INVOKABLE GeneratorRegion* at(int index);
+
+    Q_INVOKABLE void addRegion(int x, int y, int width, int height);
+    Q_INVOKABLE void deleteRegion(int index);
 private:
     QList<QSharedPointer<GeneratorRegion>> regionList;
     bool flagDebug = true;
 signals:
-    void addRegion(GeneratorRegion region);
-    void deleteRegion(int index);
+    void addRegionRequest(int x, int y, int width, int height);
+    void deleteRegionRequest(int index);
 
-    void writeRegion(QVariant value, int role, int index);
+    void writeRegionRequest(QVariant value, int role, int index);
 };

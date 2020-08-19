@@ -26,7 +26,19 @@ GeneratorRegion::GeneratorRegion(QRect rect, double intensity) {
     this->intensity = intensity;
 }
 
+GeneratorRegion::GeneratorRegion(QRectF rect, double intensity) {
+    // set ownership of the GeneratorRegion to C++ so that QML doesn't try to take over garbage collection duties, resulting in a double free
+    // this is necessary because GeneratorModel will return pointers to GeneratorRegion
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+
+    this->rect = rect.toRect();
+    this->intensity = intensity;
+}
+
 GeneratorRegion::GeneratorRegion(const GeneratorRegion& region) {
+    // set ownership of the GeneratorRegion to C++ so that QML doesn't try to take over garbage collection duties, resulting in a double free
+    // this is necessary because GeneratorModel will return pointers to GeneratorRegion
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     this->rect = region.getRect();
     this->intensity = region.getIntensity();
 }

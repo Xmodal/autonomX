@@ -22,6 +22,7 @@
         <file>components/fields/SelectField.qml</file>
         <file>components/fields/SliderField.qml</file>
         <file>components/fields/SwitchField.qml</file>
+        <file>components/fields/SpacerField.qml</file>
         <file>components/fields/TextField.qml</file>
         <file>components/racks/GenRack.qml</file>
         <file>components/racks/OscRack.qml</file>

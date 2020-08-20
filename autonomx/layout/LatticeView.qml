@@ -13,8 +13,7 @@ ColumnLayout {
 
     property int generatorIndex: window.activeGeneratorIndex
 
-    Layout.fillWidth: true
-    Layout.fillHeight: true
+    anchors.fill: parent
     spacing: 0
 
     // header

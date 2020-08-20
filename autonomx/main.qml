@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.12
 import QtQuick.Window 2.12
 
 import "./stylesheet"
-import "./pages"
+import "./layout"
 
 /**
  * Main window of this application
@@ -72,12 +72,27 @@ ApplicationWindow {
         onActivated: toggleLatticeView();
     }
 
-    StackLayout {
-        id: router
+    Item {
         anchors.fill: parent
-        currentIndex: 0
 
-        GeneratorView {}
         LatticeView {}
+
+        GeneratorList {
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+        }
+
+        Loader {
+            id: rackViewLoader
+            width: 590
+            height: parent.height - Stylesheet.headerHeight
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+
+            visible: !(window.activeGeneratorIndex < 0)
+            enabled: !(window.activeGeneratorIndex < 0)
+
+            source: window.activeGeneratorIndex < 0 ? "" : "qrc:/layout/RackList.qml"
+        }
     }
 }

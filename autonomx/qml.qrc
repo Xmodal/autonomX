@@ -28,7 +28,6 @@
         <file>components/racks/OscRack.qml</file>
         <file>components/racks/ParamsRack.qml</file>
         <file>components/racks/Rack.qml</file>
-        <file>components/racks/RackView.qml</file>
         <file>components/ui/CheckBox.qml</file>
         <file>components/ui/GeneratorButton.qml</file>
         <file>components/ui/GeneratorWidget.qml</file>
@@ -37,9 +36,11 @@
         <file>components/ui/VuMeter.qml</file>
         <file>models/InputModel.qml</file>
         <file>models/OutputModel.qml</file>
-        <file>pages/GeneratorView.qml</file>
-        <file>pages/Header.qml</file>
-        <file>pages/LatticeView.qml</file>
+        <file>layout/GeneratorList.qml</file>
+        <file>layout/GeneratorView.qml</file>
+        <file>layout/Header.qml</file>
+        <file>layout/LatticeView.qml</file>
+        <file>layout/RackList.qml</file>
         <file>shaders/gradient_overlay.frag</file>
         <file>shaders/lattice.frag</file>
         <file>shaders/lattice.vert</file>

@@ -37,7 +37,6 @@
         <file>models/InputModel.qml</file>
         <file>models/OutputModel.qml</file>
         <file>layout/GeneratorList.qml</file>
-        <file>layout/GeneratorView.qml</file>
         <file>layout/Header.qml</file>
         <file>layout/LatticeView.qml</file>
         <file>layout/RackList.qml</file>

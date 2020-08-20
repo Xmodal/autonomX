@@ -46,19 +46,10 @@ public:
     Generator(int id, QString name, QString type, QString description);
     ~Generator();
 
-    // the generator class provides input and output buffers
-    // these are resized automatically by the class deriving generator
-    std::vector<double> input;
-    std::vector<double> output;
-
-    // methods to read, write, and query the size of the io buffers
-    void writeInput(double value, int index);
-    double readOutput(int index);
-    int getInputSize();
-    int getOutputSize();
-
     // method implemented by the derived class that computes the output
-    virtual void computeOutput(double deltaTime) = 0;
+    // this assumes the input values have already been set on the lattice by ComputeEngine before this call.
+    // this also doesn't take care of retrieving output values on the lattice, as this is handled by ComputeEngine after this call.
+    virtual void computeIteration(double deltaTime) = 0;
 
     // this is the mutex used by writeLatticeData. GeneratorLatticeRenderer will lock it while using *latticeData in its render method.
     void lockLatticeDataMutex();
@@ -103,22 +94,14 @@ public:
     virtual void writeLatticeWidthDelegate(int latticeWidth) = 0;
     virtual void writeLatticeHeightDelegate(int latticeHeight) = 0;
 
-    // this method actually does the data copy, implemented by the derived class. writeLatticeData calls this and takes care of all the crazy scheculing / mutex stuff.
-    //
-    // latticeData is written to by treating the memory as a flattened 2D double array
-    //
-    // the indexing scheme goes as follows:
-    //
-    //    latticeData[indexWidth, indexHeight] = flattenedData[indexWidth + indexHeight * latticeHeight]
-    //
-    // equivalent to (where / is integer round down division):
-    //
-    //    flattenedData[index] = latticeData[index % latticeWidth, index / latticeWidth]
-    //
-    virtual void writeLatticeDataDelegate(float* latticeData) = 0;
+    // these are implemented by the derived class and allow reading / writing to the lattice.
+    // this is called by applyInputRegion / applyOutputRegion
+    virtual double getLatticeValue(int x, int y) = 0;
+    virtual void writeLatticeValue(int x, int y, double value) = 0;
 
-    //virtual double getLatticeValue(int x, int y);
-    //virtual void setLatticeValue(int x, int y);
+    // this updates the lattice / region from the corresponding region / lattice. this is called before / after the call to computeIteration from ComputeEngine
+    void applyInputRegion();
+    void applyOutputRegion();
 
     GeneratorRegionSet* getInputRegionSet();
     GeneratorRegionSet* getOutputRegionSet();
@@ -170,6 +153,17 @@ public slots:
     // the first call to this function is done with latticeData as a new float pointer pointer that is not null, and with allocatedWidth and allocatedHeight as 0. the memory for the inner pointer will be allocated automatically
     //
     // the connection from GeneratorLatticeCommunicator's requestLatticeData signal to Generator's writeLatticeData slot is created from GeneratorLatticeCommunicator
+    //
+    // latticeData is written to by treating the memory as a flattened 2D double array
+    //
+    // the indexing scheme goes as follows:
+    //
+    //    latticeData[indexWidth, indexHeight] = flattenedData[indexWidth + indexHeight * latticeHeight]
+    //
+    // equivalent to (where / is integer round down division):
+    //
+    //    flattenedData[index] = latticeData[index % latticeWidth, index / latticeWidth]
+    //
     void writeLatticeData(float** latticeData, int* allocatedWidth, int* allocatedHeight);
 signals:
     // common signal used alongside all other property change signals. allows the Facade class to work properly

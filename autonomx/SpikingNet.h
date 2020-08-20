@@ -26,8 +26,6 @@ class SpikingNet : public Generator {
     Q_OBJECT
     Q_PROPERTY(double timeScale READ getTimeScale WRITE writeTimeScale NOTIFY timeScaleChanged)
     Q_PROPERTY(double inhibitoryPortion READ getInhibitoryPortion WRITE writeInhibitoryPortion NOTIFY inhibitoryPortionChanged)
-    Q_PROPERTY(double inputPortion READ getInputPortion WRITE writeInputPortion NOTIFY inputPortionChanged)
-    Q_PROPERTY(double outputPortion READ getOutputPortion WRITE writeOutputPortion NOTIFY outputPortionChanged)
     Q_PROPERTY(NeuronType::Enum inhibitoryNeuronType READ getInhibitoryNeuronType WRITE writeInhibitoryNeuronType NOTIFY inhibitoryNeuronTypeChanged)
     Q_PROPERTY(NeuronType::Enum excitatoryNeuronType READ getExcitatoryNeuronType WRITE writeExcitatoryNeuronType NOTIFY excitatoryNeuronTypeChanged)
     Q_PROPERTY(double inhibitoryNoise READ getInhibitoryNoise WRITE writeInhibitoryNoise NOTIFY inhibitoryNoiseChanged)
@@ -68,14 +66,6 @@ private:
     double      excitatoryInitWeight = 15.0;
     double      excitatoryNoise = 5.0;
 
-    double      inputPortion = 0.2;
-    int         inputSize = (latticeWidth * latticeHeight - inhibitorySize) * inputPortion;
-    int         inputGroupSize = 1;
-
-    double      outputPortion = 0.2;
-    int         outputSize = (latticeWidth * latticeHeight - inhibitorySize) * outputPortion;
-    int         outputGroupSize = 1;
-
     double      weightMax = 20.0;
     double      weightMin = 0.0;
 
@@ -98,9 +88,6 @@ private:
     std::vector<Izhikevich> neurons;
     // the weights
     double** weights;
-    std::vector<double> outputGroupSpiking;
-    // the per-output group activation average
-    std::vector<double> outputGroupActivation;
 
     // STDP
     std::vector<int> STDPTimes;
@@ -115,17 +102,14 @@ private:
 
     inline int indexInhibitoryNeuron(int i);
     inline int indexExcitatoryNeuron(int i);
-    inline int indexInputNeuron(int i);
-    inline int indexOutputNeuron(int i);
 
-    inline void updateNeurons(double deltaTime);
-    inline void updateInput();
-    inline void updateInputDebug();
+    inline void applyIzhikevich(double deltaTime);
+    inline void applyConnections();
     inline void applyFiring();
+    inline void applyDecay(double deltaTime);
     inline void computeSTDP(double deltaTime);
     inline void computeSTP(double deltaTime);
-    inline double getSTPValue(int index, bool isFiring, double deltaTime);
-    inline void decay(double deltaTime);
+    inline double computeSTPForNeuron(int index, bool isFiring, double deltaTime);
 
     void setRandomNetwork();
     void setSparseGraph();
@@ -136,29 +120,16 @@ private:
 
     void initialize();
     void reset();
-    void update(double deltaTime);
-    void stimulation();
-    void stimulation(double strength);
-    void stimulation(int inputGroupIndex, double strength);
-    void wholeStimulation();
-    void wholeStimulation(double strength);
-    void wholeNetworkStimulation();
-    void wholeNetworkStimulation(double strength);
-
-    double getOutputGroupSpiking(int outputGroupIndex);
-    double getOutputGroupActivation(int outputGroupIndex);
 
 public:
     SpikingNet(int id);
     ~SpikingNet();
 
-    void computeOutput(double deltaTime) override;
+    void computeIteration(double deltaTime) override;
 
     int getNeuronSize() const;
     double getTimeScale() const;
     double getInhibitoryPortion() const;
-    double getInputPortion() const;
-    double getOutputPortion() const;
     NeuronType::Enum getInhibitoryNeuronType() const;
     NeuronType::Enum getExcitatoryNeuronType() const;
     double getInhibitoryNoise() const;
@@ -173,8 +144,6 @@ public:
     void writeNeuronSize(int neuronSize);
     void writeTimeScale(double timeScale);
     void writeInhibitoryPortion(double inhibitoryPortion);
-    void writeInputPortion(double inputPortion);
-    void writeOutputPortion(double outputPortion);
     void writeInhibitoryNeuronType(NeuronType::Enum inhibitoryNeuronType);
     void writeExcitatoryNeuronType(NeuronType::Enum excitatoryNeuronType);
     void writeInhibitoryNoise(double inhibitoryNoise);
@@ -188,14 +157,13 @@ public:
 
     void writeLatticeWidthDelegate(int latticeWidth) override;
     void writeLatticeHeightDelegate(int latticeHeight) override;
-    void writeLatticeDataDelegate(float* latticeData) override;
 
+    double getLatticeValue(int x, int y) override;
+    void writeLatticeValue(int x, int y, double value) override;
 signals:
     void neuronSizeChanged(int neuronSize);
     void timeScaleChanged(double timeScale);
     void inhibitoryPortionChanged(double inhibitoryPortion);
-    void inputPortionChanged(double inputPortion);
-    void outputPortionChanged(double outputPortion);
     void inhibitoryNeuronTypeChanged(NeuronType::Enum inhibitoryNeuronType);
     void excitatoryNeuronTypeChanged(NeuronType::Enum excitatoryNeuronType);
     void inhibitoryNoiseChanged(double inhibitoryNoise);

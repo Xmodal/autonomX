@@ -49,30 +49,6 @@ Generator::~Generator() {
     }
 }
 
-void Generator::writeInput(double value, int index) {
-    if(flagDebug) {
-        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-            std::chrono::system_clock::now().time_since_epoch()
-        );
-
-        qDebug() << "writeInput (Generator)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\tinid = " << index << "\tvalue = " << value;
-    }
-
-    input[index] = value;
-}
-
-double Generator::readOutput(int index) {
-    return output[index];
-}
-
-int Generator::getInputSize() {
-    return input.size();
-}
-
-int Generator::getOutputSize() {
-    return output.size();
-}
-
 QString Generator::getName() {
     return name;
 }
@@ -389,11 +365,16 @@ void Generator::writeLatticeData(float** latticeData, int* allocatedWidth, int* 
             qDebug() << "writeLatticeData (Generator): allocation done";
         }
 
-        // we can now write to the lattice data. do it via the derived delegate
-        writeLatticeDataDelegate(*latticeData);
+        // write to the lattice data
+        for(int x = 0; x < latticeWidth; x++) {
+            for(int y = 0; y < latticeHeight; y++) {
+                int index = x % latticeWidth + y * latticeWidth;
+                (*latticeData)[index] = (float) getLatticeValue(x, y);
+            }
+        }
 
         if(flagDebug) {
-            qDebug() << "writeLatticeData (Generator): delegate done";
+            qDebug() << "writeLatticeData (Generator): write done";
         }
 
         // we are done; release the mutex
@@ -414,6 +395,42 @@ void Generator::lockLatticeDataMutex() {
 
 void Generator::unlockLatticeDataMutex() {
     latticeDataMutex.unlock();
+}
+
+void Generator::applyInputRegion() {
+    for(int i = 0; i < inputRegionSet->getRegionCount(); i++) {
+        GeneratorRegion* region = inputRegionSet->getRegion(i);
+
+        int xMax = region->getRect().x() + region->getRect().width();
+        int yMax = region->getRect().y() + region->getRect().height();
+
+        for(int x = region->getRect().x(); x < xMax; x++) {
+            for(int y = region->getRect().y(); y < yMax; y++) {
+                writeLatticeValue(x, y, region->getIntensity());
+            }
+        }
+    }
+}
+
+void Generator::applyOutputRegion() {
+    for(int i = 0; i < inputRegionSet->getRegionCount(); i++) {
+        GeneratorRegion* region = outputRegionSet->getRegion(i);
+
+        int xMax = region->getRect().x() + region->getRect().width();
+        int yMax = region->getRect().y() + region->getRect().height();
+
+        double sum = 0;
+
+        for(int x = region->getRect().x(); x < xMax; x++) {
+            for(int y = region->getRect().y(); y < yMax; y++) {
+                sum += getLatticeValue(x, y);
+            }
+        }
+
+        sum /= (double) (region->getRect().width() * region->getRect().height());
+
+        region->writeIntensity(sum);
+    }
 }
 
 GeneratorRegionSet* Generator::getInputRegionSet() {

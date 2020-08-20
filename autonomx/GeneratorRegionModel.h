@@ -54,7 +54,7 @@ public:
     Q_INVOKABLE void deleteRegion(int index);
 private:
     QList<QSharedPointer<GeneratorRegion>> regionList;
-    bool flagDebug = true;
+    bool flagDebug = false;
 signals:
     void addRegionRequest(int x, int y, int width, int height);
     void deleteRegionRequest(int index);

@@ -66,13 +66,7 @@ void SpikingNet::initialize() {
     // setup vectors
     neurons.resize(latticeWidth * latticeHeight);
 
-    outputGroupSpiking.resize(outputGroupSize, 0);
-    outputGroupActivation.resize(outputGroupSize, 0);
-
     STDPTimes.resize(latticeWidth * latticeHeight, 0);
-
-    input.resize(inputGroupSize, 0);
-    output.resize(outputGroupSize, 0);
 
     // allocate memory for STP variables
     STPu = new double[latticeWidth * latticeHeight];
@@ -167,16 +161,6 @@ int SpikingNet::indexExcitatoryNeuron(int i) {
     return i + inhibitorySize;
 }
 
-int SpikingNet::indexInputNeuron(int i) {
-    // expects an index [0, Input_Size - 1]
-    return i + inhibitorySize;
-}
-
-int SpikingNet::indexOutputNeuron(int i) {
-    // expects an index [0, Output_Size - 1]
-    return i + inhibitorySize + inputSize;
-}
-
 void SpikingNet::setSparseNetwork() {
 
     std::uniform_int_distribution<> randomNeurons(0, latticeWidth * latticeHeight - 1);
@@ -239,16 +223,6 @@ void SpikingNet::setSparseNetwork() {
                     }
                     connectionSum++;
                 }
-            }
-        }
-    }
-
-    // TODO: this kind of sucks, make it so that this doesn't happen in the first place?
-    // delete direct connection between input and output
-    if(flagDirectConnection == false) {
-        for(int source = 0; source < inputSize; source++) {
-            for(int destination = 0; destination < outputSize; destination++) {
-                weights[indexInputNeuron(source)][indexOutputNeuron(destination)] = 0.0;
             }
         }
     }
@@ -333,7 +307,7 @@ void SpikingNet::setGridNetwork() {
 
 // ############################### update routines and output calculation ###############################
 
-void SpikingNet::computeOutput(double deltaTime) {
+void SpikingNet::computeIteration(double deltaTime) {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
@@ -342,29 +316,16 @@ void SpikingNet::computeOutput(double deltaTime) {
         qDebug() << "computeOutput:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    // apply input stimulation
-    for(int i = 0; i < inputGroupSize; i++) {
-        stimulation(i, input[i]);
-    }
+    // apply time scale
+    deltaTime *= timeScale;
 
-    // update, applying time scale
-    update(deltaTime * timeScale);
-
-    // write output
-    for(int i = 0; i < outputGroupSize; i++) {
-        output[i] = getOutputGroupActivation(i);
-    }
-
-}
-
-void SpikingNet::update(double deltaTime) {
-
-    if(flagDecay) decay(deltaTime);
+    // update routine
+    if(flagDecay) applyDecay(deltaTime);
     if(flagSTDP)  computeSTDP(deltaTime);
     if(flagSTP)   computeSTP(deltaTime);
 
-    updateInput();
-    updateNeurons(deltaTime);
+    applyConnections();
+    applyIzhikevich(deltaTime);
 
     applyFiring();
 }
@@ -412,48 +373,9 @@ void SpikingNet::applyFiring() {
     for(int i = 0; i < latticeWidth * latticeHeight; i++) {
         neurons[i].applyFiring();
     }
-    // reset group output variables
-    for(int i = 0; i < outputGroupSize; i++) {
-        outputGroupSpiking[i] = 0;
-        outputGroupActivation[i] = 0;
-    }
-    int sizePerGroup = (outputSize / outputGroupSize);
-    double averagingConstant = 1.0 / (double) sizePerGroup;
-    int total = 0;
-    for(int i = 0; i < outputSize; i++) {
-        // get the index of the output neuron
-        int index = indexOutputNeuron(i);
-        // get the index of the group this neuron belongs to. min is there to prevent an edge case where the number of group doesn't perfectly divide the number of output neurons.
-        int indexGroup = std::min<int>(i / sizePerGroup, outputGroupSize - 1);
-        // check to see if the neuron is firing
-        if(neurons[index].isFiring()) {
-            total++;
-            // apply increment with averaging. this isn't perfect if the last group size isn't exactly the same as the other ones, but probably shouldn't be a big problem.
-            outputGroupSpiking[indexGroup] += 1.0 * averagingConstant;
-        }
-        // update output group activation data
-        outputGroupActivation[indexGroup] += (neurons[index].getV() - neurons[index].getC()) / (neurons[index].getPotentialThreshold() - neurons[index].getC()) * averagingConstant;
-    }
-    // apply soft-clamp on output group activation
-    for(int i = 0; i < outputGroupSize; i++) {
-        outputGroupActivation[i] = softKneePositive(outputGroupActivation[i], 0.8);
-        if(flagDebug) {
-            qDebug() << "output group " << i << " activation: " << outputGroupActivation[i];
-        }
-    }
 }
 
-// returns the per-output group spiking average
-double SpikingNet::getOutputGroupSpiking(int outputGroupIndex) {
-    return outputGroupSpiking[outputGroupIndex];
-}
-
-// returns the per-output group activation average
-double SpikingNet::getOutputGroupActivation(int outputGroupIndex) {
-    return outputGroupActivation[outputGroupIndex];
-}
-
-void SpikingNet::updateInput() {
+void SpikingNet::applyConnections() {
 
     // setup normal distribution random function
     std::normal_distribution<> randomUniform(0.0, 1.0);
@@ -483,7 +405,7 @@ void SpikingNet::updateInput() {
 
 }
 
-void SpikingNet::updateNeurons(double deltaTime) {
+void SpikingNet::applyIzhikevich(double deltaTime) {
 
     // update differential equation
     for(int i = 0; i < latticeWidth * latticeHeight; ++i) {
@@ -567,11 +489,11 @@ void SpikingNet::computeSTDP(double deltaTime) {
 
 void SpikingNet::computeSTP(double deltaTime) {
     for(int i = inhibitorySize; i < latticeWidth * latticeHeight; ++i) {
-        STPw[i] = STPStrength * getSTPValue(i, neurons[i].isFiring(), deltaTime);
+        STPw[i] = STPStrength * computeSTPForNeuron(i, neurons[i].isFiring(), deltaTime);
     }
 }
 
-double SpikingNet::getSTPValue(int index, bool isFiring, double deltaTime) {
+double SpikingNet::computeSTPForNeuron(int index, bool isFiring, double deltaTime) {
     double deltaTimeMillis = deltaTime * 1000.0;
 
     // see http://www.rmki.kfki.hu/~banmi/elte/synaptic.pdf for paper describing the mechanics of this
@@ -608,7 +530,7 @@ double SpikingNet::getSTPValue(int index, bool isFiring, double deltaTime) {
     return w;
 }
 
-void SpikingNet::decay(double deltaTime) {
+void SpikingNet::applyDecay(double deltaTime) {
     double decayConstantTimeCompensated = pow(decayConstant, deltaTime);
 
     for(int i = inhibitorySize; i < latticeWidth * latticeHeight; i++) {
@@ -619,66 +541,6 @@ void SpikingNet::decay(double deltaTime) {
 
 }
 
-// ############################### input / stimulation methods ###############################
-
-void SpikingNet::stimulation() {
-    // external input to input neurons.
-    for(int i = 0; i < inputSize; ++i) {
-        neurons[indexInputNeuron(i)].addToI(stimStrength);
-    }
-}
-
-void SpikingNet::stimulation(double strength) {
-    // external input to input neurons.
-    for(int i = 0; i < inputSize; ++i) {
-        neurons[indexInputNeuron(i)].addToI(strength);
-    }
-}
-
-void SpikingNet::stimulation(int inputGroupIndex, double strength) {
-
-    int group_size = floor((float) inputSize / (float) inputGroupSize);
-
-    // external input to input neurons.
-    for(int i = 0; i < inputGroupSize; ++i) {
-        for(int j = (i * group_size); j<((i + 1) * group_size); ++j) {
-            if(i == inputGroupIndex) {
-                neurons[indexInputNeuron(j)].addToI(strength);
-            }else if(i > inputGroupIndex) {
-                break;
-            }
-        }
-    }
-}
-
-void SpikingNet::wholeStimulation() {
-    //    external input
-    for(int i = 0; i < inputSize; ++i) {
-        neurons[indexInputNeuron(i)].addToI(stimStrength);
-    }
-}
-
-void SpikingNet::wholeStimulation(double strength) {
-    //    external input
-    for(int i = 0; i < inputSize; i++) {
-        neurons[indexInputNeuron(i)].addToI(strength);
-    }
-}
-
-void SpikingNet::wholeNetworkStimulation() {
-    //    external input
-    for(int i = 0; i < latticeWidth * latticeHeight; ++i) {
-        neurons[i].addToI(stimStrength);
-    }
-}
-
-void SpikingNet::wholeNetworkStimulation(double strength) {
-    //    external input
-    for(int i = 0; i < latticeWidth * latticeHeight; ++i) {
-            neurons[i].addToI(strength);
-    }
-}
-
 // ############################### Qt read / write ###############################
 
 double SpikingNet::getTimeScale() const {
@@ -687,14 +549,6 @@ double SpikingNet::getTimeScale() const {
 
 double SpikingNet::getInhibitoryPortion() const {
     return this->inhibitoryPortion;
-}
-
-double SpikingNet::getInputPortion() const {
-    return this->inputPortion;
-}
-
-double SpikingNet::getOutputPortion() const {
-    return this->outputPortion;
 }
 
 NeuronType::Enum SpikingNet::getInhibitoryNeuronType() const {
@@ -778,46 +632,6 @@ void SpikingNet::writeInhibitoryPortion(double inhibitoryPortion) {
     // signal
     emit valueChanged("inhibitoryPortion", QVariant(inhibitoryPortion));
     emit inhibitoryPortionChanged(inhibitoryPortion);
-}
-
-void SpikingNet::writeInputPortion(double inputPortion) {
-    if(this->inputPortion == inputPortion)
-        return;
-
-    if(flagDebug) {
-        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()
-        );
-
-        qDebug() << "writeInputPortion:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
-    }
-
-    // update input size
-    inputSize = (latticeWidth * latticeHeight - inhibitorySize) * inputPortion;
-
-    this->inputPortion = inputPortion;
-    emit valueChanged("inputPortion", QVariant(inputPortion));
-    emit inputPortionChanged(inputPortion);
-}
-
-void SpikingNet::writeOutputPortion(double outputPortion) {
-    if(this->outputPortion == outputPortion)
-        return;
-
-    if(flagDebug) {
-        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()
-        );
-
-        qDebug() << "writeOutputPortion:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
-    }
-
-    // update output size
-    outputSize = (latticeWidth * latticeHeight - inhibitorySize) * outputPortion;
-
-    this->outputPortion = outputPortion;
-    emit valueChanged("outputPortion", QVariant(outputPortion));
-    emit outputPortionChanged(outputPortion);
 }
 
 void SpikingNet::writeInhibitoryNeuronType(NeuronType::Enum inhibitoryNeuronType) {
@@ -1042,13 +856,12 @@ void SpikingNet::writeLatticeHeightDelegate(int latticeHeight) {
     // signals are emitted from Generator::writeLatticeWidth once this is done
 }
 
-void SpikingNet::writeLatticeDataDelegate(float *latticeData) {
-    int width = latticeWidth;
-    int height = latticeHeight;
-    for(int x = 0; x < width; x++) {
-        for(int y = 0; y < height; y++) {
-            int index = x % width + y * width;
-            latticeData[index] = (float) (neurons[index].getV() - neurons[index].getC()) / (neurons[index].getPotentialThreshold() - neurons[index].getC());
-        }
-    }
+double SpikingNet::getLatticeValue(int x, int y) {
+    int index = x % latticeWidth + y * latticeWidth;
+    return (neurons[index].getV() - neurons[index].getC()) / (neurons[index].getPotentialThreshold() - neurons[index].getC());
+}
+
+void SpikingNet::writeLatticeValue(int x, int y, double value) {
+    int index = x % latticeWidth + y * latticeWidth;
+    neurons[index].addToI(value);
 }

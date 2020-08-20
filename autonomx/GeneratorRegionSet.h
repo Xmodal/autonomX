@@ -31,7 +31,7 @@ public:
     int getRegionCount();
 private:
     QList<QSharedPointer<GeneratorRegion>> regionList;
-    bool flagDebug = true;
+    bool flagDebug = false;
 public slots:
     void addRegion(int x, int y, int width, int height);
     void deleteRegion(int index);

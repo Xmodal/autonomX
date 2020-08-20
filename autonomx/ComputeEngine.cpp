@@ -55,7 +55,7 @@ void ComputeEngine::receiveOscData(int id, QVariantList data) {
     int argumentsTotal = data.size();
     int argumentsValid = 0;
 
-    for(int i = 0; i < generator->getInputSize(); i++) {
+    for(int i = 0; i < generator->getInputRegionSet()->getRegionCount(); i++) {
         // set default to 0
         double input = 0;
         // check that the message's list is long enough
@@ -68,7 +68,7 @@ void ComputeEngine::receiveOscData(int id, QVariantList data) {
             }
         }
         // write to input
-        generator->writeInput(input, i);
+        generator->getInputRegionSet()->getRegion(i)->writeIntensity(input);
     }
 
     if(flagDebug) {
@@ -135,24 +135,36 @@ void ComputeEngine::loop() {
     elapsedTimer.restart();
     elapsedTimer.start();
 
+    // apply input values
+    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
+        // do the actual computation
+        (*it)->applyInputRegion();
+    }
+
     // do the computation
     for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
         // do the actual computation
-        (*it)->computeOutput(1.0 / frequency);
+        (*it)->computeIteration(1.0 / frequency);
+    }
+
+    // apply output values
+    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
+        // do the actual computation
+        (*it)->applyOutputRegion();
     }
 
     // write to outputMonitor
     for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
         double outputMonitor = 0;
-        for(int i = 0; i < (*it)->getOutputSize(); i++) {
-            outputMonitor += (*it)->readOutput(i);
+        for(int i = 0; i < (*it)->getOutputRegionSet()->getRegionCount(); i++) {
+            outputMonitor += (*it)->getOutputRegionSet()->getRegion(i)->getIntensity();
         }
         if(flagDummyOutputMonitor) {
             // random output
             outputMonitor = randomUniform(randomGenerator);
         } else {
             // dumb averaging
-            outputMonitor /= (*it)->getOutputSize();
+            outputMonitor /= (*it)->getOutputRegionSet()->getRegionCount();
         }
         (*it)->writeOutputMonitor(outputMonitor);
     }
@@ -160,8 +172,8 @@ void ComputeEngine::loop() {
     // send output messages to osc engine
     for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
         QList<QVariant> outputs;
-        for(int i = 0; i < (*it)->getOutputSize(); i++) {
-            double value = flagDummyOutputMonitor ? randomUniform(randomGenerator) : (*it)->readOutput(i);
+        for(int i = 0; i < (*it)->getOutputRegionSet()->getRegionCount(); i++) {
+            double value = flagDummyOutputMonitor ? randomUniform(randomGenerator) : (*it)->getOutputRegionSet()->getRegion(i)->getIntensity();
             if(flagCastOutputToFloat) {
                 outputs.append((float)value);
             } else {

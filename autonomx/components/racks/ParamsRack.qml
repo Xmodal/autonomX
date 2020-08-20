@@ -14,8 +14,7 @@ Rack {
     removable: false
 
     content: ColumnLayout {
-        // TEMPORARY MEASURE, WILL REMOVE IN NEXT SPRINT
-        spacing: 50
+        spacing: Stylesheet.field.spacing * 1.5
 
         // --= BASIC =--
         RowLayout {
@@ -44,6 +43,12 @@ Rack {
                 currVal: generatorModel.at(generatorIndex).timeScale
                 onValueChanged: generatorModel.at(generatorIndex).timeScale = newValue
             }
+        }
+
+        // --= NEURON BEHAVIOR =--
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: Stylesheet.field.spacing
 
             SliderField {
                 labelText: "Inh. portion"
@@ -52,21 +57,6 @@ Rack {
 
                 currVal: generatorModel.at(generatorIndex).inhibitoryPortion
                 onValueChanged: generatorModel.at(generatorIndex).inhibitoryPortion = newValue
-            }
-        }
-
-        // --= NEURON BEHAVIOR =--
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: Stylesheet.field.spacing
-
-            SelectField {
-                labelText: "Inh. neuron type"
-
-                options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
-
-                index: generatorModel.at(generatorIndex).inhibitoryNeuronType
-                onValueChanged: generatorModel.at(generatorIndex).inhibitoryNeuronType = newValue
             }
 
             SliderField {
@@ -80,15 +70,6 @@ Rack {
                 onValueChanged: generatorModel.at(generatorIndex).inhibitoryNoise = newValue
             }
 
-            SelectField {
-                labelText: "Exc. neuron type"
-
-                options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
-
-                index: generatorModel.at(generatorIndex).excitatoryNeuronType
-                onValueChanged: generatorModel.at(generatorIndex).excitatoryNeuronType = newValue
-            }
-
             SliderField {
                 labelText: "Exc. neuron noise"
 
@@ -98,6 +79,31 @@ Rack {
 
                 currVal: generatorModel.at(generatorIndex).excitatoryNoise
                 onValueChanged: generatorModel.at(generatorIndex).excitatoryNoise = newValue
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: Stylesheet.field.spacing
+
+            SpacerField {}
+
+            SelectField {
+                labelText: "Inh. neuron type"
+
+                options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
+
+                index: generatorModel.at(generatorIndex).inhibitoryNeuronType
+                onValueChanged: generatorModel.at(generatorIndex).inhibitoryNeuronType = newValue
+            }
+
+            SelectField {
+                labelText: "Exc. neuron type"
+
+                options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
+
+                index: generatorModel.at(generatorIndex).excitatoryNeuronType
+                onValueChanged: generatorModel.at(generatorIndex).excitatoryNeuronType = newValue
             }
         }
 

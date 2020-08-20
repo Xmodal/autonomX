@@ -55,6 +55,7 @@ ColumnLayout {
         FieldFrame {
             id: fieldFrame
             enabled: activated
+            visible: showFrame
             isHovered: fieldHovered
             isFocused: fieldFocused
             flagEnabled: enableFlag

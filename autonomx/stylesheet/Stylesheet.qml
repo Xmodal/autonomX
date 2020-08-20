@@ -31,6 +31,9 @@ QtObject {
         readonly property int spacing: 20
     }
 
+    // OTHER VALUES
+    property real headerHeight: 40
+
     // TOOLS
     function setAlpha(color, alpha) {
         return Qt.hsla(color.hslHue, color.hslSaturation, color.hslLightness, alpha);

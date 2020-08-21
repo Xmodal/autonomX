@@ -48,10 +48,9 @@ ColumnLayout {
     Item {
         Layout.maximumWidth: fieldWidth
         Layout.preferredWidth: fieldWidth
-        Layout.maximumHeight: fieldHeight
-        Layout.preferredHeight: fieldHeight
+        height: fieldHeight
         Layout.fillWidth: true
-        Layout.fillHeight: true
+        Layout.fillHeight: parent.Layout.fillHeight
 
         FieldFrame {
             id: fieldFrame

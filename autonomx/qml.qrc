@@ -10,10 +10,12 @@
         <file>assets/images/down-caret.svg</file>
         <file>assets/images/add-icon.svg</file>
         <file>assets/images/delete-icon.svg</file>
+        <file>assets/images/generator-list.svg</file>
         <file>assets/images/icon-collapse.svg</file>
         <file>assets/images/icon-expand.svg</file>
         <file>assets/images/index-bg.svg</file>
         <file>assets/images/neurongrid_20x20.png</file>
+        <file>assets/images/wrench.svg</file>
         <file>components/fields/AreaField.qml</file>
         <file>components/fields/CheckField.qml</file>
         <file>components/fields/Field.qml</file>
@@ -32,6 +34,7 @@
         <file>components/ui/GeneratorButton.qml</file>
         <file>components/ui/GeneratorWidget.qml</file>
         <file>components/ui/HistoryGraph.qml</file>
+        <file>components/ui/IconButton.qml</file>
         <file>components/ui/Region.qml</file>
         <file>components/ui/VuMeter.qml</file>
         <file>models/InputModel.qml</file>

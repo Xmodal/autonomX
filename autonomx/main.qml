@@ -15,6 +15,9 @@ ApplicationWindow {
     property string lastMessageReceived: ""
     property int activeGeneratorIndex: -1
 
+    property bool showGeneratorList: true
+    property bool showGeneratorSettings: true
+
     visible: true
     width: 1280
     height: 720
@@ -80,6 +83,9 @@ ApplicationWindow {
         GeneratorList {
             anchors.left: parent.left
             anchors.bottom: parent.bottom
+
+            enabled: showGeneratorList
+            visible: enabled
         }
 
         Loader {
@@ -89,10 +95,9 @@ ApplicationWindow {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
 
-            visible: !(window.activeGeneratorIndex < 0)
-            enabled: !(window.activeGeneratorIndex < 0)
-
-            source: window.activeGeneratorIndex < 0 ? "" : "qrc:/layout/RackList.qml"
+            enabled: activeGeneratorIndex >= 0 && showGeneratorSettings
+            visible: enabled
+            source: enabled ? "qrc:/layout/RackList.qml" : ""
         }
     }
 }

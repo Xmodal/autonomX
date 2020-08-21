@@ -8,6 +8,7 @@ import QtGraphicalEffects 1.0
 
 import "qrc:/stylesheet"
 import "../fields"
+import "../ui"
 
 Item {
     id: rack
@@ -74,63 +75,12 @@ Item {
             }
 
             // collapse rack button
-            Button {
+            IconButton {
                 id: btnCollapse
-
-                // dimensions and alignments
+                size: 35
+                iconSource: collapsed ? "qrc:/assets/images/icon-expand.svg" : "qrc:/assets/images/icon-collapse.svg"
                 anchors.right: parent.right
-                width: 35
-                height: 35
 
-                // background
-                background: Rectangle {
-                    id: btnCollapseBg
-                    color: Stylesheet.colors.white
-                    opacity: 0
-
-                    states: [
-                        State {
-                            name: "pressed"; when: btnCollapse.pressed
-                            PropertyChanges { target: btnCollapseBg; opacity: 1; color: Stylesheet.colors.generator }
-                        },
-
-                        State {
-                            name: "hovered"; when: btnCollapse.hovered
-                            PropertyChanges { target: btnCollapseBg; opacity: 0.15 }
-                        }
-                    ]
-
-                    // i don't really like how the NumberAnimation component is essentially doubled
-                    // but whatever this works for now i think
-
-                    // TODO: if i ever find a nicer way to implement this
-                    // make sure i also apply it to the SliderField handle anim. management
-                    transitions: [
-                        Transition {
-                            from: ""; to: "hovered"
-                            NumberAnimation { target: btnCollapseBg; properties: "opacity"; duration: 250; easing.type: Easing.InOutQuad }
-                        },
-
-                        Transition {
-                            from: "hovered"; to: ""
-                            NumberAnimation { target: btnCollapseBg; properties: "opacity"; duration: 250; easing.type: Easing.InOutQuad }
-                        }
-                    ]
-                }
-
-                // expand / collapse icon
-                // NICE TO HAVE: icon becomes dark grey on pressed state
-                // (couldn't find a good workaround for this unfortunately)
-                Image {
-                    id: icon
-                    source: collapsed ? "qrc:/assets/images/icon-expand.svg" : "qrc:/assets/images/icon-collapse.svg"
-                    smooth: true
-                    mipmap: false
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-
-                // internal property management
                 onClicked: collapsed = !collapsed
             }
         }

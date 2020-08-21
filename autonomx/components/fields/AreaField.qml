@@ -8,7 +8,7 @@ Field {
     id: areaField
 
     property string placeholder: "Area Field"
-    property string defaultText: "Area Field"
+    property string defaultText: valueProp
 
     fieldHeight: -1
 

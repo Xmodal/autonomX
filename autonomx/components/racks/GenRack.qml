@@ -32,7 +32,7 @@ Rack {
         }
 
         AreaField {
-            fillHeight: true
+            Layout.fillHeight: true
             labelText: "Description"
             placeholder: "Enter description here"
 

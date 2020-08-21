@@ -3,6 +3,7 @@ import QtQuick.Controls 2.3
 import QtQuick.Layouts 1.3
 
 import "qrc:/stylesheet"
+import "../components/ui"
 
 Item {
     id: header
@@ -27,20 +28,39 @@ Item {
 
     RowLayout {
         anchors.fill: parent
+        spacing: 0
+
+        IconButton {
+            id: genListToggler
+            size: 40
+            iconSource: "qrc:/assets/images/generator-list.svg"
+
+            checkable: true
+            checked: window.showGeneratorList
+            onCheckedChanged: window.showGeneratorList = checked
+        }
 
         // "Lattice view" label
         Label {
-            Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+            Layout.alignment: Qt.AlignVCenter
             Layout.leftMargin: 20
 
             text: "Now editing"
             font: Stylesheet.fonts.label
         }
 
+        Rectangle {
+            Layout.alignment: Qt.AlignVCenter
+            Layout.leftMargin: 6
+            Layout.rightMargin: 6
+            implicitWidth: 30
+            implicitHeight: 1
+            color: Stylesheet.colors.white
+        }
+
         // Generator name label
         Label {
-            Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-            Layout.leftMargin: 40
+            Layout.alignment: Qt.AlignVCenter
 
             text: generatorIndex < 0 ? "<no generator selected>" : generatorModel.at(generatorIndex).name
             font: Stylesheet.fonts.text
@@ -49,6 +69,16 @@ Item {
         // filler
         Item {
             Layout.fillWidth: true
+        }
+
+        IconButton {
+            id: paramsToggler
+            size: 40
+            iconSource: "qrc:/assets/images/wrench.svg"
+
+            checkable: true
+            checked: window.showGeneratorSettings
+            onCheckedChanged: window.showGeneratorSettings = checked
         }
     }
 }

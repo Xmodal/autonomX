@@ -8,32 +8,33 @@ import "../ui"
 ColumnLayout {
     id: field
 
+    // general props
     property string labelText: "Label"
     property real fieldWidth: 150
     property real fieldHeight: 40
-    property bool fillHeight: false
-
+    // state props
     property bool showLabel: true
     property bool showFrame: true
     property bool fieldHovered: false
     property bool fieldFocused: false
     property bool backdropHovered: false
     property real frameMaskWidth: 0
-
+    // flag props
     property bool enableFlag: false
     property bool flagValue
     property bool activated: enableFlag ? flag.checked : true
-
+    // field prop
     property Component fieldContent
 
+    // signals
     signal valueChanged(variant newValue)
     signal flagChanged(bool newFlag)
 
+    // layout
     Layout.alignment: Qt.AlignLeft | Qt.AlignTop
     Layout.preferredWidth: fieldWidth
-    Layout.fillHeight: fillHeight
-
     spacing: 5
+
 
     // top label
     Label {

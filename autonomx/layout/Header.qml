@@ -36,8 +36,8 @@ Item {
             iconSource: "qrc:/assets/images/generator-list.svg"
 
             checkable: true
-            checked: window.showGeneratorList
-            onCheckedChanged: window.showGeneratorList = checked
+            checked: showGeneratorList
+            onCheckedChanged: showGeneratorList = checked
         }
 
         // "Lattice view" label
@@ -62,7 +62,7 @@ Item {
         Label {
             Layout.alignment: Qt.AlignVCenter
 
-            text: generatorIndex < 0 ? "<no generator selected>" : generatorModel.at(generatorIndex).name
+            text: activeGeneratorIndex < 0 ? "<no generator selected>" : generatorModel.at(activeGeneratorIndex).name
             font: Stylesheet.fonts.text
         }
 
@@ -77,8 +77,8 @@ Item {
             iconSource: "qrc:/assets/images/wrench.svg"
 
             checkable: true
-            checked: window.showGeneratorSettings
-            onCheckedChanged: window.showGeneratorSettings = checked
+            checked: showGeneratorSettings
+            onCheckedChanged: showGeneratorSettings = checked
         }
     }
 }

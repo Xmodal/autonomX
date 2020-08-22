@@ -41,10 +41,6 @@ ApplicationWindow {
         Qt.quit();
     }
 
-    function toggleLatticeView() {
-        router.currentIndex = (router.currentIndex + 1) % 2;
-    }
-
     // add/delete generators
     function addGenerator() {
         appModel.createGenerator();
@@ -70,34 +66,36 @@ ApplicationWindow {
         sequence: "Ctrl+Q"
         onActivated: quitThisApp()
     }
-    Shortcut {
-        sequence: "Tab"
-        onActivated: toggleLatticeView();
-    }
 
-    Item {
+    ColumnLayout {
         anchors.fill: parent
+        spacing: 0
 
-        LatticeView {}
-
-        GeneratorList {
-            anchors.left: parent.left
-            anchors.bottom: parent.bottom
-
-            enabled: showGeneratorList
-            visible: enabled
+        Header {
+            z: 100
         }
 
-        Loader {
-            id: rackViewLoader
-            width: 590
-            height: parent.height - Stylesheet.headerHeight
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            spacing: 0
 
-            enabled: activeGeneratorIndex >= 0 && showGeneratorSettings
-            visible: enabled
-            source: enabled ? "qrc:/layout/RackList.qml" : ""
+            GeneratorList {
+                enabled: showGeneratorList
+                visible: enabled
+            }
+
+            LatticeView {}
+
+            Loader {
+                id: rackViewLoader
+                Layout.preferredWidth: 590
+                Layout.fillHeight: true
+
+                enabled: activeGeneratorIndex >= 0 && showGeneratorSettings
+                visible: enabled
+                source: enabled ? "qrc:/layout/RackList.qml" : ""
+            }
         }
     }
 }

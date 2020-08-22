@@ -20,7 +20,7 @@ Rack {
                 labelText: "Name"
                 placeholder: "Name"
 
-                defaultText: generatorIndex < 0 ? "" : generatorModel.at(generatorIndex).name
+                defaultText: generatorModel.at(generatorIndex).name
                 onValueChanged: generatorModel.at(generatorIndex).name = newValue
             }
 
@@ -36,7 +36,7 @@ Rack {
             labelText: "Description"
             placeholder: "Enter description here"
 
-            defaultText: generatorIndex < 0 ? "" : generatorModel.at(generatorIndex).description
+            defaultText: generatorModel.at(generatorIndex).description
             onValueChanged: generatorModel.at(generatorIndex).description = newValue
 
             fieldWidth: (Stylesheet.field.initialWidth * 2) + Stylesheet.field.spacing

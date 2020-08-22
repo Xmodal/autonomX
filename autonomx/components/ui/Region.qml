@@ -7,7 +7,7 @@ Rectangle {
     id: region
 
     // props
-    property bool selected: type === mainContent.currRegion.type && index === mainContent.currRegion.index
+    property bool selected: type === latticeView.currRegion.type && index === latticeView.currRegion.index
     property bool dragActive: dragArea.drag.active
     property bool inEdit: false
     property int latticeWidth
@@ -122,7 +122,7 @@ Rectangle {
         width: 1
     }
     // border opacity
-    opacity: regions.rectSelected && !selected && !dragArea.containsMouse ? (mainContent.currRegion.type !== type ? 0.4 : 0.6) : 1
+    opacity: regions.rectSelected && !selected && !dragArea.containsMouse ? (latticeView.currRegion.type !== type ? 0.4 : 0.6) : 1
 
     // fill rectangle
     Rectangle {
@@ -135,7 +135,7 @@ Rectangle {
     onDragActiveChanged: {
         if (dragActive) {
             Drag.start();
-            mainContent.switchSelectedRegion(type, index);
+            latticeView.switchSelectedRegion(type, index);
             inEdit = true;
             changeCursor(Qt.SizeAllCursor);
         } else {
@@ -171,7 +171,7 @@ Rectangle {
         id: dragArea
 
         anchors.fill: parent
-        onClicked: mainContent.switchSelectedRegion(selected ? -1 : type, selected ? -1 : index)
+        onClicked: latticeView.switchSelectedRegion(selected ? -1 : type, selected ? -1 : index)
         propagateComposedEvents: true
         hoverEnabled: true
         drag.target: region

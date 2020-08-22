@@ -14,9 +14,6 @@ import "../components/racks"
 ScrollView {
     id: rackView
 
-    width: 590
-    height: parent.height - Stylesheet.headerHeight
-
     ScrollBar.vertical.interactive: false
     ScrollBar.vertical.hoverEnabled: false
 

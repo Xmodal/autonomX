@@ -8,8 +8,9 @@ import "../components/ui"
 Rectangle {
     color: Stylesheet.colors.black
 
-    width: 320
-    height: parent.height - Stylesheet.headerHeight
+    Layout.preferredWidth: 320
+    Layout.fillHeight: true
+    z: 100
 
     ColumnLayout {
         anchors.fill: parent

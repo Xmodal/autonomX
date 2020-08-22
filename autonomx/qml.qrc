@@ -44,6 +44,7 @@
         <file>layout/LatticeView.qml</file>
         <file>layout/RackList.qml</file>
         <file>shaders/gradient_overlay.frag</file>
+        <file>shaders/icon_button.frag</file>
         <file>shaders/lattice.frag</file>
         <file>shaders/lattice.vert</file>
         <file>shaders/slider_frame.frag</file>

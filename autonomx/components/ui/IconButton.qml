@@ -12,8 +12,8 @@ Button {
 
     background: Rectangle {
         id: background
-        color: pressed || checked ? activeColor : Stylesheet.colors.white
-        opacity: pressed ? 1 : (checked ? (hovered ? 0.75 : 0.4) : (hovered ? 0.15 : 0))
+        color: checked ? Stylesheet.colors.white : activeColor
+        opacity: hovered ? (pressed ? 0.75 : 1) : (pressed || checked ? 0.75 : 0)
         implicitWidth: size
         implicitHeight: size
     }
@@ -23,5 +23,11 @@ Button {
         anchors.centerIn: parent
         smooth: true
         mipmap: false
+
+        layer.enabled: true
+        layer.effect: ShaderEffect {
+            property bool checked: iconButton.checked
+            fragmentShader: "qrc:/shaders/icon_button.frag"
+        }
     }
 }

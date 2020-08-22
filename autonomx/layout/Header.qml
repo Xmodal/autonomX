@@ -56,13 +56,15 @@ Item {
             implicitWidth: 30
             implicitHeight: 1
             color: Stylesheet.colors.white
+            opacity: activeGeneratorIndex < 0 ? 0.4 : 1
         }
 
         // Generator name label
         Label {
             Layout.alignment: Qt.AlignVCenter
 
-            text: activeGeneratorIndex < 0 ? "<no generator selected>" : generatorModel.at(activeGeneratorIndex).name
+            text: activeGeneratorIndex < 0 ? "<none>" : generatorModel.at(activeGeneratorIndex).name
+            opacity: activeGeneratorIndex < 0 ? 0.4 : 1
             font: Stylesheet.fonts.text
         }
 
@@ -79,6 +81,7 @@ Item {
             checkable: true
             checked: showGeneratorSettings
             onCheckedChanged: showGeneratorSettings = checked
+            enabled: activeGeneratorIndex >= 0
         }
     }
 }

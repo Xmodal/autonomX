@@ -51,6 +51,13 @@ SOURCES += \
 
 RESOURCES += qml.qrc
 
+# assets
+copydata.commands = $(COPY_DIR) \"$$shell_path($$PWD\\static)\" \"$$shell_path($$OUT_PWD)\"
+first.depends = $(first) copydata
+export(first.depends)
+export(copydata.commands)
+QMAKE_EXTRA_TARGETS += first copydata
+
 # Additional import path used to resolve QML modules in Qt Creator's code model
 #QML_IMPORT_PATH =
 

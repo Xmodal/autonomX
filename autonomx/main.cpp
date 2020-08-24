@@ -50,11 +50,36 @@ int main(int argc, char *argv[]) {
 
     QGuiApplication app(argc, argv);
 
+
     // load fonts in the project database
     QDir fontDir{":/assets/fonts"};
     for (auto file : fontDir.entryList(QDir::Files)) {
         if (QFontDatabase::addApplicationFont(":/assets/fonts/" + file) == -1)
             qDebug() << "Failed to load font " << file;
+    }
+
+
+    // load help files
+    QDir helpFileDir("help_files");
+    QVariantMap helpFileMap;
+
+    for (auto filename : helpFileDir.entryList(QDir::Files)) {
+        QFile file("help_files/" + filename);
+
+        // attempt to open file
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            // read file and append to temporary string
+            QTextStream stream(&file);
+            QString output = "";
+            while (!stream.atEnd())
+                output.append(stream.readLine());
+
+            // add to hash map
+            helpFileMap.insert(filename, output);
+        }
+
+        // close file
+        file.close();
     }
 
     qDebug() << "Built against Qt" << QT_VERSION_STR;
@@ -80,6 +105,7 @@ int main(int argc, char *argv[]) {
     // Pass C++ objects to QML.
     qmlEngine.rootContext()->setContextProperty("appModel", &AppModel::getInstance());
     qmlEngine.rootContext()->setContextProperty("generatorModel", AppModel::getInstance().getGeneratorModel().data());
+    qmlEngine.rootContext()->setContextProperty("helpFiles", helpFileMap);
     qmlEngine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (qmlEngine.rootObjects().isEmpty())
         return -1;

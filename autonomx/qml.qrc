@@ -45,7 +45,6 @@
         <file>shaders/lattice.frag</file>
         <file>shaders/lattice.vert</file>
         <file>shaders/slider_frame.frag</file>
-        <file>static/help_files/help_snn.html</file>
         <file>stylesheet/qmldir</file>
         <file>stylesheet/Stylesheet.qml</file>
     </qresource>

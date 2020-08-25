@@ -70,6 +70,8 @@ int main(int argc, char *argv[]) {
         if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
             // read file and append to temporary string
             QTextStream stream(&file);
+            stream.setCodec("UTF-8");
+
             QString output = "";
             while (!stream.atEnd())
                 output.append(stream.readLine());

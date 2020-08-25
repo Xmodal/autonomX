@@ -52,9 +52,9 @@ int main(int argc, char *argv[]) {
 
 
     // load fonts in the project database
-    QDir fontDir{":/assets/fonts"};
+    QDir fontDir("static/fonts");
     for (auto file : fontDir.entryList(QDir::Files)) {
-        if (QFontDatabase::addApplicationFont(":/assets/fonts/" + file) == -1)
+        if (QFontDatabase::addApplicationFont("static/fonts/" + file) == -1)
             qDebug() << "Failed to load font " << file;
     }
 

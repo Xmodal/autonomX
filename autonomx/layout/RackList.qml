@@ -41,5 +41,10 @@ Flickable {
             rackName: "OSC settings"
             content: OscSettingsRack {}
         }
+
+        Rack {
+            rackName: "Help : SNN"
+            content: SNNHelpRack {}
+        }
     }
 }

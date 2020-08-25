@@ -4,7 +4,6 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
-import QtGraphicalEffects 1.0
 
 import "qrc:/stylesheet"
 import "../fields"
@@ -100,6 +99,7 @@ Item {
 
             Layout.fillWidth: true
             Layout.preferredHeight: implicitHeight
+            Layout.fillWidth: true
 
             // animation management
             states: [

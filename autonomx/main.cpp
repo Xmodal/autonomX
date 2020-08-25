@@ -60,11 +60,11 @@ int main(int argc, char *argv[]) {
 
 
     // load help files
-    QDir helpFileDir("help_files");
+    QDir helpFileDir("static/help_files");
     QVariantMap helpFileMap;
 
     for (auto filename : helpFileDir.entryList(QDir::Files)) {
-        QFile file("help_files/" + filename);
+        QFile file("static/help_files/" + filename);
 
         // attempt to open file
         if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {

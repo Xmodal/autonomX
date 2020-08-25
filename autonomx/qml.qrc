@@ -3,9 +3,6 @@
         <file>DebugStack.qml</file>
         <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
-        <file>assets/fonts/Overpass-Regular.ttf</file>
-        <file>assets/fonts/Overpass-SemiBold.ttf</file>
-        <file>assets/fonts/Questrial-Regular.ttf</file>
         <file>assets/images/check-frame.svg</file>
         <file>assets/images/down-caret.svg</file>
         <file>assets/images/add-icon.svg</file>
@@ -28,6 +25,7 @@
         <file>components/racks/OscSettingsRack.qml</file>
         <file>components/racks/SNNParametersRack.qml</file>
         <file>components/racks/SubRack.qml</file>
+        <file>components/racks/HelpRack.qml</file>
         <file>components/racks/Rack.qml</file>
         <file>components/ui/CheckBox.qml</file>
         <file>components/ui/GeneratorButton.qml</file>

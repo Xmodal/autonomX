@@ -161,7 +161,7 @@ void GeneratorRegionModel::deleteRegion(int index) {
 
 void GeneratorRegionModel::writeRegion(QVariant value, int role, int index) {
     if(flagDebug) {
-        qDebug() << "writeRegion (GeneratorRegionModel)";
+        qDebug() << "writeRegion (GeneratorRegionModel) value: " << value << "\t role: " << role << "\t index: " << index;
     }
 
     // check if the index is valid
@@ -177,22 +177,21 @@ void GeneratorRegionModel::writeRegion(QVariant value, int role, int index) {
                 return;
             }
             regionList.at(index)->setProperty(roleMap.value(role), value);
-            emit writeRegionFromModel(value, role, index);
             if(flagDebug) {
-                qDebug() << "writeRegion (GeneratorRegionModel): signal emitted";
+                qDebug() << "writeRegion (GeneratorRegionModel): success";
             }
             return;
+        } else if(flagDebug) {
+            qDebug() << "writeRegion (GeneratorRegionModel) role does not exist";
         }
-    }
-
-    if(flagDebug) {
-        qDebug() << "writeRegion (GeneratorRegionModel) failed to find valid entry";
+    } else if(flagDebug) {
+        qDebug() << "writeRegion (GeneratorRegionModel) index out of range";
     }
 }
 
 void GeneratorRegionModel::createConnections() {
     if(flagDebug) {
-        qDebug() << "createConnections (GeneratorModel)";
+        qDebug() << "createConnections (GeneratorRegionModel)";
     }
 
     for(int i = 0; i < regionList.count(); i++) {
@@ -200,7 +199,15 @@ void GeneratorRegionModel::createConnections() {
 
         // create the connection
         QMetaObject::Connection connection = connect(generatorRegion, &GeneratorRegion::valueChanged, this, [=](const QString &key, const QVariant &value) {
-            emit writeRegion(value, roleMap.key(key.toUtf8().toBase64()), i);
+            if(flagDebug) {
+                qDebug() << "lambda (GeneratorRegionModel) key: " << key << "\t value: " << value << "\t index: " << i;
+            }
+
+            // this ridicoulous shit is necessary to get QString to properly convert to QByteArray. for some reason QString.toUtf8().toBase64() produces garbage results
+            QByteArray keyBuffer;
+            keyBuffer.append(key);
+
+            emit writeRegionFromModel(value, GeneratorRegionModel::roleMap.key(keyBuffer), i);
         });
 
         connections.append(connection);

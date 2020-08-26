@@ -62,7 +62,7 @@ void GeneratorRegionSet::deleteRegion(int index) {
 
 void GeneratorRegionSet::writeRegion(QVariant value, int role, int index) {
     if(flagDebug) {
-        qDebug() << "writeRegion (GeneratorRegionSet) value: " << value;
+        qDebug() << "writeRegion (GeneratorRegionSet) value: " << value << "\t role: " << role << "\t index: " << index;
     }
 
     // check if index is valid
@@ -80,20 +80,20 @@ void GeneratorRegionSet::writeRegion(QVariant value, int role, int index) {
             }
             region->setProperty(GeneratorRegionModel::roleMap.value(role), value);
             if(flagDebug) {
-                qDebug() << "writeRegion (GeneratorRegionSet) successful";
+                qDebug() << "writeRegion (GeneratorRegionSet) success";
             }
             return;
+        } else if(flagDebug) {
+            qDebug() << "writeRegion (GeneratorRegionSet) role does not exist";
         }
-    }
-
-    if(flagDebug) {
-        qDebug() << "writeRegion (GeneratorRegionSet) failed";
+    } else if(flagDebug) {
+        qDebug() << "writeRegion (GeneratorRegionSet) index out of range";
     }
 }
 
 void GeneratorRegionSet::createConnections() {
     if(flagDebug) {
-        qDebug() << "createConnections (GeneratorModel)";
+        qDebug() << "createConnections (GeneratorRegionSet)";
     }
 
     for(int i = 0; i < regionList.count(); i++) {
@@ -101,7 +101,15 @@ void GeneratorRegionSet::createConnections() {
 
         // create the connection
         QMetaObject::Connection connection = connect(generatorRegion, &GeneratorRegion::valueChanged, this, [=](const QString &key, const QVariant &value) {
-            emit writeRegion(value, GeneratorRegionModel::roleMap.key(key.toUtf8().toBase64()), i);
+            if(flagDebug) {
+                qDebug() << "lambda (GeneratorRegionSet) key: " << key << "\t value: " << value << "\t index: " << i;
+            }
+
+            // this ridicoulous shit is necessary to get QString to properly convert to QByteArray. for some reason QString.toUtf8().toBase64() produces garbage results
+            QByteArray keyBuffer;
+            keyBuffer.append(key);
+
+            emit writeRegionFromSet(value, GeneratorRegionModel::roleMap.key(keyBuffer), i);
         });
 
         connections.append(connection);
@@ -110,7 +118,7 @@ void GeneratorRegionSet::createConnections() {
 
 void GeneratorRegionSet::deleteConnections() {
     if(flagDebug) {
-        qDebug() << "deleteConnections (GeneratorRegionModel)";
+        qDebug() << "deleteConnections (GeneratorRegionSet)";
     }
 
     // delete the alias contexts, destroying connections as a result
@@ -122,7 +130,7 @@ void GeneratorRegionSet::deleteConnections() {
 
 void GeneratorRegionSet::relinkConnections() {
     if(flagDebug) {
-        qDebug() << "relinkConnections (GeneratorModel)";
+        qDebug() << "relinkConnections (GeneratorRegionSet)";
     }
     deleteConnections();
     createConnections();

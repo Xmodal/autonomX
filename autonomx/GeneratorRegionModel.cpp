@@ -177,6 +177,7 @@ void GeneratorRegionModel::writeRegion(QVariant value, int role, int index) {
                 return;
             }
             regionList.at(index)->setProperty(roleMap.value(role), value);
+            emit dataChanged(QAbstractListModel::index(index), QAbstractListModel::index(index), {role});
             if(flagDebug) {
                 qDebug() << "writeRegion (GeneratorRegionModel): success";
             }

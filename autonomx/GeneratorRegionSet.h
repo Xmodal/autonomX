@@ -18,6 +18,7 @@
 #include <QObject>
 #include <QList>
 #include <QSharedPointer>
+#include <QMetaObject>
 
 #include "GeneratorRegion.h"
 #include "GeneratorRegionModel.h"
@@ -26,16 +27,28 @@ class GeneratorRegionSet : public QObject{
     Q_OBJECT
 public:
     GeneratorRegionSet();
+    ~GeneratorRegionSet();
+
+    // iterates over all members of the GeneratorRegion list and creates connections for them.
+    void createConnections();
+    // deletes all connections from GeneratorRegion.
+    void deleteConnections();
+    // this simply deletes then creates the connections.
+    void relinkConnections();
 
     GeneratorRegion* getRegion(int index);
     int getRegionCount();
 private:
+    QList<QMetaObject::Connection> connections;
     QList<QSharedPointer<GeneratorRegion>> regionList;
     bool flagDebug = false;
 public slots:
+    // these should only ever be called from a RegionModel. changes will not propagate back to the RegionModel if called directly
     void addRegion(int x, int y, int width, int height);
     void deleteRegion(int index);
-
     void writeRegion(QVariant value, int role, int index);
+signals:
+    // this can be called directly and will propagate back to its RegionModel
+    void writeRegionFromSet(QVariant value, int role, int index);
 };
 

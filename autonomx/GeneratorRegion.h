@@ -39,4 +39,5 @@ private:
 signals:
     void rectChanged(QRect rect);
     void intensityChanged(double intensity);
+    void valueChanged(const QString &key, const QVariant &value);
 };

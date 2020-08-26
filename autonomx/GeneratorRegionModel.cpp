@@ -33,6 +33,9 @@ GeneratorRegionModel::GeneratorRegionModel() {
     }
 
     regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(0, 0, 10, 10), 0.0));
+
+    // relink connections
+    relinkConnections();
 }
 
 GeneratorRegionModel::~GeneratorRegionModel() {
@@ -85,9 +88,8 @@ bool GeneratorRegionModel::setData(const QModelIndex &index, const QVariant &val
         if(index.column() == 0 && index.row() >= 0 && index.row() < regionList.size()) {
             // check if the key exists in the hash map
             if(roleMap.contains(role)) {
-                // ctash here at setProperty
                 regionList.at(index.row())->setProperty(roleMap.value(role), value);
-                emit writeRegionRequest(value, role, index.row());
+                emit writeRegionFromModel(value, role, index.row());
                 if(flagDebug) {
                     qDebug() << "setData (GeneratorRegionModel): signal emitted";
                 }
@@ -129,8 +131,11 @@ void GeneratorRegionModel::addRegion(int x, int y, int width, int height) {
     // tell the model we are done adding rows
     endInsertRows();
 
+    // relink connections
+    relinkConnections();
+
     // emit signal so that backend updates
-    emit addRegionRequest(x, y, width, height);
+    emit addRegionFromModel(x, y, width, height);
 }
 
 void GeneratorRegionModel::deleteRegion(int index) {
@@ -147,6 +152,77 @@ void GeneratorRegionModel::deleteRegion(int index) {
     // tell the model we are done removing rows
     endRemoveRows();
 
+    // relink connections
+    relinkConnections();
+
     // emit signal so that backend updates
-    emit deleteRegionRequest(index);
+    emit deleteRegionFromModel(index);
+}
+
+void GeneratorRegionModel::writeRegion(QVariant value, int role, int index) {
+    if(flagDebug) {
+        qDebug() << "writeRegion (GeneratorRegionModel)";
+    }
+
+    // check if the index is valid
+    if(index >= 0 && index < regionList.size()) {
+        // check if the key exists in the hash map
+        if(roleMap.contains(role)) {
+            QVariant previousValue = regionList.at(index)->property(roleMap.value(role));
+            // check if value changed
+            if(previousValue == value) {
+                if(flagDebug) {
+                    qDebug() << "writeRegion (GeneratorRegionModel) canceled because of redundant change";
+                }
+                return;
+            }
+            regionList.at(index)->setProperty(roleMap.value(role), value);
+            emit writeRegionFromModel(value, role, index);
+            if(flagDebug) {
+                qDebug() << "writeRegion (GeneratorRegionModel): signal emitted";
+            }
+            return;
+        }
+    }
+
+    if(flagDebug) {
+        qDebug() << "writeRegion (GeneratorRegionModel) failed to find valid entry";
+    }
+}
+
+void GeneratorRegionModel::createConnections() {
+    if(flagDebug) {
+        qDebug() << "createConnections (GeneratorModel)";
+    }
+
+    for(int i = 0; i < regionList.count(); i++) {
+        GeneratorRegion* generatorRegion = regionList.at(i).data();
+
+        // create the connection
+        QMetaObject::Connection connection = connect(generatorRegion, &GeneratorRegion::valueChanged, this, [=](const QString &key, const QVariant &value) {
+            emit writeRegion(value, roleMap.key(key.toUtf8().toBase64()), i);
+        });
+
+        connections.append(connection);
+    }
+}
+
+void GeneratorRegionModel::deleteConnections() {
+    if(flagDebug) {
+        qDebug() << "deleteConnections (GeneratorRegionModel)";
+    }
+
+    // delete the alias contexts, destroying connections as a result
+    for(QList<QMetaObject::Connection>::iterator it = connections.begin(); it != connections.end(); it++) {
+        disconnect(*it);
+    }
+    connections.clear();
+}
+
+void GeneratorRegionModel::relinkConnections() {
+    if(flagDebug) {
+        qDebug() << "relinkConnections (GeneratorModel)";
+    }
+    deleteConnections();
+    createConnections();
 }

@@ -60,7 +60,7 @@ public:
 private:
     QList<QMetaObject::Connection> connections;
     QList<QSharedPointer<GeneratorRegion>> regionList;
-    bool flagDebug = false;
+    bool flagDebug = true;
 public slots:
     // these can be called from QML. writeRegion is also used by GeneratorRegionSet to update Region's intensity property
     Q_INVOKABLE void addRegion(int x, int y, int width, int height);

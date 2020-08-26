@@ -137,19 +137,16 @@ void ComputeEngine::loop() {
 
     // apply input values
     for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
-        // do the actual computation
         (*it)->applyInputRegion();
     }
 
     // do the computation
     for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
-        // do the actual computation
         (*it)->computeIteration(1.0 / frequency);
     }
 
     // apply output values
     for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
-        // do the actual computation
         (*it)->applyOutputRegion();
     }
 

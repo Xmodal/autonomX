@@ -66,8 +66,6 @@ void GeneratorRegion::writeIntensity(double intensity) {
         return;
     }
 
-    qDebug() << intensity;
-
     this->intensity = intensity;
     emit intensityChanged(intensity);
     emit valueChanged("intensity", QVariant(intensity));

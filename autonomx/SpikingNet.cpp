@@ -858,7 +858,7 @@ void SpikingNet::writeLatticeHeightDelegate(int latticeHeight) {
 
 double SpikingNet::getLatticeValue(int x, int y) {
     int index = x % latticeWidth + y * latticeWidth;
-    return (neurons[index].getV() - neurons[index].getC()) / (neurons[index].getPotentialThreshold() - neurons[index].getC());
+    return std::min<double>(1.0, std::max<double>(0.0, (neurons[index].getV() - neurons[index].getC()) / (neurons[index].getPotentialThreshold() - neurons[index].getC())));
 }
 
 void SpikingNet::writeLatticeValue(int x, int y, double value) {

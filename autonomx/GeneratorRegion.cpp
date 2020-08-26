@@ -58,10 +58,17 @@ void GeneratorRegion::writeRect(QRect rect) {
 
     this->rect = rect;
     emit rectChanged(rect);
+    emit valueChanged("rect", QVariant(rect));
 }
 
 void GeneratorRegion::writeIntensity(double intensity) {
     if(this->intensity == intensity) {
         return;
     }
+
+    qDebug() << intensity;
+
+    this->intensity = intensity;
+    emit intensityChanged(intensity);
+    emit valueChanged("intensity", QVariant(intensity));
 }

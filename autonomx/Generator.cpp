@@ -398,12 +398,14 @@ void Generator::unlockLatticeDataMutex() {
 }
 
 void Generator::applyInputRegion() {
+    // iterate over input regions
     for(int i = 0; i < inputRegionSet->getRegionCount(); i++) {
         GeneratorRegion* region = inputRegionSet->getRegion(i);
 
         int xMax = region->getRect().x() + region->getRect().width();
         int yMax = region->getRect().y() + region->getRect().height();
 
+        // write region activation onto lattice in rect area
         for(int x = region->getRect().x(); x < xMax; x++) {
             for(int y = region->getRect().y(); y < yMax; y++) {
                 writeLatticeValue(x, y, region->getIntensity());
@@ -413,6 +415,7 @@ void Generator::applyInputRegion() {
 }
 
 void Generator::applyOutputRegion() {
+    // iterate over output regions
     for(int i = 0; i < inputRegionSet->getRegionCount(); i++) {
         GeneratorRegion* region = outputRegionSet->getRegion(i);
 
@@ -421,14 +424,17 @@ void Generator::applyOutputRegion() {
 
         double sum = 0;
 
+        // collect lattice activations in rect area
         for(int x = region->getRect().x(); x < xMax; x++) {
             for(int y = region->getRect().y(); y < yMax; y++) {
                 sum += getLatticeValue(x, y);
             }
         }
 
+        // apply averaging
         sum /= (double) (region->getRect().width() * region->getRect().height());
 
+        // write to region intensity
         region->writeIntensity(sum);
     }
 }

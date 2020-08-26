@@ -61,7 +61,7 @@ public:
 
     // iterates over all members of the GeneratorFacade list and creates connections for them.
     void createConnections();
-    // deletes all connections from GeneratorFacade. WARNING: the way this is implemented, this will delete all connections to the GeneratorModel. Keep this in mind, otherwise things might break in the future.
+    // deletes all connections from GeneratorFacade.
     void deleteConnections();
     // this simply deletes then creates the connections. This is called by AppModel whenever the list changes.
     void relinkConnections();

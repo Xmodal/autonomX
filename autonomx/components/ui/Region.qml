@@ -127,7 +127,7 @@ Rectangle {
     Rectangle {
         anchors.fill: parent
         color: Stylesheet.colors[type == 0 ? "inputs" : "outputs"][index]
-        opacity: dragArea.containsMouse && (!selected || inEdit) ? 0.5 : intensity * 10.0
+        opacity: dragArea.containsMouse && (!selected || inEdit) ? 0.5 : intensity * 0.8
     }
 
     // drag configuration

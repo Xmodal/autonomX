@@ -20,6 +20,7 @@
 #include <QModelIndex>
 #include <QSharedPointer>
 #include <QList>
+#include <QMetaObject>
 
 #include "GeneratorRegion.h"
 
@@ -39,6 +40,13 @@ public:
     GeneratorRegionModel();
     ~GeneratorRegionModel();
 
+    // iterates over all members of the GeneratorRegion list and creates connections for them.
+    void createConnections();
+    // deletes all connections from GeneratorRegion.
+    void deleteConnections();
+    // this simply deletes then creates the connections.
+    void relinkConnections();
+
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
 
@@ -49,15 +57,17 @@ public:
     QHash<int, QByteArray> roleNames() const;
 
     Q_INVOKABLE GeneratorRegion* at(int index);
-
-    Q_INVOKABLE void addRegion(int x, int y, int width, int height);
-    Q_INVOKABLE void deleteRegion(int index);
 private:
+    QList<QMetaObject::Connection> connections;
     QList<QSharedPointer<GeneratorRegion>> regionList;
     bool flagDebug = false;
+public slots:
+    // these can be called from QML. writeRegion is also used by GeneratorRegionSet to update Region's intensity property
+    Q_INVOKABLE void addRegion(int x, int y, int width, int height);
+    Q_INVOKABLE void deleteRegion(int index);
+    Q_INVOKABLE void writeRegion(QVariant value, int role, int index);
 signals:
-    void addRegionRequest(int x, int y, int width, int height);
-    void deleteRegionRequest(int index);
-
-    void writeRegionRequest(QVariant value, int role, int index);
+    void addRegionFromModel(int x, int y, int width, int height);
+    void deleteRegionFromModel(int index);
+    void writeRegionFromModel(QVariant value, int role, int index);
 };

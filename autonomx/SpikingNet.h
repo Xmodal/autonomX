@@ -69,7 +69,6 @@ private:
     double      weightMax = 20.0;
     double      weightMin = 0.0;
 
-    double      stimStrength = 6.0;
     double      decayConstant = 0.9995;
 
     double      timeScale = 30.0 / 1000.0;

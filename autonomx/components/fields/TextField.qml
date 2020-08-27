@@ -8,7 +8,7 @@ Field {
     id: textField
 
     property string placeholder: ""
-    property string defaultText: "Text Field"
+    property string defaultText: propName ? generatorModel.at(window.activeGeneratorIndex)[propName] : "Text Field"
 
     fieldContent: TextField {
         id: fieldInput
@@ -28,7 +28,7 @@ Field {
         TextMetrics {
             id: metrics
             font: fieldInput.font
-            text: textField.defaultText
+            text: defaultText
             elide: Text.ElideRight
             elideWidth: fieldWidth - 10
         }

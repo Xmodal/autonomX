@@ -10,6 +10,8 @@ ColumnLayout {
 
     // general props
     property string labelText: "Label"
+    property string propName
+
     property real fieldWidth: 150
     property real fieldHeight: 40
     // state props
@@ -20,9 +22,9 @@ ColumnLayout {
     property bool backdropHovered: false
     property real frameMaskWidth: 0
     // flag props
-    property bool enableFlag: false
-    property bool flagValue
-    property bool activated: enableFlag ? flag.checked : true
+    property string flagName: ""
+    property bool flagValue: flagName !== "" ? generatorModel.at(window.activeGeneratorIndex)[flagName] : false
+    property bool activated: flagName !== "" ? flag.checked : true
     // field prop
     property Component fieldContent
 
@@ -30,11 +32,12 @@ ColumnLayout {
     signal valueChanged(variant newValue)
     signal flagChanged(bool newFlag)
 
-    // layout
-    Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-    Layout.preferredWidth: fieldWidth
-    spacing: 5
+    onValueChanged: generatorModel.at(window.activeGeneratorIndex)[propName] = newValue
+    onFlagChanged: generatorModel.at(activeGeneratorIndex)[flagName] = newFlag
 
+    // layout
+    implicitWidth: fieldWidth
+    spacing: 5
 
     // top label
     Label {
@@ -59,7 +62,7 @@ ColumnLayout {
             visible: showFrame
             isHovered: fieldHovered
             isFocused: fieldFocused
-            flagEnabled: enableFlag
+            flagEnabled: flagName !== ""
             maskWidth: field.frameMaskWidth
 
             // necessary to properly update flag border corner
@@ -72,7 +75,7 @@ ColumnLayout {
 
             // flag
             Item {
-                visible: enableFlag
+                visible: flagName !== ""
                 Layout.preferredWidth: 30
                 Layout.fillHeight: true
 

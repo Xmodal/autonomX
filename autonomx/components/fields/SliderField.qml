@@ -9,7 +9,7 @@ Field {
 
     property real minVal: 0.0
     property real maxVal: 1.0
-    property real currVal: 0.5
+    property real currVal: propName ? generatorModel.at(window.activeGeneratorIndex)[propName] : 0.5
     property real exponent: 1.0
     property int precision: 5
     property real step: 0.0
@@ -111,10 +111,13 @@ Field {
 
                 // signals
                 onEditingFinished: {
-                    if (displayText === "") currVal = (minVal + maxVal) / 2;
-                    else if (displayText > maxVal) currVal = maxVal;
-                    else if (displayText < minVal) currVal = minVal;
-                    else currVal = displayText;
+                    var newValue = displayText;
+
+                    if (newValue === "") newValue = (minVal + maxVal) / 2;
+                    else if (newValue > maxVal) newValue = maxVal;
+                    else if (newValue < minVal) newValue = minVal;
+
+                    sliderField.valueChanged(newValue);
 
                     focus = false;
                 }

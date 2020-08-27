@@ -17,6 +17,7 @@
 
 #include <QObject>
 #include <QRect>
+#include <QHash>
 
 class GeneratorRegion : public QObject {
     Q_OBJECT
@@ -27,6 +28,18 @@ public:
     GeneratorRegion(QRect rect, double intensity);
     GeneratorRegion(QRectF rect, double intensity);
     GeneratorRegion(const GeneratorRegion& region);
+
+    // enum used by GeneratorRegionModel and GeneratorRegionSet
+    enum GeneratorRegionRoles {
+        RectRole = Qt::UserRole + 1,
+        IntensityRole
+    };
+
+    // role map used by eneratorRegionModel and GeneratorRegionSet
+    static inline const QHash<int, QByteArray> roleMap = {
+        {RectRole, "rect"},
+        {IntensityRole, "intensity"},
+    };
 
     QRect getRect() const;
     double getIntensity() const;

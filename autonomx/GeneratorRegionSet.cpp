@@ -68,9 +68,9 @@ void GeneratorRegionSet::writeRegion(QVariant value, int role, int index) {
     // check if index is valid
     if(index >= 0 && index < regionList.size()) {
         // check if the key exists in the hash map
-        if(GeneratorRegionModel::roleMap.contains((GeneratorRegionModel::GeneratorRegionRoles) role)) {
+        if(GeneratorRegion::roleMap.contains((GeneratorRegion::GeneratorRegionRoles) role)) {
             QSharedPointer<GeneratorRegion> region = regionList.at(index);
-            QVariant previousValue = region->property(GeneratorRegionModel::roleMap.value(role));
+            QVariant previousValue = region->property(GeneratorRegion::roleMap.value(role));
             // check if value changed
             if(previousValue == value) {
                 if(flagDebug) {
@@ -78,7 +78,7 @@ void GeneratorRegionSet::writeRegion(QVariant value, int role, int index) {
                 }
                 return;
             }
-            region->setProperty(GeneratorRegionModel::roleMap.value(role), value);
+            region->setProperty(GeneratorRegion::roleMap.value(role), value);
             if(flagDebug) {
                 qDebug() << "writeRegion (GeneratorRegionSet) success";
             }
@@ -109,7 +109,7 @@ void GeneratorRegionSet::createConnections() {
             QByteArray keyBuffer;
             keyBuffer.append(key);
 
-            emit writeRegionFromSet(value, GeneratorRegionModel::roleMap.key(keyBuffer), i);
+            emit writeRegionFromSet(value, GeneratorRegion::roleMap.key(keyBuffer), i);
         });
 
         connections.append(connection);

@@ -27,16 +27,6 @@
 class GeneratorRegionModel : public QAbstractListModel {
     Q_OBJECT
 public:
-    enum GeneratorRegionRoles {
-        RectRole = Qt::UserRole + 1,
-        IntensityRole
-    };
-
-    static inline const QHash<int, QByteArray> roleMap = {
-        {RectRole, "rect"},
-        {IntensityRole, "intensity"},
-    };
-
     GeneratorRegionModel();
     ~GeneratorRegionModel();
 

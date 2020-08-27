@@ -75,17 +75,6 @@ int main(int argc, char *argv[]) {
 
     AppModel::getInstance().createGenerator();
 
-    QByteArray intensityValueFromString;
-    intensityValueFromString.append(QString("intensity"));
-    QByteArray intensityValueFromRole = GeneratorRegionModel::roleMap.value(GeneratorRegionModel::GeneratorRegionRoles::IntensityRole);
-    qDebug() << "intensity QByteArray from string:  " << intensityValueFromString;
-    qDebug() << "intensity QByteArray from role: " << intensityValueFromRole;
-
-    int intensityKeyFromString = GeneratorRegionModel::roleMap.key(intensityValueFromString);
-    int intensityKeyFromRole = GeneratorRegionModel::roleMap.key(intensityValueFromRole);
-    qDebug() << "intensity int from string: " << intensityKeyFromString;
-    qDebug() << "intensity int from role:   " << intensityKeyFromRole;
-
     QQmlApplicationEngine qmlEngine;
 
     // Pass C++ objects to QML.

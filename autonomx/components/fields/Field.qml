@@ -51,6 +51,7 @@ ColumnLayout {
         height: fieldHeight
         Layout.fillWidth: true
         Layout.fillHeight: parent.Layout.fillHeight
+        Layout.bottomMargin: 10
 
         FieldFrame {
             id: fieldFrame

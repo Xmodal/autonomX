@@ -23,7 +23,6 @@
         <file>components/fields/NumberField.qml</file>
         <file>components/fields/SelectField.qml</file>
         <file>components/fields/SliderField.qml</file>
-        <file>components/fields/SwitchField.qml</file>
         <file>components/fields/SpacerField.qml</file>
         <file>components/fields/TextField.qml</file>
         <file>components/racks/GlobalSettingsRack.qml</file>

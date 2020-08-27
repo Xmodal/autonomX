@@ -14,116 +14,74 @@ Flow {
     NumberField {
         labelText: "Width"
         unsigned: true
-
-        defaultNum: generatorModel.at(generatorIndex).latticeWidth
-        onValueChanged: generatorModel.at(generatorIndex).latticeWidth = newValue
+        propName: "latticeWidth"
     }
 
     NumberField {
         labelText: "Height"
         unsigned: true
-
-        defaultNum: generatorModel.at(generatorIndex).latticeHeight
-        onValueChanged: generatorModel.at(generatorIndex).latticeHeight = newValue
+        propName: "latticeHeight"
     }
 
     SliderField {
         labelText: "Time scale"
-
-        currVal: generatorModel.at(generatorIndex).timeScale
-        onValueChanged: generatorModel.at(generatorIndex).timeScale = newValue
+        propName: "timeScale"
     }
 
     SliderField {
         labelText: "Inh. portion"
-
+        propName: "inhibitoryPortion"
         updateLag: 70
-
-        currVal: generatorModel.at(generatorIndex).inhibitoryPortion
-        onValueChanged: generatorModel.at(generatorIndex).inhibitoryPortion = newValue
     }
 
     SliderField {
         labelText: "Inh. neuron noise"
-
+        propName: "inhibitoryNoise"
         minVal: 1.0
         maxVal: 20.0
         updateLag: 70
-
-        currVal: generatorModel.at(generatorIndex).inhibitoryNoise
-        onValueChanged: generatorModel.at(generatorIndex).inhibitoryNoise = newValue
     }
 
     SliderField {
         labelText: "Exc. neuron noise"
-
+        propName: "excitatoryNoise"
         minVal: 1.0
         maxVal: 20.0
         updateLag: 70
-
-        currVal: generatorModel.at(generatorIndex).excitatoryNoise
-        onValueChanged: generatorModel.at(generatorIndex).excitatoryNoise = newValue
     }
 
     SpacerField {}
 
     SelectField {
         labelText: "Inh. neuron type"
-
+        propName: "inhibitoryNeuronType"
         options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
-
-        index: generatorModel.at(generatorIndex).inhibitoryNeuronType
-        onValueChanged: generatorModel.at(generatorIndex).inhibitoryNeuronType = newValue
     }
 
     SelectField {
         labelText: "Exc. neuron type"
-
+        propName: "excitatoryNeuronType"
         options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
-
-        index: generatorModel.at(generatorIndex).excitatoryNeuronType
-        onValueChanged: generatorModel.at(generatorIndex).excitatoryNeuronType = newValue
     }
 
     SliderField {
         labelText: "STP strength"
         updateLag: 70
-
-        // value
-        currVal: generatorModel.at(generatorIndex).STPStrength
-        onValueChanged: generatorModel.at(generatorIndex).STPStrength = newValue
-
-        // flag
-        enableFlag: true
-        flagValue: generatorModel.at(generatorIndex).flagSTP
-        onFlagChanged: generatorModel.at(generatorIndex).flagSTP = newFlag
+        propName: "STPStrength"
+        flagName: "flagSTP"
     }
 
     SliderField {
         labelText: "STDP strength"
         updateLag: 70
-
-        // value
-        currVal: generatorModel.at(generatorIndex).STDPStrength
-        onValueChanged: generatorModel.at(generatorIndex).STDPStrength = newValue
-
-        // flag
-        enableFlag: true
-        flagValue: generatorModel.at(generatorIndex).flagSTDP
-        onFlagChanged: generatorModel.at(generatorIndex).flagSTDP = newFlag
+        propName: "STDPStrength"
+        flagName: "flagSTDP"
     }
 
     SliderField {
         labelText: "Decay constant"
         updateLag: 70
-
-        // value
-        currVal: generatorModel.at(generatorIndex).decayConstant
-        onValueChanged: generatorModel.at(generatorIndex).decayConstant = newValue
-
-        // flag
-        enableFlag: true
-        flagValue: generatorModel.at(generatorIndex).flagDecay
-        onFlagChanged: generatorModel.at(generatorIndex).flagDecay = newFlag
+        propName: "decayConstant"
+        flagName: "flagDecay"
     }
 }

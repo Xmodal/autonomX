@@ -15,23 +15,20 @@ ColumnLayout {
 
         CheckField {
             id: enableOscIn
-            on: true
             controlColor: Stylesheet.colors.inputs[0]
+            propName: ""
         }
 
         TextField {
             labelText: "Address"
             activated: enableOscIn.on
-
-            defaultText: generatorModel.at(generatorIndex).oscInputAddress
-            onValueChanged: generatorModel.at(generatorIndex).oscInputAddress = newValue
+            propName: "oscInputAddress"
         }
+
         NumberField {
             labelText: "Port"
             activated: enableOscIn.on
-
-            defaultNum: generatorModel.at(generatorIndex).oscInputPort
-            onValueChanged: generatorModel.at(generatorIndex).oscInputPort = newValue
+            propName: "oscInputPort"
         }
     }
 
@@ -41,31 +38,25 @@ ColumnLayout {
 
         CheckField {
             id: enableOscOut
-            on: true
             controlColor: Stylesheet.colors.outputs[0]
+            propName: ""
         }
 
         TextField {
             labelText: "Address"
             activated: enableOscOut.on
-
-            defaultText: generatorModel.at(generatorIndex).oscOutputAddressTarget
-            onValueChanged: generatorModel.at(generatorIndex).oscOutputAddressTarget = newValue
+            propName: "oscOutputAddressTarget"
         }
         TextField {
             labelText: "Host"
             activated: enableOscOut.on
+            propName: "oscOutputAddressHost"
             // TODO: input masking to only allow a standard IP address format
-
-            defaultText: generatorModel.at(generatorIndex).oscOutputAddressHost
-            onValueChanged: generatorModel.at(generatorIndex).oscOutputAddressHost = newValue
         }
         NumberField {
             labelText: "Port"
             activated: enableOscOut.on
-
-            defaultNum: generatorModel.at(generatorIndex).oscOutputPort
-            onValueChanged: generatorModel.at(generatorIndex).oscOutputPort = newValue
+            propName: "oscOutputPort"
         }
     }
 }

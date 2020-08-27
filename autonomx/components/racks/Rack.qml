@@ -46,7 +46,7 @@ Item {
         // top label
         Item {
             Layout.fillWidth: true
-            Layout.preferredHeight: 35
+            Layout.preferredHeight: 40
 
             // background
             Rectangle {
@@ -77,7 +77,6 @@ Item {
             // collapse rack button
             IconButton {
                 id: btnCollapse
-                size: 35
                 iconSource: collapsed ? "qrc:/assets/images/icon-expand.svg" : "qrc:/assets/images/icon-collapse.svg"
                 anchors.right: parent.right
 
@@ -93,9 +92,12 @@ Item {
 
             property int generatorIndex: window.activeGeneratorIndex // -1: no assigned generator ID
 
-            Layout.margins: Stylesheet.field.spacing
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+            Layout.fillWidth: true
             Layout.preferredHeight: implicitHeight
+            Layout.topMargin: 20
+            Layout.bottomMargin: 20
+            Layout.leftMargin: 30
+            Layout.rightMargin: 30
 
             // animation management
             states: [

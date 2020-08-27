@@ -56,8 +56,8 @@ Item {
             for (var i = 0; i < sizeValid - 1; i++) {
                 var indexStart = (startIndex + sizeValid - 1 - i + sizeMax) % sizeMax;
                 var indexEnd = (startIndex + sizeValid - i + sizeMax) % sizeMax;
-                ctx.moveTo(graphCanvas.width - i * lX, (1.0 - history[indexStart]) * graphCanvas.height);
-                ctx.lineTo(graphCanvas.width - (i + 1) * lX, (1.0 - history[indexEnd]) * graphCanvas.height)
+                ctx.moveTo(graphCanvas.width - (i + 1) * lX, (1.0 - history[indexStart]) * graphCanvas.height);
+                ctx.lineTo(graphCanvas.width - i * lX, (1.0 - history[indexEnd]) * graphCanvas.height)
             }
             ctx.closePath();
             ctx.stroke();

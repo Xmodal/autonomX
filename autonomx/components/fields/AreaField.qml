@@ -7,8 +7,8 @@ import "qrc:/stylesheet"
 Field {
     id: areaField
 
-    property string placeholder: "Area Field"
-    property string defaultText: valueProp
+    property string placeholder: "Text Area"
+    property string defaultText: propName ? generatorModel.at(window.activeGeneratorIndex)[propName] : ""
 
     fieldHeight: -1
 

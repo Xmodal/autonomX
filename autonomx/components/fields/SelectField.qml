@@ -7,7 +7,7 @@ import "qrc:/stylesheet"
 Field {
     id: selectField
 
-    property int index
+    property int index: propName ? generatorModel.at(window.activeGeneratorIndex)[propName] : 0
     property variant options
 
     fieldContent: ComboBox {

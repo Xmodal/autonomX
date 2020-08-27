@@ -8,7 +8,7 @@ Field {
     id: numberField
 
     property string placeholder: ""
-    property real defaultNum: 0
+    property real defaultNum: propName ? generatorModel.at(window.activeGeneratorIndex)[propName] : 0
 
     property bool unsigned: false   // when true: negative values allowed
     property int type: 0            // 0 = int; 1 = real
@@ -18,14 +18,14 @@ Field {
 
     // inc/dec functions
     function increment() {
-        defaultNum += incStep;
-        if (max && defaultNum < max) defaultNum = max;
-        valueChanged(defaultNum);
+        var newNum = defaultNum + incStep;
+        if (max && newNum < max) newNum = max;
+        valueChanged(newNum);
     }
     function decrement() {
-        defaultNum -= incStep;
-        if (min && defaultNum < min) defaultNum = min;
-        valueChanged(defaultNum);
+        var newNum = defaultNum - incStep;
+        if (min && newNum < min) newNum = min;
+        valueChanged(newNum);
     }
 
     // validators

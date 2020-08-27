@@ -26,9 +26,9 @@
         <file>components/fields/SwitchField.qml</file>
         <file>components/fields/SpacerField.qml</file>
         <file>components/fields/TextField.qml</file>
-        <file>components/racks/GenRack.qml</file>
-        <file>components/racks/OscRack.qml</file>
-        <file>components/racks/ParamsRack.qml</file>
+        <file>components/racks/GlobalSettingsRack.qml</file>
+        <file>components/racks/OscSettingsRack.qml</file>
+        <file>components/racks/SNNParametersRack.qml</file>
         <file>components/racks/Rack.qml</file>
         <file>components/ui/CheckBox.qml</file>
         <file>components/ui/GeneratorButton.qml</file>

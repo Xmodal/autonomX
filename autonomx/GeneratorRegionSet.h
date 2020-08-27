@@ -41,7 +41,7 @@ public:
 private:
     QList<QMetaObject::Connection> connections;
     QList<QSharedPointer<GeneratorRegion>> regionList;
-    bool flagDebug = true;
+    bool flagDebug = false;
 public slots:
     // these should only ever be called from a RegionModel. changes will not propagate back to the RegionModel if called directly
     void addRegion(int x, int y, int width, int height);

@@ -107,7 +107,7 @@ void Generator::writeName(QString name) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "writeName\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << name;
+        qDebug() << "writeName (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << name;
     }
 
     this->name = name;
@@ -125,7 +125,7 @@ void Generator::writeType(QString type) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "writeType\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << type;
+        qDebug() << "writeType (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << type;
     }
 
     this->type = type;
@@ -143,7 +143,7 @@ void Generator::writeDescription(QString description) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "writeDescription\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << description;
+        qDebug() << "writeDescription (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << description;
     }
 
     this->description = description;
@@ -161,7 +161,7 @@ void Generator::writeOutputMonitor(double outputMonitor) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "writeOutputMonitor\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << outputMonitor;
+        qDebug() << "writeOutputMonitor (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << outputMonitor;
     }
 
     this->outputMonitor = outputMonitor;
@@ -179,7 +179,7 @@ void Generator::writeOscInputPort(int oscInputPort) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "writeOscInputPort\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << oscInputPort;
+        qDebug() << "writeOscInputPort (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << oscInputPort;
     }
 
     this->oscInputPort = oscInputPort;
@@ -197,7 +197,7 @@ void Generator::writeOscInputAddress(QString oscInputAddress) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "writeOscInputAddress\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << oscInputAddress;
+        qDebug() << "writeOscInputAddress (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << oscInputAddress;
     }
 
     this->oscInputAddress = oscInputAddress;
@@ -215,7 +215,7 @@ void Generator::writeOscOutputPort(int oscOutputPort) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "writeOscOutputPort\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << oscOutputPort;
+        qDebug() << "writeOscOutputPort (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << oscOutputPort;
     }
 
     this->oscOutputPort = oscOutputPort;
@@ -233,7 +233,7 @@ void Generator::writeOscOutputAddressHost(QString oscOutputAddressHost) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "writeOscOutputAddressHost\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << oscOutputAddressHost;
+        qDebug() << "writeOscOutputAddressHost (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << oscOutputAddressHost;
     }
 
     this->oscOutputAddressHost = oscOutputAddressHost;
@@ -251,7 +251,7 @@ void Generator::writeOscOutputAddressTarget(QString oscOutputAddressTarget) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "writeOscOutputAddressTarget\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << oscOutputAddressTarget;
+        qDebug() << "writeOscOutputAddressTarget (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << oscOutputAddressTarget;
     }
 
     this->oscOutputAddressTarget = oscOutputAddressTarget;
@@ -269,7 +269,7 @@ void Generator::writeLatticeWidth(int latticeWidth) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "writeLatticeWidth\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << latticeWidth;
+        qDebug() << "writeLatticeWidth (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << latticeWidth;
     }
 
     // actually do the changes in the derived class
@@ -289,7 +289,7 @@ void Generator::writeLatticeHeight(int latticeHeight) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "writeLatticeHeight\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << latticeHeight;
+        qDebug() << "writeLatticeHeight (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << latticeHeight;
     }
 
     // actually do the changes in the derived class
@@ -308,7 +308,7 @@ void Generator::updateValue(const QString &key, const QVariant &value) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "updateValue (" << keyBuffer << ") (in Generator)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << value;
+        qDebug() << "updateValue (GeneratorFacade):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tkey: " << key << "\tvalue: " << value;
     }
 
     setProperty(keyBuffer, value);

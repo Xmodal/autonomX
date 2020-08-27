@@ -91,12 +91,7 @@ void GeneratorFacade::updateValueFromAlias(const QString &key, const QVariant &v
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-        QByteArray keyArray = key.toLocal8Bit();
-        char* keyBuffer = keyArray.data();
-
-        QString valueString = value.toString();
-
-        qDebug() << "updateValueFromAlias (" << keyBuffer << ") (in GeneratorFacade):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tvalue: " << valueString;
+        qDebug() << "updateValueFromAlias (GeneratorFacade):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tkey: " << key << "\tvalue: " << value;
     }
 
     // filter for unchanging updates

@@ -43,6 +43,32 @@ class Generator : public QObject {
     Q_PROPERTY(int latticeWidth READ getLatticeWidth WRITE writeLatticeWidth NOTIFY latticeWidthChanged)
     Q_PROPERTY(int latticeHeight READ getLatticeHeight WRITE writeLatticeHeight NOTIFY latticeHeightChanged)
 public:
+    // enum used by GeneratorModel
+    enum GeneratorRoles {
+        NameRole = Qt::UserRole + 1,
+        TypeRole,
+        IDRole,
+        DescriptionRole,
+        OutputMonitorRole,
+        OutputMonitorHistoryRole,
+        OutputMonitorHistoryStartIndexRole,
+        OutputMonitorHistorySizeMaxRole,
+        OutputMonitorHistorySizeValidRole
+    };
+
+    // role map used by GeneratorModel
+    static inline const QHash<int, QByteArray> roleMap = {
+        {NameRole, "name"},
+        {TypeRole, "type"},
+        {IDRole, "id"},
+        {DescriptionRole, "description"},
+        {OutputMonitorRole, "outputMonitor"},
+        {OutputMonitorHistoryRole, "outputMonitorHistory"},
+        {OutputMonitorHistoryStartIndexRole, "outputMonitorHistoryStartIndex"},
+        {OutputMonitorHistorySizeMaxRole, "outputMonitorHistorySizeMax"},
+        {OutputMonitorHistorySizeValidRole,"outputMonitorHistorySizeValid"}
+    };
+
     Generator(int id, QString name, QString type, QString description);
     ~Generator();
 

@@ -28,30 +28,6 @@
 class GeneratorModel : public QAbstractListModel {
     Q_OBJECT
 public:
-    enum GeneratorRoles {
-        NameRole = Qt::UserRole + 1,
-        TypeRole,
-        IDRole,
-        DescriptionRole,
-        OutputMonitorRole,
-        OutputMonitorHistoryRole,
-        OutputMonitorHistoryStartIndexRole,
-        OutputMonitorHistorySizeMaxRole,
-        OutputMonitorHistorySizeValidRole
-    };
-
-    static inline const QHash<int, QByteArray> roleMap = {
-        {NameRole, "name"},
-        {TypeRole, "type"},
-        {IDRole, "id"},
-        {DescriptionRole, "description"},
-        {OutputMonitorRole, "outputMonitor"},
-        {OutputMonitorHistoryRole, "outputMonitorHistory"},
-        {OutputMonitorHistoryStartIndexRole, "outputMonitorHistoryStartIndex"},
-        {OutputMonitorHistorySizeMaxRole, "outputMonitorHistorySizeMax"},
-        {OutputMonitorHistorySizeValidRole,"outputMonitorHistorySizeValid"}
-    };
-
     GeneratorModel(QSharedPointer<QList<QSharedPointer<GeneratorFacade>>> generatorFacadesList, QSharedPointer<QHash<int, QSharedPointer<GeneratorFacade>>> generatorFacadesHashMap);
     ~GeneratorModel();
 

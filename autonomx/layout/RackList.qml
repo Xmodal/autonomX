@@ -25,9 +25,24 @@ ScrollView {
         width: parent.width
         spacing: 0
 
-        GenRack {}
-        ParamsRack {}
-        OscRack {}
+        Rack {
+            rackName: "Generator settings"
+            content: GlobalSettingsRack {}
+        }
+
+        Rack {
+            rackName: "Parameters"
+            content: SNNParametersRack {}
+        }
+
+        Rack {
+            rackName: "OSC settings"
+            content: OscSettingsRack {}
+        }
+
+//        GenRack {}
+//        ParamsRack {}
+//        OscRack {}
         // --= TODO =--
         // InputsRack {}
         // OutputsRack {}

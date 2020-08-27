@@ -15,7 +15,7 @@ Item {
 
     // metadata
     property string rackName: "Rack"
-    property int generatorIndex: window.activeGeneratorIndex // -1: no assigned generator ID
+
     // state flags
     property bool collapsed: false
     property bool removable: true
@@ -89,8 +89,9 @@ Item {
         Loader {
             id: contentLoader
             sourceComponent: content
-
             clip: true
+
+            property int generatorIndex: window.activeGeneratorIndex // -1: no assigned generator ID
 
             Layout.margins: Stylesheet.field.spacing
             Layout.alignment: Qt.AlignLeft | Qt.AlignTop
@@ -122,5 +123,3 @@ Item {
         opacity: 0.3
     }
 }
-
-

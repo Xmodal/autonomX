@@ -65,7 +65,7 @@ void GeneratorModel::updateValue(const QString &key, const QVariant &value, int 
         QByteArray valueArray = value.toString().toLocal8Bit();
         char* valueBuffer = valueArray.data();
 
-        qDebug() << "lambda (" << keyBuffer << "):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\t value = " << valueBuffer << (unrecognized ? " (unrecognized)" : "");
+        qDebug() << "updateValue (GeneratorModel)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tkey: " << keyBuffer << "\tvalue : " << valueBuffer << (unrecognized ? " (unrecognized)" : "");
     }
 
     if(!unrecognized) {

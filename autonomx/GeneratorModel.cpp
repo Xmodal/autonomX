@@ -49,7 +49,7 @@ void GeneratorModel::updateValue(const QString &key, const QVariant &value, int 
     QVector<int> roles;
     bool unrecognized = false;
 
-    int role = roleMap.key(key.toUtf8(), -1);
+    int role = Generator::roleMap.key(key.toUtf8(), -1);
     // check to see if the value exists in the hash map
     if (role == -1) unrecognized = true;
     else roles = { role };
@@ -168,15 +168,15 @@ QVariant GeneratorModel::data(const QModelIndex &index, int role) const {
     // check if the index is valid
     if(index.column() == 0 && index.row() >= 0 && index.row() < generatorFacadesList->size()) {
         // check if the key exists in the hash map
-        if(roleMap.contains(role))
-            return generatorFacadesList->at(index.row())->value(roleMap.value(role));
+        if(Generator::roleMap.contains(role))
+            return generatorFacadesList->at(index.row())->value(Generator::roleMap.value(role));
     }
 
     return QVariant();
 }
 
 QHash<int, QByteArray> GeneratorModel::roleNames() const {
-    return roleMap;
+    return Generator::roleMap;
 }
 
 GeneratorFacade * GeneratorModel::at(int index) {

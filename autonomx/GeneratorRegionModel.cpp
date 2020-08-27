@@ -66,8 +66,8 @@ QVariant GeneratorRegionModel::data(const QModelIndex &index, int role) const {
         // check if the index is valid
         if(index.column() == 0 && index.row() >= 0 && index.row() < regionList.size()) {
             // check if the key exists in the hash map
-            if(roleMap.contains(role))
-                return regionList.at(index.row())->property(roleMap.value(role));
+            if(GeneratorRegion::roleMap.contains(role))
+                return regionList.at(index.row())->property(GeneratorRegion::roleMap.value(role));
         }
     }
 
@@ -87,8 +87,8 @@ bool GeneratorRegionModel::setData(const QModelIndex &index, const QVariant &val
         // check if the index is valid
         if(index.column() == 0 && index.row() >= 0 && index.row() < regionList.size()) {
             // check if the key exists in the hash map
-            if(roleMap.contains(role)) {
-                regionList.at(index.row())->setProperty(roleMap.value(role), value);
+            if(GeneratorRegion::roleMap.contains(role)) {
+                regionList.at(index.row())->setProperty(GeneratorRegion::roleMap.value(role), value);
                 emit writeRegionFromModel(value, role, index.row());
                 if(flagDebug) {
                     qDebug() << "setData (GeneratorRegionModel): signal emitted";
@@ -107,7 +107,7 @@ bool GeneratorRegionModel::setData(const QModelIndex &index, const QVariant &val
 }
 
 QHash<int, QByteArray> GeneratorRegionModel::roleNames() const {
-    return roleMap;
+    return GeneratorRegion::roleMap;
 }
 
 GeneratorRegion* GeneratorRegionModel::at(int index) {
@@ -167,8 +167,8 @@ void GeneratorRegionModel::writeRegion(QVariant value, int role, int index) {
     // check if the index is valid
     if(index >= 0 && index < regionList.size()) {
         // check if the key exists in the hash map
-        if(roleMap.contains(role)) {
-            QVariant previousValue = regionList.at(index)->property(roleMap.value(role));
+        if(GeneratorRegion::roleMap.contains(role)) {
+            QVariant previousValue = regionList.at(index)->property(GeneratorRegion::roleMap.value(role));
             // check if value changed
             if(previousValue == value) {
                 if(flagDebug) {
@@ -176,7 +176,7 @@ void GeneratorRegionModel::writeRegion(QVariant value, int role, int index) {
                 }
                 return;
             }
-            regionList.at(index)->setProperty(roleMap.value(role), value);
+            regionList.at(index)->setProperty(GeneratorRegion::roleMap.value(role), value);
             emit dataChanged(QAbstractListModel::index(index), QAbstractListModel::index(index), {role});
             if(flagDebug) {
                 qDebug() << "writeRegion (GeneratorRegionModel): success";
@@ -208,7 +208,7 @@ void GeneratorRegionModel::createConnections() {
             QByteArray keyBuffer;
             keyBuffer.append(key);
 
-            emit writeRegionFromModel(value, GeneratorRegionModel::roleMap.key(keyBuffer), i);
+            emit writeRegionFromModel(value, GeneratorRegion::roleMap.key(keyBuffer), i);
         });
 
         connections.append(connection);

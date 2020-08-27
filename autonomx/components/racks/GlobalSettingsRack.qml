@@ -4,19 +4,22 @@ import QtQuick.Layouts 1.3
 import "qrc:/stylesheet"
 import "../fields"
 
-Flow {
+RowLayout {
     spacing: Stylesheet.field.spacing
 
-    TextField {
-        labelText: "Name"
-        placeholder: "Name"
-        propName: "name"
-    }
+    ColumnLayout {
+        spacing: parent.spacing
+        TextField {
+            labelText: "Name"
+            placeholder: "Name"
+            propName: "name"
+        }
 
-    SelectField {
-        labelText: "Type"
-        options: ["SNN"]
-        // TODO: link Generator property
+        SelectField {
+            labelText: "Type"
+            options: ["SNN"]
+            // TODO: link Generator property
+        }
     }
 
     AreaField {

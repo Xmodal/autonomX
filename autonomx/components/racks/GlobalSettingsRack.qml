@@ -13,7 +13,7 @@ ColumnLayout {
             Layout.leftMargin: 30
             Layout.rightMargin: 30
             Layout.topMargin: 20
-            Layout.bottomMargin: 20
+            Layout.bottomMargin: 30
 
             spacing: Stylesheet.field.spacing
 

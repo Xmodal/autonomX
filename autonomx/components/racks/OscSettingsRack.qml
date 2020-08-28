@@ -6,47 +6,49 @@ import "qrc:/stylesheet"
 import "../ui"
 import "../fields"
 
-Flow {
-    spacing: Stylesheet.field.spacing
+ColumnLayout {
+    Layout.fillWidth: true
+    spacing: 0
 
-    // IN
-    CheckField {
-        id: enableOscIn
-        controlColor: Stylesheet.colors.inputs[0]
-        propName: ""
-    }
-    TextField {
-        labelText: "Address"
-        activated: enableOscIn.on
-        propName: "oscInputAddress"
-    }
-    NumberField {
-        labelText: "Port"
-        activated: enableOscIn.on
-        propName: "oscInputPort"
-    }
-    SpacerField {}
+    SubRack {
+        subRackTitle: "In"
+        columnCount: 4
+        flagActive: true
+        flagColor: Stylesheet.colors.inputs[0]
 
-    // OUT
-    CheckField {
-        id: enableOscOut
-        controlColor: Stylesheet.colors.outputs[0]
-        propName: ""
+        fields: [
+            TextField {
+                labelText: "Address"
+                propName: "oscInputAddress"
+            },
+            NumberField {
+                labelText: "Port"
+                propName: "oscInputPort"
+            }
+
+        ]
     }
-    TextField {
-        labelText: "Address"
-        activated: enableOscOut.on
-        propName: "oscOutputAddressTarget"
-    }
-    TextField {
-        labelText: "Host"
-        activated: enableOscOut.on
-        propName: "oscOutputAddressHost"
-        // TODO: input masking to only allow a standard IP address format
-    }
-    NumberField {
-        labelText: "Port"
-        activated: enableOscOut.on
-        propName: "oscOutputPort"
+
+    SubRack {
+        subRackTitle: "Out"
+        columnCount: 4
+        flagActive: true
+        flagColor: Stylesheet.colors.outputs[0]
+
+        fields: [
+            TextField {
+                labelText: "Address"
+                propName: "oscOutputAddressTarget"
+            },
+            TextField {
+                labelText: "Host"
+                propName: "oscOutputAddressHost"
+                // TODO: input masking to only allow a standard IP address format
+            },
+            NumberField {
+                labelText: "Port"
+                propName: "oscOutputPort"
+            }
+        ]
     }
 }

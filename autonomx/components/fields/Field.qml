@@ -26,7 +26,7 @@ ColumnLayout {
     property bool flagValue: flagName !== "" ? generatorModel.at(window.activeGeneratorIndex)[flagName] : false
     property bool activated: flagName !== "" ? flag.checked : true
     // field prop
-    property Component fieldContent
+    property alias fieldContent: fieldContentLoader.sourceComponent
 
     // signals
     signal valueChanged(variant newValue)
@@ -42,19 +42,19 @@ ColumnLayout {
     // top label
     Label {
         id: fieldLabel
-        visible: showLabel
+        enabled: showLabel
+        opacity: showLabel
 
         text: labelText
         font: Stylesheet.fonts.label
     }
 
     Item {
-        Layout.maximumWidth: fieldWidth
-        Layout.preferredWidth: fieldWidth
-        height: fieldHeight
         Layout.fillWidth: true
+        Layout.preferredWidth: fieldWidth
+        Layout.maximumWidth: fieldWidth
         Layout.fillHeight: parent.Layout.fillHeight
-        Layout.bottomMargin: 10
+        Layout.preferredHeight: fieldHeight
 
         FieldFrame {
             id: fieldFrame
@@ -102,7 +102,7 @@ ColumnLayout {
 
             // field
             Loader {
-                sourceComponent: fieldContent
+                id: fieldContentLoader
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 

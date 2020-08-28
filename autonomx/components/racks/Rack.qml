@@ -94,10 +94,6 @@ Item {
 
             Layout.fillWidth: true
             Layout.preferredHeight: implicitHeight
-            Layout.topMargin: 20
-            Layout.bottomMargin: 20
-            Layout.leftMargin: 30
-            Layout.rightMargin: 30
 
             // animation management
             states: [

@@ -21,9 +21,9 @@
 
 class GeneratorRegion : public QObject {
     Q_OBJECT
-    Q_PROPERTY(QRect rect READ getRect WRITE writeRect NOTIFY rectChanged)
-    Q_PROPERTY(double intensity READ getIntensity WRITE writeIntensity NOTIFY intensityChanged)
-    Q_PROPERTY(int type READ getType WRITE writeType NOTIFY typeChanged)
+    Q_PROPERTY(QRect rect READ getRect WRITE writeSilentRect NOTIFY rectChanged)
+    Q_PROPERTY(double intensity READ getIntensity WRITE writeSilentIntensity NOTIFY intensityChanged)
+    Q_PROPERTY(int type READ getType WRITE writeSilentType NOTIFY typeChanged)
 public:
     GeneratorRegion();
     GeneratorRegion(QRect rect, double intensity, int type);
@@ -47,9 +47,21 @@ public:
     double getIntensity() const;
     int getType() const;
 
-    void writeRect(QRect rect);
-    void writeIntensity(double intensity);
-    void writeType(int type);
+    // these are silent writes. they update the value internally and call their linked propertyChanged(value) signals, but don't call valueChanged(key, value). this means this will not update an object that is mirroring it. this is used to carry updates between mirrored objects without causing an infinite update loop.
+    // they should not be used directly and are reserved for object mirroring.
+    void writeSilentRect(QRect rect);
+    void writeSilentIntensity(double intensity);
+    void writeSilentType(int type);
+
+    // these are mirrored writes
+    void writeMirroredRect(QRect rect);
+    void writeMirroredIntensity(double intensity);
+    void writeMirroredType(int type);
+
+    // caveat: this only works because the facade objects are not exposed directly as QObjects, but are instead presented through a model that is able to directly call the silent write function on the associated backend object whenever a change is made. (the backend is free to call the mirrored write method, so there is no issue on that side)
+    // if these were exposed as QObjects, changes would not be mirrored because the QProperties are bound to the silent write methods.
+    // to generalize this to QObjects, it would be necessary to bind the QProperties to the mirrored write methods and create a setSilentProperty counterpart to QObject's setProperty for the mirroring connections to use.
+    // in this case it might be beneficial to build a simple meta-property-like system that has both setSilentProperty and setMirroredProperty methods
 private:
     QRect rect;
     double intensity;

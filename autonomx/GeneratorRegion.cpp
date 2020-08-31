@@ -48,32 +48,59 @@ int GeneratorRegion::getType() const {
     return type;
 }
 
-void GeneratorRegion::writeRect(QRect rect) {
+void GeneratorRegion::writeSilentRect(QRect rect) {
     if(this->rect == rect) {
         return;
     }
 
     this->rect = rect;
     emit rectChanged(rect);
-    //emit valueChanged("rect", QVariant(rect));
 }
 
-void GeneratorRegion::writeIntensity(double intensity) {
+void GeneratorRegion::writeSilentIntensity(double intensity) {
     if(this->intensity == intensity) {
         return;
     }
 
     this->intensity = intensity;
     emit intensityChanged(intensity);
-    //emit valueChanged("intensity", QVariant(intensity));
 }
 
-void GeneratorRegion::writeType(int type) {
+void GeneratorRegion::writeSilentType(int type) {
     if(this->type == type) {
         return;
     }
 
     this->type = type;
     emit typeChanged(type);
-    //emit valueChanged("type", QVariant(type));
+}
+
+void GeneratorRegion::writeMirroredRect(QRect rect) {
+    if(this->rect == rect) {
+        return;
+    }
+
+    this->rect = rect;
+    emit rectChanged(rect);
+    emit valueChanged("rect", QVariant(rect));
+}
+
+void GeneratorRegion::writeMirroredIntensity(double intensity) {
+    if(this->intensity == intensity) {
+        return;
+    }
+
+    this->intensity = intensity;
+    emit intensityChanged(intensity);
+    emit valueChanged("intensity", QVariant(intensity));
+}
+
+void GeneratorRegion::writeMirroredType(int type) {
+    if(this->type == type) {
+        return;
+    }
+
+    this->type = type;
+    emit typeChanged(type);
+    emit valueChanged("type", QVariant(type));
 }

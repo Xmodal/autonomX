@@ -162,6 +162,8 @@ void ComputeEngine::loop() {
         } else {
             // dumb averaging
             historyLatest /= (*it)->getOutputRegionSet()->getRegionCount();
+            // saturation polynomial
+            historyLatest = (1.0 - pow(1.0 - historyLatest, 3));
         }
         // write value
         (*it)->writeHistoryLatest(historyLatest);

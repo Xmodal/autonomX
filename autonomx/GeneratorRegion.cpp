@@ -55,7 +55,7 @@ void GeneratorRegion::writeRect(QRect rect) {
 
     this->rect = rect;
     emit rectChanged(rect);
-    emit valueChanged("rect", QVariant(rect));
+    //emit valueChanged("rect", QVariant(rect));
 }
 
 void GeneratorRegion::writeIntensity(double intensity) {
@@ -65,7 +65,7 @@ void GeneratorRegion::writeIntensity(double intensity) {
 
     this->intensity = intensity;
     emit intensityChanged(intensity);
-    emit valueChanged("intensity", QVariant(intensity));
+    //emit valueChanged("intensity", QVariant(intensity));
 }
 
 void GeneratorRegion::writeType(int type) {
@@ -75,5 +75,5 @@ void GeneratorRegion::writeType(int type) {
 
     this->type = type;
     emit typeChanged(type);
-    emit valueChanged("type", QVariant(type));
+    //emit valueChanged("type", QVariant(type));
 }

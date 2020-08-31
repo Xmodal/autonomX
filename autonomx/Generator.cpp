@@ -65,8 +65,12 @@ QString Generator::getDescription() {
     return description;
 }
 
-double Generator::getOutputMonitor() {
-    return outputMonitor;
+double Generator::getHistoryLatest() {
+    return historyLatest;
+}
+
+bool Generator::getHistoryRefresher() {
+    return historyRefresher;
 }
 
 int Generator::getOscInputPort() {
@@ -151,8 +155,8 @@ void Generator::writeDescription(QString description) {
     emit descriptionChanged(description);
 }
 
-void Generator::writeOutputMonitor(double outputMonitor) {
-    if(this->outputMonitor == outputMonitor) {
+void Generator::writeHistoryLatest(double historyLatest) {
+    if(this->historyLatest == historyLatest) {
         return;
     }
 
@@ -161,12 +165,27 @@ void Generator::writeOutputMonitor(double outputMonitor) {
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "writeOutputMonitor (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << outputMonitor;
+        qDebug() << "writeHistoryLatest (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << historyLatest;
     }
 
-    this->outputMonitor = outputMonitor;
-    emit valueChanged("outputMonitor", QVariant(outputMonitor));
-    emit outputMonitorChanged(outputMonitor);
+    this->historyLatest = historyLatest;
+    emit valueChanged("historyLatest", QVariant(historyLatest));
+    emit historyLatestChanged(historyLatest);
+}
+
+void Generator::flipHistoryRefresher() {
+    historyRefresher = !historyRefresher;
+
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "flipHistoryRefresher (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << historyRefresher;
+    }
+
+    emit valueChanged("historyRefresher", QVariant(historyRefresher));
+    emit historyRefresherChanged(historyRefresher);
 }
 
 void Generator::writeOscInputPort(int oscInputPort) {

@@ -150,20 +150,23 @@ void ComputeEngine::loop() {
         (*it)->applyOutputRegion();
     }
 
-    // write to outputMonitor
+    // write to history
     for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
-        double outputMonitor = 0;
+        double historyLatest = 0;
         for(int i = 0; i < (*it)->getOutputRegionSet()->getRegionCount(); i++) {
-            outputMonitor += (*it)->getOutputRegionSet()->getRegion(i)->getIntensity();
+            historyLatest += (*it)->getOutputRegionSet()->getRegion(i)->getIntensity();
         }
         if(flagDummyOutputMonitor) {
             // random output
-            outputMonitor = randomUniform(randomGenerator);
+            historyLatest = randomUniform(randomGenerator);
         } else {
             // dumb averaging
-            outputMonitor /= (*it)->getOutputRegionSet()->getRegionCount();
+            historyLatest /= (*it)->getOutputRegionSet()->getRegionCount();
         }
-        (*it)->writeOutputMonitor(outputMonitor);
+        // write value
+        (*it)->writeHistoryLatest(historyLatest);
+        // flip refresher to force update on QML side
+        (*it)->flipHistoryRefresher();
     }
 
     // send output messages to osc engine

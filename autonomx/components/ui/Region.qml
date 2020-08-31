@@ -132,7 +132,6 @@ Rectangle {
 
     // drag configuration
     onDragActiveChanged: {
-        console.log(index)
         if (dragActive) {
             Drag.start();
             latticeView.switchSelectedRegion(type, index);

@@ -23,12 +23,6 @@ ApplicationWindow {
     height: 720
     title: qsTr("autonomX 0.1.0")
 
-    // TODO: move into appropriate Rack component
-    function handleMessageReceived(oscPath, oscArguments) {
-        console.log("QML-Received OSC: " + oscPath + " " + oscArguments);
-        lastMessageReceived = oscPath + " " + oscArguments;
-    }
-
     function toggleFullscreen() {
         if (visibility === Window.FullScreen) {
             visibility = Window.AutomaticVisibility;

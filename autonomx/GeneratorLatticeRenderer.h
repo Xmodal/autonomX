@@ -37,6 +37,7 @@ private:
     QQuickWindow *window;                   // pointer to window
     QOpenGLFramebufferObject *framebuffer = nullptr;        // pointer to the assigned framebuffer that is displayed in QML
     QOpenGLFramebufferObject *framebufferSuper = nullptr;   // pointer to high resolution framebuffer that will be downsampled
+    GLuint texture;
     QSize size;                             // size of the assigned framebuffer
     QSize sizeSuper;                        // size of the supersampling framebuffer
     int factorSuper = 2;                    // supersampling factor

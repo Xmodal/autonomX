@@ -12,50 +12,49 @@ Field {
 
     fieldHeight: -1
 
-    fieldContent: Item {
-        Flickable {
-            id: flickable
-            anchors.fill: parent
-            maximumFlickVelocity: 350
+    fieldContent: Flickable {
+        id: flickable
+        anchors.fill: parent
+        maximumFlickVelocity: 350
+        interactive: textArea.contentHeight > height
 
-            TextArea.flickable: TextArea {
-                id: textArea
+        TextArea.flickable: TextArea {
+            id: textArea
 
-                // root settings
-                text: defaultText
-                placeholderText: placeholder
-                wrapMode: TextArea.Wrap
+            // root settings
+            text: defaultText
+            placeholderText: placeholder
+            wrapMode: TextArea.Wrap
 
-                // field frame
-                onHoveredChanged: fieldHovered = hovered
-                onActiveFocusChanged: fieldFocused = activeFocus
+            // field frame
+            onHoveredChanged: fieldHovered = hovered
+            onActiveFocusChanged: fieldFocused = activeFocus
 
-                // alignments
-                width: fieldWidth
-                leftPadding: 0
-                rightPadding: 0
-                topPadding: Stylesheet.field.padding
-                bottomPadding: Stylesheet.field.padding
+            // alignments
+            width: fieldWidth
+            leftPadding: 0
+            rightPadding: 0
+            topPadding: Stylesheet.field.padding
+            bottomPadding: Stylesheet.field.padding
 
-                // background
-                background: Item {}
+            // background
+            background: Item {}
 
-                // font & color
-                font.pixelSize: 14
+            // font & color
+            font.pixelSize: 14
 
-                // mouse interaction
-                selectByMouse: true
+            // mouse interaction
+            selectByMouse: true
 
-                // signal hooks
-                onEditingFinished: {
-                    valueChanged(text);
-                    focus = false;
-                }
+            // signal hooks
+            onEditingFinished: {
+                valueChanged(text);
+                focus = false;
             }
+        }
 
-            ScrollBar.vertical: ScrollBar {
-                interactive: false
-            }
+        ScrollBar.vertical: ScrollBar {
+            interactive: false
         }
     }
 }

@@ -10,7 +10,6 @@ Rectangle {
 
     Layout.preferredWidth: 320
     Layout.fillHeight: true
-    z: 100
 
     ColumnLayout {
         anchors.fill: parent

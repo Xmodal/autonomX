@@ -10,6 +10,7 @@ Item {
 
     Layout.fillWidth: true
     Layout.preferredHeight: Stylesheet.headerHeight
+    z: 100
 
     Rectangle {
         anchors.fill: parent

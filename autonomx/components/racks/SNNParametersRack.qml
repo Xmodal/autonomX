@@ -17,13 +17,15 @@ ColumnLayout {
         fields: [
             NumberField {
                 labelText: "Width"
-                unsigned: true
+                min: 1
+                max: 1000
                 propName: "latticeWidth"
             },
 
             NumberField {
                 labelText: "Height"
-                unsigned: true
+                min: 1
+                max: 1000
                 propName: "latticeHeight"
             },
 
@@ -34,6 +36,27 @@ ColumnLayout {
             }
         ]
     }
+
+//    SubRack {
+//        subRackTitle: "Connections"
+
+//        fields: [
+//            SelectField {
+//                labelText: "Network type"
+//                options: ["Grid", "Random"]
+//                //propName: "networkType"
+//            },
+//            NumberField {
+//                labelText: "Num. connections"
+//                //propName: "numConnections"
+//            },
+//            NumberField {
+//                labelText: "Learning conn."
+//                //propName: "learningConnections"
+//            }
+
+//        ]
+//    }
 
     SubRack {
         subRackTitle: "Neuron behavior"
@@ -53,15 +76,15 @@ ColumnLayout {
             SliderField {
                 labelText: "Inh. neuron noise"
                 propName: "inhibitoryNoise"
-                minVal: 1.0
-                maxVal: 20.0
+                minVal: 0.0
+                maxVal: 50.0
                 updateLag: 70
             },
             SliderField {
                 labelText: "Exc. neuron noise"
                 propName: "excitatoryNoise"
-                minVal: 1.0
-                maxVal: 20.0
+                minVal: 0.0
+                maxVal: 50.0
                 updateLag: 70
             },
             SliderField {
@@ -69,7 +92,6 @@ ColumnLayout {
                 propName: "inhibitoryPortion"
                 updateLag: 70
             }
-
         ]
     }
 

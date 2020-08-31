@@ -19,7 +19,7 @@ Field {
     // inc/dec functions
     function increment() {
         var newNum = defaultNum + incStep;
-        if (max && newNum < max) newNum = max;
+        if (max && newNum > max) newNum = max;
         valueChanged(newNum);
     }
     function decrement() {

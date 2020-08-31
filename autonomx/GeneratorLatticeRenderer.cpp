@@ -51,6 +51,9 @@ GeneratorLatticeRenderer::GeneratorLatticeRenderer() : QQuickFramebufferObject::
     // init allocated width / height
     allocatedWidth = new int(0);
     allocatedHeight = new int(0);
+
+    // get texture name
+    functions->glGenTextures(1, &texture);
 }
 
 GeneratorLatticeRenderer::~GeneratorLatticeRenderer() {
@@ -127,14 +130,12 @@ void GeneratorLatticeRenderer::render() {
         #endif
 
         // bind the texture
-        GLuint texture;
         functions->glActiveTexture(GL_TEXTURE0);
         functions->glUniform1i(functions->glGetUniformLocation(program->programId(), "texture"), 0);
-        functions->glGenTextures(1, &texture);
         functions->glBindTexture(GL_TEXTURE_2D, texture);
-        functions->glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, *allocatedWidth, *allocatedHeight, 0, GL_RED, GL_FLOAT, *latticeData);
         functions->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         functions->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        functions->glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, *allocatedWidth, *allocatedHeight, 0, GL_RED, GL_FLOAT, *latticeData);
 
         // bind the standard framebuffer
         framebuffer->bind();

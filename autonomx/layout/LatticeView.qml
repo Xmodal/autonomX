@@ -24,6 +24,7 @@ RowLayout {
     Layout.fillWidth: true
     Layout.fillHeight: true
     spacing: 0
+    z: -1
 
     // manage selected region
     function switchSelectedRegion(type, index) {

@@ -63,24 +63,30 @@ Item {
                 }
             }
 
-            // rack label
-            Label {
-                id: rackTitle
-                text: rackName
+            RowLayout {
+                anchors.fill: parent
+                spacing: 0
 
-                anchors.verticalCenter: parent.verticalCenter
-                leftPadding: 20
+                // rack label
+                Label {
+                    id: rackTitle
+                    text: rackName
 
-                font: Stylesheet.fonts.rackLabel
-            }
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignVCenter
+                    Layout.leftMargin: 20
 
-            // collapse rack button
-            IconButton {
-                id: btnCollapse
-                iconSource: collapsed ? "qrc:/assets/images/icon-expand.svg" : "qrc:/assets/images/icon-collapse.svg"
-                anchors.right: parent.right
+                    font: Stylesheet.fonts.rackLabel
+                }
 
-                onClicked: collapsed = !collapsed
+                // collapse rack button
+                IconButton {
+                    id: btnCollapse
+                    iconSource: collapsed ? "qrc:/assets/images/icon-expand.svg" : "qrc:/assets/images/icon-collapse.svg"
+                    Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+
+                    onClicked: collapsed = !collapsed
+                }
             }
         }
 

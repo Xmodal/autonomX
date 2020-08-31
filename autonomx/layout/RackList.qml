@@ -33,6 +33,12 @@ Flickable {
         }
 
         Rack {
+            rackName: "Help : SNN"
+            collapsed: true
+            content: SNNHelpRack {}
+        }
+
+        Rack {
             rackName: "Parameters"
             content: SNNParametersRack {}
         }
@@ -40,11 +46,6 @@ Flickable {
         Rack {
             rackName: "OSC settings"
             content: OscSettingsRack {}
-        }
-
-        Rack {
-            rackName: "Help : SNN"
-            content: SNNHelpRack {}
         }
     }
 }

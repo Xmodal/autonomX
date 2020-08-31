@@ -25,7 +25,7 @@
         <file>components/racks/OscSettingsRack.qml</file>
         <file>components/racks/SNNParametersRack.qml</file>
         <file>components/racks/SubRack.qml</file>
-        <file>components/racks/HelpRack.qml</file>
+        <file>components/racks/SNNHelpRack.qml</file>
         <file>components/racks/Rack.qml</file>
         <file>components/ui/CheckBox.qml</file>
         <file>components/ui/GeneratorButton.qml</file>

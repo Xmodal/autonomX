@@ -17,7 +17,7 @@ Item {
 
     // state flags
     property bool collapsed: false
-    property bool removable: true
+    property bool removable: false
     // content component
     property Component content
 
@@ -98,21 +98,13 @@ Item {
             property int generatorIndex: window.activeGeneratorIndex // -1: no assigned generator ID
 
             Layout.fillWidth: true
-            Layout.preferredHeight: implicitHeight
-            Layout.fillWidth: true
+            Layout.preferredHeight: collapsed ? 0 : implicitHeight
 
             // animation management
-            states: [
-                State {
-                    name: "collapsed"; when: collapsed
-                    PropertyChanges { target: contentLoader; Layout.preferredHeight: 0; Layout.topMargin: 0; Layout.bottomMargin: 0; }
-                }
-            ]
-            transitions: Transition {
+            Behavior on Layout.preferredHeight {
                 NumberAnimation {
-                    properties: "Layout.preferredHeight,Layout.topMargin,Layout.bottomMargin"
                     duration: 500
-                    easing.type: Easing.InOutCubic
+                    easing.type: Easing.OutCubic
                 }
             }
         }

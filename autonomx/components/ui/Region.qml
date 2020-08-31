@@ -70,6 +70,9 @@ Rectangle {
                     Math.max(Math.round((height - 1 + offsetH) / ppc), 0)
                     );
 
+        if (newRect.width > regions.latticeWidth) newRect.width = regions.latticeWidth;
+        if (newRect.height > regions.latticeHeight) newRect.height = regions.latticeHeight;
+
         // clamp depending on event type
         if (evtType === "resize") {
             if (newRect.x + newRect.width > regions.latticeWidth)  newRect.width = regions.latticeWidth - newRect.x;

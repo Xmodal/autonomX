@@ -862,6 +862,8 @@ double SpikingNet::getLatticeValue(int x, int y) {
 }
 
 void SpikingNet::writeLatticeValue(int x, int y, double value) {
+    // 2 * (firing treshold) gain provided somewhat arbitrarily to provide more responsiveness to signals in the 0-1 range.
     int index = x % latticeWidth + y * latticeWidth;
-    neurons[index].addToI(value);
+    double gain = neurons[index].getPotentialThreshold() * 2.0;
+    neurons[index].addToI(value * gain);
 }

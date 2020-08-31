@@ -11,18 +11,25 @@ import QtQuick.Layouts 1.0
 import "qrc:/stylesheet"
 import "../components/racks"
 
-ScrollView {
+Flickable {
     id: rackView
 
-    ScrollBar.vertical.interactive: false
-    ScrollBar.vertical.hoverEnabled: false
+    contentWidth: rackContainer.width
+    contentHeight: rackContainer.height
 
-    background: Rectangle {
+    ScrollBar.vertical: ScrollBar {
+        interactive: false
+        hoverEnabled: false
+    }
+
+    Rectangle {
+        anchors.fill: parent
         color: Stylesheet.colors.black
     }
 
     ColumnLayout {
-        width: parent.width
+        id: rackContainer
+        width: 590
         spacing: 0
 
         Rack {
@@ -39,12 +46,5 @@ ScrollView {
             rackName: "OSC settings"
             content: OscSettingsRack {}
         }
-
-//        GenRack {}
-//        ParamsRack {}
-//        OscRack {}
-        // --= TODO =--
-        // InputsRack {}
-        // OutputsRack {}
     }
 }

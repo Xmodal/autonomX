@@ -62,17 +62,6 @@ ColumnLayout {
         subRackTitle: "Neuron behavior"
 
         fields: [
-            SelectField {
-                labelText: "Inh. neuron type"
-                propName: "inhibitoryNeuronType"
-                options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
-            },
-            SelectField {
-                labelText: "Exc. neuron type"
-                propName: "excitatoryNeuronType"
-                options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
-            },
-            SpacerField {},
             SliderField {
                 labelText: "Inh. neuron noise"
                 propName: "inhibitoryNoise"
@@ -91,6 +80,17 @@ ColumnLayout {
                 labelText: "Inh. portion"
                 propName: "inhibitoryPortion"
                 updateLag: 70
+            },
+
+            SelectField {
+                labelText: "Inh. neuron type"
+                propName: "inhibitoryNeuronType"
+                options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
+            },
+            SelectField {
+                labelText: "Exc. neuron type"
+                propName: "excitatoryNeuronType"
+                options: ["Spiking", "Spiking (rand.)", "Resonator", "Resonator (rand.)", "Chattering"]
             }
         ]
     }

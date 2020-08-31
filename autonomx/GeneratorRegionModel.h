@@ -27,7 +27,7 @@
 class GeneratorRegionModel : public QAbstractListModel {
     Q_OBJECT
 public:
-    GeneratorRegionModel();
+    GeneratorRegionModel(int type); // argument is region type. 0 = input, 1 = output
     ~GeneratorRegionModel();
 
     // iterates over all members of the GeneratorRegion list and creates connections for them.
@@ -48,9 +48,13 @@ public:
 
     Q_INVOKABLE GeneratorRegion* at(int index);
 private:
+    void initializeAsInput();
+    void initializeAsOutput();
+
     QList<QMetaObject::Connection> connections;
     QList<QSharedPointer<GeneratorRegion>> regionList;
     bool flagDebug = false;
+    const int type; // region type. 0 = input, 1 = output
 public slots:
     // these can be called from QML. writeRegion is also used by GeneratorRegionSet to update Region's intensity property
     Q_INVOKABLE void addRegion(int x, int y, int width, int height);

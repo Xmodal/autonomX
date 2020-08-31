@@ -17,15 +17,38 @@
 
 #include "GeneratorRegionSet.h"
 
-GeneratorRegionSet::GeneratorRegionSet() {
-    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(0, 0, 10, 10), 0.0));
+GeneratorRegionSet::GeneratorRegionSet(int type) : type(type) {
+    if(flagDebug) {
+        qDebug() << "constructor (GeneratorRegionSet)";
+    }
 
-    // relink connections
-    relinkConnections();
+    if(type == 0) {
+        initializeAsInput();
+    } else {
+        initializeAsOutput();
+    }
 }
 
 GeneratorRegionSet::~GeneratorRegionSet() {
+    if(flagDebug) {
+        qDebug() << "destructor (GeneratorRegionSet)";
+    }
+}
 
+void GeneratorRegionSet::initializeAsInput() {
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(1, 3, 3, 3), 0.0, 0));
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(6, 3, 3, 3), 0.0, 0));
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(11, 3, 3, 3), 0.0, 0));
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(16, 3, 3, 3), 0.0, 0));
+    createConnections();
+}
+
+void GeneratorRegionSet::initializeAsOutput() {
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(1, 14, 3, 3), 0.0, 1));
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(6, 14, 3, 3), 0.0, 1));
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(11, 14, 3, 3), 0.0, 1));
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(16, 14, 3, 3), 0.0, 1));
+    createConnections();
 }
 
 GeneratorRegion* GeneratorRegionSet::getRegion(int index) {
@@ -42,7 +65,7 @@ void GeneratorRegionSet::addRegion(int x, int y, int width, int height) {
     }
 
     // create copy of the region as a shared pointer and add to list
-    QSharedPointer<GeneratorRegion> region = QSharedPointer<GeneratorRegion>(new GeneratorRegion(QRect(x, y, width, height), 0.0));
+    QSharedPointer<GeneratorRegion> region = QSharedPointer<GeneratorRegion>(new GeneratorRegion(QRect(x, y, width, height), 0.0, type));
     regionList.append(QSharedPointer<GeneratorRegion>(region));
 
     // relink connections

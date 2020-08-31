@@ -15,6 +15,7 @@ QtObject {
 
         readonly property variant inputs:  [ "#3BB3E7", "#3B9FE7", "#3582F5", "#3B4CE7" ]
         readonly property variant outputs: [ "#C53412", "#D65B16", "#E7961D", "#EEBE16" ]
+        readonly property int variations: 4
     }
 
     // FONTS

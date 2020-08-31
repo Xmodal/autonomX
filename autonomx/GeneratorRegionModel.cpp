@@ -19,34 +19,41 @@
 
 #include "GeneratorRegionModel.h"
 
-GeneratorRegionModel::GeneratorRegionModel() {
+GeneratorRegionModel::GeneratorRegionModel(int type) : type(type) {
+    if(flagDebug) {
+        qDebug() << "constructor (GeneratorRegionModel)";
+    }
+
     // set ownership of the GeneratorFacade to C++ so that QML doesn't try to take over garbage collection duties, resulting in a double free
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 
-    if(flagDebug) {
-        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-            std::chrono::system_clock::now().time_since_epoch()
-        );
-
-        qDebug() << "constructor (GeneratorRegionModel)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
-
+    if(type == 0) {
+        initializeAsInput();
+    } else {
+        initializeAsOutput();
     }
-
-    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(0, 0, 10, 10), 0.0));
-
-    // relink connections
-    relinkConnections();
 }
 
 GeneratorRegionModel::~GeneratorRegionModel() {
     if(flagDebug) {
-        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-            std::chrono::system_clock::now().time_since_epoch()
-        );
-
-        qDebug() << "destructor (GeneratorRegionModel)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
-
+        qDebug() << "destructor (GeneratorRegionModel)";
     }
+}
+
+void GeneratorRegionModel::initializeAsInput() {
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(1, 3, 3, 3), 0.0, 0));
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(6, 3, 3, 3), 0.0, 0));
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(11, 3, 3, 3), 0.0, 0));
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(16, 3, 3, 3), 0.0, 0));
+    createConnections();
+}
+
+void GeneratorRegionModel::initializeAsOutput() {
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(1, 14, 3, 3), 0.0, 1));
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(6, 14, 3, 3), 0.0, 1));
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(11, 14, 3, 3), 0.0, 1));
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(16, 14, 3, 3), 0.0, 1));
+    createConnections();
 }
 
 int GeneratorRegionModel::rowCount(const QModelIndex& parent) const {
@@ -125,7 +132,7 @@ void GeneratorRegionModel::addRegion(int x, int y, int width, int height) {
     beginInsertRows(QModelIndex(), index, index);
 
     // create the region and add it to the list
-    QSharedPointer<GeneratorRegion> region = QSharedPointer<GeneratorRegion>(new GeneratorRegion(QRect(x, y, width, height), 0.0));
+    QSharedPointer<GeneratorRegion> region = QSharedPointer<GeneratorRegion>(new GeneratorRegion(QRect(x, y, width, height), 0.0, type));
     regionList.append(region);
 
     // tell the model we are done adding rows

@@ -122,7 +122,7 @@ void GeneratorLatticeRenderer::render() {
 
         // Play nice with the RHI. Not strictly needed when the scenegraph uses
         // OpenGL directly.
-        #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 4)
+        #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         window->beginExternalCommands();
         #endif
 
@@ -237,11 +237,11 @@ void GeneratorLatticeRenderer::render() {
         // restore previous OpenGL state
         window->resetOpenGLState();
 
-        #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 4)
+        #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         window->endExternalCommands();
         #endif
     } else {
-        #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 4)
+        #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         window->beginExternalCommands();
         #endif
 
@@ -252,7 +252,7 @@ void GeneratorLatticeRenderer::render() {
 
         window->resetOpenGLState();
 
-        #if QT_VERSION >= QT_VERSION_CHECK(5, 1, 4)
+        #if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
         window->endExternalCommands();
         #endif
     }

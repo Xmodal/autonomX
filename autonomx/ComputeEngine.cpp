@@ -68,7 +68,7 @@ void ComputeEngine::receiveOscData(int id, QVariantList data) {
             }
         }
         // write to input
-        generator->getInputRegionSet()->getRegion(i)->writeIntensity(input);
+        generator->getInputRegionSet()->getRegion(i)->writeMirroredIntensity(input);
     }
 
     if(flagDebug) {

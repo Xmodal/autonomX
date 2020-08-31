@@ -454,7 +454,7 @@ void Generator::applyOutputRegion() {
         sum /= (double) (region->getRect().width() * region->getRect().height());
 
         // write to region intensity
-        region->writeIntensity(sum);
+        region->writeMirroredIntensity(sum);
     }
 }
 

@@ -61,13 +61,30 @@ ApplicationWindow {
         onActivated: quitThisApp()
     }
 
+    Shortcut {
+        sequence: "PgUp"
+        onActivated: {
+            if (activeGeneratorIndex < 0) return;
+            var i = activeGeneratorIndex - 1;
+            if (i < 0) i++;
+            activeGeneratorIndex = i;
+        }
+    }
+
+    Shortcut {
+        sequence: "PgDown"
+        onActivated: {
+            var i = activeGeneratorIndex + 1;
+            if (i >= generatorModel.rowCount()) i--;
+            activeGeneratorIndex = i;
+        }
+    }
+
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
 
-        Header {
-            z: 100
-        }
+        Header {}
 
         RowLayout {
             Layout.fillWidth: true

@@ -22,11 +22,6 @@ Flickable {
         hoverEnabled: false
     }
 
-    Rectangle {
-        anchors.fill: parent
-        color: Stylesheet.colors.black
-    }
-
     ColumnLayout {
         id: rackContainer
         width: 590

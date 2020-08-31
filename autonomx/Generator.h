@@ -31,7 +31,8 @@ class Generator : public QObject {
     Q_PROPERTY(QString type READ getType NOTIFY typeChanged)
     Q_PROPERTY(int id READ getID)
     Q_PROPERTY(QString description READ getDescription WRITE writeDescription NOTIFY descriptionChanged)
-    Q_PROPERTY(double outputMonitor READ getOutputMonitor NOTIFY outputMonitorChanged)
+    Q_PROPERTY(double historyLatest READ getHistoryLatest NOTIFY historyLatestChanged)
+    Q_PROPERTY(bool historyRefresher READ getHistoryRefresher NOTIFY historyRefresherChanged)
 
     Q_PROPERTY(int oscInputPort READ getOscInputPort WRITE writeOscInputPort NOTIFY oscInputPortChanged)
     Q_PROPERTY(QString oscInputAddress READ getOscInputAddress WRITE writeOscInputAddress NOTIFY oscInputAddressChanged)
@@ -49,11 +50,8 @@ public:
         TypeRole,
         IDRole,
         DescriptionRole,
-        OutputMonitorRole,
-        OutputMonitorHistoryRole,
-        OutputMonitorHistoryStartIndexRole,
-        OutputMonitorHistorySizeMaxRole,
-        OutputMonitorHistorySizeValidRole
+        HistoryLatestRole,
+        HistoryRefresherRole,
     };
 
     // role map used by GeneratorModel
@@ -62,11 +60,8 @@ public:
         {TypeRole, "type"},
         {IDRole, "id"},
         {DescriptionRole, "description"},
-        {OutputMonitorRole, "outputMonitor"},
-        {OutputMonitorHistoryRole, "outputMonitorHistory"},
-        {OutputMonitorHistoryStartIndexRole, "outputMonitorHistoryStartIndex"},
-        {OutputMonitorHistorySizeMaxRole, "outputMonitorHistorySizeMax"},
-        {OutputMonitorHistorySizeValidRole,"outputMonitorHistorySizeValid"}
+        {HistoryLatestRole, "historyLatest"},
+        {HistoryRefresherRole, "historyRefresher"}
     };
 
     Generator(int id, QString name, QString type, QString description);
@@ -86,7 +81,8 @@ public:
     QString getType();
     int getID();
     QString getDescription();
-    double getOutputMonitor();
+    double getHistoryLatest();
+    bool getHistoryRefresher();
 
     int getOscInputPort();
     QString getOscInputAddress();
@@ -102,7 +98,8 @@ public:
     void writeName(QString name);
     void writeType(QString type);
     void writeDescription(QString description);
-    void writeOutputMonitor(double outputMonitor);
+    void writeHistoryLatest(double historyLatest);
+    void flipHistoryRefresher(); // this inverts the historyRefresher's value
 
     void writeOscInputPort(int oscInputPort);
     void writeOscInputAddress(QString oscInputAddress);
@@ -140,7 +137,8 @@ private:
     QString name;                               // generator name, assigned by user
     QString type;                               // generator type, fixed
     QString description;                        // generator description, fixed
-    double outputMonitor = 0;                   // output monitor / indicator light, generated from output array automatically by ComputeEngine
+    double historyLatest = 0;                   // latest value for the history graph
+    bool historyRefresher = false;              // bool that flips every time history latest is refreshed. this is an ugly workaround to prevent Qt from ignoring updates of historyLatest where the value doesn't change.
 
     int oscInputPort = 6668;                    // generator osc input port, assigned by user
     QString oscInputAddress = "/input";         // generator osc input address, assigned by user (this is an osc destination)
@@ -200,7 +198,8 @@ signals:
     void nameChanged(QString name);
     void typeChanged(QString type);
     void descriptionChanged(QString description);
-    void outputMonitorChanged(double outputMonitor);
+    void historyLatestChanged(double historyLatest);
+    void historyRefresherChanged(bool historyRefresher);
 
     void oscInputPortChanged(int oscInputPort);
     void oscInputAddressChanged(QString oscInputAddress);

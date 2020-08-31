@@ -3,7 +3,8 @@ import QtQuick 2.0
 Item {
     id: historyGraph
 
-    property real newValue
+    property real historyLatest
+    property bool historyRefresher
     property variant history: []
     property int sizeMax: 128
     property int sizeValid: 0
@@ -12,7 +13,7 @@ Item {
 
     anchors.fill: parent
 
-    onNewValueChanged: {
+    onHistoryRefresherChanged: {
         var index;
         if(sizeValid == sizeMax) {
             // buffer is full
@@ -20,7 +21,7 @@ Item {
             // index to write to is the previous start index
             index = startIndex;
             // write new value
-            history[index] = newValue;
+            history[index] = historyLatest;
             // increment start index
             startIndex = (startIndex + 1) % sizeMax;
         } else {
@@ -29,7 +30,7 @@ Item {
             // index to write to is at start index offset by valid size
             index = (startIndex + sizeValid) % sizeMax;
             // write new value
-            history[index] = newValue;
+            history[index] = historyLatest;
             // increment valid size
             sizeValid++;
         }

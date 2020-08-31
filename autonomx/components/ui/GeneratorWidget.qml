@@ -44,13 +44,14 @@ Button {
         }
     }
 
-
     // history graph
     // TODO: refactor into OpenGL component
-    HistoryGraph {
+    HistoryGraph {        
         id: historyGraph
 
-        newValue: model.outputMonitor
+        historyLatest: model.historyLatest
+        historyRefresher: model.historyRefresher
+
         strokeColor: selected ? Stylesheet.colors.white : Stylesheet.colors.generator
     }
 
@@ -89,7 +90,7 @@ Button {
         VuMeter {
             id: vuMeter
 
-            intensity: model.outputMonitor
+            intensity: model.historyLatest
             barColor: Stylesheet.colors.white
 
             Layout.alignment: Qt.AlignRight

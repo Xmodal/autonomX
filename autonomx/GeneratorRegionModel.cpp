@@ -211,7 +211,7 @@ void GeneratorRegionModel::createConnections() {
                 qDebug() << "lambda (GeneratorRegionModel) key: " << key << "\t value: " << value << "\t index: " << i;
             }
 
-            // this ridicoulous shit is necessary to get QString to properly convert to QByteArray. for some reason QString.toUtf8().toBase64() produces garbage results
+            // this ridicoulous crap is necessary to get QString to properly convert to QByteArray. for some reason QString.toUtf8().toBase64() produces garbage results
             QByteArray keyBuffer;
             keyBuffer.append(key);
 

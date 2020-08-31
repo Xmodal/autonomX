@@ -19,7 +19,7 @@ ApplicationWindow {
     property bool showGeneratorSettings: true
 
     visible: true
-    width: 1280
+    width: 1440
     height: 720
     title: qsTr("autonomX 0.1.0")
 

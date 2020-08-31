@@ -26,7 +26,7 @@
 class GeneratorRegionSet : public QObject{
     Q_OBJECT
 public:
-    GeneratorRegionSet();
+    GeneratorRegionSet(int type); // argument is region type. 0 = input, 1 = output
     ~GeneratorRegionSet();
 
     // iterates over all members of the GeneratorRegion list and creates connections for them.
@@ -39,9 +39,13 @@ public:
     GeneratorRegion* getRegion(int index);
     int getRegionCount();
 private:
+    void initializeAsInput();
+    void initializeAsOutput();
+
     QList<QMetaObject::Connection> connections;
     QList<QSharedPointer<GeneratorRegion>> regionList;
     bool flagDebug = false;
+    const int type; // region type. 0 = input, 1 = output
 public slots:
     // these should only ever be called from a RegionModel. changes will not propagate back to the RegionModel if called directly
     void addRegion(int x, int y, int width, int height);

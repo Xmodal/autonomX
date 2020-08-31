@@ -117,7 +117,7 @@ Rectangle {
     // external region boundary
     color: "transparent"
     border {
-        color: Stylesheet.colors[type == 0 ? "inputs" : "outputs"][index]
+        color: Stylesheet.colors[type == 0 ? "inputs" : "outputs"][index % Stylesheet.colors.variations]
         width: 1
     }
     // border opacity
@@ -126,12 +126,13 @@ Rectangle {
     // fill rectangle
     Rectangle {
         anchors.fill: parent
-        color: Stylesheet.colors[type == 0 ? "inputs" : "outputs"][index]
+        color: Stylesheet.colors[type == 0 ? "inputs" : "outputs"][index % Stylesheet.colors.variations]
         opacity: dragArea.containsMouse && (!selected || inEdit) ? 0.5 : intensity * 0.8
     }
 
     // drag configuration
     onDragActiveChanged: {
+        console.log(index)
         if (dragActive) {
             Drag.start();
             latticeView.switchSelectedRegion(type, index);
@@ -150,7 +151,7 @@ Rectangle {
         width: ppc; height: ppc
         anchors.left: parent.right
         anchors.top: parent.top
-        color: type == 0 ? Stylesheet.colors.inputs[index] : Stylesheet.colors.outputs[index]
+        color: Stylesheet.colors[type == 0 ? "inputs" : "outputs"][index % Stylesheet.colors.variations]
 
         opacity: dragArea.containsMouse || selected ? 1 : 0
 

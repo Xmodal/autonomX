@@ -17,22 +17,14 @@
 
 #include "GeneratorRegion.h"
 
-GeneratorRegion::GeneratorRegion(QRect rect, double intensity) {
+GeneratorRegion::GeneratorRegion(QRect rect, double intensity, int type) {
     // set ownership of the GeneratorRegion to C++ so that QML doesn't try to take over garbage collection duties, resulting in a double free
     // this is necessary because GeneratorModel will return pointers to GeneratorRegion
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 
     this->rect = rect;
     this->intensity = intensity;
-}
-
-GeneratorRegion::GeneratorRegion(QRectF rect, double intensity) {
-    // set ownership of the GeneratorRegion to C++ so that QML doesn't try to take over garbage collection duties, resulting in a double free
-    // this is necessary because GeneratorModel will return pointers to GeneratorRegion
-    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
-
-    this->rect = rect.toRect();
-    this->intensity = intensity;
+    this->type = type;
 }
 
 GeneratorRegion::GeneratorRegion(const GeneratorRegion& region) {
@@ -41,6 +33,7 @@ GeneratorRegion::GeneratorRegion(const GeneratorRegion& region) {
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     this->rect = region.getRect();
     this->intensity = region.getIntensity();
+    this->type = region.getType();
 }
 
 QRect GeneratorRegion::getRect() const {
@@ -49,6 +42,10 @@ QRect GeneratorRegion::getRect() const {
 
 double GeneratorRegion::getIntensity() const {
     return intensity;
+}
+
+int GeneratorRegion::getType() const {
+    return type;
 }
 
 void GeneratorRegion::writeRect(QRect rect) {
@@ -69,4 +66,14 @@ void GeneratorRegion::writeIntensity(double intensity) {
     this->intensity = intensity;
     emit intensityChanged(intensity);
     emit valueChanged("intensity", QVariant(intensity));
+}
+
+void GeneratorRegion::writeType(int type) {
+    if(this->type == type) {
+        return;
+    }
+
+    this->type = type;
+    emit typeChanged(type);
+    emit valueChanged("type", QVariant(type));
 }

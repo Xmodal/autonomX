@@ -50,8 +50,8 @@ GeneratorFacade::GeneratorFacade(Generator *generator) : QQmlPropertyMap(this, n
     }
 
     // init region models
-    inputRegionModel = QSharedPointer<GeneratorRegionModel>(new GeneratorRegionModel());
-    outputRegionModel = QSharedPointer<GeneratorRegionModel>(new GeneratorRegionModel());
+    inputRegionModel = QSharedPointer<GeneratorRegionModel>(new GeneratorRegionModel(0));
+    outputRegionModel = QSharedPointer<GeneratorRegionModel>(new GeneratorRegionModel(1));
 
     // connect generator changes to facade
     QObject::connect(generator, &Generator::valueChanged, this, &GeneratorFacade::updateValueFromAlias, Qt::QueuedConnection);

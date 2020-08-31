@@ -12,17 +12,7 @@ Item {
     Rectangle {
         anchors.fill: parent
 
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: Stylesheet.colors.darkGrey }
-            GradientStop { position: 1.0; color: Stylesheet.colors.black }
-        }
-
-        Image {
-            anchors.fill: parent
-            source: "qrc:/assets/images/dot-pattern.svg"
-            fillMode: Image.Tile
-            opacity: 0.4
-        }
+        color: Stylesheet.colors.darkGrey
     }
 
     ColumnLayout {

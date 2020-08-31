@@ -13,7 +13,7 @@ Button {
     background: Rectangle {
         id: background
         color: checked ? Stylesheet.colors.white : activeColor
-        opacity: hovered ? (pressed ? 0.75 : 1) : (pressed || checked ? 0.75 : 0)
+        opacity: hovered ? (pressed ? 0.75 : 1) : (pressed || checked ? 1.0 : 0)
         implicitWidth: size
         implicitHeight: size
     }

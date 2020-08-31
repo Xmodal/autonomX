@@ -20,7 +20,7 @@ Item {
         layer.effect: ShaderEffect {
             property real minAlpha: 0.85
             property real maxAlpha: 0.95
-            property bool vertical: true
+            property bool vertical: false
             property bool overlayColor: Stylesheet.colors.black
 
             fragmentShader: "qrc:/shaders/gradient_overlay.frag"
@@ -46,7 +46,7 @@ Item {
             Layout.alignment: Qt.AlignVCenter
             Layout.leftMargin: 20
 
-            text: "Now editing"
+            text: activeGeneratorIndex < 0 ? "No selection" : "Now editing"
             font: Stylesheet.fonts.label
         }
 
@@ -57,14 +57,14 @@ Item {
             implicitWidth: 30
             implicitHeight: 1
             color: Stylesheet.colors.white
-            opacity: activeGeneratorIndex < 0 ? 0.4 : 1
+            visible: activeGeneratorIndex >= 0
         }
 
         // Generator name label
         Label {
             Layout.alignment: Qt.AlignVCenter
 
-            text: activeGeneratorIndex < 0 ? "<none>" : generatorModel.at(activeGeneratorIndex).name
+            text: activeGeneratorIndex < 0 ? "" : generatorModel.at(activeGeneratorIndex).name
             opacity: activeGeneratorIndex < 0 ? 0.4 : 1
             font: Stylesheet.fonts.text
         }

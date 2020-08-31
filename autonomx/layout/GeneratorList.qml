@@ -5,11 +5,25 @@ import QtQuick.Layouts 1.12
 import "qrc:/stylesheet"
 import "../components/ui"
 
-Rectangle {
-    color: Stylesheet.colors.black
-
+Item {
     Layout.preferredWidth: 320
     Layout.fillHeight: true
+
+    Rectangle {
+        anchors.fill: parent
+
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: Stylesheet.colors.darkGrey }
+            GradientStop { position: 1.0; color: Stylesheet.colors.black }
+        }
+
+        Image {
+            anchors.fill: parent
+            source: "qrc:/assets/images/dot-pattern.svg"
+            fillMode: Image.Tile
+            opacity: 0.4
+        }
+    }
 
     ColumnLayout {
         anchors.fill: parent

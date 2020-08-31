@@ -103,6 +103,23 @@ ApplicationWindow {
                 Layout.preferredWidth: 590
                 Layout.fillHeight: true
 
+                Rectangle {
+                    anchors.fill: parent
+                    z: -1
+
+                    gradient: Gradient {
+                        GradientStop { position: 0.0; color: Stylesheet.colors.darkGrey }
+                        GradientStop { position: 1.0; color: Stylesheet.colors.black }
+                    }
+
+                    Image {
+                        anchors.fill: parent
+                        source: "qrc:/assets/images/dot-pattern.svg"
+                        fillMode: Image.Tile
+                        opacity: 0.4
+                    }
+                }
+
                 enabled: activeGeneratorIndex >= 0 && showGeneratorSettings
                 visible: enabled
                 source: enabled ? "qrc:/layout/RackList.qml" : ""

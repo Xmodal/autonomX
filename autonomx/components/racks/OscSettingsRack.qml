@@ -13,7 +13,7 @@ ColumnLayout {
     SubRack {
         subRackTitle: "In"
         columnCount: 4
-        flagActive: true
+        flagActive: false
         flagColor: Stylesheet.colors.inputs[0]
 
         fields: [
@@ -32,7 +32,7 @@ ColumnLayout {
     SubRack {
         subRackTitle: "Out"
         columnCount: 4
-        flagActive: true
+        flagActive: false
         flagColor: Stylesheet.colors.outputs[0]
 
         fields: [

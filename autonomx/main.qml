@@ -108,13 +108,6 @@ ApplicationWindow {
                     z: -1
 
                     color: Stylesheet.colors.darkGrey
-
-                    Image {
-                        anchors.fill: parent
-                        source: "qrc:/assets/images/dot-pattern.svg"
-                        fillMode: Image.Tile
-                        opacity: 0.4
-                    }
                 }
 
                 enabled: activeGeneratorIndex >= 0 && showGeneratorSettings

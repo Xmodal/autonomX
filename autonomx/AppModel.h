@@ -38,7 +38,7 @@ public:
     QThread*            getOscThread() const;               // needed to exit the thread at app quit. we can only connect this from the main.
     ComputeEngine*      getComputeEngine() const;           // needed for connections
     OscEngine*          getOscEngine() const;               // needed for connections
-    Generator*          getGenerator(int id) const;
+    QSharedPointer<Generator>          getGenerator(int id) const;
     GeneratorFacade*    getGeneratorFacade(int id) const;
     GeneratorModel*     getGeneratorModel() const;
 

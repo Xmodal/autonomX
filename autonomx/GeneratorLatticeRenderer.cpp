@@ -19,7 +19,7 @@
 #include "GeneratorLattice.h"
 #include "AppModel.h"
 
-GeneratorLatticeRenderer::GeneratorLatticeRenderer() : QQuickFramebufferObject::Renderer() {
+GeneratorLatticeRenderer::GeneratorLatticeRenderer() : QQuickFramebufferObject::Renderer(), communicator() {
     if(flagDebug) {
         qDebug() << "constructor (GeneratorLatticeRenderer)";
     }
@@ -41,9 +41,6 @@ GeneratorLatticeRenderer::GeneratorLatticeRenderer() : QQuickFramebufferObject::
         throw std::runtime_error(QString(QString("constructor (GeneratorLatticeRenderer): Error in shader compilation or linking: ") + log).toUtf8().constData());
     }
 
-    // init communicator
-    communicator = new GeneratorLatticeCommunicator();
-
     // init latticeData
     latticeData = new float*;
     *latticeData = nullptr;
@@ -62,8 +59,6 @@ GeneratorLatticeRenderer::~GeneratorLatticeRenderer() {
     }
     // delete shader program
     delete program;
-    // delete communicator
-    delete communicator;
     // delete lattice data (inner pointer) if it exists
     if(*latticeData != nullptr) {
         delete *latticeData;
@@ -121,7 +116,7 @@ void GeneratorLatticeRenderer::render() {
     }
 
     // only render if generator is valid and lattice data is ready
-    if(generator != nullptr && communicator->isFirstRequestDone()) {
+    if(generator != nullptr && communicator.isFirstRequestDone()) {
         // lock the lattice data mutex since we want to use that data
         generator->lockLatticeDataMutex();
 
@@ -216,8 +211,8 @@ void GeneratorLatticeRenderer::render() {
         generator->unlockLatticeDataMutex();
 
         // we request an update of the lattice data (as soon as possible!) if the last request finished before this frame
-        if(communicator->isCurrentRequestDone()) {
-            communicator->writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
+        if(communicator.isCurrentRequestDone()) {
+            communicator.writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
         }
 
         // TODO: what does this do
@@ -308,10 +303,10 @@ void GeneratorLatticeRenderer::synchronize(QQuickFramebufferObject *item) {
         if(generator != nullptr) {
 
             // update communicator
-            communicator->updateGenerator(generator);
+            communicator.updateGenerator(generator);
 
             // request lattice data
-            communicator->writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
+            communicator.writeLatticeData(latticeData, allocatedWidth, allocatedHeight);
         }
     }
 

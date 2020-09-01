@@ -21,6 +21,7 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLFramebufferObject>
 #include <QQuickWindow>
+#include <QSharedPointer>
 
 #include "Generator.h"
 #include "GeneratorLatticeCommunicator.h"
@@ -47,8 +48,8 @@ private:
     bool flagSuper = true;                  // enables supersampling
     bool flagDebug = false;                 // enables debug
     int generatorID;                        // associated generator id
-    Generator* generator;                   // associated generator
-    GeneratorLatticeCommunicator* communicator;
+    QSharedPointer<Generator> generator;    // associated generator
+    GeneratorLatticeCommunicator communicator;
     float** latticeData;        // the lattice data used to draw the graphics
     int* allocatedWidth;        // the width of allocated flattened array in the memory block pointed by latticeData
     int* allocatedHeight;       // the height of allocated flattened array in the memory block pointed by latticeData

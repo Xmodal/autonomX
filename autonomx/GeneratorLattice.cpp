@@ -27,6 +27,12 @@ QQuickFramebufferObject::Renderer * GeneratorLattice::createRenderer() const {
     return renderer;
 }
 
+GeneratorLattice::GeneratorLattice() : QQuickFramebufferObject() {
+    if(flagDebug) {
+        qDebug() << "constructor (GeneratorLattice)";
+    }
+}
+
 GeneratorLattice::~GeneratorLattice() {
     if(flagDebug) {
         qDebug() << "destructor (GeneratorLattice)";

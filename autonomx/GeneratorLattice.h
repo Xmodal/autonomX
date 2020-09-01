@@ -26,6 +26,8 @@ class GeneratorLattice : public QQuickFramebufferObject {
     Q_PROPERTY(QVector4D mask READ getMask WRITE writeMask NOTIFY maskChanged)
     Q_PROPERTY(float maskAlpha READ getMaskAlpha WRITE writeMaskAlpha NOTIFY maskAlphaChanged)
 public:
+    ~GeneratorLattice();
+
     QQuickFramebufferObject::Renderer * createRenderer() const;
     int getGeneratorID();
     float getSquareInPixels();

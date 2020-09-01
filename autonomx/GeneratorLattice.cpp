@@ -18,9 +18,19 @@
 #include "GeneratorLattice.h"
 
 QQuickFramebufferObject::Renderer * GeneratorLattice::createRenderer() const {
+    if(flagDebug) {
+        qDebug() << "constructor (GeneratorLattice)";
+    }
+
     connect(this, &GeneratorLattice::visibleChanged, this, &QQuickFramebufferObject::update);
     QQuickFramebufferObject::Renderer * renderer = new GeneratorLatticeRenderer();
     return renderer;
+}
+
+GeneratorLattice::~GeneratorLattice() {
+    if(flagDebug) {
+        qDebug() << "destructor (GeneratorLattice)";
+    }
 }
 
 int GeneratorLattice::getGeneratorID() {

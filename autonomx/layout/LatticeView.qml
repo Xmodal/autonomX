@@ -131,7 +131,7 @@ RowLayout {
 
             visible: generatorIndex < 0
 
-            text: qsTr("Please select a generator from the Generator View to edit its I/O zones.")
+            text: qsTr("Select a generator from the left panel to visualize and edit it.")
             wrapMode: Text.WordWrap
             horizontalAlignment: Text.AlignHCenter
             font.pixelSize: 14

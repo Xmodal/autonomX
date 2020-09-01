@@ -17,7 +17,6 @@ Button {
     onSelectedChanged: {
         if (selected) {
             forceActiveFocus();
-            generatorList.positionViewAtIndex(window.activeGeneratorIndex, ListView.SnapPosition)
         }
     }
 

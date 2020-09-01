@@ -28,10 +28,7 @@ Item {
             Layout.fillHeight: true
 
             orientation: Qt.Vertical
-            //boundsBehavior: Flickable.StopAtBounds
-            highlightRangeMode: ListView.ApplyRange
-            preferredHighlightBegin: 40
-            preferredHighlightEnd: height - 40
+            boundsBehavior: Flickable.StopAtBounds
             ScrollBar.vertical: ScrollBar {
                 interactive: false
             }

@@ -107,10 +107,7 @@ ApplicationWindow {
                     anchors.fill: parent
                     z: -1
 
-                    gradient: Gradient {
-                        GradientStop { position: 0.0; color: Stylesheet.colors.darkGrey }
-                        GradientStop { position: 1.0; color: Stylesheet.colors.black }
-                    }
+                    color: Stylesheet.colors.darkGrey
 
                     Image {
                         anchors.fill: parent

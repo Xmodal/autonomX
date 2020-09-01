@@ -102,20 +102,20 @@ AppModel::AppModel() {
     computeEngine->start();
 }
 
-QThread* AppModel::getComputeThread() const {
-    return computeThread.data();
+QSharedPointer<QThread> AppModel::getComputeThread() const {
+    return computeThread;
 }
 
-QThread* AppModel::getOscThread() const {
-    return oscThread.data();
+QSharedPointer<QThread> AppModel::getOscThread() const {
+    return oscThread;
 }
 
-ComputeEngine*  AppModel::getComputeEngine() const {
-    return computeEngine.data();
+QSharedPointer<ComputeEngine>  AppModel::getComputeEngine() const {
+    return computeEngine;
 }
 
-OscEngine* AppModel::getOscEngine() const {
-    return oscEngine.data();
+QSharedPointer<OscEngine> AppModel::getOscEngine() const {
+    return oscEngine;
 }
 
 void AppModel::createGenerator() {
@@ -278,10 +278,10 @@ QSharedPointer<Generator> AppModel::getGenerator(int id) const {
     return generatorsHashMap->value(id);
 }
 
-GeneratorFacade* AppModel::getGeneratorFacade(int id) const {
-    return generatorFacadesHashMap->value(id).data();
+QSharedPointer<GeneratorFacade> AppModel::getGeneratorFacade(int id) const {
+    return generatorFacadesHashMap->value(id);
 }
 
-GeneratorModel* AppModel::getGeneratorModel() const {
-    return generatorModel.data();
+QSharedPointer<GeneratorModel> AppModel::getGeneratorModel() const {
+    return generatorModel;
 }

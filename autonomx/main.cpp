@@ -79,7 +79,7 @@ int main(int argc, char *argv[]) {
 
     // Pass C++ objects to QML.
     qmlEngine.rootContext()->setContextProperty("appModel", &AppModel::getInstance());
-    qmlEngine.rootContext()->setContextProperty("generatorModel", AppModel::getInstance().getGeneratorModel());
+    qmlEngine.rootContext()->setContextProperty("generatorModel", AppModel::getInstance().getGeneratorModel().data());
     qmlEngine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (qmlEngine.rootObjects().isEmpty())
         return -1;

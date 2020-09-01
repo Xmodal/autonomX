@@ -16,6 +16,7 @@
 #pragma once
 
 #include <QObject>
+#include <QSharedPointer>
 
 #include "Generator.h"
 
@@ -23,13 +24,13 @@ class GeneratorLatticeCommunicator : public QObject {
     Q_OBJECT
 public:
     GeneratorLatticeCommunicator();
-    void updateGenerator(Generator* generator);
+    void updateGenerator(QSharedPointer<Generator> generator);
     void writeLatticeData(float** latticeData, int* allocatedWidth, int* allocatedHeight);
 
     bool isCurrentRequestDone();
     bool isFirstRequestDone();
 private:
-    Generator* generator = nullptr;
+    QSharedPointer<Generator> generator = nullptr;
     bool currentRequestDone = true;
     bool firstRequestDone = false;
     bool flagDebug = false;

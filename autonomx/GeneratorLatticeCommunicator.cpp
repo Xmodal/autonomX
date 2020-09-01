@@ -19,7 +19,7 @@
 
 GeneratorLatticeCommunicator::GeneratorLatticeCommunicator() {}
 
-void GeneratorLatticeCommunicator::updateGenerator(Generator *generator) {
+void GeneratorLatticeCommunicator::updateGenerator(QSharedPointer<Generator> generator) {
     if(flagDebug) {
         qDebug() << "updateGenerator (GeneratorLatticeCommunicator)";
     }
@@ -32,8 +32,8 @@ void GeneratorLatticeCommunicator::updateGenerator(Generator *generator) {
     }
     this->generator = generator;
 
-    connectionWriteLatticeData = connect(this, &GeneratorLatticeCommunicator::writeLatticeDataHandler, generator, &Generator::writeLatticeData);
-    connectionWriteLatticeDataCompleted = connect(generator, &Generator::writeLatticeDataCompleted, this, &GeneratorLatticeCommunicator::requestLatticeDataCompleted);
+    connectionWriteLatticeData = connect(this, &GeneratorLatticeCommunicator::writeLatticeDataHandler, generator.data(), &Generator::writeLatticeData);
+    connectionWriteLatticeDataCompleted = connect(generator.data(), &Generator::writeLatticeDataCompleted, this, &GeneratorLatticeCommunicator::requestLatticeDataCompleted);
 }
 
 void GeneratorLatticeCommunicator::writeLatticeData(float** latticeData, int* allocatedWidth, int* allocatedHeight) {

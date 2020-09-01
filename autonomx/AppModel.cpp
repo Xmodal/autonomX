@@ -274,8 +274,8 @@ bool AppModel::validateNewGeneratorName(QString name) {
     return valid;
 }
 
-Generator* AppModel::getGenerator(int id) const {
-    return generatorsHashMap->value(id).data();
+QSharedPointer<Generator> AppModel::getGenerator(int id) const {
+    return generatorsHashMap->value(id);
 }
 
 GeneratorFacade* AppModel::getGeneratorFacade(int id) const {

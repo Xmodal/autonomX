@@ -52,7 +52,7 @@ GeneratorLatticeRenderer::GeneratorLatticeRenderer() : QQuickFramebufferObject::
     allocatedWidth = new int(0);
     allocatedHeight = new int(0);
 
-    // get texture name
+    // get texture
     functions->glGenTextures(1, &texture);
 }
 
@@ -76,6 +76,8 @@ GeneratorLatticeRenderer::~GeneratorLatticeRenderer() {
             delete framebufferSuper;
         }
     }
+    // delete texture
+    functions->glDeleteTextures(1, &texture);
 }
 
 void GeneratorLatticeRenderer::render() {

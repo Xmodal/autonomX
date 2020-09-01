@@ -80,40 +80,40 @@ void OscEngine::startGeneratorOsc(QSharedPointer<Generator> generator) {
     createOscSender(id, addressSenderHost, addressSenderTarget, portSender);
 
     // connect input / receiver changes
-    QObject::connect(generator.data(), &Generator::oscInputAddressChanged, this, [this, generator](QString oscInputAddress){
+    QObject::connect(generator.data(), &Generator::oscInputAddressChanged, this, [this, id](QString oscInputAddress){
         if(flagDebug) {
             qDebug() << "oscInputAddressChanged (lambda)";
         }
-        emit updateOscReceiverAddress(generator->getID(), oscInputAddress);
+        emit updateOscReceiverAddress(id, oscInputAddress);
     });
 
-    QObject::connect(generator.data(), &Generator::oscInputPortChanged, this, [this, generator](int oscInputPort){
+    QObject::connect(generator.data(), &Generator::oscInputPortChanged, this, [this, id](int oscInputPort){
         if(flagDebug) {
             qDebug() << "oscInputPortChanged (lambda)";
         }
-        emit updateOscReceiverPort(generator->getID(), oscInputPort);
+        emit updateOscReceiverPort(id, oscInputPort);
     });
 
     // connect output / sender changes
-    QObject::connect(generator.data(), &Generator::oscOutputAddressHostChanged, this, [this, generator](QString oscOutputAddressHost){
+    QObject::connect(generator.data(), &Generator::oscOutputAddressHostChanged, this, [this, id](QString oscOutputAddressHost){
         if(flagDebug) {
             qDebug() << "oscOutputAddressHostChanged (lambda)";
         }
-        emit updateOscSenderAddressHost(generator->getID(), oscOutputAddressHost);
+        emit updateOscSenderAddressHost(id, oscOutputAddressHost);
     });
 
-    QObject::connect(generator.data(), &Generator::oscOutputAddressTargetChanged, this, [this, generator](QString oscOutputAddressTarget){
+    QObject::connect(generator.data(), &Generator::oscOutputAddressTargetChanged, this, [this, id](QString oscOutputAddressTarget){
         if(flagDebug) {
             qDebug() << "oscOutputAddressTargetChanged (lambda)";
         }
-        emit updateOscSenderAddressTarget(generator->getID(), oscOutputAddressTarget);
+        emit updateOscSenderAddressTarget(id, oscOutputAddressTarget);
     });
 
-    QObject::connect(generator.data(), &Generator::oscOutputPortChanged, this, [this, generator](int oscOutputPort){
+    QObject::connect(generator.data(), &Generator::oscOutputPortChanged, this, [this, id](int oscOutputPort){
         if(flagDebug) {
             qDebug() << "oscOutputAddressTargetChanged (lambda)";
         }
-        emit updateOscSenderPort(generator->getID(), oscOutputPort);
+        emit updateOscSenderPort(id, oscOutputPort);
     });
 }
 

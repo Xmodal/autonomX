@@ -47,6 +47,9 @@ Generator::~Generator() {
 
         qDebug() << "destructor (Generator)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id;
     }
+
+    // wait until other threads release their lock before finishing destruction
+    QMutexLocker locker(&latticeDataMutex);
 }
 
 QString Generator::getName() {

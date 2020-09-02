@@ -18,10 +18,14 @@ ApplicationWindow {
     property bool showGeneratorList: true
     property bool showGeneratorSettings: true
 
+    // We update this version number each time we do a release/tag.
+    // We follow Semantic Versioning 2.0.0 https://semver.org/
+    readonly property string softwareVersion: "0.1.0"
+
     visible: true
     width: 1440
     height: 720
-    title: qsTr("autonomX 0.1.0")
+    title: qsTr("autonomX") + " " + softwareVersion
 
     function toggleFullscreen() {
         if (visibility === Window.FullScreen) {

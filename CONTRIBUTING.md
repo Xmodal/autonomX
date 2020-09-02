@@ -21,3 +21,10 @@ make
 
 We follow the Qt style guide for C++ and QML.
 
+
+## Version number
+
+Each time we do a release/tag, we update the version number.
+It's located in autonomx/main.qml.
+We follow Semantic Versioning 2.0.0 - See https://semver.org/ 
+

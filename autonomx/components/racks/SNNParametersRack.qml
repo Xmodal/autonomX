@@ -67,14 +67,12 @@ ColumnLayout {
                 propName: "inhibitoryNoise"
                 minVal: 0.0
                 maxVal: 50.0
-                updateLag: 70
             },
             SliderField {
                 labelText: "Exc. neuron noise"
                 propName: "excitatoryNoise"
                 minVal: 0.0
                 maxVal: 50.0
-                updateLag: 70
             },
             SliderField {
                 labelText: "Inh. portion"
@@ -104,22 +102,21 @@ ColumnLayout {
                 propName: "STPStrength"
                 flagName: "flagSTP"
                 minVal: 0.0
-                maxVal: 10.0
-                updateLag: 70
+                maxVal: 30.0
             },
             SliderField {
                 labelText: "STDP strength"
                 propName: "STDPStrength"
                 flagName: "flagSTDP"
                 minVal: 0.0
-                maxVal: 10.0
-                updateLag: 70
+                maxVal: 30.0
             },
             SliderField {
-                labelText: "Decay constant"
-                propName: "decayConstant"
+                labelText: "Decay half life"
+                propName: "decayHalfLife"
                 flagName: "flagDecay"
-                updateLag: 70
+                minVal: 0.1
+                maxVal: 60.0
             }
 
         ]

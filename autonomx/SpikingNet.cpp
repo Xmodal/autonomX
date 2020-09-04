@@ -575,8 +575,8 @@ double SpikingNet::getSTDPStrength() const {
     return this->STDPStrength;
 }
 
-double SpikingNet::getDecayConstant() const {
-    return this->decayConstant;
+double SpikingNet::getDecayHalfLife() const {
+    return this->decayHalfLife;
 }
 
 bool SpikingNet::getFlagSTP() const {
@@ -750,8 +750,8 @@ void SpikingNet::writeSTDPStrength(double STDPStrength) {
     emit STDPStrengthChanged(STDPStrength);
 }
 
-void SpikingNet::writeDecayConstant(double decayConstant) {
-    if(this->decayConstant == decayConstant)
+void SpikingNet::writeDecayHalfLife(double decayHalfLife) {
+    if(this->decayHalfLife == decayHalfLife)
         return;
 
     if(flagDebug) {
@@ -762,9 +762,10 @@ void SpikingNet::writeDecayConstant(double decayConstant) {
         qDebug() << "writeDecayConstant:\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    this->decayConstant = decayConstant;
-    emit valueChanged("decayConstant", QVariant(decayConstant));
-    emit decayConstantChanged(decayConstant);
+    this->decayHalfLife = decayHalfLife;
+    decayConstant = std::pow(2.0, - 1.0 / decayHalfLife);
+    emit valueChanged("decayHalfLife", QVariant(decayHalfLife));
+    emit decayHalfLifeChanged(decayHalfLife);
 }
 
 void SpikingNet::writeFlagSTP(bool flagSTP) {

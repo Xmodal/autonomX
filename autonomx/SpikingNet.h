@@ -33,7 +33,7 @@ class SpikingNet : public Generator {
 
     Q_PROPERTY(double STPStrength READ getSTPStrength WRITE writeSTPStrength NOTIFY STPStrengthChanged)
     Q_PROPERTY(double STDPStrength READ getSTDPStrength WRITE writeSTDPStrength NOTIFY STDPStrengthChanged)
-    Q_PROPERTY(double decayConstant READ getDecayConstant WRITE writeDecayConstant NOTIFY decayConstantChanged)
+    Q_PROPERTY(double decayHalfLife READ getDecayHalfLife WRITE writeDecayHalfLife NOTIFY decayHalfLifeChanged)
 
     Q_PROPERTY(bool flagSTP READ getFlagSTP WRITE writeFlagSTP NOTIFY flagSTPChanged)
     Q_PROPERTY(bool flagSTDP READ getFlagSTDP WRITE writeFlagSTDP NOTIFY flagSTDPChanged)
@@ -69,7 +69,8 @@ private:
     double      weightMax = 20.0;
     double      weightMin = 0.0;
 
-    double      decayConstant = 0.9995;
+    double      decayHalfLife = 10.0;
+    double      decayConstant = std::pow(2.0, - 1.0 / decayHalfLife);
 
     double      timeScale = 30.0 / 1000.0;
 
@@ -77,7 +78,7 @@ private:
     double STPStrength = 1.0;
 
     bool        flagSTP                 = false;
-    bool        flagSTDP                = true;
+    bool        flagSTDP                = false;
     bool        flagDecay               = false;
     bool        flagDirectConnection    = true;
     bool        flagRandomDevice        = true;
@@ -135,7 +136,7 @@ public:
     double getExcitatoryNoise() const;
     double getSTPStrength() const;
     double getSTDPStrength() const;
-    double getDecayConstant() const;
+    double getDecayHalfLife() const;
     bool getFlagSTP() const;
     bool getFlagSTDP() const;
     bool getFlagDecay() const;
@@ -149,7 +150,7 @@ public:
     void writeExcitatoryNoise(double excitatoryNoise);
     void writeSTPStrength(double STPStrength);
     void writeSTDPStrength(double STDPStrength);
-    void writeDecayConstant(double decayConstant);
+    void writeDecayHalfLife(double decayHalfLife);
     void writeFlagSTP(bool flagSTP);
     void writeFlagSTDP(bool flagSTDP);
     void writeFlagDecay(bool flagDecay);
@@ -169,7 +170,7 @@ signals:
     void excitatoryNoiseChanged(double excitatoryNoise);
     void STPStrengthChanged(double STPStrength);
     void STDPStrengthChanged(double STDPStrength);
-    void decayConstantChanged(double decayConstant);
+    void decayHalfLifeChanged(double decayHalfLife);
     void flagSTPChanged(bool flagSTP);
     void flagSTDPChanged(bool flagSTDP);
     void flagDecayChanged(bool flagDecay);

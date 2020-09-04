@@ -103,12 +103,16 @@ ColumnLayout {
                 labelText: "STP strength"
                 propName: "STPStrength"
                 flagName: "flagSTP"
+                minVal: 0.0
+                maxVal: 10.0
                 updateLag: 70
             },
             SliderField {
                 labelText: "STDP strength"
                 propName: "STDPStrength"
                 flagName: "flagSTDP"
+                minVal: 0.0
+                maxVal: 10.0
                 updateLag: 70
             },
             SliderField {

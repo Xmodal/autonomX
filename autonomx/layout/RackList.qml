@@ -11,41 +11,49 @@ import QtQuick.Layouts 1.0
 import "qrc:/stylesheet"
 import "../components/racks"
 
-Flickable {
-    id: rackView
+Rectangle {
+    Layout.preferredWidth: 590
+    Layout.fillHeight: true
 
-    contentWidth: rackContainer.width
-    contentHeight: rackContainer.height
+    color: Stylesheet.colors.darkGrey
 
-    ScrollBar.vertical: ScrollBar {
-        interactive: false
-        hoverEnabled: false
-    }
+    Flickable {
+        id: rackView
 
-    ColumnLayout {
-        id: rackContainer
-        width: 590
-        spacing: 0
+        width: parent.width
+        height: parent.height
+        contentHeight: rackContainer.height
 
-        Rack {
-            rackName: "Generator settings"
-            content: GlobalSettingsRack {}
+        ScrollBar.vertical: ScrollBar {
+            interactive: false
+            hoverEnabled: false
         }
 
-        Rack {
-            rackName: "Help : SNN"
-            collapsed: true
-            content: SNNHelpRack {}
-        }
+        ColumnLayout {
+            id: rackContainer
+            width: parent.width
+            spacing: 0
 
-        Rack {
-            rackName: "Parameters"
-            content: SNNParametersRack {}
-        }
+            Rack {
+                rackName: "Generator settings"
+                content: GlobalSettingsRack {}
+            }
 
-        Rack {
-            rackName: "OSC settings"
-            content: OscSettingsRack {}
+            Rack {
+                rackName: "Help : SNN"
+                collapsed: true
+                content: SNNHelpRack {}
+            }
+
+            Rack {
+                rackName: "Parameters"
+                content: SNNParametersRack {}
+            }
+
+            Rack {
+                rackName: "OSC settings"
+                content: OscSettingsRack {}
+            }
         }
     }
 }

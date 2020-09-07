@@ -98,21 +98,8 @@ ApplicationWindow {
 
             LatticeView {}
 
-            Loader {
-                id: rackViewLoader
-                Layout.preferredWidth: 590
-                Layout.fillHeight: true
-
-                Rectangle {
-                    anchors.fill: parent
-                    z: -1
-
-                    color: Stylesheet.colors.darkGrey
-                }
-
-                enabled: activeGeneratorIndex >= 0 && showGeneratorSettings
-                visible: enabled
-                source: enabled ? "qrc:/layout/RackList.qml" : ""
+            RackList {
+                visible: activeGeneratorIndex >= 0 && showGeneratorSettings
             }
         }
     }

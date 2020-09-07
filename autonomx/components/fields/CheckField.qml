@@ -11,7 +11,7 @@ Field {
     id: checkField
 
     // props
-    property bool on: propName ? generatorModel.at(window.activeGeneratorIndex)[propName] : false
+    property bool on: propName && generatorModel.at(window.activeGeneratorIndex) ? generatorModel.at(window.activeGeneratorIndex)[propName] : false
     property color controlColor: Stylesheet.colors.white
 
     showLabel: false

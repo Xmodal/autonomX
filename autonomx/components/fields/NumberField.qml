@@ -8,7 +8,7 @@ Field {
     id: numberField
 
     property string placeholder: ""
-    property real defaultNum: propName ? generatorModel.at(window.activeGeneratorIndex)[propName] : 0
+    property real defaultNum: propName && generatorModel.at(window.activeGeneratorIndex) ? generatorModel.at(window.activeGeneratorIndex)[propName] : 0
 
     property bool unsigned: false   // when true: negative values allowed
     property int type: 0            // 0 = int; 1 = real

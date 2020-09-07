@@ -8,7 +8,7 @@ Field {
     id: areaField
 
     property string placeholder: "Text Area"
-    property string defaultText: propName ? generatorModel.at(window.activeGeneratorIndex)[propName] : ""
+    property string defaultText: propName && generatorModel.at(window.activeGeneratorIndex) ? generatorModel.at(window.activeGeneratorIndex)[propName] : ""
 
     fieldHeight: -1
 

@@ -18,10 +18,12 @@ ColumnLayout {
             bottomPadding: 30
 
             text: helpFiles["help_snn.html"]
-            textFormat: Text.StyledText
+            textFormat: Text.RichText
             wrapMode: Text.WordWrap
             font.pixelSize: 14
             lineHeight: 1.15
+
+            onLinkActivated: Qt.openUrlExternally(link)
         }
     }
 }

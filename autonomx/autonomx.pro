@@ -51,12 +51,12 @@ SOURCES += \
 
 RESOURCES += qml.qrc
 
-# assets
-copydata.commands = $(COPY_DIR) \"$$shell_path($$PWD\\resources)\" \"$$shell_path($$OUT_PWD\\static)\"
-first.depends = $(first) copydata
-export(first.depends)
-export(copydata.commands)
-QMAKE_EXTRA_TARGETS += first copydata
+# static exports (disabled)
+#copydata.commands = $(COPY_DIR) \"$$shell_path($$PWD\\resources)\" \"$$shell_path($$OUT_PWD\\static)\"
+#first.depends = $(first) copydata
+#export(first.depends)
+#export(copydata.commands)
+#QMAKE_EXTRA_TARGETS += first copydata
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 #QML_IMPORT_PATH =
@@ -126,3 +126,9 @@ CONFIG(release, debug|release): DEFINES += NDEBUG
 # else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../qosc/release/qosc_release_binary.lib
 # else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../qosc/debug/qosc_debug_binary.lib
 # else:unix: PRE_TARGETDEPS += $$OUT_PWD/../qosc/libqosc_release_binary.a
+
+DISTFILES += \
+    assets/fonts/Overpass-Regular.ttf \
+    assets/fonts/Overpass-SemiBold.ttf \
+    assets/fonts/Questrial-Regular.ttf \
+    assets/help_files/help_snn.html

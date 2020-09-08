@@ -52,19 +52,19 @@ int main(int argc, char *argv[]) {
 
 
     // load fonts in the project database
-    QDir fontDir("static/fonts");
+    QDir fontDir{":/assets/fonts"};
     for (auto file : fontDir.entryList(QDir::Files)) {
-        if (QFontDatabase::addApplicationFont("static/fonts/" + file) == -1)
+        if (QFontDatabase::addApplicationFont(":/assets/fonts/" + file) == -1)
             qDebug() << "Failed to load font " << file;
     }
 
 
     // load help files
-    QDir helpFileDir("static/help_files");
+    QDir helpFileDir(":/assets/help_files");
     QVariantMap helpFileMap;
 
     for (auto filename : helpFileDir.entryList(QDir::Files)) {
-        QFile file("static/help_files/" + filename);
+        QFile file(":/assets/help_files/" + filename);
 
         // attempt to open file
         if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {

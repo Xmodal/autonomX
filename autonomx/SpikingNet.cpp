@@ -93,6 +93,9 @@ void SpikingNet::initialize() {
         }
     }
 
+    // update inhibitory size, which might have changed just before this call if any of the involved parameters were modified
+    inhibitorySize = latticeWidth * latticeHeight * inhibitoryPortion;
+
     // set neuron types
     for(int i = 0; i < latticeWidth * latticeHeight; ++i) {
         if(i < inhibitorySize) {
@@ -625,8 +628,6 @@ void SpikingNet::writeInhibitoryPortion(double inhibitoryPortion) {
     reset();
     // do the change
     this->inhibitoryPortion = inhibitoryPortion;    
-    // update inhibitory size
-    inhibitorySize = latticeWidth * latticeHeight * inhibitoryPortion;
     // re-initialize
     initialize();
     // signal

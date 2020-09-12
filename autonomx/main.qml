@@ -20,7 +20,7 @@ ApplicationWindow {
 
     // We update this version number each time we do a release/tag.
     // We follow Semantic Versioning 2.0.0 https://semver.org/
-    readonly property string softwareVersion: "0.1.0"
+    readonly property string softwareVersion: "0.1.1-SNAPSHOT"
 
     visible: true
     width: 1440

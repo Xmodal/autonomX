@@ -1,5 +1,12 @@
 # Release Notes for autonomX
 
+## Version 0.1.1 - UNRELEASED
+
+Bug fixes:
+
+- (TODO)
+
+
 ## Version 0.1.0 - 2020-09-12
 
 This is the first release of autonomX.

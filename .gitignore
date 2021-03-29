@@ -62,3 +62,6 @@ compile_commands.json
 autonomx/autonomx
 test_autonomx/test_autonomx
 
+# doxygen
+html/
+

@@ -35,6 +35,8 @@ For documentation, we use [Doxygen](https://www.doxygen.nl) with [GraphViz](http
 
 ## Doxygen Configuration
 
+### Complete explanation
+
 1. Download and install [Doxygen](https://www.doxygen.nl/download.html)
     * Download and install [GraphViz](https://graphviz.org/download/) - required to generate UML diagrams
     * **parameters might need to be modified to specify what needs to be included (!)
@@ -75,3 +77,20 @@ For documentation, we use [Doxygen](https://www.doxygen.nl) with [GraphViz](http
     
 8. Outside Doxygen, navigate to the ouput folder, click any html file inside, and it should open the entire documentation in your default browser. Left hand side should have a navigation menu.
     * You did it! :)
+
+### Short instructions for Ubuntu GNU/Linux
+
+On Ubuntu, you can install Doxygen like this:
+
+```
+sudo apt install doxygen graphviz
+```
+
+Then, you can build the documentation and open the resulting HTML files:
+
+```
+doxygen
+cd html/
+xdg-start index.html
+```
+

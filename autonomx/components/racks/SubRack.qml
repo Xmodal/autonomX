@@ -19,6 +19,9 @@ ColumnLayout {
     //property string switchProp
     property alias activated: subRackFlag.checked
 
+    property string headerTitle
+    property string headerDesc
+
     Layout.fillWidth: true
     spacing: 0
 
@@ -50,7 +53,7 @@ ColumnLayout {
     Rectangle {
         visible: titleBarVisible
         Layout.fillWidth: true
-        implicitHeight: childrenRect.height + 50
+        implicitHeight: childrenRect.height ? childrenRect.height + 50 : 0
         color: Stylesheet.setAlpha(Stylesheet.colors.darkGrey, 0.6)
 
         Grid {

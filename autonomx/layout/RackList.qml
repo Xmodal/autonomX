@@ -35,14 +35,8 @@ Rectangle {
             spacing: 0
 
             Rack {
-                rackName: "Generator settings"
+                rackName: "Generator info"
                 content: GlobalSettingsRack {}
-            }
-
-            Rack {
-                rackName: "Help : SNN"
-                collapsed: true
-                content: SNNHelpRack {}
             }
 
             Rack {

@@ -17,6 +17,7 @@ Field {
         leftPadding: 0
 
         // text
+        font: Stylesheet.fonts.fieldText
         text: activeFocus ? defaultText : metrics.elidedText
         placeholderText: placeholder
 

@@ -131,4 +131,5 @@ DISTFILES += \
     assets/fonts/Overpass-Regular.ttf \
     assets/fonts/Overpass-SemiBold.ttf \
     assets/fonts/Questrial-Regular.ttf \
-    assets/help_files/help_snn.html
+    assets/help_files/help_snn_desc.html \
+    assets/help_files/help_snn_params.html

@@ -8,7 +8,8 @@
         <file>assets/fonts/Overpass-Regular.ttf</file>
         <file>assets/fonts/Overpass-SemiBold.ttf</file>
         <file>assets/fonts/Questrial-Regular.ttf</file>
-        <file>assets/help_files/help_snn.html</file>
+        <file>assets/help_files/help_snn_desc.html</file>
+        <file>assets/help_files/help_snn_params.html</file>
         <file>assets/images/check-frame.svg</file>
         <file>assets/images/down-caret.svg</file>
         <file>assets/images/add-icon.svg</file>

@@ -11,7 +11,6 @@ ColumnLayout {
 
     SubRack {
         titleBarVisible: false
-//        visible: false
 
         ColumnLayout {
             Layout.fillWidth: true
@@ -52,6 +51,7 @@ ColumnLayout {
                 propName: "userNotes"
             }
 
+            // TODO: turn this into a proper text area!
 //            AreaField {
 //                labelText: "User notes"
 //                placeholder: "add anything relevant to your setup here!"
@@ -60,24 +60,43 @@ ColumnLayout {
         }
     }
 
+    // documentation rack (collapsed by default)
     SubRack {
-        subRackTitle: "Full documentation"
-//        visible: false
+        subRackTitle: "SNN overview"
+        collapsed: true
 
-        Label {
-            Layout.fillWidth: true
-            leftPadding: 30
-            rightPadding: 50
-            bottomPadding: 30
-            topPadding: 20
+        fields: [
+            Label {
+                width: parent.width
 
-            text: helpFiles["help_snn.html"]
-            textFormat: Text.RichText
-            wrapMode: Text.WordWrap
-            font: Stylesheet.fonts.text
-            lineHeight: 1.15
+                text: helpFiles["help_snn_desc.html"]
+                textFormat: Text.RichText
+                wrapMode: Text.WordWrap
+                font: Stylesheet.fonts.text
+                lineHeight: 1.15
 
-            onLinkActivated: Qt.openUrlExternally(link)
-        }
+                onLinkActivated: Qt.openUrlExternally(link)
+            }
+        ]
+    }
+
+    SubRack {
+        subRackTitle: "Parameter help"
+        collapsed: true
+
+        fields: [
+            Label {
+                width: parent.width
+
+                text: helpFiles["help_snn_params.html"]
+                textFormat: Text.RichText
+                wrapMode: Text.WordWrap
+                font: Stylesheet.fonts.text
+                lineHeight: 1.15
+
+                onLinkActivated: Qt.openUrlExternally(link)
+            }
+
+        ]
     }
 }

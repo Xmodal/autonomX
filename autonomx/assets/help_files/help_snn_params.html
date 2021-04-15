@@ -6,12 +6,6 @@
     h3, b { font-weight: 500; }
 </style>
 
-Spiking Neural Networks (SNNs) are artificial neural networks that mimic the temporal dynamics of natural neural networks.<br><br>
-In addition to neuronal and synaptic state, SNNs incorporate the concept of time into their operating model. The idea is that neurons fire only when a membrane potential—an intrinsic quality of the neuron related to its membrane electrical charge—reaches a specific value. When a neuron fires, it generates a signal that travels to other neurons which, in turn, increase or decrease their potential in accordance with this signal. In SNNs the electrical state of the neurons are modeled by differential equations. Depending on the signals they receive, each neuron is either firing or decaying state.<br><br>
-The Spiking Neurons implemented here are based on the differential equations developed by Mathematicien Eugene M. Izhikevich (Izhikevich 2003). The Izhikevitvh model defines different types of neurons: spiking, resonator and chattering. Each type has a different temporal characteristic.<br><br>
-Here, the neurons have been implemented into a network that contains synaptic plasticity parameters contributing to the network’s ability to evolve and learn over time.<br><br>
-In this Spiking Neural Network implementation, each neuron (each square of the grid) is connected to its neighbors. The electric intensity of the neuron corresponds to the brightness of the square: a bright square corresponds to a firing neuron. As a result, when a neuron fires, some electric potential is sent to the neurons that surround it and patterns emerge and propagate throughout the whole network.<br><br>
-For more information:<br>Izhikevich E.M. (2003), “Simple Model of Spiking Neurons” in IEEE Transactions on Neural Networks, 14:1569- 1572<br><a href="https://en.wikipedia.org/wiki/Spiking_neural_network">en.wikipedia.org/wiki/Spiking_neural_network</a><br>
 <h3>Parameters</h3>
 <ul type="bullet">
     <li><b>General</b><ul><li><b>Width</b>: width (in neurons) of the network</li><li><b>Height</b>: heights (in neurons) oh the network</li><li><b>Time scale</b>: corresponds to the speed of the network. This is expressed as a ratio relative to the speed at which biological neurons would fire.</li></ul></li>

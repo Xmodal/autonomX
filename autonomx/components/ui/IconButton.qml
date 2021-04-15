@@ -24,6 +24,8 @@ Button {
         smooth: true
         mipmap: false
 
+        opacity: hovered ? 1 : 0.5
+
         layer.enabled: true
         layer.effect: ShaderEffect {
             property bool checked: iconButton.checked

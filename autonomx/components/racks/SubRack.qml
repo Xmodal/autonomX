@@ -17,7 +17,12 @@ ColumnLayout {
     property bool flagActive: false
     property color flagColor: Stylesheet.colors.white
     //property string switchProp
-    property alias activated: subRackFlag.checked
+
+    // this was for when we thought toggling OSC on/off would be best done in the rack label thru a checkbox
+    // i don't think we really need it anymore though
+    //property alias activated: subRackFlag.checked
+    property bool activated: true
+    property bool collapsed: false
 
     property string headerTitle
     property string headerDesc
@@ -25,35 +30,67 @@ ColumnLayout {
     Layout.fillWidth: true
     spacing: 0
 
-    Label {
-        visible: titleBarVisible
+    // top label
+    Item {
         Layout.fillWidth: true
         Layout.preferredHeight: 30
-        leftPadding: 20
-        verticalAlignment: Text.AlignVCenter
-        font: Stylesheet.fonts.label
-        text: subRackTitle
+        visible: titleBarVisible
 
-        background: Rectangle {
+        // background
+        Rectangle {
+            anchors.fill: parent
             color: Stylesheet.colors.black
         }
 
-        CheckBox {
-            id: subRackFlag
-            checked: true
-            visible: flagActive
-            controlColor: flagColor
-            size: 16
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.right: parent.right
-            anchors.rightMargin: 20
+        RowLayout {
+            anchors.fill: parent
+            spacing: 0
+
+            // text
+            Label {
+                Layout.fillWidth: true
+                Layout.preferredHeight: 30
+                leftPadding: 20
+                verticalAlignment: Text.AlignVCenter
+                font: Stylesheet.fonts.label
+                text: subRackTitle
+
+        //        CheckBox {
+        //            id: subRackFlag
+        //            checked: true
+        //            visible: flagActive
+        //            controlColor: flagColor
+        //            size: 16
+        //            anchors.verticalCenter: parent.verticalCenter
+        //            anchors.right: parent.right
+        //            anchors.rightMargin: 20
+        //        }
+
+            }
+
+            // collapse button
+            IconButton {
+                id: btnCollapse
+                size: 30
+                iconSource: collapsed ? "qrc:/assets/images/icon-expand.svg" : "qrc:/assets/images/icon-collapse.svg"
+                Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+
+                onClicked: {
+                    // this will prevent height from being animated in parent rack
+                    // (see Loader comments for more behavior info)
+                    subRack.parent.parent.disableAnimation = true
+                    collapsed = !collapsed
+                }
+            }
         }
     }
 
+    // sub rack content
     Rectangle {
         visible: titleBarVisible
         Layout.fillWidth: true
-        implicitHeight: childrenRect.height ? childrenRect.height + 50 : 0
+        Layout.preferredHeight: collapsed ? 0 : childrenRect.height + 50
+        clip: true
         color: Stylesheet.setAlpha(Stylesheet.colors.darkGrey, 0.6)
 
         Grid {
@@ -82,6 +119,13 @@ ColumnLayout {
 
             // fields are directly set as children of Flow object here
             children: fields
+        }
+
+        Behavior on Layout.preferredHeight {
+            NumberAnimation {
+                duration: 500
+                easing.type: Easing.OutCubic
+            }
         }
     }
 }

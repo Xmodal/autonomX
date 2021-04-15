@@ -84,7 +84,11 @@ Item {
                     iconSource: collapsed ? "qrc:/assets/images/icon-expand.svg" : "qrc:/assets/images/icon-collapse.svg"
                     Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
 
-                    onClicked: collapsed = !collapsed
+                    onClicked: {
+                        // re-enable animation
+                        contentLoader.disableAnimation = false
+                        collapsed = !collapsed
+                    }
                 }
             }
         }
@@ -95,7 +99,13 @@ Item {
             sourceComponent: content
             clip: true
 
-            property int generatorIndex: window.activeGeneratorIndex // -1: no assigned generator ID
+            // when true: below behavior is disabled
+            // - is set to true when any SubRack instance is collapsed/expanded
+            // - is set to false when the contained Rack is collapsed/expanded
+            // TODO: cross-animation blocker to prevent weird bugs! :) depending on how severe the bugs actually are (untested)
+            property bool disableAnimation: false
+
+            //property int generatorIndex: window.activeGeneratorIndex // -1: no assigned generator ID
 
             Layout.fillWidth: true
             Layout.preferredHeight: collapsed ? 0 : implicitHeight
@@ -103,7 +113,7 @@ Item {
             // animation management
             Behavior on Layout.preferredHeight {
                 NumberAnimation {
-                    duration: 500
+                    duration: contentLoader.disableAnimation ? 0 : 500
                     easing.type: Easing.OutCubic
                 }
             }

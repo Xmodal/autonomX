@@ -25,7 +25,7 @@ ColumnLayout {
 
                 Label {
                     id: generatorName
-                    text: "Spiking Neural Network"
+                    text: generatorModel.at(window.activeGeneratorIndex) ? generatorModel.at(window.activeGeneratorIndex)["name"] : ""
                     font: Stylesheet.fonts.title
 
                     Rectangle {
@@ -38,7 +38,7 @@ ColumnLayout {
 
                 Label {
                     id: generatorDescription
-                    text: "An interconnected network of biologically-modeled neurons."
+                    text: generatorModel.at(window.activeGeneratorIndex) ? generatorModel.at(window.activeGeneratorIndex)["description"] : ""
                     font: Stylesheet.fonts.text
                 }
             }

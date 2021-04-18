@@ -25,6 +25,7 @@ Generator::Generator(int id, QString name, QString type, QString description) {
     this->name = name;
     this->type = type;
     this->description = description;
+    this->userNotes = "";
 
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
@@ -65,6 +66,10 @@ QString Generator::getDescription() {
     return description;
 }
 
+QString Generator::getUserNotes() {
+    return userNotes;
+}
+
 double Generator::getHistoryLatest() {
     return historyLatest;
 }
@@ -101,23 +106,23 @@ int Generator::getLatticeHeight() {
     return latticeHeight;
 }
 
-void Generator::writeName(QString name) {
-    if(this->name == name) {
-        return;
-    }
+//void Generator::writeName(QString name) {
+//    if(this->name == name) {
+//        return;
+//    }
 
-    if(flagDebug) {
-        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-            std::chrono::system_clock::now().time_since_epoch()
-        );
+//    if(flagDebug) {
+//        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+//            std::chrono::system_clock::now().time_since_epoch()
+//        );
 
-        qDebug() << "writeName (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << name;
-    }
+//        qDebug() << "writeName (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << name;
+//    }
 
-    this->name = name;
-    emit valueChanged("name", QVariant(name));
-    emit nameChanged(name);
-}
+//    this->name = name;
+//    emit valueChanged("name", QVariant(name));
+//    emit nameChanged(name);
+//}
 
 void Generator::writeType(QString type) {
     if(this->type == type) {
@@ -137,22 +142,41 @@ void Generator::writeType(QString type) {
     emit typeChanged(type);
 }
 
-void Generator::writeDescription(QString description) {
-    if(this->description == description) {
-        return;
-    }
+//void Generator::writeDescription(QString description) {
+//    if(this->description == description) {
+//        return;
+//    }
 
-    if(flagDebug) {
+//    if(flagDebug) {
+//        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+//            std::chrono::system_clock::now().time_since_epoch()
+//        );
+
+//        qDebug() << "writeDescription (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << description;
+//    }
+
+//    this->description = description;
+//    emit valueChanged("description", QVariant(description));
+//    emit descriptionChanged(description);
+//}
+
+void Generator::writeUserNotes(QString userNotes) {
+    if (this->userNotes == userNotes)
+        return;
+
+    if (flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
             std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "writeDescription (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << description;
+        qDebug() << "writeUserNotes (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << userNotes;
     }
 
-    this->description = description;
-    emit valueChanged("description", QVariant(description));
-    emit descriptionChanged(description);
+    this->userNotes = userNotes;
+    emit valueChanged("userNotes", QVariant(userNotes));
+    emit userNotesChanged(userNotes);
+
+    // qDebug() << userNotes << "\t" << this->userNotes;
 }
 
 void Generator::writeHistoryLatest(double historyLatest) {
@@ -319,6 +343,8 @@ void Generator::writeLatticeHeight(int latticeHeight) {
 }
 
 void Generator::updateValue(const QString &key, const QVariant &value) {
+    // qDebug() << "Generator::updateValue";
+
     QByteArray keyArray = key.toLocal8Bit();
     char* keyBuffer = keyArray.data();
 

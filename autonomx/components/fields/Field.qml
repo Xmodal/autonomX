@@ -103,6 +103,17 @@ ColumnLayout {
                     }
                 }
             }
+
+            MouseArea {
+                Layout.topMargin: -fieldContentLoader.implicitHeight
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.leftMargin: -10
+                Layout.rightMargin: -10
+
+                visible: !field.activated
+                cursorShape: Qt.ForbiddenCursor
+            }
         }
     }
 }

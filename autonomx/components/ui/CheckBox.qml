@@ -49,6 +49,8 @@ CheckBox {
         }
     }
 
+    CursorShaper {}
+
     Behavior on scaleValue {
         NumberAnimation { duration: 350; easing.type: Easing.OutQuart }
     }

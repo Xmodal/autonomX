@@ -104,6 +104,7 @@ ColumnLayout {
                 }
             }
 
+            // mouse blocker
             MouseArea {
                 Layout.topMargin: -fieldContentLoader.implicitHeight
                 Layout.fillHeight: true

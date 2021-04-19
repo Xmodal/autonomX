@@ -34,6 +34,7 @@
         <file>components/racks/SNNHelpRack.qml</file>
         <file>components/racks/Rack.qml</file>
         <file>components/ui/CheckBox.qml</file>
+        <file>components/ui/CursorShaper.qml</file>
         <file>components/ui/GeneratorButton.qml</file>
         <file>components/ui/GeneratorWidget.qml</file>
         <file>components/ui/HistoryGraph.qml</file>

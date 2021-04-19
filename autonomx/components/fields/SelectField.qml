@@ -26,7 +26,7 @@ Field {
         // options delegate
         delegate: ItemDelegate {
             id: itemDlgt
-            width: comboBox.width
+            width: comboBox.width + 20
             padding: 0
 
             // item contents
@@ -45,22 +45,22 @@ Field {
                 opacity: hovered ? 0.1 : 0
                 border.width: 0
             }
-
-
         }
 
         // selected item contents
         contentItem: Label {
             text: comboBox.displayText
-            verticalAlignment: Text.AlignVCenter
-            height: 40
+            leftPadding: 0
+            topPadding: 7
+            bottomPadding: 7
         }
 
         // popup
         popup: Popup {
             id: cbPopup
+            x: -10
             y: comboBox.height
-            width: comboBox.width
+            width: comboBox.width + 20
             height: contentItem.implicitHeight < 240 ? contentItem.implicitHeight : 240
             padding: 0
 

@@ -8,7 +8,8 @@ Field {
     id: areaField
 
     property string placeholder: "Text Area"
-    property string defaultText: propName && generatorModel.at(window.activeGeneratorIndex) ? generatorModel.at(window.activeGeneratorIndex)[propName] : ""
+    //property string defaultText: propName && generatorModel.at(window.activeGeneratorIndex) ? generatorModel.at(window.activeGeneratorIndex)[propName] : ""
+    property string defaultText
 
     fieldHeight: -1
 
@@ -16,6 +17,7 @@ Field {
         id: flickable
         anchors.fill: parent
         maximumFlickVelocity: 350
+        height: 50
         interactive: textArea.contentHeight > height
 
         TextArea.flickable: TextArea {

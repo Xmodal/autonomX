@@ -20,12 +20,7 @@ Field {
     }
 
     // main slider area
-    fieldContent: Item {
-        id: sliderContainer
-
-        property real innerMaskWidth: Math.max((sliderValue.contentWidth + 14) / width, 0.3)
-        onInnerMaskWidthChanged: frameMaskWidth = innerMaskWidth
-
+    fieldContent: TextField {
         // value update lag timer
         Timer {
             id: sliderLagTimer
@@ -35,119 +30,76 @@ Field {
             onTriggered: sliderField.valueChanged(slider.value)
         }
 
-        ColumnLayout {
-            spacing: 3
-            anchors.fill: parent
+        id: sliderValue
 
-            // slider
-            Slider {
-                id: slider
+        // alignment
+        leftPadding: 0
 
-                // alignment
-                Layout.fillWidth: true
-                Layout.preferredHeight: 10
-                Layout.topMargin: 10
-                padding: 0
+        // text
+        text: parseValue(slider.value)
+        validator: DoubleValidator { bottom: minVal; top: maxVal }
+        selectByMouse: true
 
-                onHoveredChanged: fieldHovered = hovered
-                onPressedChanged: fieldFocused = pressed
+        // field frame
+        onHoveredChanged: fieldHovered = hovered
+        onActiveFocusChanged: fieldFocused = activeFocus
 
-                // slider params
-                from: minVal
-                to: maxVal
-                value: currVal
-                stepSize: step
+        // background (none)
+        background: Item {}
 
-                // value bar
-                background: Rectangle {
-                    width: parent.width
-                    height: 10
-                    color: "#4D4D4D"
+        // signals
+        onEditingFinished: {
+            var newValue = displayText;
 
-                    Rectangle {
-                        width: parent.width * slider.visualPosition
-                        anchors.left: parent.left
-                        height: parent.height
-                        color: Stylesheet.colors.generator
-                    }
-                }
+            if (newValue === "") newValue = (minVal + maxVal) / 2;
+            else if (newValue > maxVal) newValue = maxVal;
+            else if (newValue < minVal) newValue = minVal;
 
-                // no handle
-                handle: Rectangle {
-                    width: 0; height: parent.height
-                    x: slider.visualPosition * slider.availableWidth; y: 0
-                }
+            sliderField.valueChanged(newValue);
 
-                // signals
-                onValueChanged: {
-                    if (updateLag > 0) sliderLagTimer.restart();
-                    else sliderField.valueChanged(value)
-                }
+            focus = false;
+        }
+
+        // slider
+        Slider {
+            id: slider
+
+            // alignment
+            anchors.bottom: parent.bottom
+            implicitWidth: parent.width + 20
+            anchors.left: parent.left
+            anchors.leftMargin: -10
+            implicitHeight: 4
+            padding: 0
+
+            onHoveredChanged: fieldHovered = hovered
+            onPressedChanged: fieldFocused = pressed
+
+            // slider params
+            from: minVal
+            to: maxVal
+            value: currVal
+            stepSize: step
+
+            // value bar
+            background: Rectangle {
+                width: parent.width * slider.visualPosition
+                anchors.left: parent.left
+                height: parent.height
+                color: Stylesheet.colors.generator
             }
 
-            TextField {
-                id: sliderValue
-
-                // alignment
-                padding: 0
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignCenter
-
-                // text
-                text: parseValue(slider.value)
-                horizontalAlignment: Text.AlignHCenter
-                validator: DoubleValidator { bottom: minVal; top: maxVal }
-                selectByMouse: true
-
-                // field frame
-                onHoveredChanged: fieldHovered = hovered
-                onActiveFocusChanged: fieldFocused = activeFocus
-
-                // background (none)
-                background: Item {}
-
-                // offset to the left (not sure why I need this, but I Do)
-                transform: Translate { x: -2 }
-
-                // signals
-                onEditingFinished: {
-                    var newValue = displayText;
-
-                    if (newValue === "") newValue = (minVal + maxVal) / 2;
-                    else if (newValue > maxVal) newValue = maxVal;
-                    else if (newValue < minVal) newValue = minVal;
-
-                    sliderField.valueChanged(newValue);
-
-                    focus = false;
-                }
+            // no handle
+            handle: Rectangle {
+                width: 0; height: parent.height
+                x: slider.visualPosition * slider.availableWidth; y: 0
             }
 
-            // states & transitions
-            // current state (apparently I have to set it like this for it to work properly instead of using "when" in each state)
-    //        state: slider.pressed ? "pressed" : (slider.hovered ? "hovered" : "")
-    //        states: [
-    //            State {
-    //                name: "hovered";
-    //                PropertyChanges { target: trueHandle; handleColor: Stylesheet.colors.white }
-    //            },
-
-    //            State {
-    //                name: "pressed";
-    //                PropertyChanges { target: trueHandle; handleColor: Stylesheet.colors.generator }
-    //            }
-    //        ]
-    //        transitions: [
-    //            Transition {
-    //                from: ""; to: "hovered"
-    //                ColorAnimation { target: trueHandle; properties: "handleColor"; duration: 250; easing.type: Easing.InOutQuad }
-    //            },
-
-    //            Transition {
-    //                from: "hovered"; to: ""
-    //                ColorAnimation { target: trueHandle; properties: "handleColor"; duration: 250; easing.type: Easing.InOutQuad }
-    //            }
-    //        ]
+            // signals
+            onValueChanged: {
+                if (updateLag > 0) sliderLagTimer.restart();
+                else sliderField.valueChanged(value)
+            }
         }
     }
 }

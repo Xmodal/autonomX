@@ -13,7 +13,6 @@ ColumnLayout {
     property string propName
 
     property real fieldWidth: 150
-    property real fieldHeight: 40
     // state props
     property bool showLabel: true
     property bool showFrame: true
@@ -49,55 +48,42 @@ ColumnLayout {
         font: Stylesheet.fonts.label
     }
 
-    Item {
+    Rectangle {
+        // color
+        color: Stylesheet.colors.black
+
+        // layout
         Layout.fillWidth: true
         Layout.preferredWidth: fieldWidth
         Layout.maximumWidth: fieldWidth
         Layout.fillHeight: parent.Layout.fillHeight
-        Layout.preferredHeight: fieldHeight
+        Layout.preferredHeight: childrenRect.height
 
-        FieldFrame {
-            id: fieldFrame
-            enabled: activated
-            visible: showFrame
-            isHovered: fieldHovered
-            isFocused: fieldFocused
-            flagEnabled: flagName !== ""
-            maskWidth: field.frameMaskWidth
-
-            // necessary to properly update flag border corner
-            onBackdropHoveredChanged: field.backdropHovered = fieldFrame.backdropHovered
-        }
-
-        RowLayout {
+        // content
+        ColumnLayout {
             spacing: 0
-            anchors.fill: parent
+            anchors {
+                left: parent.left
+                right: parent.right
+                leftMargin: 10
+                rightMargin: 10
+                topMargin: 7
+                bottomMargin: 7
+            }
 
             // flag
-            Item {
+            CheckBox {
+                id: flag
                 visible: flagName !== ""
-                Layout.preferredWidth: 30
-                Layout.fillHeight: true
 
-                CheckBox {
-                    id: flag
-                    checked: flagValue
-                    onCheckedChanged: flagChanged(checked)
-                }
+                Layout.preferredWidth: 20
+                Layout.topMargin: -25
+                Layout.bottomMargin: 5
+                Layout.rightMargin: -10
+                Layout.alignment: Qt.AlignRight
 
-                Image {
-                    anchors.bottom: parent.bottom
-                    anchors.right: parent.right
-                    source: "qrc:/assets/images/check-frame.svg"
-                    opacity: backdropHovered || fieldHovered || fieldFocused ? 1 : 0.3
-
-                    Behavior on opacity {
-                        NumberAnimation {
-                            duration: 150
-                            easing.type: Easing.Linear
-                        }
-                    }
-                }
+                checked: flagValue
+                onCheckedChanged: flagChanged(checked)
             }
 
             // field
@@ -107,12 +93,11 @@ ColumnLayout {
                 Layout.fillHeight: true
 
                 enabled: field.activated
-                opacity: field.activated ? 1 : 0.25
+                opacity: field.activated ? 1 : 0.4
 
                 // animations
                 Behavior on opacity {
                     NumberAnimation {
-                        property: "opacity"
                         duration: 250
                         easing.type: Easing.InOutQuad
                     }

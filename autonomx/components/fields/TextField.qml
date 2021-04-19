@@ -41,7 +41,7 @@ Field {
 
         // signal hooks
         onEditingFinished: {
-            valueChanged(text);
+            textField.valueChanged(text);
             focus = false;
         }
     }

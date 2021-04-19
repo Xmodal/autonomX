@@ -3,6 +3,7 @@ import QtQuick.Controls 2.3
 import QtQuick.Layouts 1.3
 
 import "qrc:/stylesheet"
+import "../ui"
 
 Field {
     id: selectField
@@ -53,6 +54,11 @@ Field {
             leftPadding: 0
             topPadding: 7
             bottomPadding: 7
+
+            CursorShaper {
+                anchors.leftMargin: -10
+                anchors.rightMargin: -20
+            }
         }
 
         // popup
@@ -76,6 +82,8 @@ Field {
                 color: Stylesheet.colors.black
                 border.width: 0
             }
+
+            CursorShaper {}
         }
 
         // down caret indicator

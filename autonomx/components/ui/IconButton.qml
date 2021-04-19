@@ -32,4 +32,6 @@ Button {
             fragmentShader: "qrc:/shaders/icon_button.frag"
         }
     }
+
+    CursorShaper {}
 }

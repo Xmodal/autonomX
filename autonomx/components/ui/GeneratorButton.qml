@@ -81,6 +81,7 @@ Control {
         id: mouseArea
         anchors.fill: parent
         hoverEnabled: true
+        cursorShape: Qt.PointingHandCursor
 
         onReleased: if (containsMouse) generatorButton.clicked()
     }

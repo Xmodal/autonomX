@@ -130,6 +130,8 @@ Button {
         }
 
         onClicked: window.deleteGenerator(index)
+
+        CursorShaper {}
     }
 
     // inferior border
@@ -140,5 +142,10 @@ Button {
         anchors.bottom: parent.bottom
         color: Stylesheet.colors.white
         opacity: 0.1
+    }
+
+    // global hand cursor
+    CursorShaper {
+        visible: !generatorWidget.selected
     }
 }

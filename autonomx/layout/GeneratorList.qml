@@ -62,7 +62,7 @@ Item {
                 implicitWidth: parent.width * 0.5
 
                 backgroundColor: Stylesheet.colors.generator
-                iconSource: "qrc:/assets/images/add-icon.svg"
+                iconSource: "qrc:/assets/images/plus.svg"
 
                 onClicked: window.addGenerator()
             }

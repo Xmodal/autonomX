@@ -12,7 +12,7 @@ import "qrc:/stylesheet"
 import "../components/racks"
 
 Rectangle {
-    Layout.preferredWidth: 590
+    Layout.preferredWidth: 580
     Layout.fillHeight: true
 
     color: Stylesheet.colors.darkGrey

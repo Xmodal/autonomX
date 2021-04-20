@@ -12,7 +12,7 @@ ColumnLayout {
     property string labelText: "Label"
     property string propName
 
-    property real fieldWidth: 150
+    property real fieldWidth: 160
     // state props
     property bool showLabel: true
     property bool showFrame: true
@@ -48,9 +48,19 @@ ColumnLayout {
         font: Stylesheet.fonts.label
     }
 
-    Rectangle {
-        // color
-        color: Stylesheet.colors.black
+    Item {
+        Rectangle {
+            anchors.fill: parent
+            color: Stylesheet.colors.black
+            opacity: fieldFocused || fieldHovered ? 1 : 0.5
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 200
+                    easing.type: Easing.Linear
+                }
+            }
+        }
 
         // layout
         Layout.fillWidth: true

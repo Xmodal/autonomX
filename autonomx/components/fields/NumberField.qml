@@ -71,44 +71,34 @@ Field {
         onActiveFocusChanged: fieldFocused = activeFocus
 
         // inc/dec widget
-        Item {
+        RowLayout {
             anchors.right: parent.right
-            width: 10
             anchors.top: parent.top
             anchors.bottom: parent.bottom
 
-            // block default field pointer events on widget zone
-            MouseArea {
-                anchors.fill: parent
-            }
+            spacing: 0
 
-            // image buttons
             Repeater {
-                model: 2
+                model: ["minus", "plus-small"]
 
-                Image {
-                    id: caret
-                    source: "qrc:/assets/images/down-caret.svg"
-                    opacity: caretMouse.containsMouse && !caretMouse.pressed ? 1 : 0.25
+                Item {
+                    Layout.alignment: Qt.AlignVCenter
+                    width: 14; height: 14
+                    x: 0.5; y: -0.5
 
-                    anchors {
-                        right: parent.right
-                        top: index % 2 === 0 ? parent.top : undefined
-                        topMargin: index % 2 === 0 ? 8 : 0
-                        bottom: index % 2 === 0 ? undefined : parent.bottom
-                        bottomMargin: index % 2 === 0 ? 0 : 8
-                    }
-
-                    transform: Rotation {
-                        angle: index % 2 === 0 ? 180 : 0
-                        origin { x: caret.width/2; y: caret.height/2 }
+                    Image {
+                        source: "qrc:/assets/images/" + modelData + ".svg"
+                        opacity: mouseArea.containsMouse && !mouseArea.pressed ? 1 : 0.35
+                        anchors.centerIn: parent
                     }
 
                     MouseArea {
-                        id: caretMouse
+                        id: mouseArea
                         anchors.fill: parent
                         hoverEnabled: true
-                        onClicked: index % 2 === 0 ? increment() : decrement()
+                        cursorShape: Qt.PointingHandCursor
+
+                        onClicked: index % 2 === 0 ? decrement() : increment()
                     }
                 }
             }

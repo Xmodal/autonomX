@@ -32,6 +32,7 @@
 #include "GeneratorLattice.h"
 #include "SpikingNet.h"
 #include "AppModel.h"
+#include "CursorOverrider.h"
 
 // only include AppNap code if platform is macOS
 #ifdef Q_OS_MAC
@@ -103,6 +104,12 @@ int main(int argc, char *argv[]) {
     AppModel::getInstance().createGenerator();
 
     QQmlApplicationEngine qmlEngine;
+
+    // add cursor overrider object
+    // this allows any part of the application to instantaneously alter the mouse cursor shape
+    // (mainly used for slide-dragging interactions)
+    CursorOverrider co(&app);
+    qmlEngine.rootContext()->setContextObject(&co);
 
     // Pass C++ objects to QML.
     qmlEngine.rootContext()->setContextProperty("appModel", &AppModel::getInstance());

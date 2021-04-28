@@ -22,6 +22,8 @@ ApplicationWindow {
     // We follow Semantic Versioning 2.0.0 https://semver.org/
     readonly property string softwareVersion: "0.1.1-SNAPSHOT"
 
+    property bool altPressed: false
+
     visible: true
     width: 1440
     height: 720
@@ -39,6 +41,7 @@ ApplicationWindow {
         Qt.quit();
     }
 
+
     // add/delete generators
     function addGenerator() {
         appModel.createGenerator();
@@ -49,22 +52,22 @@ ApplicationWindow {
         if (activeGeneratorIndex === generatorModel.rowCount()) activeGeneratorIndex--;
     }
 
+
     // background
     background: Rectangle {
         color: Stylesheet.colors.black
     }
+
 
     // Shortcuts:
     Shortcut {
         sequence: "Esc"
         onActivated: toggleFullscreen()
     }
-
     Shortcut {
         sequence: "Ctrl+Q"
         onActivated: quitThisApp()
     }
-
     Shortcut {
         sequence: "PgUp"
         onActivated: {
@@ -74,7 +77,6 @@ ApplicationWindow {
             activeGeneratorIndex = i;
         }
     }
-
     Shortcut {
         sequence: "PgDown"
         onActivated: {
@@ -84,6 +86,7 @@ ApplicationWindow {
         }
     }
 
+    // main content
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
@@ -105,6 +108,14 @@ ApplicationWindow {
             RackList {
                 visible: activeGeneratorIndex >= 0 && showGeneratorSettings
             }
+        }
+
+        // alt press detection
+        Keys.onPressed: {
+            if (event.key === Qt.Key_Alt) altPressed = true
+        }
+        Keys.onReleased: {
+            if (event.key === Qt.Key_Alt) altPressed = false
         }
     }
 }

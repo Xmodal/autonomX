@@ -34,6 +34,7 @@ SOURCES += \
     ../qosc/contrib/oscpack/OscTypes.cpp \
     AppModel.cpp \
     ComputeEngine.cpp \
+    CursorOverrider.cpp \
     Facade.cpp \
     Generator.cpp \
     GeneratorFacade.cpp \
@@ -82,6 +83,7 @@ HEADERS += \
     ../qosc/contrib/oscpack/OscTypes.h \
     AppModel.h \
     ComputeEngine.h \
+    CursorOverrider.h \
     Facade.h \
     Generator.h \
     GeneratorFacade.h \

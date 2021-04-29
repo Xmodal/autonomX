@@ -43,7 +43,7 @@ ColumnLayout {
                 }
             }
 
-            TextField {
+            AreaField {
                 fieldWidth: -1
                 Layout.fillWidth: true
                 labelText: "User notes"

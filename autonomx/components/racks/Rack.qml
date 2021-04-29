@@ -1,7 +1,7 @@
 // Global Rack component
 // -- is always extended
 
-import QtQuick 2.9
+import QtQuick 2.11
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 

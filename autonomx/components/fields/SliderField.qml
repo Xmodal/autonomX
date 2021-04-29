@@ -117,6 +117,13 @@ Field {
             onValueChanged: {
                 if (updateLag > 0) sliderLagTimer.restart();
                 else sliderField.valueChanged(value)
+
+                // to prevent binding from being disconnected midway into a slider drag operation;
+                // i don't really know why QML does this but it seems to occur on
+                // very quick value changes are triggered, so that the binding doesn't have enough time to
+                // re-update itself before it's overwritten, effectively breaking the connection
+                // (that's my current take, at least)
+                value = Qt.binding(function() { return currVal })
             }
         }
 

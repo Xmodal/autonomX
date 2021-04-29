@@ -23,6 +23,8 @@ ApplicationWindow {
     readonly property string softwareVersion: "0.1.1-SNAPSHOT"
 
     property bool altPressed: false
+    property bool shiftPressed: false
+    property alias allowSlideDrag: slideDragger.visible
 
     visible: true
     width: 1440
@@ -110,12 +112,49 @@ ApplicationWindow {
             }
         }
 
-        // alt press detection
+        // shift/alt press detection
         Keys.onPressed: {
             if (event.key === Qt.Key_Alt) altPressed = true
+            if (event.key === Qt.Key_Shift) shiftPressed = true
         }
         Keys.onReleased: {
-            if (event.key === Qt.Key_Alt) altPressed = false
+            if (event.key === Qt.Key_Alt) {
+                altPressed = false
+                allowSlideDrag = false
+                restoreCursor()
+            }
+
+            if (event.key === Qt.Key_Shift) shiftPressed = false
+        }
+    }
+
+    // slide drag detection/mgmt
+    Item {
+        id: slideDragger
+        x: 0
+        y: 0
+        width: parent.width
+        height: parent.height
+        visible: false
+
+        property alias mouseArea: dragArea
+        Drag.active: dragArea.drag.active
+
+        MouseArea {
+            id: dragArea
+            anchors.fill: parent
+
+            drag.target: parent
+            drag.threshold: 0
+            drag.smoothed: false
+
+            cursorShape: Qt.SizeHorCursor
+
+            onReleased: {
+                window.allowSlideDrag = false
+                parent.x = 0
+                parent.y = 0
+            }
         }
     }
 }

@@ -11,8 +11,6 @@ Field {
     //property string defaultText: propName && generatorModel.at(window.activeGeneratorIndex) ? generatorModel.at(window.activeGeneratorIndex)[propName] : ""
     property string defaultText
 
-    fieldHeight: -1
-
     fieldContent: Flickable {
         id: flickable
         anchors.fill: parent

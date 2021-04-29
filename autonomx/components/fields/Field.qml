@@ -121,6 +121,7 @@ ColumnLayout {
                 Layout.fillWidth: true
                 Layout.leftMargin: -10
                 Layout.rightMargin: -10
+                hoverEnabled: true
 
                 visible: !field.activated
                 cursorShape: Qt.ForbiddenCursor

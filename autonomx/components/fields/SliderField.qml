@@ -3,6 +3,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 
 import "qrc:/stylesheet"
+import "../ui"
 
 Field {
     id: sliderField
@@ -21,6 +22,19 @@ Field {
 
     // main slider area
     fieldContent: TextField {
+        property bool altPressed: window.altPressed
+        onAltPressedChanged: updateDragCursor()
+
+        // generalized drag cursor update process
+        function updateDragCursor(restore = false) {
+            if (altPressed) {
+                if (cursorShaper.containsMouse)
+                    return overrideCursor(Qt.SizeHorCursor)
+
+                if (restore) restoreCursor()
+            }
+        }
+
         // value update lag timer
         Timer {
             id: sliderLagTimer
@@ -51,12 +65,16 @@ Field {
         onEditingFinished: {
             var newValue = displayText;
 
+            // treat empty values
             if (newValue === "") newValue = (minVal + maxVal) / 2;
+            // clamp to min/max
             else if (newValue > maxVal) newValue = maxVal;
             else if (newValue < minVal) newValue = minVal;
 
+            // signal to facade
             sliderField.valueChanged(newValue);
 
+            // blur
             focus = false;
         }
 
@@ -99,6 +117,46 @@ Field {
             onValueChanged: {
                 if (updateLag > 0) sliderLagTimer.restart();
                 else sliderField.valueChanged(value)
+            }
+        }
+
+        MouseArea {
+            id: cursorShaper
+            anchors.fill: parent
+            visible: altPressed     // override active only on alt press+hold
+            hoverEnabled: true
+
+            // slider value is being changed here
+            property real dragX: slideDragger.x
+            property real prevDragX: 0
+            onDragXChanged: {
+                // prevents value bounce when mouse is released from drag state
+                if (!window.allowSlideDrag) {
+                    prevDragX = 0;
+                    return;
+                }
+
+                if (containsMouse) {
+                    var newDragX = prevDragX - dragX;
+
+                    // calculate value displacement
+                    var pixelUnit = (slider.to - slider.from) / slider.width;
+                    var displaceValue = newDragX * pixelUnit;
+                    if (shiftPressed) displaceValue *= 0.2;         // fine tuning
+                    // effectively update slider value
+                    slider.value -= displaceValue;
+
+                    // set previous value
+                    prevDragX = dragX;
+                }
+            }
+
+            // this is where we detect when to
+            onHoveredChanged: {
+                updateDragCursor(true)
+
+                if (containsMouse) window.allowSlideDrag = true
+                else window.allowSlideDrag = false
             }
         }
     }

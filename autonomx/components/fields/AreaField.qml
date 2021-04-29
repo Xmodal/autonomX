@@ -7,48 +7,42 @@ import "qrc:/stylesheet"
 Field {
     id: areaField
 
-    property string placeholder: "Text Area"
-    //property string defaultText: propName && generatorModel.at(window.activeGeneratorIndex) ? generatorModel.at(window.activeGeneratorIndex)[propName] : ""
-    property string defaultText
+    property string placeholder: ""
+    property string defaultText: propName && generatorModel.at(window.activeGeneratorIndex) ? generatorModel.at(window.activeGeneratorIndex)[propName] : "Text Field"
 
     fieldContent: Flickable {
         id: flickable
         anchors.fill: parent
         maximumFlickVelocity: 350
-        height: 50
-        interactive: textArea.contentHeight > height
+        implicitHeight: 100
+        interactive: fieldInput.contentHeight > height
 
         TextArea.flickable: TextArea {
-            id: textArea
+            id: fieldInput
 
-            // root settings
+            // alignment
+            leftPadding: 0
+            topPadding: 7
+            bottomPadding: 7
+
+            // text
+            font: Stylesheet.fonts.text
             text: defaultText
             placeholderText: placeholder
             wrapMode: TextArea.Wrap
 
-            // field frame
+            // field frame events
             onHoveredChanged: fieldHovered = hovered
             onActiveFocusChanged: fieldFocused = activeFocus
 
-            // alignments
-            width: fieldWidth
-            leftPadding: 0
-            rightPadding: 0
-            topPadding: Stylesheet.field.padding
-            bottomPadding: Stylesheet.field.padding
-
-            // background
             background: Item {}
 
-            // font & color
-            font.pixelSize: 14
-
-            // mouse interaction
+            // interactivity
             selectByMouse: true
 
             // signal hooks
             onEditingFinished: {
-                valueChanged(text);
+                areaField.valueChanged(text);
                 focus = false;
             }
         }

@@ -45,7 +45,7 @@ Button {
 
     // history graph
     // TODO: refactor into OpenGL component
-    HistoryGraph {        
+    HistoryGraph {
         id: historyGraph
 
         historyLatest: model.historyLatest
@@ -60,25 +60,25 @@ Button {
         anchors.fill: parent
 
         // index
-        Label {
-            id: labelIndex
+//        Label {
+//            id: labelIndex
 
-            Layout.leftMargin: 12
-            Layout.preferredWidth: 10
+//            Layout.leftMargin: 12
+//            Layout.preferredWidth: 10
 
-            text: model.index + 1
-            color: Stylesheet.colors[selected ? 'darkGrey' : 'white']
-            font { weight: Font.DemiBold; pixelSize: 11 }
-            opacity: selected ? 1 : (hovered ? 1 : 0.5)
-            horizontalAlignment: Text.AlignHCenter
-        }
+//            text: model.index + 1
+//            color: Stylesheet.colors[selected ? 'darkGrey' : 'white']
+//            font { weight: Font.DemiBold; pixelSize: 11 }
+//            opacity: selected ? 1 : (hovered ? 1 : 0.5)
+//            horizontalAlignment: Text.AlignHCenter
+//        }
 
         // generator name
         Label {
             id: labelName
 
             text: model.name
-            Layout.leftMargin: 30
+            Layout.leftMargin: 45
             Layout.fillWidth: true
             color: Stylesheet.colors.white
             font.weight: Font.DemiBold

@@ -123,7 +123,7 @@ Field {
         MouseArea {
             id: cursorShaper
             anchors.fill: parent
-            visible: altPressed     // override active only on alt press+hold
+            visible: sliderField.activated && altPressed     // override active only on alt press+hold
             hoverEnabled: true
 
             // slider value is being changed here

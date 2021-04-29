@@ -24,11 +24,18 @@ CursorOverrider::CursorOverrider(QGuiApplication* app, QObject* parent) : QObjec
 void CursorOverrider::overrideCursor(Qt::CursorShape shape)
 {
     app->setOverrideCursor(QCursor(shape));
-    qDebug() << "override";
+    // qDebug() << "override";
 }
 
 void CursorOverrider::restoreCursor()
 {
     app->restoreOverrideCursor();
-    qDebug() << "restore";
+    // qDebug() << "restore";
+}
+
+void CursorOverrider::sendPress(QObject *object, QPointF pos, int button)
+{
+    Qt::MouseButton type = Qt::MouseButton(button);
+    auto down = new QMouseEvent(QMouseEvent::Type::MouseButtonPress, pos, type, type, Qt::KeyboardModifier::NoModifier);
+    app->postEvent(object, down);
 }

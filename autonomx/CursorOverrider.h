@@ -30,4 +30,5 @@ public:
 public slots:
     void overrideCursor(Qt::CursorShape shape);
     void restoreCursor();
+    void sendPress(QObject* object, QPointF pos, int button);
 };

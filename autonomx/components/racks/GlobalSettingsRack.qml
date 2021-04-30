@@ -50,13 +50,6 @@ ColumnLayout {
                 placeholder: "add anything relevant to your setup here!"
                 propName: "userNotes"
             }
-
-            // TODO: turn this into a proper text area!
-//            AreaField {
-//                labelText: "User notes"
-//                placeholder: "add anything relevant to your setup here!"
-//                propName: "userNotes"
-//            }
         }
     }
 

@@ -39,3 +39,11 @@ void CursorOverrider::sendPress(QObject *object, QPointF pos, int button)
     auto down = new QMouseEvent(QMouseEvent::Type::MouseButtonPress, pos, type, type, Qt::KeyboardModifier::NoModifier);
     app->postEvent(object, down);
 }
+
+void CursorOverrider::deAlt(QObject* tf)
+{
+    QKeyEvent releaseEvent = QKeyEvent(QEvent::KeyRelease, Qt::Key_Alt, Qt::NoModifier);
+    QCoreApplication::sendEvent(tf, &releaseEvent);
+
+    // qDebug() << "key released";
+}

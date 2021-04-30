@@ -33,7 +33,10 @@ Field {
 
             // field frame events
             onHoveredChanged: fieldHovered = hovered
-            onActiveFocusChanged: fieldFocused = activeFocus
+            onActiveFocusChanged: {
+                window.editingTextField = activeFocus
+                fieldFocused = activeFocus
+            }
 
             background: Item {}
 

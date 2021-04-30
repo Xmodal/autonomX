@@ -23,7 +23,10 @@ Field {
 
         // field frame events
         onHoveredChanged: fieldHovered = hovered
-        onActiveFocusChanged: fieldFocused = activeFocus
+        onActiveFocusChanged: {
+            window.editingTextField = activeFocus
+            fieldFocused = activeFocus
+        }
 
         // text metrics (used to elide text)
         TextMetrics {

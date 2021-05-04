@@ -38,6 +38,7 @@
         <file>components/ui/CursorShaper.qml</file>
         <file>components/ui/GeneratorButton.qml</file>
         <file>components/ui/GeneratorWidget.qml</file>
+        <file>components/ui/GenericButton.qml</file>
         <file>components/ui/HistoryGraph.qml</file>
         <file>components/ui/IconButton.qml</file>
         <file>components/ui/Region.qml</file>

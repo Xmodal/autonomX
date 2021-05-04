@@ -122,6 +122,8 @@ void SpikingNet::initialize() {
             setGridNetwork();
             break;
     }
+
+    // qDebug() << "initialized";
 }
 
 void SpikingNet::reset() {
@@ -148,6 +150,13 @@ void SpikingNet::reset() {
     }
     delete[] weights;
     weights = 0;
+}
+
+void SpikingNet::resetParameters()
+{
+    // reset parameters here
+
+    // qDebug() << "parameters reset";
 }
 
 // inhibitory neurons are first, the rest is excitatory neurons

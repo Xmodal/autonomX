@@ -37,27 +37,6 @@ ColumnLayout {
         ]
     }
 
-//    SubRack {
-//        subRackTitle: "Connections"
-
-//        fields: [
-//            SelectField {
-//                labelText: "Network type"
-//                options: ["Grid", "Random"]
-//                //propName: "networkType"
-//            },
-//            NumberField {
-//                labelText: "Num. connections"
-//                //propName: "numConnections"
-//            },
-//            NumberField {
-//                labelText: "Learning conn."
-//                //propName: "learningConnections"
-//            }
-
-//        ]
-//    }
-
     SubRack {
         subRackTitle: "Neuron behavior"
 
@@ -79,7 +58,6 @@ ColumnLayout {
                 propName: "inhibitoryPortion"
                 updateLag: 70
             },
-
             SelectField {
                 labelText: "Inh. neuron type"
                 propName: "inhibitoryNeuronType"
@@ -118,7 +96,6 @@ ColumnLayout {
                 minVal: 0.1
                 maxVal: 60.0
             }
-
         ]
     }
 }

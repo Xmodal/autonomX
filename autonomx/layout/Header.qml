@@ -74,6 +74,27 @@ Item {
             Layout.fillWidth: true
         }
 
+        // restart/reset buttons
+        GenericButton {
+            id: restartButton
+            text: "Restart"
+            visible: activeGeneratorIndex >= 0
+
+            Layout.rightMargin: 5
+
+            onClicked: generatorModel.at(activeGeneratorIndex).initialize()
+        }
+
+        GenericButton {
+            id: resetParametersButton
+            text: "Reset params"
+            visible: activeGeneratorIndex >= 0
+
+            Layout.rightMargin: 15
+
+            onClicked: generatorModel.at(activeGeneratorIndex).resetParameters()
+        }
+
         IconButton {
             id: paramsToggler
             size: 40

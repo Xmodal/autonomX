@@ -30,8 +30,6 @@ SpikingNet::SpikingNet(int id) : Generator(id, "Spiking Neural Network", "SNN", 
         qDebug() << "constructor (SpikingNet):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    qDebug() << this->metaObject()->indexOfProperty("inhibitoryPortion");
-
     initialize();
 }
 

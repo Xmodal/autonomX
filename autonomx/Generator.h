@@ -117,13 +117,17 @@ public:
 
     // these are implemented by the derived class and take care of any memory reallocation needed to change the size of the algorithm.
     // this is called by writeLatticeWidth / writeLatticeHeight. this must set the variable to the passed value.
-    virtual void writeLatticeWidthDelegate(int latticeWidth) = 0;
-    virtual void writeLatticeHeightDelegate(int latticeHeight) = 0;
+//    virtual void writeLatticeWidthDelegate(int latticeWidth) = 0;
+//    virtual void writeLatticeHeightDelegate(int latticeHeight) = 0;
 
     // these are implemented by the derived class and allow reading / writing to the lattice.
     // this is called by applyInputRegion / applyOutputRegion
     virtual double getLatticeValue(int x, int y) = 0;
     virtual void writeLatticeValue(int x, int y, double value) = 0;
+
+    // reinitialize generator
+    virtual void reset() = 0;
+    virtual void initialize() = 0;
 
     // this updates the lattice / region from the corresponding region / lattice. this is called before / after the call to computeIteration from ComputeEngine
     void applyInputRegion();

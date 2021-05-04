@@ -119,6 +119,7 @@ private:
 
     void initialize() override;
     void reset() override;
+    void resetParameters() override;
 
 public:
     SpikingNet(int id);

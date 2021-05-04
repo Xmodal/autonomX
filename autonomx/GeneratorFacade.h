@@ -31,10 +31,15 @@ public:
 
     Q_INVOKABLE GeneratorRegionModel* getInputRegionModel();
     Q_INVOKABLE GeneratorRegionModel* getOutputRegionModel();
+
+    Q_INVOKABLE void initialize();
+    Q_INVOKABLE void resetParameters();
 private:
     QSharedPointer<GeneratorRegionModel> inputRegionModel;
     QSharedPointer<GeneratorRegionModel> outputRegionModel;
     bool flagDebug = false;
+
+    Generator* generator;
 public slots:
     void updateValueFromAlias(const QString &key, const QVariant &value);
 signals:

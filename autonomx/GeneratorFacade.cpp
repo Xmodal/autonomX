@@ -22,6 +22,8 @@
 #include "GeneratorFacade.h"
 
 GeneratorFacade::GeneratorFacade(Generator *generator) : QQmlPropertyMap(this, nullptr) {
+    this->generator = generator;
+
     // set ownership of the GeneratorFacade to C++ so that QML doesn't try to take over garbage collection duties, resulting in a double free
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 
@@ -71,7 +73,6 @@ GeneratorFacade::GeneratorFacade(Generator *generator) : QQmlPropertyMap(this, n
     // connect facade region set changes to region model
     QObject::connect(generator->getInputRegionSet(), &GeneratorRegionSet::writeRegionFromSet, inputRegionModel.data(), &GeneratorRegionModel::writeRegion, Qt::QueuedConnection);
     QObject::connect(generator->getOutputRegionSet(), &GeneratorRegionSet::writeRegionFromSet, outputRegionModel.data(), &GeneratorRegionModel::writeRegion, Qt::QueuedConnection);
-
 }
 
 GeneratorFacade::~GeneratorFacade() {
@@ -108,4 +109,15 @@ GeneratorRegionModel* GeneratorFacade::getInputRegionModel() {
 
 GeneratorRegionModel* GeneratorFacade::getOutputRegionModel() {
     return outputRegionModel.data();
+}
+
+// i'll be quite frank... this is rather dumb
+void GeneratorFacade::initialize()
+{
+    generator->initialize();
+}
+
+void GeneratorFacade::resetParameters()
+{
+    generator->resetParameters();
 }

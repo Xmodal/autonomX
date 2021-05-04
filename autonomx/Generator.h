@@ -128,6 +128,7 @@ public:
     // reinitialize generator
     virtual void reset() = 0;
     virtual void initialize() = 0;
+    virtual void resetParameters() = 0;
 
     // this updates the lattice / region from the corresponding region / lattice. this is called before / after the call to computeIteration from ComputeEngine
     void applyInputRegion();

@@ -30,6 +30,8 @@ SpikingNet::SpikingNet(int id) : Generator(id, "Spiking Neural Network", "SNN", 
         qDebug() << "constructor (SpikingNet):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
+    qDebug() << this->metaObject()->indexOfProperty("inhibitoryPortion");
+
     initialize();
 }
 
@@ -820,43 +822,43 @@ void SpikingNet::writeFlagDecay(bool flagDecay) {
     emit flagDecayChanged(flagDecay);
 }
 
-void SpikingNet::writeLatticeWidthDelegate(int latticeWidth) {
-    if(flagDebug) {
-        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()
-        );
+//void SpikingNet::writeLatticeWidthDelegate(int latticeWidth) {
+//    if(flagDebug) {
+//        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+//                    std::chrono::system_clock::now().time_since_epoch()
+//        );
 
-        qDebug() << "writeLatticeWidthDelegate:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
-    }
+//        qDebug() << "writeLatticeWidthDelegate:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+//    }
 
-    // reset network, since memory has to be reallocated
-    reset();
-    // do the change
-    this->latticeWidth = latticeWidth;
-    // re-initialize
-    initialize();
+//    // reset network, since memory has to be reallocated
+//    reset();
+//    // do the change
+//    this->latticeWidth = latticeWidth;
+//    // re-initialize
+//    initialize();
 
-    // signals are emitted from Generator::writeLatticeWidth once this is done
-}
+//    // signals are emitted from Generator::writeLatticeWidth once this is done
+//}
 
-void SpikingNet::writeLatticeHeightDelegate(int latticeHeight) {
-    if(flagDebug) {
-        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()
-        );
+//void SpikingNet::writeLatticeHeightDelegate(int latticeHeight) {
+//    if(flagDebug) {
+//        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+//                    std::chrono::system_clock::now().time_since_epoch()
+//        );
 
-        qDebug() << "writeLatticeHeightDelegate:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
-    }
+//        qDebug() << "writeLatticeHeightDelegate:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+//    }
 
-    // reset network, since memory has to be reallocated
-    reset();
-    // do the change
-    this->latticeHeight = latticeHeight;
-    // re-initialize
-    initialize();
+//    // reset network, since memory has to be reallocated
+//    reset();
+//    // do the change
+//    this->latticeHeight = latticeHeight;
+//    // re-initialize
+//    initialize();
 
-    // signals are emitted from Generator::writeLatticeWidth once this is done
-}
+//    // signals are emitted from Generator::writeLatticeWidth once this is done
+//}
 
 double SpikingNet::getLatticeValue(int x, int y) {
     int index = x % latticeWidth + y * latticeWidth;

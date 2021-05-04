@@ -316,7 +316,9 @@ void Generator::writeLatticeWidth(int latticeWidth) {
     }
 
     // actually do the changes in the derived class
-    writeLatticeWidthDelegate(latticeWidth);
+    reset();
+    this->latticeWidth = latticeWidth;
+    initialize();
 
     emit valueChanged("latticeWidth", latticeWidth);
     emit latticeWidthChanged(latticeWidth);
@@ -336,7 +338,9 @@ void Generator::writeLatticeHeight(int latticeHeight) {
     }
 
     // actually do the changes in the derived class
-    writeLatticeHeightDelegate(latticeHeight);
+    reset();
+    this->latticeHeight = latticeHeight;
+    initialize();
 
     emit valueChanged("latticeHeight", latticeHeight);
     emit latticeHeightChanged(latticeHeight);

@@ -48,7 +48,6 @@ public:
         GridNetwork
     };
     Q_ENUM(NetworkType)
-    //Q_ENUM(NeuronType)
 
 private:
     NetworkType networkType = NetworkType::GridNetwork;
@@ -118,8 +117,8 @@ private:
     void setChainNetwork();
     void setGridNetwork();
 
-    void initialize();
-    void reset();
+    void initialize() override;
+    void reset() override;
 
 public:
     SpikingNet(int id);
@@ -154,9 +153,6 @@ public:
     void writeFlagSTP(bool flagSTP);
     void writeFlagSTDP(bool flagSTDP);
     void writeFlagDecay(bool flagDecay);
-
-    void writeLatticeWidthDelegate(int latticeWidth) override;
-    void writeLatticeHeightDelegate(int latticeHeight) override;
 
     double getLatticeValue(int x, int y) override;
     void writeLatticeValue(int x, int y, double value) override;

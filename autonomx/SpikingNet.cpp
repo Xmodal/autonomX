@@ -41,8 +41,6 @@ SpikingNet::~SpikingNet() {
 
         qDebug() << "destructor (SpikingNet):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
-
-    reset();
 }
 
 
@@ -122,32 +120,6 @@ void SpikingNet::initialize() {
     }
 
     // qDebug() << "initialized";
-}
-
-void SpikingNet::reset() {
-    if(flagDebug) {
-        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()
-        );
-
-        qDebug() << "reset:\t\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
-    }
-
-    // delete STP variables
-    delete[] STPu;
-    delete[] STPx;
-    delete[] STPw;
-    STPu = 0;
-    STPx = 0;
-    STPw = 0;
-
-    // delete weights
-    for(int i = 0; i < latticeWidth * latticeHeight; ++i) {
-        delete[] weights[i];
-        weights[i] = 0;
-    }
-    delete[] weights;
-    weights = 0;
 }
 
 void SpikingNet::resetParameters()
@@ -632,9 +604,6 @@ void SpikingNet::writeInhibitoryPortion(double inhibitoryPortion) {
         qDebug() << "writeInhibitoryPortion:\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    // reset network, since these parameters only take effect when the network is created anew
-    // TODO: this isn't as efficient as it could be since it's not necessary to deallocate and reallocate memory for weights / STP
-    reset();
     // do the change
     this->inhibitoryPortion = inhibitoryPortion;    
     // re-initialize
@@ -656,9 +625,6 @@ void SpikingNet::writeInhibitoryNeuronType(NeuronType::Enum inhibitoryNeuronType
         qDebug() << "writeInhibitoryNeuronType:\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    // reset network, since these parameters only take effect when the network is created anew
-    // TODO: this isn't as efficient as it could be since it's not necessary to deallocate and reallocate memory for weights / STP
-    reset();
     // do the change
     this->inhibitoryNeuronType = inhibitoryNeuronType;
     // re-initialize
@@ -680,9 +646,6 @@ void SpikingNet::writeExcitatoryNeuronType(NeuronType::Enum excitatoryNeuronType
         qDebug() << "writeExcitatoryNeuronType:\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    // reset network, since these parameters only take effect when the network is created anew
-    // TODO: this isn't as efficient as it could be since it's not necessary to deallocate and reallocate memory for weights / STP
-    reset();
     // do the change
     this->excitatoryNeuronType = excitatoryNeuronType;
     // re-initialize

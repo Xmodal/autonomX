@@ -126,7 +126,6 @@ public:
     virtual void writeLatticeValue(int x, int y, double value) = 0;
 
     // reinitialize generator
-    virtual void reset() = 0;
     virtual void initialize() = 0;
     virtual void resetParameters() = 0;
 

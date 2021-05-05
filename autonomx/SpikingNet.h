@@ -118,7 +118,6 @@ private:
     void setGridNetwork();
 
     void initialize() override;
-    void reset() override;
     void resetParameters() override;
 
 public:

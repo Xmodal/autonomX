@@ -315,9 +315,9 @@ void Generator::writeLatticeWidth(int latticeWidth) {
         qDebug() << "writeLatticeWidth (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << latticeWidth;
     }
 
-    // actually do the changes in the derived class
-    reset();
+    // update property locally
     this->latticeWidth = latticeWidth;
+    // re-initialize network
     initialize();
 
     emit valueChanged("latticeWidth", latticeWidth);
@@ -337,9 +337,9 @@ void Generator::writeLatticeHeight(int latticeHeight) {
         qDebug() << "writeLatticeHeight (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << latticeHeight;
     }
 
-    // actually do the changes in the derived class
-    reset();
+    // update property locally
     this->latticeHeight = latticeHeight;
+    // re-initialize network
     initialize();
 
     emit valueChanged("latticeHeight", latticeHeight);

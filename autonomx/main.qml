@@ -13,7 +13,7 @@ ApplicationWindow {
     id: window
 
     property string lastMessageReceived: ""
-    property int activeGeneratorIndex: 0
+    property int activeGeneratorIndex: -1
 
     property bool showGeneratorList: true
     property bool showGeneratorSettings: true

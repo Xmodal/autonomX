@@ -101,7 +101,9 @@ int main(int argc, char *argv[]) {
     qmlRegisterType<GeneratorLattice>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorLattice");
     qRegisterMetaType<QSharedPointer<Generator>>();
 
-    AppModel::getInstance().createGenerator();
+    // create initial generators
+    AppModel::getInstance().createGenerator("spiking_net");
+    // AppModel::getInstance().createGenerator("wolfram");
 
     QQmlApplicationEngine qmlEngine;
 

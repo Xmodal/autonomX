@@ -17,6 +17,7 @@
 
 #include "AppModel.h"
 #include "SpikingNet.h"
+#include "WolframCA.h"
 
 AppModel::AppModel() {
     if(flagDebug) {
@@ -118,7 +119,7 @@ QSharedPointer<OscEngine> AppModel::getOscEngine() const {
     return oscEngine;
 }
 
-void AppModel::createGenerator() {
+void AppModel::createGenerator(QString type) {
     if(flagDebug) {
         qDebug() << "createGenerator (AppModel): finding a free id";
     }
@@ -146,7 +147,12 @@ void AppModel::createGenerator() {
     }
 
     // create a new generator
-    QSharedPointer<Generator> generator = QSharedPointer<Generator>(new SpikingNet(nextID));
+    QSharedPointer<Generator> generator;
+    if (type.compare("spiking_net")) {
+        generator = QSharedPointer<Generator>(new SpikingNet(nextID));
+    } else if (type.compare("wolfram")) {
+        generator = QSharedPointer<Generator>(new WolframCA(nextID));
+    }
 
     // move the Generator to computeThread
     if(flagDebug) {

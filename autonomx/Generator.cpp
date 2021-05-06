@@ -106,24 +106,6 @@ int Generator::getLatticeHeight() {
     return latticeHeight;
 }
 
-//void Generator::writeName(QString name) {
-//    if(this->name == name) {
-//        return;
-//    }
-
-//    if(flagDebug) {
-//        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-//            std::chrono::system_clock::now().time_since_epoch()
-//        );
-
-//        qDebug() << "writeName (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << name;
-//    }
-
-//    this->name = name;
-//    emit valueChanged("name", QVariant(name));
-//    emit nameChanged(name);
-//}
-
 void Generator::writeType(QString type) {
     if(this->type == type) {
         return;
@@ -141,24 +123,6 @@ void Generator::writeType(QString type) {
     emit valueChanged("type", QVariant(type));
     emit typeChanged(type);
 }
-
-//void Generator::writeDescription(QString description) {
-//    if(this->description == description) {
-//        return;
-//    }
-
-//    if(flagDebug) {
-//        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-//            std::chrono::system_clock::now().time_since_epoch()
-//        );
-
-//        qDebug() << "writeDescription (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << description;
-//    }
-
-//    this->description = description;
-//    emit valueChanged("description", QVariant(description));
-//    emit descriptionChanged(description);
-//}
 
 void Generator::writeUserNotes(QString userNotes) {
     if (this->userNotes == userNotes)

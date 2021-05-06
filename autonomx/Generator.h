@@ -27,10 +27,10 @@
 
 class Generator : public QObject {
     Q_OBJECT
-    Q_PROPERTY(QString name READ getName NOTIFY nameChanged)
+    Q_PROPERTY(QString name READ getName)
     Q_PROPERTY(QString type READ getType NOTIFY typeChanged)
     Q_PROPERTY(int id READ getID)
-    Q_PROPERTY(QString description READ getDescription NOTIFY descriptionChanged)
+    Q_PROPERTY(QString description READ getDescription)
     Q_PROPERTY(QString userNotes READ getUserNotes WRITE writeUserNotes NOTIFY userNotesChanged)
     Q_PROPERTY(double historyLatest READ getHistoryLatest NOTIFY historyLatestChanged)
     Q_PROPERTY(bool historyRefresher READ getHistoryRefresher NOTIFY historyRefresherChanged)
@@ -115,11 +115,6 @@ public:
     void writeLatticeWidth(int latticeWidth);
     void writeLatticeHeight(int latticeHeight);
 
-    // these are implemented by the derived class and take care of any memory reallocation needed to change the size of the algorithm.
-    // this is called by writeLatticeWidth / writeLatticeHeight. this must set the variable to the passed value.
-//    virtual void writeLatticeWidthDelegate(int latticeWidth) = 0;
-//    virtual void writeLatticeHeightDelegate(int latticeHeight) = 0;
-
     // these are implemented by the derived class and allow reading / writing to the lattice.
     // this is called by applyInputRegion / applyOutputRegion
     virtual double getLatticeValue(int x, int y) = 0;
@@ -203,9 +198,7 @@ signals:
     void valueChanged(const QString &key, const QVariant &value);
 
     // usual signals for property changes
-    void nameChanged(QString name);
     void typeChanged(QString type);
-    void descriptionChanged(QString description);
     void userNotesChanged(QString userNotes);
     void historyLatestChanged(double historyLatest);
     void historyRefresherChanged(bool historyRefresher);

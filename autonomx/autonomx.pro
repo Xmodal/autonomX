@@ -48,6 +48,7 @@ SOURCES += \
     Izhikevich.cpp \
     OscEngine.cpp \
     SpikingNet.cpp \
+    WolframCA.cpp \
     gameoflife.cpp \
     main.cpp
 
@@ -99,6 +100,7 @@ HEADERS += \
     NeuronType.h \
     OscEngine.h \
     SpikingNet.h \
+    WolframCA.h \
     gameoflife.h
 
 INCLUDEPATH += $$PWD/../qosc

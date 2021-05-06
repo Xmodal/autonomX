@@ -48,6 +48,7 @@ SOURCES += \
     Izhikevich.cpp \
     OscEngine.cpp \
     SpikingNet.cpp \
+    gameoflife.cpp \
     main.cpp
 
 RESOURCES += qml.qrc
@@ -97,7 +98,8 @@ HEADERS += \
     Izhikevich.h \
     NeuronType.h \
     OscEngine.h \
-    SpikingNet.h
+    SpikingNet.h \
+    gameoflife.h
 
 INCLUDEPATH += $$PWD/../qosc
 INCLUDEPATH += $$PWD/../qosc/contrib/packosc

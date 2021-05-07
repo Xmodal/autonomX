@@ -26,8 +26,8 @@ class SpikingNet : public Generator {
     Q_OBJECT
     Q_PROPERTY(double timeScale READ getTimeScale WRITE writeTimeScale NOTIFY timeScaleChanged)
     Q_PROPERTY(double inhibitoryPortion READ getInhibitoryPortion WRITE writeInhibitoryPortion NOTIFY inhibitoryPortionChanged)
-    Q_PROPERTY(NeuronType::Enum inhibitoryNeuronType READ getInhibitoryNeuronType WRITE writeInhibitoryNeuronType NOTIFY inhibitoryNeuronTypeChanged)
-    Q_PROPERTY(NeuronType::Enum excitatoryNeuronType READ getExcitatoryNeuronType WRITE writeExcitatoryNeuronType NOTIFY excitatoryNeuronTypeChanged)
+    Q_PROPERTY(NeuronType inhibitoryNeuronType READ getInhibitoryNeuronType WRITE writeInhibitoryNeuronType NOTIFY inhibitoryNeuronTypeChanged)
+    Q_PROPERTY(NeuronType excitatoryNeuronType READ getExcitatoryNeuronType WRITE writeExcitatoryNeuronType NOTIFY excitatoryNeuronTypeChanged)
     Q_PROPERTY(double inhibitoryNoise READ getInhibitoryNoise WRITE writeInhibitoryNoise NOTIFY inhibitoryNoiseChanged)
     Q_PROPERTY(double excitatoryNoise READ getExcitatoryNoise WRITE writeExcitatoryNoise NOTIFY excitatoryNoiseChanged)
 
@@ -57,11 +57,11 @@ private:
 
     double      inhibitoryPortion = 0.2;
     int         inhibitorySize = latticeWidth * latticeHeight * inhibitoryPortion;
-    NeuronType::Enum  inhibitoryNeuronType = NeuronType::ChatteringNeuron;
+    NeuronType  inhibitoryNeuronType = NeuronType::ChatteringNeuron;
     double      inhibitoryInitWeight = -5.0;
     double      inhibitoryNoise = 3.0;
 
-    NeuronType::Enum  excitatoryNeuronType = NeuronType::ChatteringNeuron;
+    NeuronType  excitatoryNeuronType = NeuronType::ChatteringNeuron;
     double      excitatoryInitWeight = 15.0;
     double      excitatoryNoise = 5.0;
 
@@ -129,8 +129,8 @@ public:
     int getNeuronSize() const;
     double getTimeScale() const;
     double getInhibitoryPortion() const;
-    NeuronType::Enum getInhibitoryNeuronType() const;
-    NeuronType::Enum getExcitatoryNeuronType() const;
+    NeuronType getInhibitoryNeuronType() const;
+    NeuronType getExcitatoryNeuronType() const;
     double getInhibitoryNoise() const;
     double getExcitatoryNoise() const;
     double getSTPStrength() const;
@@ -143,8 +143,8 @@ public:
     void writeNeuronSize(int neuronSize);
     void writeTimeScale(double timeScale);
     void writeInhibitoryPortion(double inhibitoryPortion);
-    void writeInhibitoryNeuronType(NeuronType::Enum inhibitoryNeuronType);
-    void writeExcitatoryNeuronType(NeuronType::Enum excitatoryNeuronType);
+    void writeInhibitoryNeuronType(NeuronType inhibitoryNeuronType);
+    void writeExcitatoryNeuronType(NeuronType excitatoryNeuronType);
     void writeInhibitoryNoise(double inhibitoryNoise);
     void writeExcitatoryNoise(double excitatoryNoise);
     void writeSTPStrength(double STPStrength);
@@ -160,8 +160,8 @@ signals:
     void neuronSizeChanged(int neuronSize);
     void timeScaleChanged(double timeScale);
     void inhibitoryPortionChanged(double inhibitoryPortion);
-    void inhibitoryNeuronTypeChanged(NeuronType::Enum inhibitoryNeuronType);
-    void excitatoryNeuronTypeChanged(NeuronType::Enum excitatoryNeuronType);
+    void inhibitoryNeuronTypeChanged(NeuronType inhibitoryNeuronType);
+    void excitatoryNeuronTypeChanged(NeuronType excitatoryNeuronType);
     void inhibitoryNoiseChanged(double inhibitoryNoise);
     void excitatoryNoiseChanged(double excitatoryNoise);
     void STPStrengthChanged(double STPStrength);

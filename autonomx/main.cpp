@@ -97,9 +97,14 @@ int main(int argc, char *argv[]) {
     qmlRegisterUncreatableType<GeneratorRegion>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorRegion", "Cannot instanciate GeneratorRegion.");
     qmlRegisterUncreatableType<GeneratorRegionModel>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorRegionModel", "Cannot instanciate GeneratorRegionModel.");
     qmlRegisterUncreatableType<SpikingNet>("ca.hexagram.xmodal.autonomx", 1, 0, "SpikingNet", "Cannot instanciate SpikingNet.");
-    qmlRegisterUncreatableType<NeuronType>("ca.hexagram.xmodal.autonomx", 1, 0, "NeuronType", "Cannot instanciate NeuronType.");
     qmlRegisterType<GeneratorLattice>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorLattice");
     qRegisterMetaType<QSharedPointer<Generator>>();
+
+    // enum types
+    // we found a solution for this! wooooo!!!!! THANK YOU JESUS!!! /s
+    // https://qml.guide/enums-in-qt-qml/
+    qRegisterMetaType<NeuronType>("NeuronType");
+    qmlRegisterUncreatableType<NeuronTypeClass>("ca.hexagram.xmodal.autonomx", 1, 0, "NeuronType", "Cannot instanciate NeuronType.");
 
     // create initial generators
     AppModel::getInstance().createGenerator("spiking_net");

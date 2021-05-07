@@ -14,6 +14,8 @@ class WolframCA : public Generator
 
 private:
 
+    bool        flagDebug               = true;
+
     // cells of lattice
     std::vector<double> cells;
 

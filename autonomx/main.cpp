@@ -31,6 +31,7 @@
 #include "GeneratorRegionModel.h"
 #include "GeneratorLattice.h"
 #include "SpikingNet.h"
+#include "WolframCA.h"
 #include "AppModel.h"
 #include "CursorOverrider.h"
 
@@ -102,8 +103,8 @@ int main(int argc, char *argv[]) {
     qRegisterMetaType<QSharedPointer<Generator>>();
 
     // create initial generators
-    AppModel::getInstance().createGenerator("spiking_net");
-    // AppModel::getInstance().createGenerator("wolfram");
+//    AppModel::getInstance().createGenerator("spiking_net");
+     AppModel::getInstance().createGenerator("wolframCA");
 
     QQmlApplicationEngine qmlEngine;
 

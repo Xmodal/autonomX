@@ -17,9 +17,9 @@
 
 #include <QObject>
 
-class NeuronType : public QObject {
-    Q_OBJECT
-    Q_ENUMS(Enum);
+// see https://qml.guide/enums-in-qt-qml/
+class NeuronTypeClass : public QObject {
+    Q_GADGET
 public:
     enum Enum {
         SpikingNeuron,
@@ -33,5 +33,10 @@ public:
         ExcitatoryNeuronRandomized
     };
 
-    explicit NeuronType(QObject *parent = 0) : QObject(parent) {}
+    Q_ENUM(Enum);
+
+    explicit NeuronTypeClass();
 };
+
+// redefine class member as global enum
+typedef NeuronTypeClass::Enum NeuronType;

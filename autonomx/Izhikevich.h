@@ -25,7 +25,7 @@ private:
     double potentialThreshold;
     double u;
     double v;
-    NeuronType::Enum type;
+    NeuronType type;
     double I;
     double a, b, c, d;
 
@@ -34,10 +34,10 @@ public:
     ~Izhikevich();
 
     void update(double deltaTime);
-    void setParam(NeuronType::Enum type, double a, double b, double c, double d, double u, double v, double I);
-    void setNeuronType(NeuronType::Enum type);
+    void setParam(NeuronType type, double a, double b, double c, double d, double u, double v, double I);
+    void setNeuronType(NeuronType type);
     bool applyFiring(); // checks if the neuron is firing and updates the differential equationa accordingly
-    NeuronType::Enum getNeuronType();
+    NeuronType getNeuronType();
     bool isFiring();
     
     void setA(double a){ this->a = a; };

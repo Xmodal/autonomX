@@ -31,7 +31,7 @@ Izhikevich::Izhikevich() {
 Izhikevich::~Izhikevich() {
 }
 
-void Izhikevich::setParam(NeuronType::Enum type, double a, double b, double c, double d, double u, double v, double I) {
+void Izhikevich::setParam(NeuronType type, double a, double b, double c, double d, double u, double v, double I) {
     this->type = type;
     this->a = a;
     this->b = b;
@@ -42,7 +42,7 @@ void Izhikevich::setParam(NeuronType::Enum type, double a, double b, double c, d
     this->I = I;
 }
 
-void Izhikevich::setNeuronType(NeuronType::Enum type) {
+void Izhikevich::setNeuronType(NeuronType type) {
     this->type = type;
     switch(type) {
         case NeuronType::SpikingNeuron: {
@@ -146,7 +146,7 @@ bool Izhikevich::applyFiring() {
     return(firing);
 }
 
-NeuronType::Enum Izhikevich::getNeuronType() {
+NeuronType Izhikevich::getNeuronType() {
     return(type);
 }
 

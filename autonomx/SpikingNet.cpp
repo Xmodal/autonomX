@@ -535,11 +535,11 @@ double SpikingNet::getInhibitoryPortion() const {
     return this->inhibitoryPortion;
 }
 
-NeuronType::Enum SpikingNet::getInhibitoryNeuronType() const {
+NeuronType SpikingNet::getInhibitoryNeuronType() const {
     return this->inhibitoryNeuronType;
 }
 
-NeuronType::Enum SpikingNet::getExcitatoryNeuronType() const {
+NeuronType SpikingNet::getExcitatoryNeuronType() const {
     return this->excitatoryNeuronType;
 }
 
@@ -613,7 +613,7 @@ void SpikingNet::writeInhibitoryPortion(double inhibitoryPortion) {
     emit inhibitoryPortionChanged(inhibitoryPortion);
 }
 
-void SpikingNet::writeInhibitoryNeuronType(NeuronType::Enum inhibitoryNeuronType) {
+void SpikingNet::writeInhibitoryNeuronType(NeuronType inhibitoryNeuronType) {
     if(this->inhibitoryNeuronType == inhibitoryNeuronType)
         return;
 
@@ -630,11 +630,11 @@ void SpikingNet::writeInhibitoryNeuronType(NeuronType::Enum inhibitoryNeuronType
     // re-initialize
     initialize();
     // signal
-    emit valueChanged("inhibitoryNeuronType", QVariant(inhibitoryNeuronType));
+    emit valueChanged("inhibitoryNeuronType", QVariant(static_cast<int>(inhibitoryNeuronType)));
     emit inhibitoryNeuronTypeChanged(inhibitoryNeuronType);
 }
 
-void SpikingNet::writeExcitatoryNeuronType(NeuronType::Enum excitatoryNeuronType) {
+void SpikingNet::writeExcitatoryNeuronType(NeuronType excitatoryNeuronType) {
     if(this->excitatoryNeuronType == excitatoryNeuronType)
         return;
 
@@ -651,7 +651,7 @@ void SpikingNet::writeExcitatoryNeuronType(NeuronType::Enum excitatoryNeuronType
     // re-initialize
     initialize();
     // signal
-    emit valueChanged("excitatoryNeuronType", QVariant(excitatoryNeuronType));
+    emit valueChanged("excitatoryNeuronType", QVariant(static_cast<int>(excitatoryNeuronType)));
     emit excitatoryNeuronTypeChanged(excitatoryNeuronType);
 }
 

@@ -2,6 +2,7 @@
 //#define WOLFRAMCA_H
 
 #pragma once
+#include <vector>
 
 #include "Generator.h"
 
@@ -13,7 +14,11 @@ class WolframCA : public Generator
 
 private:
 
+    // cells of lattice
     std::vector<double> cells;
+
+    // cell values
+    double** cellValues;
 
     // properties and rules
     int rule;
@@ -32,7 +37,10 @@ public:
 
     // accessors / mutators
     int getRule();
-    void setRule();
+    void writeRule(int rule);
+
+//    double getCellValue();
+//    void setCellValue(double);
 
 signals:
     // QML signals

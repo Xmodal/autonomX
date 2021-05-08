@@ -16,7 +16,7 @@
 #include <QDebug>
 
 #include "AppModel.h"
-#include "SpikingNet.h"
+//#include "SpikingNet.h"
 #include "WolframCA.h"
 
 AppModel::AppModel() {

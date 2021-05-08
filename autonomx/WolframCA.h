@@ -11,9 +11,11 @@ class WolframCA : public Generator
 {
     Q_OBJECT
     Q_PROPERTY(int rule READ getRule WRITE writeRule NOTIFY ruleChanged)
+    Q_PROPERTY(double timeScale READ getTimeScale WRITE writeTimeScale NOTIFY timeScaleChanged)
 
 private:
 
+    // Debugging
     bool        flagDebug               = true;
 
     // cells of lattice
@@ -24,6 +26,9 @@ private:
 
     // properties and rules
     int rule;
+
+    // timeScale variable
+    double      timeScale = 30.0 / 1000.0;
 
 public:
 
@@ -41,12 +46,16 @@ public:
     int getRule();
     void writeRule(int rule);
 
+    void writeTimeScale(double timeScale);
+    double getTimeScale() const;
+
 //    double getCellValue();
 //    void setCellValue(double);
 
 signals:
     // QML signals
     void ruleChanged(int rule);
+    void timeScaleChanged(double timeScale);
 };
 
 //#endif // WOLFRAMCA_H

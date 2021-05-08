@@ -30,7 +30,7 @@
 #include "GeneratorRegion.h"
 #include "GeneratorRegionModel.h"
 #include "GeneratorLattice.h"
-#include "SpikingNet.h"
+//#include "SpikingNet.h"
 #include "WolframCA.h"
 #include "AppModel.h"
 #include "CursorOverrider.h"
@@ -97,8 +97,9 @@ int main(int argc, char *argv[]) {
     qmlRegisterUncreatableType<GeneratorFacade>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorFacade", "Cannot instanciate GeneratorFacade.");
     qmlRegisterUncreatableType<GeneratorRegion>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorRegion", "Cannot instanciate GeneratorRegion.");
     qmlRegisterUncreatableType<GeneratorRegionModel>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorRegionModel", "Cannot instanciate GeneratorRegionModel.");
-    qmlRegisterUncreatableType<SpikingNet>("ca.hexagram.xmodal.autonomx", 1, 0, "SpikingNet", "Cannot instanciate SpikingNet.");
-    qmlRegisterUncreatableType<NeuronType>("ca.hexagram.xmodal.autonomx", 1, 0, "NeuronType", "Cannot instanciate NeuronType.");
+//    qmlRegisterUncreatableType<SpikingNet>("ca.hexagram.xmodal.autonomx", 1, 0, "SpikingNet", "Cannot instanciate SpikingNet.");
+    qmlRegisterUncreatableType<WolframCA>("ca.hexagram.xmodal.autonomx", 1, 0, "WolframCA", "Cannot instanciate WolframCA.");
+//    qmlRegisterUncreatableType<NeuronType>("ca.hexagram.xmodal.autonomx", 1, 0, "NeuronType", "Cannot instanciate NeuronType.");
     qmlRegisterType<GeneratorLattice>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorLattice");
     qRegisterMetaType<QSharedPointer<Generator>>();
 

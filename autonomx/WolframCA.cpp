@@ -48,9 +48,9 @@ void WolframCA::initialize(){
     for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
         for(int j = 0; j < (latticeHeight * latticeWidth); ++j) {
             if (j % 2 == 0 ) {
-                cellValues[i][j] = j * 10.0;
+                cellValues[i][j] = j * 5.0;
             } else {
-                cellValues[i][j] = j * 20.0;
+                cellValues[i][j] = j * 10.0;
             }
         }
     }
@@ -65,7 +65,7 @@ void WolframCA::resetParameters()
 void WolframCA::computeIteration(double deltaTime)
 {
     // execute CA here
-//    deltaTime *= timeScale;
+    deltaTime *= timeScale;
 
     initialize();
 }
@@ -96,6 +96,27 @@ void WolframCA::writeRule(int rule)
     // make sure you follow this signal structure when you write a property!
     emit ruleChanged(rule);
     emit valueChanged("rule", rule);
+}
+
+double WolframCA::getTimeScale() const {
+    return this->timeScale;
+}
+
+void WolframCA::writeTimeScale(double timeScale) {
+    if(this->timeScale == timeScale)
+        return;
+
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "writeTimeScale:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+    }
+
+    this->timeScale = timeScale;
+    emit valueChanged("timeScale", QVariant(timeScale));
+    emit timeScaleChanged(timeScale);
 }
 
 //double WolframCA::getCellValue() {

@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
 
     // create initial generators
 //    AppModel::getInstance().createGenerator("spiking_net");
-     AppModel::getInstance().createGenerator("wolframCA");
+     AppModel::getInstance().createGenerator();
 
     QQmlApplicationEngine qmlEngine;
 

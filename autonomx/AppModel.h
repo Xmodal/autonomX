@@ -44,7 +44,7 @@ public:
     QSharedPointer<GeneratorFacade> getGeneratorFacade(int id) const;
     QSharedPointer<GeneratorModel>  getGeneratorModel() const;
 
-    Q_INVOKABLE void    createGenerator(QString type);
+    Q_INVOKABLE void    createGenerator();
     Q_INVOKABLE void    deleteGenerator(int id);
     Q_INVOKABLE bool    validateNewGeneratorName(QString name);
 private:

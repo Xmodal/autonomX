@@ -39,20 +39,20 @@ void WolframCA::initialize(){
     cells.resize(latticeHeight * latticeWidth);
 
     // allocate memory for cell values
-    cellValues = new double*[latticeHeight * latticeWidth];
-    for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
-        cellValues[i] = new double[latticeHeight * latticeWidth];
-    }
+//    cellValues = new double[latticeHeight * latticeWidth];
+//    for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
+//        cellValues[i] = new double[latticeHeight * latticeWidth];
+//    }
 
     // initialize cell values
     for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
-        for(int j = 0; j < (latticeHeight * latticeWidth); ++j) {
-            if (j % 2 == 0 ) {
-                cellValues[i][j] = j * 5.0;
+//        for(int j = 0; j < (latticeHeight * latticeWidth); ++j) {
+            if (i % 2 == 0 ) {
+                cells[i] = 1.0;
             } else {
-                cellValues[i][j] = j * 10.0;
+                cells[i] = 0;
             }
-        }
+//        }
     }
 
 }
@@ -66,8 +66,26 @@ void WolframCA::computeIteration(double deltaTime)
 {
     // execute CA here
     deltaTime *= timeScale;
+    double modValue2 = modValue++;
 
-    initialize();
+//    double r = ((double) rand() / (1));
+
+//    initialize();
+
+
+
+    for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
+//        for(int j = 0; j < (latticeHeight * latticeWidth); ++j) {
+//            if (modValue % 10 == 0) {
+//                cells[i] = modValue2;
+//            }
+//            else {
+//                cells[i] = 0.0;
+//            }
+//        }
+
+        cells[i] = sigmoid(deltaTime);
+    }
 }
 
 double WolframCA::getLatticeValue(int x, int y)
@@ -117,6 +135,17 @@ void WolframCA::writeTimeScale(double timeScale) {
     this->timeScale = timeScale;
     emit valueChanged("timeScale", QVariant(timeScale));
     emit timeScaleChanged(timeScale);
+}
+
+double WolframCA::sigmoid(double value) {
+    // https://www.desmos.com/calculator/ikdusaa9yh
+    // sigmoid function centered at 0
+    // df/dx = 1 at x = 0
+    // f(0) = 0
+    // f(infinity) = 1
+    // f(-infinity) = -1
+
+    return 1.0 / (1.0 + exp(-value));
 }
 
 //double WolframCA::getCellValue() {

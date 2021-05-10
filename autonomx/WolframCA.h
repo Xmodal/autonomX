@@ -22,13 +22,14 @@ private:
     std::vector<double> cells;
 
     // cell values
-    double** cellValues;
+    double* cellValues;
 
     // properties and rules
     int rule;
 
     // timeScale variable
     double      timeScale = 30.0 / 1000.0;
+
 
 public:
 
@@ -41,6 +42,7 @@ public:
     void resetParameters() override;
     double getLatticeValue(int x, int y) override;
     void writeLatticeValue(int x, int y, double value) override;
+    double sigmoid(double value);
 
     // accessors / mutators
     int getRule();
@@ -51,6 +53,8 @@ public:
 
 //    double getCellValue();
 //    void setCellValue(double);
+
+    int modValue = 1;
 
 signals:
     // QML signals

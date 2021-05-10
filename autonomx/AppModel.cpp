@@ -119,7 +119,7 @@ QSharedPointer<OscEngine> AppModel::getOscEngine() const {
     return oscEngine;
 }
 
-void AppModel::createGenerator(QString type) {
+void AppModel::createGenerator() {
     if(flagDebug) {
         qDebug() << "createGenerator (AppModel): finding a free id";
     }
@@ -152,9 +152,9 @@ void AppModel::createGenerator(QString type) {
 //    if (type.compare("spiking_net")) {
 //        generator = QSharedPointer<Generator>(new SpikingNet(nextID));
 //    }
-    if (type.compare("wolframCA")) {
+//    if (type.compare("wolframCA")) {
         generator = QSharedPointer<Generator>(new WolframCA(nextID));
-    }
+//    }
 
     // move the Generator to computeThread
     if(flagDebug) {

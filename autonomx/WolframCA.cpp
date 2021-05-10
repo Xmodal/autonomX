@@ -1,6 +1,7 @@
 #include <chrono>
 #include <QThread>
 #include <QDebug>
+#include <time.h>
 //#include <iostream>
 
 #include "WolframCA.h"
@@ -46,45 +47,31 @@ void WolframCA::initialize(){
 
     // initialize cell values
     for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
-//        for(int j = 0; j < (latticeHeight * latticeWidth); ++j) {
-            if (i % 2 == 0 ) {
-                cells[i] = 1.0;
-            } else {
                 cells[i] = 0;
             }
-//        }
-    }
 
 }
 
 void WolframCA::resetParameters()
 {
     // reset params here
+    initialize();
 }
 
 void WolframCA::computeIteration(double deltaTime)
 {
     // execute CA here
-    deltaTime *= timeScale;
-    double modValue2 = modValue++;
 
-//    double r = ((double) rand() / (1));
-
-//    initialize();
-
-
+    srand( (unsigned)time( NULL ) );
 
     for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
-//        for(int j = 0; j < (latticeHeight * latticeWidth); ++j) {
-//            if (modValue % 10 == 0) {
-//                cells[i] = modValue2;
-//            }
-//            else {
-//                cells[i] = 0.0;
-//            }
-//        }
+        for(int j = 0; j < (latticeHeight * latticeWidth); ++j) {
+            cells[i] = (float) rand()/RAND_MAX;
+        }
 
-        cells[i] = sigmoid(deltaTime);
+
+
+//        cells[i] = sigmoid(deltaTime);
     }
 }
 
@@ -103,8 +90,7 @@ void WolframCA::writeLatticeValue(int x, int y, double value)
     cells[index] = value;
 }
 
-int WolframCA::getRule()
-{
+int WolframCA::getRule() {
     return rule;
 }
 

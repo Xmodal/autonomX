@@ -50,6 +50,9 @@ void WolframCA::initialize(){
                 cells[i] = 0;
             }
 
+    lastGeneration = latticeHeight;
+    iterationNumber = 1;
+
 }
 
 void WolframCA::resetParameters()
@@ -62,16 +65,37 @@ void WolframCA::computeIteration(double deltaTime)
 {
     // execute CA here
 
-    srand( (unsigned)time( NULL ) );
+    ///// random float values on lattice version /////
+//    srand( (unsigned)time( NULL ) );
 
-    for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
-        for(int j = 0; j < (latticeHeight * latticeWidth); ++j) {
-            cells[i] = (float) rand()/RAND_MAX;
+//    for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
+//            cells[i] = (float) rand()/RAND_MAX;
+//        }
+
+    ///// line by line generation implementation /////
+
+    // every iteration, iterationNumber increments
+    iterationNumber++;
+
+    // every 1000 iterations, currentGeneration increments and iterationNumber resets
+    if(iterationNumber % 100 == 0) {
+        currentGeneration++;
+        iterationNumber = 0;
+    }
+
+    // if last generation has been passed, currentGeneration resets so lattice can begin writing from top
+    if(currentGeneration == lastGeneration) {
+        currentGeneration = 1;
+
+        // reset all cell values to 0
+        for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
+            cells[i] = 0;
         }
+    }
 
-
-
-//        cells[i] = sigmoid(deltaTime);
+    // set values of cells, brighter for each generation
+    for(int i = 0; i < latticeWidth; ++i) {
+        cells[currentGeneration * latticeWidth + i] = currentGeneration / (double)latticeHeight;
     }
 }
 

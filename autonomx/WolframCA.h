@@ -30,6 +30,13 @@ private:
     // timeScale variable
     double      timeScale = 30.0 / 1000.0;
 
+    // global iteration counter
+    int iterationNumber;
+
+    // WolframCA specific variables
+    int currentGeneration = 1;
+    int lastGeneration;
+
 
 public:
 

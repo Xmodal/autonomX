@@ -14,6 +14,9 @@ private:
     // cell values
     bool* cellLife;
 
+    // properties and rules
+    int rule;
+
     // global iteration counter
     int iterationNumber;
 
@@ -36,6 +39,7 @@ public:
 
     // prop hooks
     int getRule();
+    void writeRule(int rule);
 
 signals:
     // QML signals

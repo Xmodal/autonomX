@@ -41,6 +41,7 @@ private:
 public:
 
     WolframCA(int id);
+//    WolframCA(const WolframCA &wca1);
     ~WolframCA();
 
     // overrides / implementing necessary virtual functions from Generator class

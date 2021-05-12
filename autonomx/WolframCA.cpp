@@ -19,6 +19,11 @@ WolframCA::WolframCA(int id) : Generator(id, "WolframCA", "WCA", "Wolfram CA des
 
 }
 
+//WolframCA::WolframCA(const WolframCA &wca1)
+//{
+
+//}
+
 WolframCA::~WolframCA()
 {
 
@@ -50,6 +55,7 @@ void WolframCA::initialize(){
                 cells[i] = 0;
             }
 
+    // set last generation to the last available row in lattice
     lastGeneration = latticeHeight;
     iterationNumber = 1;
 

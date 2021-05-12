@@ -1,4 +1,9 @@
-#include "gameoflife.h"
+#include <chrono>
+#include <QThread>
+#include <QDebug>
+#include <time.h>
+
+#include "GameOfLife.h"
 
 GameOfLife::GameOfLife(int id) : Generator(id, "Game of Life", "GOL", "Game of Life description")
 {
@@ -10,14 +15,26 @@ GameOfLife::~GameOfLife()
 
 }
 
-void GameOfLife::computeIteration(double deltaTime)
-{
-    // compute iteration here
-}
-
 void GameOfLife::initialize()
 {
     // re-initialize algorithm here
+
+    // resize cells vector for current lattice size
+    cells.resize(latticeHeight * latticeWidth);
+
+    // initialize cell values
+    for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
+                cells[i] = false;
+            }
+
+    // set last generation
+    lastGeneration = latticeHeight;
+    iterationNumber = 1;
+}
+
+void GameOfLife::computeIteration(double deltaTime)
+{
+    // compute iteration here
 }
 
 void GameOfLife::resetParameters()

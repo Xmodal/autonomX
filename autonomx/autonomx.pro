@@ -36,6 +36,7 @@ SOURCES += \
     ComputeEngine.cpp \
     CursorOverrider.cpp \
     Facade.cpp \
+    GameOfLife.cpp \
     Generator.cpp \
     GeneratorFacade.cpp \
     GeneratorLattice.cpp \
@@ -49,7 +50,6 @@ SOURCES += \
     OscEngine.cpp \
     SpikingNet.cpp \
     WolframCA.cpp \
-    gameoflife.cpp \
     main.cpp
 
 RESOURCES += qml.qrc
@@ -87,6 +87,7 @@ HEADERS += \
     ComputeEngine.h \
     CursorOverrider.h \
     Facade.h \
+    GameOfLife.h \
     Generator.h \
     GeneratorFacade.h \
     GeneratorLattice.h \
@@ -100,8 +101,7 @@ HEADERS += \
     NeuronType.h \
     OscEngine.h \
     SpikingNet.h \
-    WolframCA.h \
-    gameoflife.h
+    WolframCA.h
 
 INCLUDEPATH += $$PWD/../qosc
 INCLUDEPATH += $$PWD/../qosc/contrib/packosc

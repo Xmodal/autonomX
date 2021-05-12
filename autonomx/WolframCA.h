@@ -16,7 +16,7 @@ class WolframCA : public Generator
 private:
 
     // Debugging
-    bool        flagDebug               = true;
+    bool flagDebug = false;
 
     // cells of lattice
     std::vector<double> cells;
@@ -28,7 +28,7 @@ private:
     int rule;
 
     // timeScale variable
-    double      timeScale = 30.0 / 1000.0;
+    double timeScale = 30.0 / 1000.0;
 
     // global iteration counter
     int iterationNumber;

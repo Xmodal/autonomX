@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 
 #include "Generator.h"
 
@@ -10,8 +11,18 @@ private:
     // computation variables here etc etc
     std::vector<double> cells;
 
-    // properties
-    int rule;
+    // cell values
+    bool* cellLife;
+
+    // global iteration counter
+    int iterationNumber;
+
+    // GOL specific variables
+    int currentGeneration;
+    int lastGeneration;
+    bool gameOver = false;
+
+
 public:
     GameOfLife(int id);
     ~GameOfLife();
@@ -25,7 +36,6 @@ public:
 
     // prop hooks
     int getRule();
-    void writeRule(int rule);
 
 signals:
     // QML signals

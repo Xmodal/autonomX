@@ -1,5 +1,17 @@
-//#ifndef WOLFRAMCA_H
-//#define WOLFRAMCA_H
+// Copyright 2020, Xmodal
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #pragma once
 #include <vector>
@@ -31,17 +43,16 @@ private:
     double timeScale = 30.0 / 1000.0;
 
     // global iteration counter
-    int iterationNumber;
+    int iterationNumber;        // iteration = 1 tick in global clock
 
     // WolframCA specific variables
-    int currentGeneration = 1;
-    int lastGeneration;
+    int currentGeneration = 0;  // generation = each 1D row of cells = 1000 iterations
+    int lastGeneration;         // last generation = ensures loop to beginning of lattice on next generation
 
 
 public:
 
     WolframCA(int id);
-//    WolframCA(const WolframCA &wca1);
     ~WolframCA();
 
     // overrides / implementing necessary virtual functions from Generator class
@@ -50,7 +61,6 @@ public:
     void resetParameters() override;
     double getLatticeValue(int x, int y) override;
     void writeLatticeValue(int x, int y, double value) override;
-    double sigmoid(double value);
 
     // accessors / mutators
     int getRule();
@@ -69,5 +79,3 @@ signals:
     void ruleChanged(int rule);
     void timeScaleChanged(double timeScale);
 };
-
-//#endif // WOLFRAMCA_H

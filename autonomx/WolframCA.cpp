@@ -1,8 +1,22 @@
+// Copyright 2020, Xmodal
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 #include <chrono>
 #include <QThread>
 #include <QDebug>
 #include <time.h>
-//#include <iostream>
 
 #include "WolframCA.h"
 
@@ -18,11 +32,6 @@ WolframCA::WolframCA(int id) : Generator(id, "WolframCA", "WCA", "Wolfram CA des
     initialize();
 
 }
-
-//WolframCA::WolframCA(const WolframCA &wca1)
-//{
-
-//}
 
 WolframCA::~WolframCA()
 {
@@ -55,9 +64,12 @@ void WolframCA::initialize(){
                 cells[i] = 0;
             }
 
-    // set last generation to the last available row in lattice
+    // set last generation to the last available row in lattice -> ensures looping at end of lattice
     lastGeneration = latticeHeight;
+
+    // reset iterations and generations
     iterationNumber = 1;
+    currentGeneration = 0;
 
 }
 
@@ -69,19 +81,9 @@ void WolframCA::resetParameters()
 
 void WolframCA::computeIteration(double deltaTime)
 {
-    // execute CA here
-
-    ///// random float values on lattice version /////
-//    srand( (unsigned)time( NULL ) );
-
-//    for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
-//            cells[i] = (float) rand()/RAND_MAX;
-//        }
+    // execute WolframCA here
 
     ///// line by line generation implementation /////
-
-    // every iteration, iterationNumber increments
-    iterationNumber++;
 
     // every 1000 iterations, currentGeneration increments and iterationNumber resets
     if(iterationNumber % 100 == 0) {
@@ -91,7 +93,7 @@ void WolframCA::computeIteration(double deltaTime)
 
     // if last generation has been passed, currentGeneration resets so lattice can begin writing from top
     if(currentGeneration == lastGeneration) {
-        currentGeneration = 1;
+        currentGeneration = 0;
 
         // reset all cell values to 0
         for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
@@ -103,14 +105,15 @@ void WolframCA::computeIteration(double deltaTime)
     for(int i = 0; i < latticeWidth; ++i) {
         cells[currentGeneration * latticeWidth + i] = currentGeneration / (double)latticeHeight;
     }
+
+    // every iteration, iterationNumber increments
+    iterationNumber++;
 }
 
 double WolframCA::getLatticeValue(int x, int y)
 {
     int index = x % latticeWidth + y * latticeWidth;
-//    std::cout << "Index = " + index;
     return cells[index];
-
 }
 
 void WolframCA::writeLatticeValue(int x, int y, double value)
@@ -151,17 +154,6 @@ void WolframCA::writeTimeScale(double timeScale) {
     this->timeScale = timeScale;
     emit valueChanged("timeScale", QVariant(timeScale));
     emit timeScaleChanged(timeScale);
-}
-
-double WolframCA::sigmoid(double value) {
-    // https://www.desmos.com/calculator/ikdusaa9yh
-    // sigmoid function centered at 0
-    // df/dx = 1 at x = 0
-    // f(0) = 0
-    // f(infinity) = 1
-    // f(-infinity) = -1
-
-    return 1.0 / (1.0 + exp(-value));
 }
 
 //double WolframCA::getCellValue() {

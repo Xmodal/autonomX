@@ -14,9 +14,10 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <QDebug>
+#include <QVector>
 
 #include "AppModel.h"
-//#include "SpikingNet.h"
+#include "SpikingNet.h"
 #include "WolframCA.h"
 
 AppModel::AppModel() {
@@ -119,7 +120,7 @@ QSharedPointer<OscEngine> AppModel::getOscEngine() const {
     return oscEngine;
 }
 
-void AppModel::createGenerator() {
+void AppModel::createGenerator(int genType) {
     if(flagDebug) {
         qDebug() << "createGenerator (AppModel): finding a free id";
     }
@@ -149,11 +150,71 @@ void AppModel::createGenerator() {
     // create a new generator
     // Comment out all others except the specific type of generator to be used for this test
     QSharedPointer<Generator> generator;
+
+    // Create enum of generator class
+//    enum generatorID { SNN, WCA };
+
+
+    // generator factory
+//    Generator *generatorFactory(generatorID id) {
+
+//    }
+
+
+    // Create QVector of QStrings that holds list of generator.type options
+//    int uniqueGeneratorTypes = 2;
+//    QVector<QString> generatorTypeVector(uniqueGeneratorTypes);
+//    generatorTypeVector[0] = "SNN";
+//    generatorTypeVector[1] = "WCA";
+
+//    bool creatableType = false;
+
+//    int genNumber;
+
+
+     // search generatorTypeVector for matching generator type to confirm it exists
+//        for(int i = 0; i < generatorTypeVector.size(); i++){
+//            if(i == genType) {
+//                creatableType = true;
+//                genNumber = i;
+//                break;
+//            }
+//        }
+
+        //        if(creatableType == false) {
+        //            // return error or select from list?
+
+        //        }
+
+        switch(genType) {
+            case 0:
+                generator = QSharedPointer<Generator>(new SpikingNet(nextID));
+                break;
+            case 1:
+                generator = QSharedPointer<Generator>(new WolframCA(nextID));
+                break;
+        }
+
+//        generator = QSharedPointer<Generator>(new SpikingNet(nextID));
+
+
+    // Creating QMetaType for Generator
+//    int genID = QMetaType::type("Generator");
+//    if (genID != QMetaType::UnknownType) {
+//        void *generatorPtr = QMetaType::create(genID);
+//        // ...? What else needs to go here?
+
+//        QMetaType::destroy(genID, generatorPtr);
+//        generatorPtr = 0;
+//    }
+
+
+
 //    if (type.compare("spiking_net")) {
 //        generator = QSharedPointer<Generator>(new SpikingNet(nextID));
 //    }
 //    if (type.compare("wolframCA")) {
-        generator = QSharedPointer<Generator>(new WolframCA(nextID));
+//        generator = QSharedPointer<Generator>(new WolframCA(nextID));
 //    }
 
     // move the Generator to computeThread

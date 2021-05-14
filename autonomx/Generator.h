@@ -45,6 +45,8 @@ class Generator : public QObject {
     Q_PROPERTY(int latticeWidth READ getLatticeWidth WRITE writeLatticeWidth NOTIFY latticeWidthChanged)
     Q_PROPERTY(int latticeHeight READ getLatticeHeight WRITE writeLatticeHeight NOTIFY latticeHeightChanged)
 public:
+
+
     // enum used by GeneratorModel
     enum GeneratorRoles {
         NameRole = Qt::UserRole + 1,
@@ -69,6 +71,9 @@ public:
 
     Generator(int id, QString name, QString type, QString description);
     ~Generator();
+
+    // pointer for creating generators
+    typedef std::shared_ptr<Generator> ptr;
 
     // method implemented by the derived class that computes the output
     // this assumes the input values have already been set on the lattice by ComputeEngine before this call.

@@ -30,10 +30,12 @@
 #include "GeneratorRegion.h"
 #include "GeneratorRegionModel.h"
 #include "GeneratorLattice.h"
-//#include "SpikingNet.h"
+#include "SpikingNet.h"
 #include "WolframCA.h"
 #include "AppModel.h"
 #include "CursorOverrider.h"
+
+#include "GeneratorFactory.h"
 
 // only include AppNap code if platform is macOS
 #ifdef Q_OS_MAC
@@ -41,6 +43,30 @@
 #endif
 
 bool flagDebug = false;
+
+// Generator Factory testing
+static GeneratorFactory::ptr generatorFactory;
+
+// passed argument = user created generator?
+bool checkGeneratorFactory() {
+    std::vector<char*> generatorList = {"SNN", "WCA", "other"};
+
+    // register the types
+    // how do we use the pointer here?
+
+    // create SNN type
+//    AbstractGeneratorType::ptr SNNType((AbstractGeneratorType*) new GeneratorType<SpikingNet>);
+//    if(! generatorFactory->registerType(generatorList[0], SNNType)) {
+//        return false;
+//    }
+
+//    if(! generatorFactory->registerType(generatorList[1], )) {
+//        return false;
+//    }
+    // etc
+
+    return true;
+}
 
 int main(int argc, char *argv[]) {
     // disable App Nap on macOS to prevent compute / osc thread from stalling
@@ -97,15 +123,30 @@ int main(int argc, char *argv[]) {
     qmlRegisterUncreatableType<GeneratorFacade>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorFacade", "Cannot instanciate GeneratorFacade.");
     qmlRegisterUncreatableType<GeneratorRegion>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorRegion", "Cannot instanciate GeneratorRegion.");
     qmlRegisterUncreatableType<GeneratorRegionModel>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorRegionModel", "Cannot instanciate GeneratorRegionModel.");
-//    qmlRegisterUncreatableType<SpikingNet>("ca.hexagram.xmodal.autonomx", 1, 0, "SpikingNet", "Cannot instanciate SpikingNet.");
+    qmlRegisterUncreatableType<SpikingNet>("ca.hexagram.xmodal.autonomx", 1, 0, "SpikingNet", "Cannot instanciate SpikingNet.");
     qmlRegisterUncreatableType<WolframCA>("ca.hexagram.xmodal.autonomx", 1, 0, "WolframCA", "Cannot instanciate WolframCA.");
-//    qmlRegisterUncreatableType<NeuronType>("ca.hexagram.xmodal.autonomx", 1, 0, "NeuronType", "Cannot instanciate NeuronType.");
+    qmlRegisterUncreatableType<NeuronType>("ca.hexagram.xmodal.autonomx", 1, 0, "NeuronType", "Cannot instanciate NeuronType.");
     qmlRegisterType<GeneratorLattice>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorLattice");
     qRegisterMetaType<QSharedPointer<Generator>>();
 
+    // Generator Creation test
+    // simple passed argument style
+    int genType = 1;
+
+    // Generator Creation test
+    // Using GeneratorFactory
+    char* generatorToTry = "SNN";
+
+    if(checkGeneratorFactory() == 0) {
+        // generator registration has failed somehow
+        // error
+    }
+
+
+
     // create initial generators
 //    AppModel::getInstance().createGenerator("spiking_net");
-     AppModel::getInstance().createGenerator();
+     AppModel::getInstance().createGenerator(genType);
 
     QQmlApplicationEngine qmlEngine;
 

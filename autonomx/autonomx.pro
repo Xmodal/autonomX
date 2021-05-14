@@ -39,6 +39,7 @@ SOURCES += \
     GameOfLife.cpp \
     Generator.cpp \
     GeneratorFacade.cpp \
+    GeneratorFactory.cpp \
     GeneratorLattice.cpp \
     GeneratorLatticeCommunicator.cpp \
     GeneratorLatticeRenderer.cpp \
@@ -90,6 +91,7 @@ HEADERS += \
     GameOfLife.h \
     Generator.h \
     GeneratorFacade.h \
+    GeneratorFactory.h \
     GeneratorLattice.h \
     GeneratorLatticeCommunicator.h \
     GeneratorLatticeRenderer.h \
@@ -97,6 +99,7 @@ HEADERS += \
     GeneratorRegion.h \
     GeneratorRegionModel.h \
     GeneratorRegionSet.h \
+    GeneratorType.h \
     Izhikevich.h \
     NeuronType.h \
     OscEngine.h \

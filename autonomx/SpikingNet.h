@@ -20,11 +20,13 @@
 
 #include "Generator.h"
 #include "Izhikevich.h"
+#include "GeneratorField.h"
 
 class SpikingNet : public Generator {
     // TODO: figure out how we decide to add / remove inputs. this should probably be a property that belongs to the Generator abstract class, rather than this.
     Q_OBJECT
     Q_PROPERTY(double timeScale READ getTimeScale WRITE writeTimeScale NOTIFY timeScaleChanged)
+
     Q_PROPERTY(double inhibitoryPortion READ getInhibitoryPortion WRITE writeInhibitoryPortion NOTIFY inhibitoryPortionChanged)
     Q_PROPERTY(NeuronType inhibitoryNeuronType READ getInhibitoryNeuronType WRITE writeInhibitoryNeuronType NOTIFY inhibitoryNeuronTypeChanged)
     Q_PROPERTY(NeuronType excitatoryNeuronType READ getExcitatoryNeuronType WRITE writeExcitatoryNeuronType NOTIFY excitatoryNeuronTypeChanged)
@@ -35,9 +37,9 @@ class SpikingNet : public Generator {
     Q_PROPERTY(double STDPStrength READ getSTDPStrength WRITE writeSTDPStrength NOTIFY STDPStrengthChanged)
     Q_PROPERTY(double decayHalfLife READ getDecayHalfLife WRITE writeDecayHalfLife NOTIFY decayHalfLifeChanged)
 
-    Q_PROPERTY(bool flagSTP READ getFlagSTP WRITE writeFlagSTP NOTIFY flagSTPChanged)
-    Q_PROPERTY(bool flagSTDP READ getFlagSTDP WRITE writeFlagSTDP NOTIFY flagSTDPChanged)
-    Q_PROPERTY(bool flagDecay READ getFlagDecay WRITE writeFlagDecay NOTIFY flagDecayChanged)
+    Q_PROPERTY(bool flagSTPStrength READ getFlagSTP WRITE writeFlagSTP NOTIFY flagSTPChanged)
+    Q_PROPERTY(bool flagSTDPStrength READ getFlagSTDP WRITE writeFlagSTDP NOTIFY flagSTDPChanged)
+    Q_PROPERTY(bool flagDecayHalfLife READ getFlagDecay WRITE writeFlagDecay NOTIFY flagDecayChanged)
 
 // enum
 public:
@@ -117,14 +119,15 @@ private:
     void setChainNetwork();
     void setGridNetwork();
 
-    void initialize() override;
-    void resetParameters() override;
-
 public:
     SpikingNet(int id);
     ~SpikingNet();
 
     void computeIteration(double deltaTime) override;
+    void initialize() override;
+    void resetParameters() override;
+    double getLatticeValue(int x, int y) override;
+    void writeLatticeValue(int x, int y, double value) override;
 
     int getNeuronSize() const;
     double getTimeScale() const;
@@ -154,8 +157,6 @@ public:
     void writeFlagSTDP(bool flagSTDP);
     void writeFlagDecay(bool flagDecay);
 
-    double getLatticeValue(int x, int y) override;
-    void writeLatticeValue(int x, int y, double value) override;
 signals:
     void neuronSizeChanged(int neuronSize);
     void timeScaleChanged(double timeScale);

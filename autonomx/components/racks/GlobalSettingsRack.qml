@@ -6,8 +6,13 @@ import "qrc:/stylesheet"
 import "../fields"
 
 ColumnLayout {
+    id: globalSettingsRack
+
     Layout.fillWidth: true
     spacing: 0
+
+    signal startedGenerating()
+    signal finishedGenerating()
 
     SubRack {
         titleBarVisible: false
@@ -53,43 +58,47 @@ ColumnLayout {
         }
     }
 
-    // documentation rack (collapsed by default)
-    SubRack {
-        subRackTitle: "SNN overview"
-        collapsed: true
+    // TODO: adapt to target multiple generators
+    Repeater {
+        model: metaModel ? Object.keys(metaModel.helpRacks) : []
+        onModelChanged: {
+            globalSettingsRack.startedGenerating();
+            //delay(100, globalSettingsRack.finishedGenerating);
+        }
 
-        fields: [
-            Label {
-                width: parent.width
+        function delay(time, cb) {
+            let timer = Qt.createQmlObject("import QtQuick 2.9; Timer {}", window);
+            timer.interval = time;
+            timer.repeat = false;
+            timer.triggered.connect(cb);
+            timer.start();
+        }
 
-                text: helpFiles["help_snn_desc.html"]
-                textFormat: Text.RichText
-                wrapMode: Text.WordWrap
-                font: Stylesheet.fonts.text
-                lineHeight: 1.15
+        // documentation rack (collapsed by default)
+        SubRack {
+            subRackTitle: modelData.slice(3)
+            collapsed: true
 
-                onLinkActivated: Qt.openUrlExternally(link)
-            }
-        ]
-    }
+            fields: [
+                Label {
+                    width: parent.width
 
-    SubRack {
-        subRackTitle: "Parameter help"
-        collapsed: true
+                    text: metaModel.helpRacks[modelData]
+                    textFormat: Text.StyledText
+                    wrapMode: Text.WordWrap
+                    font: Stylesheet.fonts.text
+                    lineHeight: 1.15
 
-        fields: [
-            Label {
-                width: parent.width
+                    // cursor shape events on link hover
+                    onLinkHovered: {
+                        if (link.length > 0) overrideCursor(Qt.PointingHandCursor);
+                        else restoreCursor();
+                    }
 
-                text: helpFiles["help_snn_params.html"]
-                textFormat: Text.RichText
-                wrapMode: Text.WordWrap
-                font: Stylesheet.fonts.text
-                lineHeight: 1.15
-
-                onLinkActivated: Qt.openUrlExternally(link)
-            }
-
-        ]
+                    // open URL on link click
+                    onLinkActivated: Qt.openUrlExternally(link)
+                }
+            ]
+        }
     }
 }

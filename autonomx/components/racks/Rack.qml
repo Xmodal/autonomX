@@ -19,7 +19,7 @@ Item {
     property bool collapsed: false
     property bool removable: false
     // content component
-    property Component content
+    property alias content: contentLoader.sourceComponent
 
     Layout.fillWidth: true
     Layout.alignment: Qt.AlignLeft | Qt.AlignTop
@@ -96,7 +96,6 @@ Item {
         // content (extended)
         Loader {
             id: contentLoader
-            sourceComponent: content
             clip: true
 
             // when true: below behavior is disabled
@@ -105,7 +104,7 @@ Item {
             // TODO: cross-animation blocker to prevent weird bugs! :) depending on how severe the bugs actually are (untested)
             property bool disableAnimation: false
 
-            //property int generatorIndex: window.activeGeneratorIndex // -1: no assigned generator ID
+            onDisableAnimationChanged: console.log(disableAnimation)
 
             Layout.fillWidth: true
             Layout.preferredHeight: collapsed ? 0 : implicitHeight
@@ -117,6 +116,13 @@ Item {
                     easing.type: Easing.OutCubic
                 }
             }
+        }
+
+        Connections {
+            target: contentLoader.item
+
+            onStartedGenerating: contentLoader.disableAnimation = true
+            onFinishedGenerating: contentLoader.disableAnimation = false
         }
     }
 

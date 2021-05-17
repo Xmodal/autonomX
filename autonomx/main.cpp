@@ -21,15 +21,18 @@
 #include <QSharedPointer>
 #include <QFontDatabase>
 #include <QQmlPropertyMap>
+#include <QFile>
 
 #include "OscEngine.h"
 #include "ComputeEngine.h"
 #include "Generator.h"
+#include "GeneratorField.h"
 #include "GeneratorFacade.h"
 #include "GeneratorModel.h"
 #include "GeneratorRegion.h"
 #include "GeneratorRegionModel.h"
 #include "GeneratorLattice.h"
+#include "GeneratorMetaModel.h"
 #include "SpikingNet.h"
 #include "AppModel.h"
 #include "CursorOverrider.h"
@@ -59,36 +62,17 @@ int main(int argc, char *argv[]) {
             qDebug() << "Failed to load font " << file;
     }
 
-
-    // load help files
-    QDir helpFileDir(":/assets/help_files");
-    QVariantMap helpFileMap;
-
-    for (auto filename : helpFileDir.entryList(QDir::Files)) {
-        QFile file(":/assets/help_files/" + filename);
-
-        // attempt to open file
-        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            // read file and append to temporary string
-            QTextStream stream(&file);
-            stream.setCodec("UTF-8");
-
-            QString output = "";
-            while (!stream.atEnd())
-                output.append(stream.readLine());
-
-            // add to hash map
-            helpFileMap.insert(filename, output);
-        }
-
-        // close file
-        file.close();
-    }
-
     qDebug() << "Built against Qt" << QT_VERSION_STR;
     qDebug() << "Using Qt" << QLibraryInfo::version() << "at runtime";
 
     qDebug() << "GUI id = " << QThread::currentThreadId();
+
+
+    // generator meta model
+    // (tests in here because defining it in AppModel causes crashes fsr)
+    // TODO: move this in AppModel?
+    GeneratorMetaModel generatorMetaModel;
+    generatorMetaModel.insertAtEnd("SNN");
 
 
     // expose custom types to QML and Qt's meta type system
@@ -96,15 +80,17 @@ int main(int argc, char *argv[]) {
     qmlRegisterUncreatableType<GeneratorFacade>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorFacade", "Cannot instanciate GeneratorFacade.");
     qmlRegisterUncreatableType<GeneratorRegion>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorRegion", "Cannot instanciate GeneratorRegion.");
     qmlRegisterUncreatableType<GeneratorRegionModel>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorRegionModel", "Cannot instanciate GeneratorRegionModel.");
-    qmlRegisterUncreatableType<SpikingNet>("ca.hexagram.xmodal.autonomx", 1, 0, "SpikingNet", "Cannot instanciate SpikingNet.");
+    qmlRegisterUncreatableType<GeneratorMeta>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorMeta", "Cannot instanciate GeneratorMeta.");
     qmlRegisterType<GeneratorLattice>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorLattice");
     qRegisterMetaType<QSharedPointer<Generator>>();
 
-    // enum types
-    // we found a solution for this! wooooo!!!!! THANK YOU JESUS!!! /s
-    // https://qml.guide/enums-in-qt-qml/
-    qRegisterMetaType<NeuronType>("NeuronType");
-    qmlRegisterUncreatableType<NeuronTypeClass>("ca.hexagram.xmodal.autonomx", 1, 0, "NeuronType", "Cannot instanciate NeuronType.");
+
+    // register generators to QML engine
+    // TODO: find a way to not have to declare these in main.cpp;
+    // maybe on type registry initialization?
+    qmlRegisterUncreatableType<SpikingNet>("ca.hexagram.xmodal.autonomx", 1, 0, "SpikingNet", "Cannot instanciate SpikingNet.");
+    qmlRegisterUncreatableMetaObject(NeuronTypeNS::staticMetaObject, "ca.hexagram.xmodal.autonomx", 1, 0, "NeuronType", "Cannot instanciate NeuronType.");
+
 
     // create initial generators
     AppModel::getInstance().createGenerator("spiking_net");
@@ -121,7 +107,7 @@ int main(int argc, char *argv[]) {
     // Pass C++ objects to QML.
     qmlEngine.rootContext()->setContextProperty("appModel", &AppModel::getInstance());
     qmlEngine.rootContext()->setContextProperty("generatorModel", AppModel::getInstance().getGeneratorModel().data());
-    qmlEngine.rootContext()->setContextProperty("helpFiles", helpFileMap);
+    qmlEngine.rootContext()->setContextProperty("generatorMetaModel", &generatorMetaModel);
     qmlEngine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (qmlEngine.rootObjects().isEmpty())
         return -1;

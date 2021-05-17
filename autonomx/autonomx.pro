@@ -41,6 +41,8 @@ SOURCES += \
     GeneratorLattice.cpp \
     GeneratorLatticeCommunicator.cpp \
     GeneratorLatticeRenderer.cpp \
+    GeneratorMeta.cpp \
+    GeneratorMetaModel.cpp \
     GeneratorModel.cpp \
     GeneratorRegion.cpp \
     GeneratorRegionModel.cpp \
@@ -48,7 +50,6 @@ SOURCES += \
     Izhikevich.cpp \
     OscEngine.cpp \
     SpikingNet.cpp \
-    gameoflife.cpp \
     main.cpp
 
 RESOURCES += qml.qrc
@@ -88,9 +89,12 @@ HEADERS += \
     Facade.h \
     Generator.h \
     GeneratorFacade.h \
+    GeneratorField.h \
     GeneratorLattice.h \
     GeneratorLatticeCommunicator.h \
     GeneratorLatticeRenderer.h \
+    GeneratorMeta.h \
+    GeneratorMetaModel.h \
     GeneratorModel.h \
     GeneratorRegion.h \
     GeneratorRegionModel.h \
@@ -98,11 +102,20 @@ HEADERS += \
     Izhikevich.h \
     NeuronType.h \
     OscEngine.h \
-    SpikingNet.h \
-    gameoflife.h
+    SpikingNet.h
 
 INCLUDEPATH += $$PWD/../qosc
 INCLUDEPATH += $$PWD/../qosc/contrib/packosc
+
+
+# generator metadata folder
+# copied to the build dir
+copydata.commands = $(COPY_DIR) \"$$shell_path($$PWD\\generators)\" \"$$shell_path($$OUT_PWD)\"
+first.depends = $(first) copydata
+export(first.depends)
+export(copydata.commands)
+QMAKE_EXTRA_TARGETS += first copydata
+
 
 # necessary on macOS for App Nap patch
 macx {
@@ -130,10 +143,3 @@ CONFIG(release, debug|release): DEFINES += NDEBUG
 # else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../qosc/release/qosc_release_binary.lib
 # else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../qosc/debug/qosc_debug_binary.lib
 # else:unix: PRE_TARGETDEPS += $$OUT_PWD/../qosc/libqosc_release_binary.a
-
-DISTFILES += \
-    assets/fonts/Overpass-Regular.ttf \
-    assets/fonts/Overpass-SemiBold.ttf \
-    assets/fonts/Questrial-Regular.ttf \
-    assets/help_files/help_snn_desc.html \
-    assets/help_files/help_snn_params.html

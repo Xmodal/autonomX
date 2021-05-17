@@ -86,40 +86,42 @@ void Izhikevich::setNeuronType(NeuronType type) {
             d = 2.;
             break;
         }
-        case NeuronType::InhibitoryNeuron: {
-            a = 0.1;
-            b = 0.2;
-            c = -65.;
-            d = 2.;
-            break;
-        }
-        case NeuronType::InhibitoryNeuronRandomized: {
-            std::mt19937 randomGenerator;
-            std::uniform_real_distribution<> randomUniform(0.0, 1.0);
-            double random = randomUniform(randomGenerator);
-            a = 0.1;
-            b = 0.25 - 0.05 * random;
-            c = -65.;
-            d = 2.;
-            break;
-        }
-        case NeuronType::ExcitatoryNeuron : {
-            a = 0.02;
-            b = 0.2;
-            c = -50.;
-            d = 2.;
-            break;
-        }
-        case NeuronType::ExcitatoryNeuronRandomized : {
-            std::mt19937 randomGenerator;
-            std::uniform_real_distribution<> randomUniform(0.0, 1.0);
-            double random = randomUniform(randomGenerator);
-            a = 0.02;
-            b = 0.2;
-            c = -65. + 15. * random * random;
-            d = 8. - 6. * random * random;
-            break;
-        }
+        // pretty sure none of these are really necessary,
+        // less so used in the actual GUI ........
+//        case NeuronType::InhibitoryNeuron: {
+//            a = 0.1;
+//            b = 0.2;
+//            c = -65.;
+//            d = 2.;
+//            break;
+//        }
+//        case NeuronType::InhibitoryNeuronRandomized: {
+//            std::mt19937 randomGenerator;
+//            std::uniform_real_distribution<> randomUniform(0.0, 1.0);
+//            double random = randomUniform(randomGenerator);
+//            a = 0.1;
+//            b = 0.25 - 0.05 * random;
+//            c = -65.;
+//            d = 2.;
+//            break;
+//        }
+//        case NeuronType::ExcitatoryNeuron : {
+//            a = 0.02;
+//            b = 0.2;
+//            c = -50.;
+//            d = 2.;
+//            break;
+//        }
+//        case NeuronType::ExcitatoryNeuronRandomized : {
+//            std::mt19937 randomGenerator;
+//            std::uniform_real_distribution<> randomUniform(0.0, 1.0);
+//            double random = randomUniform(randomGenerator);
+//            a = 0.02;
+//            b = 0.2;
+//            c = -65. + 15. * random * random;
+//            d = 8. - 6. * random * random;
+//            break;
+//        }
     }
     v = -65.;
     u = d;

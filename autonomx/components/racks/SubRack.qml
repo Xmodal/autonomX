@@ -30,6 +30,9 @@ ColumnLayout {
     Layout.fillWidth: true
     spacing: 0
 
+    // to prevent bouncing on initial load
+    Component.onCompleted: heightAnim.duration = 500
+
     // top label
     Item {
         Layout.fillWidth: true
@@ -54,18 +57,6 @@ ColumnLayout {
                 verticalAlignment: Text.AlignVCenter
                 font: Stylesheet.fonts.label
                 text: subRackTitle
-
-        //        CheckBox {
-        //            id: subRackFlag
-        //            checked: true
-        //            visible: flagActive
-        //            controlColor: flagColor
-        //            size: 16
-        //            anchors.verticalCenter: parent.verticalCenter
-        //            anchors.right: parent.right
-        //            anchors.rightMargin: 20
-        //        }
-
             }
 
             // collapse button
@@ -123,7 +114,8 @@ ColumnLayout {
 
         Behavior on Layout.preferredHeight {
             NumberAnimation {
-                duration: 500
+                id: heightAnim
+                duration: 0
                 easing.type: Easing.OutCubic
             }
         }

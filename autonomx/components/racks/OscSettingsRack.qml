@@ -10,6 +10,9 @@ ColumnLayout {
     Layout.fillWidth: true
     spacing: 0
 
+    signal startedGenerating()
+    signal finishedGenerating()
+
     SubRack {
         subRackTitle: "In"
         columnCount: 4

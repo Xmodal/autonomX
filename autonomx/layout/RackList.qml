@@ -41,7 +41,7 @@ Rectangle {
 
             Rack {
                 rackName: "Parameters"
-                content: SNNParametersRack {}
+                content: ParametersRack {}
             }
 
             Rack {

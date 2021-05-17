@@ -15,6 +15,14 @@ ApplicationWindow {
     property string lastMessageReceived: ""
     property int activeGeneratorIndex: -1
 
+    // the meta model used to create the interface
+    // will only change when the generator type changes
+    property var metaModel
+    onActiveGeneratorIndexChanged: {
+        if (activeGeneratorIndex < 0) return;
+        metaModel = generatorMetaModel.at(generatorModel.at(activeGeneratorIndex).type)
+    }
+
     property bool showGeneratorList: true
     property bool showGeneratorSettings: true
 
@@ -51,13 +59,32 @@ ApplicationWindow {
 
     // add/delete generators
     function addGenerator() {
-        appModel.createGenerator();
+        appModel.createGenerator("spiking_net");
         activeGeneratorIndex = generatorModel.rowCount() - 1;
     }
     function deleteGenerator(index) {
         appModel.deleteGenerator(generatorModel.at(activeGeneratorIndex > 0 ? activeGeneratorIndex : index).id);
         if (activeGeneratorIndex === generatorModel.rowCount()) activeGeneratorIndex--;
     }
+
+
+    // component creation
+    // used by ParametersRack to dynamically generate field structure
+    // from field tree provided by each generator type
+    property var components
+    function registerComponents() {
+        components = {
+            SubRack: Qt.createComponent("qrc:/components/racks/SubRack.qml"),
+
+            SliderField: Qt.createComponent("qrc:/components/fields/SliderField.qml"),
+            NumberField: Qt.createComponent("qrc:/components/fields/NumberField.qml"),
+            SelectField: Qt.createComponent("qrc:/components/fields/SelectField.qml"),
+            TextField: Qt.createComponent("qrc:/components/fields/TextField.qml"),
+            AreaField: Qt.createComponent("qrc:/components/fields/AreaField.qml")
+        };
+    }
+
+    Component.onCompleted: registerComponents()
 
 
     // background

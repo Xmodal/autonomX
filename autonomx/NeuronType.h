@@ -16,27 +16,20 @@
 #pragma once
 
 #include <QObject>
+#include <QQmlEngine>
+#include <QDebug>
 
-// see https://qml.guide/enums-in-qt-qml/
-class NeuronTypeClass : public QObject {
-    Q_GADGET
-public:
+namespace NeuronTypeNS {
+    Q_NAMESPACE
     enum Enum {
-        SpikingNeuron,
+        SpikingNeuron = 0,
         SpikingNeuronRandomized,
         ResonatorNeuron,
         ResonatorNeuronRandomized,
-        ChatteringNeuron,
-        InhibitoryNeuron,
-        InhibitoryNeuronRandomized,
-        ExcitatoryNeuron,
-        ExcitatoryNeuronRandomized
+        ChatteringNeuron
     };
+    Q_ENUMS(Enum)
+}
 
-    Q_ENUM(Enum);
-
-    explicit NeuronTypeClass();
-};
-
-// redefine class member as global enum
-typedef NeuronTypeClass::Enum NeuronType;
+typedef NeuronTypeNS::Enum NeuronType;
+Q_DECLARE_METATYPE(NeuronType);

@@ -1,0 +1,111 @@
+{
+    "racks": [
+        {
+            "title": "General",
+            "fields": [
+                {
+                    "label": "Width",
+                    "propName": "latticeWidth",
+                    "type": "number",
+                    "min": 1,
+                    "max": 1000
+                },
+                {
+                    "label": "Height",
+                    "propName": "latticeHeight",
+                    "type": "number",
+                    "min": 1,
+                    "max": 1000
+                },
+                {
+                    "label": "Time scale",
+                    "propName": "timeScale",
+                    "type": "slider",
+                    "max": 0.03
+                }
+            ]
+        },
+        {
+            "title": "Neuron behavior",
+            "fields": [
+                {
+                    "label": "Inh. neuron noise",
+                    "propName": "inhibitoryNoise",
+                    "type": "slider",
+                    "max": 50
+                },
+                {
+                    "label": "Exc. neuron noise",
+                    "propName": "excitatoryNoise",
+                    "type": "slider",
+                    "max": 50
+                },
+                {
+                    "label": "Inh. portion",
+                    "propName": "inhibitoryPortion",
+                    "type": "slider"
+                },
+                {
+                    "label": "Inh. neuron type",
+                    "propName": "inhibitoryNeuronType",
+                    "type": "select",
+                    "enumName": "NeuronType"
+                },
+                {
+                    "label": "Exc. neuron type",
+                    "propName": "excitatoryNeuronType",
+                    "type": "select",
+                    "enumName": "NeuronType"
+                }
+            ]
+        },
+        {
+            "title": "Learning",
+            "fields": [
+                {
+                    "label": "STP strength",
+                    "propName": "STPStrength",
+                    "type": "slider",
+                    "flag": true,
+                    "max": 30
+                },
+                {
+                    "label": "STDP strength",
+                    "propName": "STDPStrength",
+                    "type": "slider",
+                    "flag": true,
+                    "max": 30
+                },
+                {
+                    "label": "Decay half life",
+                    "propName": "decayHalfLife",
+                    "type": "slider",
+                    "flag": true,
+                    "min": 0.1,
+                    "max": 60
+                }
+            ]
+        }
+    ],
+
+    "help": [
+        {
+            "title": "SNN overview",
+            "html_path": "help_snn_desc.html"
+        },
+        {
+            "title": "Parameter help",
+            "html_path": "help_snn_params.html"
+        }
+    ],
+
+    "enumLabels": {
+        "NeuronType": [
+            "Spiking",
+            "Spiking (rand.)",
+            "Resonator",
+            "Resonator (rand.)",
+            "Chattering"
+        ]
+    }
+}

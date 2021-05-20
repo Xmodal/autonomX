@@ -68,13 +68,6 @@ int main(int argc, char *argv[]) {
     qDebug() << "GUI id = " << QThread::currentThreadId();
 
 
-    // generator meta model
-    // (tests in here because defining it in AppModel causes crashes fsr)
-    // TODO: move this in AppModel?
-    GeneratorMetaModel generatorMetaModel;
-    generatorMetaModel.insertAtEnd("SNN");
-
-
     // expose custom types to QML and Qt's meta type system
     qmlRegisterUncreatableType<Generator>("ca.hexagram.xmodal.autonomx", 1, 0, "Generator", "Cannot instanciate Generator.");
     qmlRegisterUncreatableType<GeneratorFacade>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorFacade", "Cannot instanciate GeneratorFacade.");
@@ -107,7 +100,7 @@ int main(int argc, char *argv[]) {
     // Pass C++ objects to QML.
     qmlEngine.rootContext()->setContextProperty("appModel", &AppModel::getInstance());
     qmlEngine.rootContext()->setContextProperty("generatorModel", AppModel::getInstance().getGeneratorModel().data());
-    qmlEngine.rootContext()->setContextProperty("generatorMetaModel", &generatorMetaModel);
+    qmlEngine.rootContext()->setContextProperty("generatorMetaModel", AppModel::getInstance().getGeneratorMetaModel().data());
     qmlEngine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (qmlEngine.rootObjects().isEmpty())
         return -1;

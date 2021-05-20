@@ -58,8 +58,8 @@ ApplicationWindow {
 
 
     // add/delete generators
-    function addGenerator() {
-        appModel.createGenerator("spiking_net");
+    function addGenerator(type) {
+        appModel.createGenerator(type);
         activeGeneratorIndex = generatorModel.rowCount() - 1;
     }
     function deleteGenerator(index) {

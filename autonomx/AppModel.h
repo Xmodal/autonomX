@@ -26,6 +26,7 @@
 #include "Generator.h"
 #include "GeneratorFacade.h"
 #include "GeneratorModel.h"
+#include "GeneratorMetaModel.h"
 
 class AppModel : public QObject {
     Q_OBJECT
@@ -36,13 +37,14 @@ public:
     }
     // these return shared pointers to avoid threading issues related to the deletion of these objects.
     // be careful! whenever a Generator or GeneratorFacade is accessed through one of these, the reference must go out of scope when the generator is removed so that the objects are actually deleted.
-    QSharedPointer<QThread>         getComputeThread() const;
-    QSharedPointer<QThread>         getOscThread() const;
-    QSharedPointer<ComputeEngine>   getComputeEngine() const;
-    QSharedPointer<OscEngine>       getOscEngine() const;
-    QSharedPointer<Generator>       getGenerator(int id) const;
-    QSharedPointer<GeneratorFacade> getGeneratorFacade(int id) const;
-    QSharedPointer<GeneratorModel>  getGeneratorModel() const;
+    QSharedPointer<QThread>             getComputeThread() const;
+    QSharedPointer<QThread>             getOscThread() const;
+    QSharedPointer<ComputeEngine>       getComputeEngine() const;
+    QSharedPointer<OscEngine>           getOscEngine() const;
+    QSharedPointer<Generator>           getGenerator(int id) const;
+    QSharedPointer<GeneratorFacade>     getGeneratorFacade(int id) const;
+    QSharedPointer<GeneratorModel>      getGeneratorModel() const;
+    QSharedPointer<GeneratorMetaModel>  getGeneratorMetaModel() const;
 
     Q_INVOKABLE void    createGenerator(QString type);
     Q_INVOKABLE void    deleteGenerator(int id);
@@ -62,6 +64,7 @@ private:
 
     // data (unique elements)
     QSharedPointer<GeneratorModel> generatorModel;
+    QSharedPointer<GeneratorMetaModel> generatorMetaModel;
 
     // engines
     QSharedPointer<ComputeEngine> computeEngine;

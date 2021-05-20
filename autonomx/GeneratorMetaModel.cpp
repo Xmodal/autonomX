@@ -35,6 +35,7 @@ int GeneratorMetaModel::rowCount(const QModelIndex &parent) const
 QVariant GeneratorMetaModel::data(const QModelIndex &index, int role) const
 {
     // this is technically never used
+    // JUST KIDDING!! it's actually going to be used :)
     return QVariant();
 
 //    if (!index.isValid())

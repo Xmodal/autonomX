@@ -17,7 +17,6 @@
 
 #include "AppModel.h"
 #include "SpikingNet.h"
-#include "WolframCA.h"
 
 AppModel::AppModel() {
     if(flagDebug) {
@@ -42,6 +41,14 @@ AppModel::AppModel() {
 
     // init data (unique elements)
     generatorModel = QSharedPointer<GeneratorModel>(new GeneratorModel(generatorFacadesList, generatorFacadesHashMap));
+
+    if(flagDebug) {
+        qDebug() << "constructor (AppModel): initializing generatorMetaModel";
+    }
+
+    // init data (type registry, sort of)
+    generatorMetaModel = QSharedPointer<GeneratorMetaModel>(new GeneratorMetaModel());
+    generatorMetaModel->insertAtEnd("SNN");
 
     if(flagDebug) {
         qDebug() << "constructor (AppModel): initializing engines";
@@ -150,7 +157,6 @@ void AppModel::createGenerator(QString type) {
     QSharedPointer<Generator> generator;
     if (type.compare("spiking_net") == 0) {
         generator = QSharedPointer<Generator>(new SpikingNet(nextID));
-    } else if (type.compare("wolfram") == 0) {
     }
 
     // move the Generator to computeThread
@@ -289,4 +295,9 @@ QSharedPointer<GeneratorFacade> AppModel::getGeneratorFacade(int id) const {
 
 QSharedPointer<GeneratorModel> AppModel::getGeneratorModel() const {
     return generatorModel;
+}
+
+QSharedPointer<GeneratorMetaModel> AppModel::getGeneratorMetaModel() const
+{
+    return generatorMetaModel;
 }

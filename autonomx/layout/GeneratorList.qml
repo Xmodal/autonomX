@@ -64,7 +64,7 @@ Item {
                 backgroundColor: Stylesheet.colors.generator
                 iconSource: "qrc:/assets/images/plus.svg"
 
-                onClicked: window.addGenerator()
+                onClicked: window.addGenerator("spiking_net")
             }
 
             GeneratorButton {

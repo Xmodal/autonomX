@@ -12,6 +12,7 @@ class WolframCA : public Generator
     Q_OBJECT
     Q_PROPERTY(int rule READ getRule WRITE writeRule NOTIFY ruleChanged)
     Q_PROPERTY(double timeScale READ getTimeScale WRITE writeTimeScale NOTIFY timeScaleChanged)
+    Q_PROPERTY(double randSeed READ getRandSeed WRITE writeRandSeed NOTIFY randSeedChanged)
 
 private:
 
@@ -28,13 +29,16 @@ private:
     double* cellValues;
 
     // properties and rules; default rule set to 90
-    int rule = 90;
+    int rule = 102;
+
+    //random seed property
+    double randSeed = 0.0;
 
     //random generator to initialize cells
     std::mt19937 randomGenerator;
 
     // timeScale variable
-    double      timeScale = 30.0 / 1000.0;
+    double timeScale = 30.0 / 1000.0;
 
     // global iteration counter
     int iterationNumber;
@@ -69,6 +73,9 @@ public:
     void writeTimeScale(double timeScale);
     double getTimeScale() const;
 
+    void writeRandSeed(double randSeed);
+    double getRandSeed() ;
+
 //    double getCellValue();
 //    void setCellValue(double);
 
@@ -78,6 +85,7 @@ signals:
     // QML signals
     void ruleChanged(int rule);
     void timeScaleChanged(double timeScale);
+    void randSeedChanged(double randSeed);
 };
 
 //#endif // WOLFRAMCA_H

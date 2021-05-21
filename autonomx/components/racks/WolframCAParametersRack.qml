@@ -29,6 +29,7 @@ ColumnLayout {
                 propName: "latticeHeight"
             },
 
+
             SliderField {
                 labelText: "Time scale"
                 propName: "timeScale"
@@ -38,12 +39,18 @@ ColumnLayout {
     }
 
     SubRack {
-        subRackTitle: "Rule behavior"
+        subRackTitle: "Rule behavior and Random Seed"
 
         fields: [
             NumberField {
                 labelText: "Rule"
                 propName: "rule"
+            },
+
+            SliderField {
+                labelText: "Random Seed"
+                maxVal: 1
+                propName: "randSeed"
             }
         ]
     }

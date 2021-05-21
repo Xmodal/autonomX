@@ -39,11 +39,29 @@ void WolframCA::initialize(){
     // resize cells vector for current lattice size
     cells.resize(latticeHeight * latticeWidth);
 
-    // initialize cell values
-    for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
+    // initialize cell values with only one cell in the middle
+   if (getRandSeed()==0){
+   for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
         cells[i]=0;
     }
     cells[latticeWidth/2]=1;
+   }
+else{
+    //initialize cells with a random seed
+    for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
+        if (i>latticeWidth)
+        cells[i]=0;
+        // generate a random number magic b/w 0-1 and initialize to 1 if magic>0.5 o/w magic -> 0
+        else{
+            double magic = (float) rand()/RAND_MAX;
+            if (magic>getRandSeed())
+             cells[i] = 1;
+            else
+                cells[i]=0;
+        }
+    }
+   }
+
 
     lastGeneration = latticeHeight;
     iterationNumber = 1;
@@ -101,16 +119,34 @@ void WolframCA::computeIteration(double deltaTime)
        // cells[latticeWidth/2]=1;
     }
 
-    //write the main logic here to get values of next generation
+    //write the main logic here to get values of next generation -- remmeber the current generation starts from 1 hence current generation -1
 
-    for(int i = 1; i < latticeWidth-1; ++i) {
-        int left = cells[(currentGeneration-1) * latticeWidth + i - 1];
-        int right = cells[(currentGeneration-1) * latticeWidth + i + 1];
-        int middle = cells[(currentGeneration-1) * latticeWidth + i];
-        cells[(currentGeneration) * latticeWidth + i] = findCellValue(left,middle,right);
+    for(int i = 0 ; i <= latticeWidth-1; ++i) {
+        // to check for the leftmost cell
+        if (i==0){
+            int left = cells[(currentGeneration-1) * latticeWidth + latticeWidth - 1];
+            int right = cells[(currentGeneration-1) * latticeWidth + i + 1];
+            int middle = cells[(currentGeneration-1) * latticeWidth + i];
+            cells[(currentGeneration) * latticeWidth + i] = findCellValue(left,middle,right);
+        }
+        // to check for the rightmost cell
+        else if (i==latticeWidth-1){
+            int left = cells[(currentGeneration-1) * latticeWidth + i - 1];
+            int right = cells[(currentGeneration-1) * latticeWidth + i - (latticeWidth - 1)];
+            int middle = cells[(currentGeneration-1) * latticeWidth + i];
+            cells[(currentGeneration) * latticeWidth + i] = findCellValue(left,middle,right);
+        }
+        //any other cell on the lattice
+        else{
+             int left = cells[(currentGeneration-1) * latticeWidth + i - 1];
+             int right = cells[(currentGeneration-1) * latticeWidth + i + 1];
+             int middle = cells[(currentGeneration-1) * latticeWidth + i];
+             cells[(currentGeneration) * latticeWidth + i] = findCellValue(left,middle,right);
+        }
         //qDebug() << findCellValue(left,middle,right);
         //cells[currentGeneration * latticeWidth + i] =  i*0.5; //currentGeneration / (double)latticeHeight;
-    }
+
+        }
 
   /*  // set values of cells, brighter for each generation
     for(int i = 0; i < latticeWidth; ++i) {
@@ -172,7 +208,6 @@ double WolframCA::getLatticeValue(int x, int y)
     int index = x % latticeWidth + y * latticeWidth;
 //    std::cout << "Index = " + index;
     return cells[index];
-
 }
 
 void WolframCA::writeLatticeValue(int x, int y, double value)
@@ -199,6 +234,10 @@ double WolframCA::getTimeScale() const {
     return this->timeScale;
 }
 
+double WolframCA::getRandSeed(){
+    return this->randSeed;
+}
+
 void WolframCA::writeTimeScale(double timeScale) {
     if(this->timeScale == timeScale)
         return;
@@ -214,6 +253,23 @@ void WolframCA::writeTimeScale(double timeScale) {
     this->timeScale = timeScale;
     emit valueChanged("timeScale", QVariant(timeScale));
     emit timeScaleChanged(timeScale);
+}
+
+void WolframCA::writeRandSeed(double randSeed){
+    if(this->randSeed == randSeed)
+        return;
+
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "writeTimeScale:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+    }
+
+    this->randSeed = randSeed;
+    emit valueChanged("timeScale", QVariant(randSeed));
+    emit randSeedChanged(randSeed);
 }
 
 

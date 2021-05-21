@@ -54,12 +54,12 @@ SOURCES += \
 
 RESOURCES += qml.qrc
 
-# static exports (disabled)
-#copydata.commands = $(COPY_DIR) \"$$shell_path($$PWD\\resources)\" \"$$shell_path($$OUT_PWD\\static)\"
-#first.depends = $(first) copydata
-#export(first.depends)
-#export(copydata.commands)
-#QMAKE_EXTRA_TARGETS += first copydata
+# copy action
+CONFIG += file_copies
+
+COPIES += static_gen
+static_gen.path = $$OUT_PWD
+static_gen.files = generators
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 #QML_IMPORT_PATH =
@@ -106,15 +106,6 @@ HEADERS += \
 
 INCLUDEPATH += $$PWD/../qosc
 INCLUDEPATH += $$PWD/../qosc/contrib/packosc
-
-
-# generator metadata folder
-# copied to the build dir
-copydata.commands = $(COPY_DIR) \"$$shell_path($$PWD\\generators)\" \"$$shell_path($$OUT_PWD)\"
-first.depends = $(first) copydata
-export(first.depends)
-export(copydata.commands)
-QMAKE_EXTRA_TARGETS += first copydata
 
 
 # necessary on macOS for App Nap patch

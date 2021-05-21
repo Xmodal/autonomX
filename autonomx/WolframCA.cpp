@@ -1,22 +1,8 @@
-// Copyright 2020, Xmodal
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 #include <chrono>
 #include <QThread>
 #include <QDebug>
 #include <time.h>
+//#include <iostream>
 
 #include "WolframCA.h"
 
@@ -53,24 +39,18 @@ void WolframCA::initialize(){
     // resize cells vector for current lattice size
     cells.resize(latticeHeight * latticeWidth);
 
-    // allocate memory for cell values
-//    cellValues = new double[latticeHeight * latticeWidth];
-//    for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
-//        cellValues[i] = new double[latticeHeight * latticeWidth];
-//    }
-
     // initialize cell values
     for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
-                cells[i] = 0;
-            }
+        cells[i]=0;
+    }
+    cells[latticeWidth/2]=1;
 
-    // set last generation to the last available row in lattice -> ensures looping at end of lattice
     lastGeneration = latticeHeight;
-
-    // reset iterations and generations
     iterationNumber = 1;
-    currentGeneration = 0;
 
+    //generate the rule set array based on the defined rule
+    int r = getRule();
+    generate(r);
 }
 
 void WolframCA::resetParameters()
@@ -81,39 +61,118 @@ void WolframCA::resetParameters()
 
 void WolframCA::computeIteration(double deltaTime)
 {
-    // execute WolframCA here
+    // execute CA here
+
+    ///// random float values on lattice version /////
+//    srand( (unsigned)time( NULL ) );
+
+//    for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
+//            cells[i] = (float) rand()/RAND_MAX;
+//        }
 
     ///// line by line generation implementation /////
 
+    //set ruleset using the determined rule after checking if the rule has changed by the user
+    int r = getRule();
+    if (iterationNumber>=1 && (prev_rule!=rule))
+    generate(r);
+
     // every 1000 iterations, currentGeneration increments and iterationNumber resets
-    if(iterationNumber % 100 == 0) {
+    if(iterationNumber % 50 == 0) {
         currentGeneration++;
         iterationNumber = 0;
     }
 
     // if last generation has been passed, currentGeneration resets so lattice can begin writing from top
     if(currentGeneration == lastGeneration) {
-        currentGeneration = 0;
+        currentGeneration = 1;
 
-        // reset all cell values to 0
+        //continuing the lattice from the top as the cells have fallen to the bottom
         for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
-            cells[i] = 0;
+            if (i==0){
+                // to restart the cells from the top but with a continuing pattern from below; hence intializing the topmost layer once again
+                for (int j = 1 ; j < latticeWidth-1; ++j){
+                    cells[j] = cells[(latticeHeight) * (latticeHeight-1) + j];
+                }
+            }
+            if (i>latticeWidth)
+                cells[i] = 0;
         }
+       // cells[latticeWidth/2]=1;
     }
 
-    // set values of cells, brighter for each generation
-    for(int i = 0; i < latticeWidth; ++i) {
-        cells[currentGeneration * latticeWidth + i] = currentGeneration / (double)latticeHeight;
+    //write the main logic here to get values of next generation
+
+    for(int i = 1; i < latticeWidth-1; ++i) {
+        int left = cells[(currentGeneration-1) * latticeWidth + i - 1];
+        int right = cells[(currentGeneration-1) * latticeWidth + i + 1];
+        int middle = cells[(currentGeneration-1) * latticeWidth + i];
+        cells[(currentGeneration) * latticeWidth + i] = findCellValue(left,middle,right);
+        //qDebug() << findCellValue(left,middle,right);
+        //cells[currentGeneration * latticeWidth + i] =  i*0.5; //currentGeneration / (double)latticeHeight;
     }
+
+  /*  // set values of cells, brighter for each generation
+    for(int i = 0; i < latticeWidth; ++i) {
+        cells[currentGeneration * latticeWidth + i] =  i*0.5; //currentGeneration / (double)latticeHeight;
+    }*/
+
+    //store the rule to check next time if the rule has changed
+    prev_rule = rule;
 
     // every iteration, iterationNumber increments
     iterationNumber++;
 }
 
+int WolframCA::findCellValue(int a, int b, int c) {
+    if (a == 1 && b == 1 && c == 1) {
+        return ruleset[7];
+    }
+    if (a == 1 && b == 1 && c == 0) {
+        return ruleset[6];
+    }
+    if (a == 1 && b == 0 && c == 1) {
+        return ruleset[5];
+    }
+    if (a == 1 && b == 0 && c == 0) {
+        return ruleset[4];
+    }
+    if (a == 0 && b == 1 && c == 1) {
+        return ruleset[3];
+    }
+    if (a == 0 && b == 1 && c == 0) {
+        return ruleset[2];
+    }
+    if (a == 0 && b == 0 && c == 1) {
+        return ruleset[1];
+    }
+    //else (a == 0 && b == 0 && c == 0) {
+        return ruleset[0];
+    //}
+}
+
+void WolframCA::generate(int r){
+
+    //Grabs the binary value from the int and inserts into array
+       for (int i = sizeof(r) * CHAR_BIT; i--; )
+       {
+           if (i < 8) {
+               char temp = ('0' + ((r >> i) & 1));
+               int x = temp - '0';
+               ruleset[i] = x;
+           }
+       }
+       //to check the update rulesets
+       //for (int j=0;j<8;j++)
+       //qDebug() << "The value of new ruleset is is  "<< ruleset[j];
+}
+
 double WolframCA::getLatticeValue(int x, int y)
 {
     int index = x % latticeWidth + y * latticeWidth;
+//    std::cout << "Index = " + index;
     return cells[index];
+
 }
 
 void WolframCA::writeLatticeValue(int x, int y, double value)
@@ -124,6 +183,7 @@ void WolframCA::writeLatticeValue(int x, int y, double value)
 }
 
 int WolframCA::getRule() {
+    //qDebug() <<"New Rule is"<< rule;
     return rule;
 }
 
@@ -155,6 +215,8 @@ void WolframCA::writeTimeScale(double timeScale) {
     emit valueChanged("timeScale", QVariant(timeScale));
     emit timeScaleChanged(timeScale);
 }
+
+
 
 //double WolframCA::getCellValue() {
 //}

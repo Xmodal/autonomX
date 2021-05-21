@@ -1,65 +1,42 @@
 # Notes about the software architecture
 
-## The current architecture is kept generic and has the following classes for its functioning:
+The current architecture is kept generic and has the following classes for its functioning:
 
-1. AppModel
+1. **AppModel**: Singleton object containing all main application components. It orchestrates the initialization of engines and threads, and takes care of all operations that involve coordination over multiple threads.
 
-Singleton object containing all main application components. It orchestrates the initialization
-of engines and threads, and takes care of all operations that involve coordination over multiple threads.
+2. **ComputeEngine**: Unique object in charge of scheduling Generator calculations and relaying signal input and output to OscEngine.
 
-2. ComputeEngine
+3. **Facade**
 
-Unique object in charge of scheduling Generator
-calculations and relaying signal input and
-output to OscEngine.
+4. **Generator**
 
-3. Facade
-4. Generator
+5. **GeneratorFacade**: Object which mirrors all properties of Generator, allowing QML to read and write parameter values without causing fatal threading issues. One such object exists for each Generator.
 
-5. GeneratorFacade
+6. **GeneratorLattice**: Object which allows the embedding of custom graphics code required for visualizing Generator grids as a QML object. This is instanciated from QML. It declares a few QML-editable properties, allowing the targeted generator to be changed. This class does not contain the rendering code itself, but rather wraps it in a QML-interpretable container.
 
-Object which mirrors all properties of Generator, allowing QML to read and write parameter values without
-causing fatal threading issues. One such object exists for each Generator.
+7. **GeneratorLatticeCommunicator**: Object in charge of updating the lattice texture; this involves attaching messages to the correct Generator, requesting the lattice texture buffer to be overwritten by the Generator, and keeping track of query completion.
 
-6. GeneratorLattice
-
-Object which allows the embedding of custom graphics code required for visualizing Generator grids as a QML object. This is instanciated from QML. It declares a few QML-editable properties, allowing the targeted generator to
-be changed. This class does not contain the rendering code itself, but rather wraps it in a
-QML-interpretable container.
-
-7. GeneratorLatticeCommunicator
-
-Object in charge of updating the lattice texture; this involves attaching messages to the correct Generator, requesting the lattice texture buffer to be overwritten by the Generator, and keeping track of query completion.
-
-8. GeneratorLatticeRenderer
-
-Object containing the OpenGL graphics code that performs lattice rendering and
+8. **GeneratorLatticeRenderer**: Object containing the OpenGL graphics code that performs lattice rendering and
 coordinates lattice texture updating with GeneratorLatticeCommunicator.
 
-9. GeneratorModel
+9. **GeneratorModel**
 
-10. GeneratorRegion
+10. **GeneratorRegion**: Object which represents a single input or output region square.
 
-Object which represents a single input or output region square.
+11. **GeneratorRegionModel**: Object which mirrors all properties of GeneratorRegionSet, allowing QML to render Regions in lists and interact with their detailed properties without causing fatal threading issues. Two such objects exist per GeneratorFacade; one dedicated to inputs, the other dedicated to outputs.
 
-11. GeneratorRegionModel
-
-Object which mirrors all properties of GeneratorRegionSet, allowing QML to render Regions in lists and interact with their detailed properties without causing fatal threading issues. Two such objects exist per GeneratorFacade; one dedicated to inputs, the other dedicated to outputs.
-
-12. GeneratorRegionSet
-
-Object containing a set of input or output regions. Two such objects exist per Generator;
+12. **GeneratorRegionSet**: Object containing a set of input or output regions. Two such objects exist per Generator;
 one dedicated to inputs, the other dedicated to outputs.
 
-14. OscEngine
+14. **OscEngine**: Unique object in charge of managing OSC communications.
 
-Unique object in charge of managing OSC communications.
+### SpikingNet exclusive classes
 
-## In the current setting there is one generator already implemented in the software - SpikingNet. Hence, two more classes are added into the functionality:
+In the current setting there is one generator already implemented in the software - SpikingNet. Hence, two more classes are added into the functionality:
 
-15. SpikingNet
-16. Izhikevich
-17. NeuronType
+15. **SpikingNet**
+16. **Izhikevich**
+17. **NeuronType**
 
 ## Adding new generators
 

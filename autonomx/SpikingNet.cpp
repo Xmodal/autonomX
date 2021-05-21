@@ -21,7 +21,8 @@
 
 // ############################### initialization routines ###############################
 
-SpikingNet::SpikingNet(int id) : Generator(id, "Spiking Neural Network", "SNN", "An interconnected network of biologically-modeled neurons.") {
+SpikingNet::SpikingNet(int id, GeneratorMeta * meta) : Generator(id, meta)
+{
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()

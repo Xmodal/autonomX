@@ -4,14 +4,29 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QGuiApplication>
 
 #include "GeneratorMeta.h"
 
-GeneratorMeta::GeneratorMeta(QString generatorType)
+GeneratorMeta::GeneratorMeta(QString type)
 {
-    this->generatorType = generatorType;
-
+    this->type = type;
     registerMeta();
+}
+
+QString GeneratorMeta::getName() const
+{
+    return name;
+}
+
+QString GeneratorMeta::getType() const
+{
+    return type;
+}
+
+QString GeneratorMeta::getDescription() const
+{
+    return description;
 }
 
 QVariantMap GeneratorMeta::getFieldTree() const
@@ -30,7 +45,15 @@ QVariantMap GeneratorMeta::getEnumLabels() const
 }
 
 void GeneratorMeta::registerMeta() {
-    QString basePath = QDir::currentPath() + "/" + this->generatorType;
+    // blame this on the fact that $$OUT_PWD points to Two Different Locations
+    // depending on whether you're on macOS or on Windows
+    // thanks, Qt! i hate it
+    #ifdef Q_OS_MAC
+        QString basePath = QCoreApplication::applicationDirPath() + "/generators/" + this->type;
+    #else
+        QString basePath = QDir::currentPath() + "/generators/" + this->type;
+    #endif
+
 
     // load meta file and open
     QFile loadFile(basePath + "/meta.json");
@@ -39,14 +62,22 @@ void GeneratorMeta::registerMeta() {
         return;
     }
 
-    // -- STEP ONE:
-    // convert rack data to QML-readable field structure
-    // ----------------
-
     // read and convert to interpretable JSON
     QByteArray fieldData = loadFile.readAll();
     QJsonDocument fieldDoc(QJsonDocument::fromJson(fieldData));
 
+
+    // -- STEP ZERO:
+    // the easy properties :-)
+    // ----------------
+    name = fieldDoc["name"].toString();
+    type = fieldDoc["type"].toString();
+    description = fieldDoc["description"].toString();
+
+
+    // -- STEP ONE:
+    // convert rack data to QML-readable field structure
+    // ----------------
     QJsonArray racks = fieldDoc["racks"].toArray();
 
     // skim thru sub-racks

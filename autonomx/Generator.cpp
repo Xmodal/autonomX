@@ -20,11 +20,9 @@
 
 #include "Generator.h"
 
-Generator::Generator(int id, QString name, QString type, QString description) {
+Generator::Generator(int id, GeneratorMeta * meta) {
     this->id = id;
-    this->name = name;
-    this->type = type;
-    this->description = description;
+    this->meta = meta;
     this->userNotes = "";
 
     if(flagDebug) {
@@ -51,11 +49,11 @@ Generator::~Generator() {
 }
 
 QString Generator::getName() {
-    return name;
+    return meta->property("name").toString();
 }
 
 QString Generator::getType() {
-    return type;
+    return meta->property("type").toString();
 }
 
 int Generator::getID() {
@@ -63,7 +61,7 @@ int Generator::getID() {
 }
 
 QString Generator::getDescription() {
-    return description;
+    return meta->property("description").toString();
 }
 
 QString Generator::getUserNotes() {
@@ -104,24 +102,6 @@ int Generator::getLatticeWidth() {
 
 int Generator::getLatticeHeight() {
     return latticeHeight;
-}
-
-void Generator::writeType(QString type) {
-    if(this->type == type) {
-        return;
-    }
-
-    if(flagDebug) {
-        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-            std::chrono::system_clock::now().time_since_epoch()
-        );
-
-        qDebug() << "writeType (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << type;
-    }
-
-    this->type = type;
-    emit valueChanged("type", QVariant(type));
-    emit typeChanged(type);
 }
 
 void Generator::writeUserNotes(QString userNotes) {

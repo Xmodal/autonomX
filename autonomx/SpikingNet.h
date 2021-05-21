@@ -120,7 +120,7 @@ private:
     void setGridNetwork();
 
 public:
-    SpikingNet(int id);
+    SpikingNet(int id, GeneratorMeta * meta);
     ~SpikingNet();
 
     void computeIteration(double deltaTime) override;

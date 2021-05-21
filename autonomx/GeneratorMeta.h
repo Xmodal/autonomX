@@ -3,20 +3,27 @@
 #include <QObject>
 #include <QVariant>
 
-#include "Generator.h"
 #include "GeneratorField.h"
 
 class GeneratorMeta : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString name READ getName NOTIFY nameChanged)
+    Q_PROPERTY(QString type READ getType NOTIFY typeChanged)
+    Q_PROPERTY(QString description READ getDescription NOTIFY descriptionChanged)
+
     Q_PROPERTY(QVariantMap fieldTree READ getFieldTree NOTIFY fieldTreeChanged)
     Q_PROPERTY(QVariantMap helpRacks READ getHelpRacks NOTIFY helpRacksChanged)
     Q_PROPERTY(QVariantMap enumLabels READ getEnumLabels NOTIFY enumLabelsChanged)
 
-    // for posterity, you never know
-    QString generatorType;
+    // essential labels
+    // name: used as a front-end label
+    // type: used to ID what generator to create
+    QString name;
+    QString type;
+    QString description;
 
-    // prop members
+    // meta trees
     QVariantMap fieldTree;
     QVariantMap helpRacks;
     QVariantMap enumLabels;
@@ -53,15 +60,22 @@ public:
     };
 
     // constructor/destructor
-    GeneratorMeta(QString generatorType);
+    GeneratorMeta(QString type);
 
     // property getters
+    QString getName() const;
+    QString getType() const;
+    QString getDescription() const;
+
     QVariantMap getFieldTree() const;
     QVariantMap getHelpRacks() const;
     QVariantMap getEnumLabels() const;
 
 signals:
-    // signals
+    void nameChanged(QString name);
+    void typeChanged(QString type);
+    void descriptionChanged(QString description);
+
     void fieldTreeChanged(QVariantMap fieldTree);
     void helpRacksChanged(QVariantMap helpRacks);
     void enumLabelsChanged(QVariantMap enumLabels);

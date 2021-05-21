@@ -77,7 +77,6 @@ int main(int argc, char *argv[]) {
     qmlRegisterType<GeneratorLattice>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorLattice");
     qRegisterMetaType<QSharedPointer<Generator>>();
 
-
     // register generators to QML engine
     // TODO: find a way to not have to declare these in main.cpp;
     // maybe on type registry initialization?
@@ -86,8 +85,8 @@ int main(int argc, char *argv[]) {
 
 
     // create initial generators
-    AppModel::getInstance().createGenerator("spiking_net");
-    // AppModel::getInstance().createGenerator("wolfram");
+    AppModel::getInstance().createGenerator("SNN");
+    // AppModel::getInstance().createGenerator("WolframCA");
 
     QQmlApplicationEngine qmlEngine;
 

@@ -52,7 +52,7 @@ public:
         {"label", "Field"},
         {"type", "text"},
         {"restartOnEdit", false},
-        {"flagged", false},
+        {"flag", false},
         {"placeholder", "Text"},
         {"min", 0},
         {"max", 1},

@@ -49,5 +49,8 @@
         <file>shaders/slider_frame.frag</file>
         <file>stylesheet/qmldir</file>
         <file>stylesheet/Stylesheet.qml</file>
+        <file>generators/SNN/help/snn_desc.html</file>
+        <file>generators/SNN/help/snn_params.html</file>
+        <file>generators/SNN/meta.json</file>
     </qresource>
 </RCC>

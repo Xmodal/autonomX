@@ -95,11 +95,11 @@
     "help": [
         {
             "title": "SNN overview",
-            "html_path": "help_snn_desc.html"
+            "html_path": "help/snn_desc.html"
         },
         {
             "title": "Parameter help",
-            "html_path": "help_snn_params.html"
+            "html_path": "help/snn_params.html"
         }
     ],
 

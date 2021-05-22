@@ -54,12 +54,12 @@ SOURCES += \
 
 RESOURCES += qml.qrc
 
-# copy action
-CONFIG += file_copies
+# copy action (standby for now, but DO FIND A SOLUTION SOON!!!!)
+#CONFIG += file_copies
 
-COPIES += static_gen
-static_gen.path = $$OUT_PWD
-static_gen.files = generators
+#COPIES += static_gen
+#static_gen.path = $$OUT_PWD
+#static_gen.files = generators
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 #QML_IMPORT_PATH =

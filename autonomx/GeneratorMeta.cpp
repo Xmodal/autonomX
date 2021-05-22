@@ -45,20 +45,23 @@ QVariantMap GeneratorMeta::getEnumLabels() const
 }
 
 void GeneratorMeta::registerMeta() {
-    // blame this on the fact that $$OUT_PWD points to Two Different Locations
-    // depending on whether you're on macOS or on Windows
-    // thanks, Qt! i hate it
-    #ifdef Q_OS_MAC
-        QString basePath = QCoreApplication::applicationDirPath() + "/generators/" + this->type;
-    #else
-        QString basePath = QDir::currentPath() + "/generators/" + this->type;
-    #endif
+    // the previous way of doing it,
+    // via a static reference to the generators folder
+//    #ifdef Q_OS_MAC
+//        QString basePath = QCoreApplication::applicationDirPath() + "/generators/" + this->type;
+//    #else
+//        QString basePath = QDir::currentPath() + "/generators/" + this->type;
+//    #endif
+
+    // the clutch way of doing it,
+    // by importing assets in the .qrc and reading them from there
+    QString basePath = ":/generators/" + this->type + "/";
 
 
     // load meta file and open
-    QFile loadFile(basePath + "/meta.json");
+    QFile loadFile{basePath + "meta.json"};
     if (!loadFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning("Couldn't open field table.");
+        qWarning() << "GeneratorMeta::registerMeta - Couldn't open field table of" << this->type << "type at" << loadFile.fileName();
         return;
     }
 
@@ -124,9 +127,9 @@ void GeneratorMeta::registerMeta() {
         QString htmlPath = help[i].toObject()["html_path"].toString();
 
         // open file
-        QFile helpHtml(basePath + "/help/" + htmlPath);
+        QFile helpHtml(basePath + htmlPath);
         if (!helpHtml.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            qWarning("Couldn't open help file.");
+            qWarning() << "GeneratorMeta::registerMeta - Couldn't register help file" << htmlPath << "at" << helpHtml.fileName();
             continue;
         }
 

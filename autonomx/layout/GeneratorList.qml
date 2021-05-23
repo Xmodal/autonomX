@@ -59,25 +59,11 @@ Item {
                 text: "Add"
 
                 Layout.fillWidth: true
-                implicitWidth: parent.width * 0.5
 
                 backgroundColor: Stylesheet.colors.generator
                 iconSource: "qrc:/assets/images/plus.svg"
 
                 onClicked: window.addGenerator("SNN")
-            }
-
-            GeneratorButton {
-                id: deleteGenerator
-                text: "Delete"
-
-                implicitWidth: parent.width * 0.5
-
-                backgroundColor: Stylesheet.colors.cancel
-                iconSource: "qrc:/assets/images/delete-icon.svg"
-
-                onClicked: window.deleteGenerator()
-                state: window.activeGeneratorIndex < 0 || generatorList.count === 1 ? "hidden" : ""
             }
         }
     }

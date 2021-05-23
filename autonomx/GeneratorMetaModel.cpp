@@ -34,20 +34,19 @@ int GeneratorMetaModel::rowCount(const QModelIndex &parent) const
 
 QVariant GeneratorMetaModel::data(const QModelIndex &index, int role) const
 {
-    // this is technically never used
-    // JUST KIDDING!! it's actually going to be used :)
-    return QVariant();
+    if (!index.isValid())
+        return QVariant();
 
-//    if (!index.isValid())
-//        return QVariant();
+    if (index.column() == 0 && index.row() >= 0 && index.row() < metaMap.size()) {
+        if (GeneratorMeta::roleMap.contains(role))
+            // here, we target the metaMap item by key index
+            // this will have for effect the automatic sorting of all generator types in alphabetical order
+            // cool! thanks
+            return metaMap[metaMap.keys()[index.row()]]->property(GeneratorMeta::roleMap[role]);
+        else return QVariant();
 
-//    if (index.column() == 0 && index.row() >= 0 && index.row() < metaMap.size()) {
-//        if (GeneratorMeta::roleMap.contains(role))
-//            return metaMap.at(index.row())->property(GeneratorMeta::roleMap[role]);
-//        else return QVariant();
-
-//    }
-//    else return QVariant();
+    }
+    else return QVariant();
 }
 
 QHash<int, QByteArray> GeneratorMetaModel::roleNames() const

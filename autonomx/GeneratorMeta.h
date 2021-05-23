@@ -37,13 +37,21 @@ public:
         FieldTreeRole = Qt::UserRole + 1,
         HelpRacksRole,
         EnumLabelsRole,
+
+        NameRole,
+        TypeRole,
+        DescriptionRole
     };
 
     // role map used by GeneratorMetaModel
     static inline const QHash<int, QByteArray> roleMap = {
         {FieldTreeRole, "fieldTree"},
         {HelpRacksRole, "helpRacks"},
-        {EnumLabelsRole, "enumLabels"}
+        {EnumLabelsRole, "enumLabels"},
+
+        {NameRole, "name"},
+        {TypeRole, "type"},
+        {DescriptionRole, "description"}
     };
 
     // field defaults, used when constructing field tree

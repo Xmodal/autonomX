@@ -49,7 +49,7 @@ Item {
         }
 
         // add/delete generator buttons
-        RowLayout {
+        ColumnLayout {
             Layout.alignment: Qt.AlignBottom
             Layout.fillWidth: true
             spacing: 0
@@ -64,6 +64,23 @@ Item {
                 iconSource: "qrc:/assets/images/plus.svg"
 
                 onClicked: window.addGenerator("SNN")
+            }
+
+            Repeater {
+                model: generatorMetaModel
+
+                Label {
+                    property string type: model.type
+                    text: model.name
+
+                    Layout.fillWidth: true
+                    height: 50
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: console.log(parent.type)
+                    }
+                }
             }
         }
     }

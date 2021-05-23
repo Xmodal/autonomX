@@ -104,8 +104,6 @@ Item {
             // TODO: cross-animation blocker to prevent weird bugs! :) depending on how severe the bugs actually are (untested)
             property bool disableAnimation: false
 
-            onDisableAnimationChanged: console.log(disableAnimation)
-
             Layout.fillWidth: true
             Layout.preferredHeight: collapsed ? 0 : implicitHeight
 

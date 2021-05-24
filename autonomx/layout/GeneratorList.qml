@@ -6,12 +6,14 @@ import "qrc:/stylesheet"
 import "../components/ui"
 
 Item {
+    property bool choicesOpen: false
+
     Layout.preferredWidth: 320
     Layout.fillHeight: true
 
+    // background
     Rectangle {
         anchors.fill: parent
-
         color: Stylesheet.colors.darkGrey
     }
 
@@ -36,7 +38,7 @@ Item {
             model: generatorModel
             delegate: GeneratorWidget {
                 onClicked: {
-                    generatorAddCtn.choicesOpen = false
+                    choicesOpen = false
                     window.activeGeneratorIndex = selected ? -1 : model.index
                 }
             }
@@ -45,11 +47,25 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    generatorAddCtn.choicesOpen = false
+                    choicesOpen = false
                     window.activeGeneratorIndex = -1
                 }
 
-                z: -1
+                z: choicesOpen ? 1 : -1
+            }
+
+            // masking overlay
+            Rectangle {
+                id: overlay
+                anchors.fill: parent
+                color: Stylesheet.colors.black
+                opacity: choicesOpen ? 0.6 : 0
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: 250
+                    }
+                }
             }
         }
 
@@ -57,12 +73,11 @@ Item {
         ColumnLayout {
             id: generatorAddCtn
 
-            property bool choicesOpen: false
-
             Layout.alignment: Qt.AlignBottom
             Layout.fillWidth: true
             spacing: 0
             Layout.bottomMargin: choicesOpen ? 0 : -childrenRect.height + addGenerator.height
+            z: 10
 
             Behavior on Layout.bottomMargin {
                 NumberAnimation {
@@ -80,19 +95,27 @@ Item {
                 backgroundColor: Stylesheet.colors.generator
                 iconSource: "qrc:/assets/images/plus.svg"
 
-                onClicked: generatorAddCtn.choicesOpen = true
+                onClicked: choicesOpen = !choicesOpen
             }
 
-            Repeater {
+            ListView {
+                Layout.fillWidth: true
+                Layout.preferredHeight: childrenRect.height
+                Layout.maximumHeight: 140
+                z: -1
+
+                snapMode: ListView.SnapToItem
+                boundsBehavior: Flickable.StopAtBounds
+
                 model: generatorMetaModel
 
-                Button {
+                delegate: Button {
                     id: genTypeChoice
 
                     property string type: model.type
                     text: model.name
 
-                    Layout.fillWidth: true
+                    width: parent.width
                     leftPadding: hovered ? 25 : 15
 
                     contentItem: Label {
@@ -132,7 +155,7 @@ Item {
                     font: Stylesheet.fonts.text
 
                     onClicked: {
-                        generatorAddCtn.choicesOpen = false
+                        choicesOpen = false
                         window.addGenerator(type)
                     }
 

@@ -95,6 +95,8 @@ Item {
                 backgroundColor: Stylesheet.colors.generator
                 iconSource: "qrc:/assets/images/plus.svg"
 
+                indicatorState: choicesOpen ? "chevron" : "plus"
+
                 onClicked: choicesOpen = !choicesOpen
             }
 

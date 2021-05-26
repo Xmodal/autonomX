@@ -48,7 +48,7 @@ AppModel::AppModel() {
 
     // init data (type registry, sort of)
     generatorMetaModel = QSharedPointer<GeneratorMetaModel>(new GeneratorMetaModel());
-    generatorMetaModel->insertAtEnd("SNN");
+    generatorMetaModel->insertAtEnd("SpikingNet");
 
     if(flagDebug) {
         qDebug() << "constructor (AppModel): initializing engines";
@@ -155,8 +155,8 @@ void AppModel::createGenerator(QString type) {
 
     // create a new generator
     QSharedPointer<Generator> generator;
-    if (type.compare("SNN") == 0) {
-        generator = QSharedPointer<Generator>(new SpikingNet(nextID, generatorMetaModel->at("SNN")));
+    if (type.compare("SpikingNet") == 0) {
+        generator = QSharedPointer<Generator>(new SpikingNet(nextID, generatorMetaModel->at("SpikingNet")));
     }
 
     // move the Generator to computeThread

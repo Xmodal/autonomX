@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
 
 
     // create initial generators
-    AppModel::getInstance().createGenerator("SNN");
+    AppModel::getInstance().createGenerator("SpikingNet");
     // AppModel::getInstance().createGenerator("WolframCA");
 
     QQmlApplicationEngine qmlEngine;

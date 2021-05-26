@@ -1,6 +1,6 @@
 {
     "name": "Spiking Neural Network",
-    "type": "SNN",
+    "type": "SpikingNet",
     "description": "An interconnected network of biologically-modeled neurons.",
 
     "racks": [

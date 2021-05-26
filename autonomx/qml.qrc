@@ -38,6 +38,9 @@
         <file>components/ui/IconButton.qml</file>
         <file>components/ui/Region.qml</file>
         <file>components/ui/VuMeter.qml</file>
+        <file>generators/SpikingNet/help/snn_desc.html</file>
+        <file>generators/SpikingNet/help/snn_params.html</file>
+        <file>generators/SpikingNet/meta.json</file>
         <file>layout/GeneratorList.qml</file>
         <file>layout/Header.qml</file>
         <file>layout/LatticeView.qml</file>
@@ -49,8 +52,5 @@
         <file>shaders/slider_frame.frag</file>
         <file>stylesheet/qmldir</file>
         <file>stylesheet/Stylesheet.qml</file>
-        <file>generators/SNN/help/snn_desc.html</file>
-        <file>generators/SNN/help/snn_params.html</file>
-        <file>generators/SNN/meta.json</file>
     </qresource>
 </RCC>

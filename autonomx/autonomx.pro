@@ -50,6 +50,7 @@ SOURCES += \
     Izhikevich.cpp \
     OscEngine.cpp \
     SpikingNet.cpp \
+    WolframCA.cpp \
     main.cpp
 
 RESOURCES += qml.qrc
@@ -102,7 +103,8 @@ HEADERS += \
     Izhikevich.h \
     NeuronType.h \
     OscEngine.h \
-    SpikingNet.h
+    SpikingNet.h \
+    WolframCA.h
 
 INCLUDEPATH += $$PWD/../qosc
 INCLUDEPATH += $$PWD/../qosc/contrib/packosc

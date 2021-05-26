@@ -17,6 +17,7 @@
 
 #include "AppModel.h"
 #include "SpikingNet.h"
+#include "WolframCA.h"
 
 AppModel::AppModel() {
     if(flagDebug) {

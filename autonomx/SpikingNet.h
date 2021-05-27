@@ -125,7 +125,6 @@ public:
 
     void computeIteration(double deltaTime) override;
     void initialize() override;
-    void resetParameters() override;
     double getLatticeValue(int x, int y) override;
     void writeLatticeValue(int x, int y, double value) override;
 

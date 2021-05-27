@@ -123,12 +123,6 @@ void SpikingNet::initialize() {
     // qDebug() << "initialized";
 }
 
-void SpikingNet::resetParameters()
-{
-    // reset parameters here
-
-    // qDebug() << "parameters reset";
-}
 
 // inhibitory neurons are first, the rest is excitatory neurons
 // input and output neurons are always in the excitatory neurons

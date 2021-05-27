@@ -31,6 +31,9 @@ struct GeneratorField {
     Q_PROPERTY(bool restartOnEdit MEMBER restartOnEdit)
     Q_PROPERTY(bool flag MEMBER flag)
 
+    Q_PROPERTY(QVariant defaultValue MEMBER defaultValue)
+    Q_PROPERTY(bool flagDefaultValue MEMBER flagDefaultValue)
+
     Q_PROPERTY(QString placeholder MEMBER placeholder)
     Q_PROPERTY(QVariant min MEMBER min)
     Q_PROPERTY(QVariant max MEMBER max)
@@ -46,6 +49,9 @@ public:
             bool restartOnEdit,
             bool flag,
 
+            QVariant defaultValue,
+            bool flagDefaultValue,
+
             QString placeholder,
             QVariant min,
             QVariant max,
@@ -56,6 +62,9 @@ public:
           type(type),
           restartOnEdit(restartOnEdit),
           flag(flag),
+
+          defaultValue(defaultValue),
+          flagDefaultValue(flagDefaultValue),
 
           placeholder(placeholder),
           min(min),
@@ -70,6 +79,9 @@ public:
         restartOnEdit = fieldProps["restartOnEdit"].toBool();
         flag = fieldProps["flag"].toBool();
 
+        defaultValue = fieldProps["default"];
+        flagDefaultValue = fieldProps["flagDefault"].toBool();
+
         placeholder = fieldProps["placeholder"].toString();
         min = fieldProps["min"];
         max = fieldProps["max"];
@@ -81,6 +93,9 @@ public:
     QString type;
     bool restartOnEdit = false;
     bool flag = false;
+
+    QVariant defaultValue;
+    bool flagDefaultValue;
 
     // field-specific
     QString placeholder = "";

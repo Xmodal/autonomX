@@ -23,6 +23,10 @@ class GeneratorMeta : public QObject
     QString type;
     QString description;
 
+    // used by resetParameters()
+    // and hopefully other things too!
+    QList<GeneratorField*> fields;
+
     // meta trees
     QVariantMap fieldTree;
     QVariantMap helpRacks;
@@ -74,6 +78,8 @@ public:
     QString getName() const;
     QString getType() const;
     QString getDescription() const;
+
+    QList<GeneratorField*> getFields() const;
 
     QVariantMap getFieldTree() const;
     QVariantMap getHelpRacks() const;

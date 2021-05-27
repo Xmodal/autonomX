@@ -290,6 +290,36 @@ void Generator::writeLatticeHeight(int latticeHeight) {
     emit latticeHeightChanged(latticeHeight);
 }
 
+void Generator::resetParameters()
+{
+    const QMetaObject *metaObject = this->metaObject();
+
+    for (int i = metaObject->indexOfProperty("latticeWidth"); i < metaObject->propertyCount(); i++) {
+        // get property object
+        QMetaProperty metaProperty = metaObject->property(i);
+
+        // TODO: flags need a different validation system
+        // (hint: trim down w/o the "flag" prefix)
+
+        // find associated default value for given property in the meta tree
+        for (GeneratorField* f : meta->getFields()) {
+            if (f->propName == metaProperty.name()) {
+                // write default value to property
+                // TODO: doesn't work with selects/enums yet
+                metaProperty.write(this, f->defaultValue);
+
+                // break to next field
+                break;
+            }
+        }
+    }
+
+    // TODO: reset input/output zones as well...?
+
+    // re-initialize
+    initialize();
+}
+
 void Generator::updateValue(const QString &key, const QVariant &value) {
     // qDebug() << "Generator::updateValue";
 

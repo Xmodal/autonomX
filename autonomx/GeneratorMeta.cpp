@@ -29,6 +29,11 @@ QString GeneratorMeta::getDescription() const
     return description;
 }
 
+QList<GeneratorField*> GeneratorMeta::getFields() const
+{
+    return fields;
+}
+
 QVariantMap GeneratorMeta::getFieldTree() const
 {
     return fieldTree;
@@ -102,9 +107,13 @@ void GeneratorMeta::registerMeta() {
                 fieldProps[keys[k]] = fieldData[keys[k]].toVariant();
             }
 
-            // apply all default and new values to new instance of GeneratorField
-            // and insert into SubRack vector
-            rackStr.append(QVariant::fromValue(GeneratorField(fieldProps)));
+            // apply all default and new values to a new instance of GeneratorField
+            GeneratorField* newField = new GeneratorField(fieldProps);
+
+            // append to single-leveled field list
+            fields.append(newField);
+            // append to multi-leveled field tree
+            rackStr.append(QVariant::fromValue(*newField));
         }
 
         // insert SubRack vector into the field tree
@@ -133,10 +142,10 @@ void GeneratorMeta::registerMeta() {
             continue;
         }
 
+        // read from file
+        QString htmlContent = helpHtml.readAll();
         // insert as entry in rack
         // again, index to order
-        QString htmlContent = helpHtml.readAll();
-
         QString index = QStringLiteral("%1").arg(i, 2, 10, QLatin1Char('0'));
         helpRacks.insert(index + "_" + title, htmlContent);
 

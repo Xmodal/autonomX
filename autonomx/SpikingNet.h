@@ -37,9 +37,9 @@ class SpikingNet : public Generator {
     Q_PROPERTY(double STDPStrength READ getSTDPStrength WRITE writeSTDPStrength NOTIFY STDPStrengthChanged)
     Q_PROPERTY(double decayHalfLife READ getDecayHalfLife WRITE writeDecayHalfLife NOTIFY decayHalfLifeChanged)
 
-    Q_PROPERTY(bool flagSTPStrength READ getFlagSTP WRITE writeFlagSTP NOTIFY flagSTPChanged)
-    Q_PROPERTY(bool flagSTDPStrength READ getFlagSTDP WRITE writeFlagSTDP NOTIFY flagSTDPChanged)
-    Q_PROPERTY(bool flagDecayHalfLife READ getFlagDecay WRITE writeFlagDecay NOTIFY flagDecayChanged)
+    Q_PROPERTY(bool flag_STPStrength READ getFlagSTP WRITE writeFlagSTP NOTIFY flagSTPChanged)
+    Q_PROPERTY(bool flag_STDPStrength READ getFlagSTDP WRITE writeFlagSTDP NOTIFY flagSTDPChanged)
+    Q_PROPERTY(bool flag_decayHalfLife READ getFlagDecay WRITE writeFlagDecay NOTIFY flagDecayChanged)
 
 // enum
 public:

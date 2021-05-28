@@ -749,7 +749,7 @@ void SpikingNet::writeFlagSTP(bool flagSTP) {
     }
 
     this->flagSTP = flagSTP;
-    emit valueChanged("flagSTP", QVariant(flagSTP));
+    emit valueChanged("flag_STPStrength", QVariant(flagSTP));
     emit flagSTPChanged(flagSTP);
 }
 
@@ -766,7 +766,7 @@ void SpikingNet::writeFlagSTDP(bool flagSTDP) {
     }
 
     this->flagSTDP = flagSTDP;
-    emit valueChanged("flagSTDP", QVariant(flagSTDP));
+    emit valueChanged("flag_STDPStrength", QVariant(flagSTDP));
     emit flagSTDPChanged(flagSTDP);
 }
 
@@ -783,7 +783,7 @@ void SpikingNet::writeFlagDecay(bool flagDecay) {
     }
 
     this->flagDecay = flagDecay;
-    emit valueChanged("flagDecay", QVariant(flagDecay));
+    emit valueChanged("flag_decayHalfLife", QVariant(flagDecay));
     emit flagDecayChanged(flagDecay);
 }
 

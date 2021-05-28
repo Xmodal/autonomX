@@ -59,15 +59,5 @@
             "title": "Parameter help",
             "html_path": "help/WolframCA_params.html"
         }
-    ],
-
-    "enumLabels": {
-        "NeuronType": [
-            "Spiking",
-            "Spiking (rand.)",
-            "Resonator",
-            "Resonator (rand.)",
-            "Chattering"
-        ]
-    }
+    ]
 }

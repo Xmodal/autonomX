@@ -159,6 +159,8 @@ void AppModel::createGenerator(QString type) {
     QSharedPointer<Generator> generator;
     if (type.compare("SpikingNet") == 0) {
         generator = QSharedPointer<Generator>(new SpikingNet(nextID, generatorMetaModel->at("SpikingNet")));
+    } else if (type.compare("WolframCA") == 0) {
+        generator = QSharedPointer<Generator>(new WolframCA(nextID, generatorMetaModel->at("WolframCA")));
     }
 
     // move the Generator to computeThread

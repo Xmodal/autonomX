@@ -52,5 +52,7 @@
         <file>shaders/slider_frame.frag</file>
         <file>stylesheet/qmldir</file>
         <file>stylesheet/Stylesheet.qml</file>
+        <file>generators/WolframCA/meta.json</file>
+        <file>generators/WolframCA/help/WolframCA_desc.html</file>
     </qresource>
 </RCC>

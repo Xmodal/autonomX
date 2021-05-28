@@ -1,0 +1,73 @@
+{
+    "name": "Wolfram Cellular Automata",
+    "type": "WolframCA",
+    "description": "An interconnected network of biologically-modeled neurons.",
+
+    "racks": [
+        {
+            "title": "General",
+            "fields": [
+                {
+                    "label": "Width",
+                    "propName": "latticeWidth",
+                    "type": "number",
+                    "min": 1,
+                    "max": 1000
+                },
+                {
+                    "label": "Height",
+                    "propName": "latticeHeight",
+                    "type": "number",
+                    "min": 1,
+                    "max": 1000
+                },
+                {
+                    "label": "Time scale",
+                    "propName": "timeScale",
+                    "type": "slider",
+                    "max": 0.03
+                }
+            ]
+        },
+        {
+            "title": "Wolfram Properties",
+            "fields": [
+                {
+                    "label": "Rule Number",
+                    "propName": "rule",
+                    "type": "slider",
+                    "min": 0,
+                    "max": 255
+                },
+                {
+                    "label": "Random Seed",
+                    "propName": "randSeed",
+                    "type": "slider",
+                    "min": 0,
+                    "max": 50
+                }
+            ]
+        }
+    ],
+
+    "help": [
+        {
+            "title": "WolframCA Overview",
+            "html_path": "help/WolframCA_desc.html"
+        },
+        {
+            "title": "Parameter help",
+            "html_path": "help/WolframCA_params.html"
+        }
+    ],
+
+    "enumLabels": {
+        "NeuronType": [
+            "Spiking",
+            "Spiking (rand.)",
+            "Resonator",
+            "Resonator (rand.)",
+            "Chattering"
+        ]
+    }
+}

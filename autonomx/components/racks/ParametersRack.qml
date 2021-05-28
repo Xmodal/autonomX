@@ -59,7 +59,7 @@ ColumnLayout {
 
                     // flag property
                     if (field.flag) {
-                        props.flagName = "flag" + field.propName.charAt(0).toUpperCase() + field.propName.slice(1);
+                        props.flagName = "flag_" + field.propName;
                     }
 
                     // determine field type

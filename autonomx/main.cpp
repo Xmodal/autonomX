@@ -34,6 +34,7 @@
 #include "GeneratorLattice.h"
 #include "GeneratorMetaModel.h"
 #include "SpikingNet.h"
+#include "WolframCA.h"
 #include "AppModel.h"
 #include "CursorOverrider.h"
 

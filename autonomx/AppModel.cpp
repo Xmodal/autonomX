@@ -50,6 +50,7 @@ AppModel::AppModel() {
     // init data (type registry, sort of)
     generatorMetaModel = QSharedPointer<GeneratorMetaModel>(new GeneratorMetaModel());
     generatorMetaModel->insertAtEnd("SpikingNet");
+    generatorMetaModel->insertAtEnd("WolframCA");
 
     if(flagDebug) {
         qDebug() << "constructor (AppModel): initializing engines";

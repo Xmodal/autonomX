@@ -295,18 +295,25 @@ void Generator::resetParameters()
     const QMetaObject *metaObject = this->metaObject();
 
     for (int i = metaObject->indexOfProperty("latticeWidth"); i < metaObject->propertyCount(); i++) {
-        // get property object
-        QMetaProperty metaProperty = metaObject->property(i);
+        QMetaProperty target = metaObject->property(i);
+        // get property name
+        QString underProp(metaObject->property(i).name());
+        bool flag = false;
 
-        // TODO: flags need a different validation system
-        // (hint: trim down w/o the "flag" prefix)
+        // re-target prop if current target is a flag
+        // (only flags can be exposed boolean properties, i've decided)
+        if (QString(target.typeName()).compare("bool") == 0) {
+            // remove "flag_" prefix
+            underProp = underProp.mid(5, underProp.length());
+            // check in
+            flag = true;
+        }
 
         // find associated default value for given property in the meta tree
         for (GeneratorField* f : meta->getFields()) {
-            if (f->propName == metaProperty.name()) {
-                // write default value to property
-                // TODO: doesn't work with selects/enums yet
-                metaProperty.write(this, f->defaultValue);
+            if (f->propName == underProp) {
+                // write default value to prop
+                target.write(this, flag ? f->flagDefaultValue : f->defaultValue);
 
                 // break to next field
                 break;
@@ -317,6 +324,7 @@ void Generator::resetParameters()
     // TODO: reset input/output zones as well...?
 
     // re-initialize
+    // probably unnecessary, some properties can call this when rewritten
     initialize();
 }
 

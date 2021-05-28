@@ -22,7 +22,7 @@ ColumnLayout {
     property real frameMaskWidth: 0
     // flag props
     property string flagName: ""
-    property bool flagValue: flagName !== "" && generatorModel.at(window.activeGeneratorIndex) ? generatorModel.at(window.activeGeneratorIndex)[flagName] : false
+    property bool flagValue: flagName !== "" && generatorModel.at(activeGeneratorIndex) ? generatorModel.at(activeGeneratorIndex)[flagName] : false
     property bool activated: flagName !== "" ? flag.checked : true
     // field prop
     property alias fieldContent: fieldContentLoader.sourceComponent
@@ -31,8 +31,8 @@ ColumnLayout {
     signal valueChanged(variant newValue)
     signal flagChanged(bool newFlag)
 
-    onValueChanged: if (generatorModel.at(window.activeGeneratorIndex)) generatorModel.at(window.activeGeneratorIndex)[propName] = newValue
-    onFlagChanged: if (generatorModel.at(window.activeGeneratorIndex)) generatorModel.at(activeGeneratorIndex)[flagName] = newFlag
+    onValueChanged: if (generatorModel.at(activeGeneratorIndex)) generatorModel.at(activeGeneratorIndex)[propName] = newValue
+    onFlagChanged: if (generatorModel.at(activeGeneratorIndex)) generatorModel.at(activeGeneratorIndex)[flagName] = newFlag
 
     // layout
     implicitWidth: fieldWidth

@@ -60,14 +60,14 @@
                     "propName": "inhibitoryNeuronType",
                     "type": "select",
                     "enumName": "NeuronType",
-                    "default": "ChatteringNeuron"
+                    "default": 4
                 },
                 {
                     "label": "Exc. neuron type",
                     "propName": "excitatoryNeuronType",
                     "type": "select",
                     "enumName": "NeuronType",
-                    "default": "ChatteringNeuron"
+                    "default": 4
                 }
             ]
         },

@@ -86,12 +86,6 @@ else{
     generate(r);
 }
 
-void WolframCA::resetParameters()
-{
-    // reset params here
-    initialize();
-}
-
 void WolframCA::computeIteration(double deltaTime)
 {
     //set ruleset using the determined rule after checking if the rule has changed by the user

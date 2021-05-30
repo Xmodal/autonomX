@@ -31,6 +31,8 @@ SpikingNet::SpikingNet(int id, GeneratorMeta * meta) : Generator(id, meta)
         qDebug() << "constructor (SpikingNet):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
+    // make sure these two functions are ALWAYS called at the end of a constructor!
+    resetParameters();
     initialize();
 }
 

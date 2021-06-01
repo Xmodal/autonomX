@@ -12,8 +12,7 @@ ColumnLayout {
     Layout.fillWidth: true
     spacing: 0
 
-    signal startedGenerating()
-    signal finishedGenerating()
+    signal changeContent()
 
     Repeater {
         model: metaModel ? Object.keys(metaModel.fieldTree) : []
@@ -23,22 +22,15 @@ ColumnLayout {
 
             subRackTitle: modelData.slice(3)
             onSubRackTitleChanged: regenerateGUI()
-
-            function createTimer() {
-                return Qt.createQmlObject("import QtQuick 2.9; Timer {}", window);
-            }
-
-            function delay(time, cb) {
-                let timer = createTimer();
-                timer.interval = time;
-                timer.repeat = false;
-                timer.triggered.connect(cb);
-                timer.start();
-            }
+            Component.onDestruction: destroyGUI()
 
             // this function is/should be executed everytime the generator type changes
             function regenerateGUI() {
-                paramsRack.startedGenerating();
+                // disable animations
+                paramsRack.changeContent();
+
+                // destroy previous fields
+                destroyGUI();
 
                 // reset fields
                 paramsSubRack.fields = [];
@@ -91,9 +83,13 @@ ColumnLayout {
                     // push to field array
                     paramsSubRack.fields.push(fieldObj)
                 }
+            }
 
-                // relink props
-                delay(30, paramsRack.finishedGenerating);
+            function destroyGUI() {
+                for (let i = 0; i < paramsSubRack.fields.length; i++) {
+                    paramsSubRack.fields[i].reset();
+                    paramsSubRack.fields[i].destroy();
+                }
             }
         }
     }

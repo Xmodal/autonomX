@@ -86,7 +86,7 @@ public:
     double getTimeScale() const;
 
     void writeRandSeed(double randSeed);
-    double getRandSeed() ;
+    double getRandSeed() const;
 
 signals:
     // QML signals

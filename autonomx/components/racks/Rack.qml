@@ -102,7 +102,7 @@ Item {
             // - is set to true when any SubRack instance is collapsed/expanded
             // - is set to false when the contained Rack is collapsed/expanded
             // TODO: cross-animation blocker to prevent weird bugs! :) depending on how severe the bugs actually are (untested)
-            property bool disableAnimation: false
+            property bool disableAnimation: true
 
             Layout.fillWidth: true
             Layout.preferredHeight: collapsed ? 0 : implicitHeight
@@ -116,11 +116,11 @@ Item {
             }
         }
 
+        // disable animations when new content is being loaded
+        // (called inside each discrete loaded component when content height is likely to change)
         Connections {
             target: contentLoader.item
-
-            onStartedGenerating: contentLoader.disableAnimation = true
-            onFinishedGenerating: contentLoader.disableAnimation = false
+            onChangeContent: contentLoader.disableAnimation = true
         }
     }
 

@@ -317,6 +317,9 @@ void Generator::resetParameters()
         // find associated default value for given property in the meta tree
         for (GeneratorField* f : meta->getFields()) {
             if (f->propName == underProp) {
+                // check if default value is defined in the field data
+                if (f->defaultValue.isNull()) break;
+
                 // write default value to prop
                 target.write(this, flag ? f->flagDefaultValue : f->defaultValue);
 

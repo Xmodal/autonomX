@@ -35,7 +35,7 @@
                 {
                     "label": "Rule Number",
                     "propName": "rule",
-                    "type": "slider",
+                    "type": "number",
                     "min": 0,
                     "max": 255
                 },

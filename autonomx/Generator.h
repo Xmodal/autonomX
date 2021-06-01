@@ -34,6 +34,7 @@ class Generator : public QObject {
     Q_PROPERTY(QString name READ getName)
     Q_PROPERTY(QString type READ getType)
     Q_PROPERTY(QString description READ getDescription)
+    Q_PROPERTY(GeneratorMeta* meta READ getMeta);
 
     // these do change
     Q_PROPERTY(QString userNotes READ getUserNotes WRITE writeUserNotes NOTIFY userNotesChanged)
@@ -90,6 +91,7 @@ public:
     int getID();
     QString getDescription();
     QString getUserNotes();
+    GeneratorMeta* getMeta() const;
     double getHistoryLatest();
     bool getHistoryRefresher();
 

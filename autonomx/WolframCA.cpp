@@ -220,7 +220,7 @@ double WolframCA::getTimeScale() const {
     return this->timeScale;
 }
 
-double WolframCA::getRandSeed(){
+double WolframCA::getRandSeed() const{
     return this->randSeed;
 }
 
@@ -250,10 +250,10 @@ void WolframCA::writeRandSeed(double randSeed){
                     std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "writeTimeScale:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+        qDebug() << "writeRandSeed:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
     this->randSeed = randSeed;
-    emit valueChanged("timeScale", QVariant(randSeed));
+    emit valueChanged("randSeed", QVariant(randSeed));
     emit randSeedChanged(randSeed);
 }

@@ -20,7 +20,7 @@ ApplicationWindow {
     property var metaModel
     onActiveGeneratorIndexChanged: {
         if (activeGeneratorIndex < 0) return;
-        metaModel = generatorMetaModel.at(generatorModel.at(activeGeneratorIndex).type)
+        metaModel = generatorModel.at(activeGeneratorIndex).meta
     }
 
     property bool showGeneratorList: true

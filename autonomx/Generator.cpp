@@ -68,6 +68,11 @@ QString Generator::getUserNotes() {
     return userNotes;
 }
 
+GeneratorMeta *Generator::getMeta() const
+{
+    return meta;
+}
+
 double Generator::getHistoryLatest() {
     return historyLatest;
 }

@@ -54,5 +54,6 @@
         <file>stylesheet/Stylesheet.qml</file>
         <file>generators/WolframCA/meta.json</file>
         <file>generators/WolframCA/help/WolframCA_desc.html</file>
+        <file>generators/WolframCA/help/WolframCA_params.html</file>
     </qresource>
 </RCC>

@@ -11,8 +11,7 @@ ColumnLayout {
     Layout.fillWidth: true
     spacing: 0
 
-    signal startedGenerating()
-    signal finishedGenerating()
+    signal changeContent()
 
     SubRack {
         titleBarVisible: false
@@ -61,18 +60,7 @@ ColumnLayout {
     // TODO: adapt to target multiple generators
     Repeater {
         model: metaModel ? Object.keys(metaModel.helpRacks) : []
-        onModelChanged: {
-            globalSettingsRack.startedGenerating();
-            //delay(100, globalSettingsRack.finishedGenerating);
-        }
-
-        function delay(time, cb) {
-            let timer = Qt.createQmlObject("import QtQuick 2.9; Timer {}", window);
-            timer.interval = time;
-            timer.repeat = false;
-            timer.triggered.connect(cb);
-            timer.start();
-        }
+        onModelChanged: globalSettingsRack.changeContent()
 
         // documentation rack (collapsed by default)
         SubRack {

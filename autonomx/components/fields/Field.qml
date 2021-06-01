@@ -38,6 +38,12 @@ ColumnLayout {
     implicitWidth: fieldWidth
     spacing: 5
 
+    // reset prop name + flag name to prevent void linking when changing generator type
+    function reset() {
+        flagName = "";
+        propName = null;
+    }
+
     // top label
     Label {
         id: fieldLabel

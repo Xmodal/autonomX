@@ -10,8 +10,7 @@ ColumnLayout {
     Layout.fillWidth: true
     spacing: 0
 
-    signal startedGenerating()
-    signal finishedGenerating()
+    signal changeContent()
 
     SubRack {
         subRackTitle: "In"

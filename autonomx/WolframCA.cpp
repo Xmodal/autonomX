@@ -18,14 +18,14 @@
 #include <QThread>
 #include <QDebug>
 #include <time.h>
+#include <random>
 
 #include "WolframCA.h"
 
 WolframCA::WolframCA(int id, GeneratorMeta * meta) : Generator(id, meta){
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()
-        );
+                    std::chrono::system_clock::now().time_since_epoch());
 
         qDebug() << "constructor (WolframCA):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
@@ -34,64 +34,94 @@ WolframCA::WolframCA(int id, GeneratorMeta * meta) : Generator(id, meta){
 
 }
 
-WolframCA::~WolframCA()
-{
+WolframCA::~WolframCA() {
 
 }
 
-void WolframCA::initialize(){
+void WolframCA::initialize() {
 
-    if(flagDebug) {
-        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()
-        );
+   if(flagDebug) {
+       std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                   std::chrono::system_clock::now().time_since_epoch());
 
-        qDebug() << "initialize:\t\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
-    }
-
-    // re-init algorithm here
-
-    // resize cells vector for current lattice size
-    cells.resize(latticeHeight * latticeWidth);
-
-    // initialize cell values with only one cell in the middle
-   if (getRandSeed()==0){
-   for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
-        cells[i]=0;
-    }
-    cells[latticeWidth/2]=1;
-   }
-else{
-    //initialize cells with a random seed
-    for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
-        if (i>latticeWidth)
-        cells[i]=0;
-        // generate a random number magic b/w 0-1 and initialize to 1 if magic>0.5 o/w magic -> 0
-        else{
-            double magic = (float) rand()/RAND_MAX;
-            if (magic>getRandSeed())
-             cells[i] = 1;
-            else
-                cells[i]=0;
-        }
-    }
+       qDebug() << "initialize:\t\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
    }
 
+   // re-init algorithm here
 
-    lastGeneration = latticeHeight;
-    iterationNumber = 1;
+   // resize cells vector for current lattice size
+   cells.resize(latticeHeight * latticeWidth);
 
-    //generate the rule set array based on the defined rule
-    int r = getRule();
-    generate(r);
+   // reset all cells to 0 / black
+   for(int i = 0; i < (latticeHeight * latticeWidth); i++) {
+       cells[i] = 0;
+   }
+
+   bool seedChosen = false;
+   double magic;
+
+   // user choice: random starting seed or no?
+   // if no random starting seed (default choice)
+   if (getRandSeed() == 0) {
+       // middle cell on first line is starting seed
+       cells[latticeWidth / 2] = 1;
+   }
+
+   // if random starting seed is selected by user
+   // TODO:
+   // random seed bug
+   // see below for temp fix and issue
+   else {
+//       qDebug() << "random seed selected by user: " << getRandSeed();
+       // initialize a random cell as starting cell
+       for(int i = 0; i < (latticeHeight * latticeWidth); i++) {
+           if (i >= latticeWidth) {
+               cells[i] = 0;
+           }
+           else {
+               // generate a random number magic b/w 0-1 and initialize to 1 if magic>0.5 o/w magic -> 0
+                magic = (float) rand() / RAND_MAX;
+//               qDebug() << "magic value: " << magic;
+               if (magic > getRandSeed()) {
+                   cells[i] = 1;
+                   seedChosen = true;
+               }
+               else {
+                   cells[i] = 0;
+               }
+           }
+       }
+
+       // TODO:
+       // fix this random seed bug
+       // temporary fix below
+       // selects one random cell from the first row to be the random seed
+       // ensures that at least one cell is seleted as seed
+       // otherwise, as the random seed approaches 1, the likelihood that no cell will be initialized increases
+       // at max value (1) it is 100% certain that a blank lattice will be generated
+       if(seedChosen == false) {
+           magic = (float) rand() / RAND_MAX;
+           qDebug() << "no cell was selected normally, temp fix triggered." << endl << "random cell selected for seed: " << (int)(magic * latticeWidth);
+           cells[(int)(magic * latticeWidth)] = 1;
+       }
+   }
+
+
+   lastGeneration = latticeHeight;
+   currentGeneration = 1;
+   iterationNumber = 1;
+
+   //generate the rule set array based on the defined rule
+   int r = getRule();
+   generate(r);
 }
 
-void WolframCA::computeIteration(double deltaTime)
-{
+void WolframCA::computeIteration(double deltaTime) {
     //set ruleset using the determined rule after checking if the rule has changed by the user
     int r = getRule();
-    if (iterationNumber>=1 && (prev_rule!=rule))
-    generate(r);
+    if (iterationNumber >= 1 && (prev_rule!=rule)) {
+        generate(r);
+    }
 
     // every 1000 iterations, currentGeneration increments and iterationNumber resets
     if(iterationNumber % 50 == 0) {
@@ -104,10 +134,10 @@ void WolframCA::computeIteration(double deltaTime)
         currentGeneration = 1;
 
         //continuing the lattice from the top as the cells have fallen to the bottom
-        for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
+        for(int i = 0; i < (latticeHeight * latticeWidth); i++) {
             if (i==0){
                 // to restart the cells from the top but with a continuing pattern from below; hence intializing the topmost layer once again
-                for (int j = 1 ; j < latticeWidth-1; ++j){
+                for (int j = 1 ; j < latticeWidth-1; j++){
                     cells[j] = cells[(latticeHeight) * (latticeHeight-1) + j];
                 }
             }
@@ -119,7 +149,7 @@ void WolframCA::computeIteration(double deltaTime)
 
     //write the main logic here to get values of next generation -- remmeber the current generation starts from 1 hence current generation -1
 
-    for(int i = 0 ; i <= latticeWidth-1; ++i) {
+    for(int i = 0 ; i <= latticeWidth-1; i++) {
         // to check for the leftmost cell
         if (i==0){
             int left = cells[(currentGeneration-1) * latticeWidth + latticeWidth - 1];
@@ -190,14 +220,12 @@ void WolframCA::generate(int r){
        }
 }
 
-double WolframCA::getLatticeValue(int x, int y)
-{
+double WolframCA::getLatticeValue(int x, int y) {
     int index = x % latticeWidth + y * latticeWidth;
     return cells[index];
 }
 
-void WolframCA::writeLatticeValue(int x, int y, double value)
-{
+void WolframCA::writeLatticeValue(int x, int y, double value) {
     // write values to lattice
     int index = x % latticeWidth + y * latticeWidth;
     cells[index] = value;
@@ -208,8 +236,7 @@ int WolframCA::getRule() {
     return rule;
 }
 
-void WolframCA::writeRule(int rule)
-{
+void WolframCA::writeRule(int rule) {
     this->rule = rule;
     // make sure you follow this signal structure when you write a property!
     emit ruleChanged(rule);
@@ -220,7 +247,7 @@ double WolframCA::getTimeScale() const {
     return this->timeScale;
 }
 
-double WolframCA::getRandSeed() const{
+double WolframCA::getRandSeed() const {
     return this->randSeed;
 }
 
@@ -241,7 +268,7 @@ void WolframCA::writeTimeScale(double timeScale) {
     emit timeScaleChanged(timeScale);
 }
 
-void WolframCA::writeRandSeed(double randSeed){
+void WolframCA::writeRandSeed(double randSeed) {
     if(this->randSeed == randSeed)
         return;
 

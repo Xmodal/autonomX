@@ -30,7 +30,7 @@ class WolframCA : public Generator
 private:
 
     // Debugging
-    bool  flagDebug = true;
+    bool  flagDebug = false;
 
     // cells of lattice
     std::vector<double> cells;

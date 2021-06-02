@@ -290,6 +290,16 @@ void Generator::writeLatticeHeight(int latticeHeight) {
     emit latticeHeightChanged(latticeHeight);
 }
 
+void Generator::readJson(const QJsonObject &json)
+{
+
+}
+
+void Generator::writeJson(QJsonObject &json) const
+{
+
+}
+
 void Generator::resetParameters()
 {
     const QMetaObject *metaObject = this->metaObject();

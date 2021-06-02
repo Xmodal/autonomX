@@ -119,7 +119,7 @@ QSharedPointer<QThread> AppModel::getOscThread() const {
     return oscThread;
 }
 
-QSharedPointer<ComputeEngine>  AppModel::getComputeEngine() const {
+QSharedPointer<ComputeEngine> AppModel::getComputeEngine() const {
     return computeEngine;
 }
 
@@ -286,6 +286,55 @@ bool AppModel::validateNewGeneratorName(QString name) {
     return valid;
 }
 
+bool AppModel::loadProject(QString uri)
+{
+    // parse URI
+    QUrl url(uri);
+    // create QFile at URI
+    QFile loadFile(url.toLocalFile());
+
+    // try to open file
+    if (!loadFile.open(QIODevice::ReadOnly)) {
+        qWarning() << "Couldn't open save file:" << uri;
+        return false;
+    }
+
+    // read file
+    QByteArray saveData = loadFile.readAll();
+
+    // convert to JSON document
+    QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
+
+    // read data
+    readJson(loadDoc.object());
+
+    // success!
+    return true;
+}
+
+bool AppModel::saveProject(QString uri) {
+    // parse URI
+    QUrl url(uri);
+    // create QFile at URL
+    QFile saveFile(url.toLocalFile());
+
+    // try to open file
+    if (!saveFile.open(QIODevice::WriteOnly)) {
+        qWarning() << "Couldn't open save file:" << uri;
+        return false;
+    }
+
+    // create JSON object
+    QJsonObject saveObject;
+    // write all data
+    writeJson(saveObject);
+    // save to file
+    saveFile.write(QJsonDocument(saveObject).toJson());
+
+    // success
+    return true;
+}
+
 QSharedPointer<Generator> AppModel::getGenerator(int id) const {
     return generatorsHashMap->value(id);
 }
@@ -301,4 +350,14 @@ QSharedPointer<GeneratorModel> AppModel::getGeneratorModel() const {
 QSharedPointer<GeneratorMetaModel> AppModel::getGeneratorMetaModel() const
 {
     return generatorMetaModel;
+}
+
+void AppModel::readJson(const QJsonObject &json)
+{
+    qDebug() << json["test"];
+}
+
+void AppModel::writeJson(QJsonObject &json) const
+{
+    json["test"] = "yo :)";
 }

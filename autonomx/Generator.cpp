@@ -295,8 +295,7 @@ void Generator::writeLatticeHeight(int latticeHeight) {
     emit latticeHeightChanged(latticeHeight);
 }
 
-void Generator::resetParameters()
-{
+void Generator::resetParameters() {
     const QMetaObject *metaObject = this->metaObject();
 
     for (int i = metaObject->indexOfProperty("latticeWidth"); i < metaObject->propertyCount(); i++) {

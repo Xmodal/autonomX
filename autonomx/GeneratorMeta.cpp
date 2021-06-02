@@ -62,7 +62,7 @@ void GeneratorMeta::registerMeta() {
     // by importing assets in the .qrc and reading them from there
     QString basePath = ":/generators/" + this->type + "/";
 
-    qDebug() << basePath;
+//    qDebug() << basePath;
 
     // load meta file and open
     QFile loadFile{basePath + "meta.json"};

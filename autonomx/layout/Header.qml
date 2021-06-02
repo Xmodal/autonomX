@@ -1,109 +1,209 @@
 import QtQuick 2.11
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
+import Qt.labs.platform 1.0
 
 import "qrc:/stylesheet"
 import "../components/ui"
 
-Item {
-    id: header
+ColumnLayout {
+    property string currentFileUri
 
     Layout.fillWidth: true
-    Layout.preferredHeight: Stylesheet.headerHeight
-    z: 100
+    spacing: 0
 
+    // save/load bar
     Rectangle {
-        anchors.fill: parent
-        color: Stylesheet.colors.white
+        id: serializer
 
-        layer.enabled: true
-        layer.effect: ShaderEffect {
-            property real minAlpha: 0.85
-            property real maxAlpha: 0.95
-            property bool vertical: false
-            property bool overlayColor: Stylesheet.colors.black
+        Layout.fillWidth: true
+        Layout.preferredHeight: 30
+        z: 100
 
-            fragmentShader: "qrc:/shaders/gradient_overlay.frag"
+        color: Stylesheet.colors.black
+
+        // changes lost warning
+        MessageDialog {
+            text: "You are about to modify the current project. Any unsaved changes will be lost."
+            informativeText: "Do you want to continue?"
+
+            buttons: MessageDialog.Ok | MessageDialog.Cancel
+        }
+
+        // save dialog
+        FileDialog {
+            id: saveDialog
+            title: "Save project file as..."
+            nameFilters: ["autonomX save files (*.atnx)"]
+            defaultSuffix: "atnx"
+            fileMode: FileDialog.SaveFile
+
+            onAccepted: {
+                currentFileUri = currentFile
+                appModel.saveProject(currentFileUri)
+            }
+        }
+
+        // load dialog
+        FileDialog {
+            id: loadDialog
+            title: "Load project file..."
+            nameFilters: ["autonomX save files (*.atnx)"]
+            defaultSuffix: "atnx"
+            fileMode: FileDialog.OpenFile
+
+            onAccepted: {
+                currentFileUri = currentFile
+                appModel.loadProject(currentFileUri)
+            }
+        }
+
+        RowLayout {
+            anchors.fill: parent
+
+            GenericButton {
+                neutralColor: Stylesheet.colors.black
+                text: "New"
+                Layout.alignment: Qt.AlignLeft
+                Layout.fillHeight: true
+            }
+
+            GenericButton {
+                neutralColor: Stylesheet.colors.black
+                text: "Load"
+                Layout.alignment: Qt.AlignLeft
+                Layout.fillHeight: true
+
+                onClicked: loadDialog.open()
+            }
+
+            GenericButton {
+                neutralColor: Stylesheet.colors.black
+                text: "Save"
+                Layout.alignment: Qt.AlignLeft
+                Layout.fillHeight: true
+
+                onClicked: {
+                    if (!currentFileUri) saveDialog.open()
+                    else appModel.saveProject(currentFileUri)
+                }
+            }
+
+            GenericButton {
+                neutralColor: Stylesheet.colors.black
+                text: "Save as"
+                Layout.alignment: Qt.AlignLeft
+                Layout.fillHeight: true
+
+                onClicked: saveDialog.open()
+            }
+
+            Item {
+                Layout.fillWidth: true
+            }
         }
     }
 
-    RowLayout {
-        anchors.fill: parent
-        spacing: 0
+    // generator bar
+    Item {
+        id: header
 
-        IconButton {
-            id: genListToggler
-            size: 40
-            iconSource: "qrc:/assets/images/generator-list.svg"
-
-            checkable: true
-            checked: showGeneratorList
-            onCheckedChanged: showGeneratorList = checked
-        }
-
-        // "Lattice view" label
-        Label {
-            Layout.alignment: Qt.AlignVCenter
-            Layout.leftMargin: 20
-
-            text: activeGeneratorIndex < 0 ? "No selection" : "Now editing"
-            font: Stylesheet.fonts.label
-        }
+        Layout.fillWidth: true
+        Layout.preferredHeight: Stylesheet.headerHeight
+        z: 100
 
         Rectangle {
-            Layout.alignment: Qt.AlignVCenter
-            Layout.leftMargin: 6
-            Layout.rightMargin: 6
-            implicitWidth: 30
-            implicitHeight: 1
+            anchors.fill: parent
             color: Stylesheet.colors.white
-            visible: activeGeneratorIndex >= 0
+
+            layer.enabled: true
+            layer.effect: ShaderEffect {
+                property real minAlpha: 0.85
+                property real maxAlpha: 0.95
+                property bool vertical: false
+                property bool overlayColor: Stylesheet.colors.black
+
+                fragmentShader: "qrc:/shaders/gradient_overlay.frag"
+            }
         }
 
-        // Generator name label
-        Label {
-            Layout.alignment: Qt.AlignVCenter
+        RowLayout {
+            anchors.fill: parent
+            spacing: 0
 
-            text: activeGeneratorIndex < 0 ? "" : generatorModel.at(activeGeneratorIndex).name
-            opacity: activeGeneratorIndex < 0 ? 0.4 : 1
-            font: Stylesheet.fonts.text
-        }
+            IconButton {
+                id: genListToggler
+                size: 40
+                iconSource: "qrc:/assets/images/generator-list.svg"
 
-        // filler
-        Item {
-            Layout.fillWidth: true
-        }
+                checkable: true
+                checked: showGeneratorList
+                onCheckedChanged: showGeneratorList = checked
+            }
 
-        // restart/reset buttons
-        GenericButton {
-            id: restartButton
-            text: "Restart"
-            visible: activeGeneratorIndex >= 0
+            // "Lattice view" label
+            Label {
+                Layout.alignment: Qt.AlignVCenter
+                Layout.leftMargin: 20
 
-            Layout.rightMargin: 5
+                text: activeGeneratorIndex < 0 ? "No selection" : "Now editing"
+                font: Stylesheet.fonts.label
+            }
 
-            onClicked: generatorModel.at(activeGeneratorIndex).initialize()
-        }
+            Rectangle {
+                Layout.alignment: Qt.AlignVCenter
+                Layout.leftMargin: 6
+                Layout.rightMargin: 6
+                implicitWidth: 30
+                implicitHeight: 1
+                color: Stylesheet.colors.white
+                visible: activeGeneratorIndex >= 0
+            }
 
-        GenericButton {
-            id: resetParametersButton
-            text: "Reset params"
-            visible: activeGeneratorIndex >= 0
+            // Generator name label
+            Label {
+                Layout.alignment: Qt.AlignVCenter
 
-            Layout.rightMargin: 15
+                text: activeGeneratorIndex < 0 ? "" : generatorModel.at(activeGeneratorIndex).name
+                opacity: activeGeneratorIndex < 0 ? 0.4 : 1
+                font: Stylesheet.fonts.text
+            }
 
-            onClicked: generatorModel.at(activeGeneratorIndex).resetParameters()
-        }
+            // filler
+            Item {
+                Layout.fillWidth: true
+            }
 
-        IconButton {
-            id: paramsToggler
-            size: 40
-            iconSource: "qrc:/assets/images/wrench.svg"
+            // restart/reset buttons
+            GenericButton {
+                id: restartButton
+                text: "Restart"
+                visible: activeGeneratorIndex >= 0
 
-            checkable: true
-            checked: showGeneratorSettings
-            onCheckedChanged: showGeneratorSettings = checked
-            enabled: activeGeneratorIndex >= 0
+                Layout.rightMargin: 5
+
+                onClicked: generatorModel.at(activeGeneratorIndex).initialize()
+            }
+
+            GenericButton {
+                id: resetParametersButton
+                text: "Reset params"
+                visible: activeGeneratorIndex >= 0
+
+                Layout.rightMargin: 15
+
+                onClicked: generatorModel.at(activeGeneratorIndex).resetParameters()
+            }
+
+            IconButton {
+                id: paramsToggler
+                size: 40
+                iconSource: "qrc:/assets/images/wrench.svg"
+
+                checkable: true
+                checked: showGeneratorSettings
+                onCheckedChanged: showGeneratorSettings = checked
+                enabled: activeGeneratorIndex >= 0
+            }
         }
     }
-}

@@ -87,6 +87,8 @@ ColumnLayout {
 
             function destroyGUI() {
                 for (let i = 0; i < paramsSubRack.fields.length; i++) {
+                    if (!paramsSubRack.fields[i]) continue;
+
                     paramsSubRack.fields[i].reset();
                     paramsSubRack.fields[i].destroy();
                 }

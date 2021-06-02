@@ -329,7 +329,8 @@ bool AppModel::saveProject(QString uri) {
     // write all data
     writeJson(saveObject);
     // save to file
-    saveFile.write(QJsonDocument(saveObject).toJson());
+    // saveFile.write(QJsonDocument(saveObject).toJson(QJsonDocument::Compact));
+    saveFile.write(QJsonDocument(saveObject).toJson(QJsonDocument::Indented));
 
     // success
     return true;
@@ -354,10 +355,27 @@ QSharedPointer<GeneratorMetaModel> AppModel::getGeneratorMetaModel() const
 
 void AppModel::readJson(const QJsonObject &json)
 {
-    qDebug() << json["test"];
+    qDebug() << json["version"];
 }
 
 void AppModel::writeJson(QJsonObject &json) const
 {
-    json["test"] = "yo :)";
+    std::time_t now = std::time(0);
+
+    json["version"] = QCoreApplication::applicationVersion();
+    json["savedAt"] = now;
+
+    // TODO: OSC I/O port numbers + send host
+
+    // write generator data
+    QJsonArray generatorData;
+
+    for (QSharedPointer<Generator> g : *generatorsList) {
+        QJsonObject singleGeneratorData;
+        g->writeJson(singleGeneratorData);
+        generatorData.append(singleGeneratorData);
+    }
+
+    // add to global JSON
+    json["generators"] = generatorData;
 }

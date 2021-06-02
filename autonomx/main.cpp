@@ -51,8 +51,11 @@ int main(int argc, char *argv[]) {
     #endif
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-
     QGuiApplication app(argc, argv);
+    // global settings
+    QCoreApplication::setApplicationName("autonomX");
+    QCoreApplication::setApplicationVersion("0.1.1");
+    QCoreApplication::setOrganizationName("Xmodal");
 
 
     // load fonts in the project database
@@ -62,9 +65,9 @@ int main(int argc, char *argv[]) {
             qDebug() << "Failed to load font " << file;
     }
 
+
     qDebug() << "Built against Qt" << QT_VERSION_STR;
     qDebug() << "Using Qt" << QLibraryInfo::version() << "at runtime";
-
     qDebug() << "GUI id = " << QThread::currentThreadId();
 
 

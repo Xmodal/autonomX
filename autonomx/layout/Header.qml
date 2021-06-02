@@ -11,6 +11,7 @@ ColumnLayout {
 
     Layout.fillWidth: true
     spacing: 0
+    z: 100
 
     // save/load bar
     Rectangle {
@@ -18,7 +19,6 @@ ColumnLayout {
 
         Layout.fillWidth: true
         Layout.preferredHeight: 30
-        z: 100
 
         color: Stylesheet.colors.black
 
@@ -110,7 +110,6 @@ ColumnLayout {
 
         Layout.fillWidth: true
         Layout.preferredHeight: Stylesheet.headerHeight
-        z: 100
 
         Rectangle {
             anchors.fill: parent
@@ -207,3 +206,4 @@ ColumnLayout {
             }
         }
     }
+}

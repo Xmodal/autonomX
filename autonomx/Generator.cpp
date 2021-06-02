@@ -17,6 +17,7 @@
 #include <QThread>
 #include <QTimer>
 #include <QDebug>
+#include <QJsonObject>
 
 #include "Generator.h"
 
@@ -297,7 +298,24 @@ void Generator::readJson(const QJsonObject &json)
 
 void Generator::writeJson(QJsonObject &json) const
 {
+    json["id"] = id;
+    json["type"] = meta->property("type").toString();
+    json["userNotes"] = userNotes;
 
+    // start at oscInputPort
+    const QMetaObject *metaObject = this->metaObject();
+
+    for (int i = metaObject->indexOfProperty("oscInputPort"); i < metaObject->propertyCount(); i++) {
+        // retrieve target QMetaProperty
+        QMetaProperty target = metaObject->property(i);
+
+        // get key and value
+        QString k = target.name();
+        QVariant v = target.read(this);
+
+        // write to JSON object
+        json[k] = QJsonValue::fromVariant(v);
+    }
 }
 
 void Generator::resetParameters()

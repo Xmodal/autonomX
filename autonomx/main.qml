@@ -26,10 +26,6 @@ ApplicationWindow {
     property bool showGeneratorList: true
     property bool showGeneratorSettings: true
 
-    // We update this version number each time we do a release/tag.
-    // We follow Semantic Versioning 2.0.0 https://semver.org/
-    readonly property string softwareVersion: "0.1.1-SNAPSHOT"
-
     property bool altPressed: false
     property bool shiftPressed: false
     property bool editingTextField: false
@@ -42,7 +38,7 @@ ApplicationWindow {
     visible: true
     width: 1440
     height: 720
-    title: qsTr("autonomX") + " " + softwareVersion
+    title: Qt.application.name + " " + Qt.application.version
 
     function toggleFullscreen() {
         if (visibility === Window.FullScreen) {

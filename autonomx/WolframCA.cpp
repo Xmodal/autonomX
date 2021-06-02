@@ -126,7 +126,7 @@ void WolframCA::computeIteration(double deltaTime) {
     // every 1000 iterations, currentGeneration increments and iterationNumber resets
     if(iterationNumber % 50 == 0) {
         currentGeneration++;
-        iterationNumber = 0;
+        iterationNumber = 1;
     }
 
     // if last generation has been passed, currentGeneration resets so lattice can begin writing from top
@@ -135,40 +135,39 @@ void WolframCA::computeIteration(double deltaTime) {
 
         //continuing the lattice from the top as the cells have fallen to the bottom
         for(int i = 0; i < (latticeHeight * latticeWidth); i++) {
-            if (i==0){
+            if (i == 0){
                 // to restart the cells from the top but with a continuing pattern from below; hence intializing the topmost layer once again
-                for (int j = 1 ; j < latticeWidth-1; j++){
-                    cells[j] = cells[(latticeHeight) * (latticeHeight-1) + j];
+                for (int j = 1 ; j < latticeWidth - 1; j++){
+                    cells[j] = cells[(latticeHeight) * (latticeHeight - 1) + j];
                 }
             }
-            if (i>latticeWidth)
+            if (i > latticeWidth)
                 cells[i] = 0;
         }
-       // cells[latticeWidth/2]=1;
     }
 
     //write the main logic here to get values of next generation -- remmeber the current generation starts from 1 hence current generation -1
 
-    for(int i = 0 ; i <= latticeWidth-1; i++) {
+    for(int i = 0 ; i < latticeWidth; i++) {
         // to check for the leftmost cell
-        if (i==0){
-            int left = cells[(currentGeneration-1) * latticeWidth + latticeWidth - 1];
-            int right = cells[(currentGeneration-1) * latticeWidth + i + 1];
-            int middle = cells[(currentGeneration-1) * latticeWidth + i];
+        if (i == 0){
+            int left = cells[(currentGeneration - 1) * latticeWidth + latticeWidth - 1];
+            int right = cells[(currentGeneration - 1) * latticeWidth + i + 1];
+            int middle = cells[(currentGeneration - 1) * latticeWidth + i];
             cells[(currentGeneration) * latticeWidth + i] = findCellValue(left,middle,right);
         }
         // to check for the rightmost cell
-        else if (i==latticeWidth-1){
-            int left = cells[(currentGeneration-1) * latticeWidth + i - 1];
-            int right = cells[(currentGeneration-1) * latticeWidth + i - (latticeWidth - 1)];
-            int middle = cells[(currentGeneration-1) * latticeWidth + i];
+        else if (i == latticeWidth - 1){
+            int left = cells[(currentGeneration - 1) * latticeWidth + i - 1];
+            int right = cells[(currentGeneration - 1) * latticeWidth + i - (latticeWidth - 1)];
+            int middle = cells[(currentGeneration - 1) * latticeWidth + i];
             cells[(currentGeneration) * latticeWidth + i] = findCellValue(left,middle,right);
         }
         //any other cell on the lattice
         else{
-             int left = cells[(currentGeneration-1) * latticeWidth + i - 1];
-             int right = cells[(currentGeneration-1) * latticeWidth + i + 1];
-             int middle = cells[(currentGeneration-1) * latticeWidth + i];
+             int left = cells[(currentGeneration - 1) * latticeWidth + i - 1];
+             int right = cells[(currentGeneration - 1) * latticeWidth + i + 1];
+             int middle = cells[(currentGeneration - 1) * latticeWidth + i];
              cells[(currentGeneration) * latticeWidth + i] = findCellValue(left,middle,right);
         }
     }

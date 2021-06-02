@@ -1,7 +1,7 @@
 {
     "name": "Wolfram Cellular Automata",
     "type": "WolframCA",
-    "description": "An interconnected network of biologically-modeled neurons.",
+    "description": "A two-dimensional rendering of Wolfram's rules for cellular automata.",
 
     "racks": [
         {
@@ -22,13 +22,6 @@
                     "min": 1,
                     "max": 1000,
                     "default": 20
-                },
-                {
-                    "label": "Time scale",
-                    "propName": "timeScale",
-                    "type": "slider",
-                    "max": 0.03,
-                    "default": 0.03
                 }
             ]
         },

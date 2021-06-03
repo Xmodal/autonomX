@@ -18,6 +18,7 @@
 #include <QTimer>
 #include <QDebug>
 #include <QJsonObject>
+#include <QJsonArray>
 
 #include "Generator.h"
 
@@ -298,13 +299,17 @@ void Generator::readJson(const QJsonObject &json)
 
 void Generator::writeJson(QJsonObject &json) const
 {
+    // 000. GENERAL DATA
     json["id"] = id;
     json["type"] = meta->property("type").toString();
     json["userNotes"] = userNotes;
 
+
+    // 001. PROP DATA
+    QJsonObject props;
+
     // start at oscInputPort
     const QMetaObject *metaObject = this->metaObject();
-
     for (int i = metaObject->indexOfProperty("oscInputPort"); i < metaObject->propertyCount(); i++) {
         // retrieve target QMetaProperty
         QMetaProperty target = metaObject->property(i);
@@ -313,9 +318,45 @@ void Generator::writeJson(QJsonObject &json) const
         QString k = target.name();
         QVariant v = target.read(this);
 
-        // write to JSON object
-        json[k] = QJsonValue::fromVariant(v);
+        // write to props obj
+        props[k] = QJsonValue::fromVariant(v);
     }
+
+    // write props to main JSON
+    json["props"] = props;
+
+
+    // 002. REGION DATA
+    QJsonArray inputRegions;
+    QJsonArray outputRegions;
+
+    // scan thru input regions
+    for (int i = 0; i < inputRegionSet->getRegionCount(); i++) {
+        GeneratorRegion* region = inputRegionSet->getRegion(i);
+
+        // write to obj
+        QJsonObject obj;
+        region->writeJson(obj);
+
+        // append
+        inputRegions.append(obj);
+    }
+
+    // scan thru output regions
+    for (int i = 0; i < outputRegionSet->getRegionCount(); i++) {
+        GeneratorRegion* region = outputRegionSet->getRegion(i);
+
+        // write to obj
+        QJsonObject obj;
+        region->writeJson(obj);
+
+        // append
+        outputRegions.append(obj);
+    }
+
+    // write to main JSON
+    json["inputs"] = inputRegions;
+    json["outputs"] = outputRegions;
 }
 
 void Generator::resetParameters()

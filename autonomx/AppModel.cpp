@@ -355,6 +355,7 @@ QSharedPointer<GeneratorMetaModel> AppModel::getGeneratorMetaModel() const
 
 void AppModel::readJson(const QJsonObject &json)
 {
+    // destroy all current generators
     qDebug() << json["version"];
 }
 
@@ -365,7 +366,7 @@ void AppModel::writeJson(QJsonObject &json) const
     json["version"] = QCoreApplication::applicationVersion();
     json["savedAt"] = now;
 
-    // TODO: OSC I/O port numbers + send host
+    // TODO: global OSC I/O port numbers + send host
 
     // write generator data
     QJsonArray generatorData;

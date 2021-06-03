@@ -14,6 +14,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <QQmlEngine>
+#include <QJsonObject>
 
 #include "GeneratorRegion.h"
 
@@ -46,6 +47,20 @@ double GeneratorRegion::getIntensity() const {
 
 int GeneratorRegion::getType() const {
     return type;
+}
+
+void GeneratorRegion::readJson(const QJsonObject &json)
+{
+    // read coords from object and apply
+}
+
+void GeneratorRegion::writeJson(QJsonObject &json) const
+{
+    // write coords to object
+    json["x"] = rect.x();
+    json["y"] = rect.y();
+    json["w"] = rect.width();
+    json["h"] = rect.height();
 }
 
 void GeneratorRegion::writeSilentRect(QRect rect) {

@@ -47,6 +47,9 @@ public:
     double getIntensity() const;
     int getType() const;
 
+    void readJson(const QJsonObject &json);
+    void writeJson(QJsonObject &json) const;
+
     // these are silent writes. they update the value internally and call their linked propertyChanged(value) signals, but don't call valueChanged(key, value). this means this will not update an object that is mirroring it. this is used to carry updates between mirrored objects without causing an infinite update loop.
     // they should not be used directly and are reserved for object mirroring.
     void writeSilentRect(QRect rect);

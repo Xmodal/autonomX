@@ -318,6 +318,10 @@ void Generator::writeJson(QJsonObject &json) const
         QString k = target.name();
         QVariant v = target.read(this);
 
+        // typecast enum values
+        if (meta->getEnumLabels().keys().contains(target.typeName()))
+            v = v.toInt();
+
         // write to props obj
         props[k] = QJsonValue::fromVariant(v);
     }

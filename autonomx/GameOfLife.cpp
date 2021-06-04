@@ -12,7 +12,7 @@ GameOfLife::GameOfLife(int id) : Generator(id, "Game of Life", "GOL", "Game of L
                     std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "constructor (WolframCA):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+        qDebug() << "constructor (GAMEOFLIFE):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
     initialize();

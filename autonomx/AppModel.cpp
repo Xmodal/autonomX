@@ -381,10 +381,8 @@ void AppModel::readJson(const QJsonObject &json)
 
 void AppModel::writeJson(QJsonObject &json) const
 {
-    std::time_t now = std::time(0);
-
     json["version"] = QCoreApplication::applicationVersion();
-    json["savedAt"] = now;
+    json["savedAt"] = QJsonValue::fromVariant(QVariant::fromValue(std::time(0)));
 
     // TODO: global OSC I/O port numbers + send host
 

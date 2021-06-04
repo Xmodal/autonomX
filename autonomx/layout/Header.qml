@@ -68,12 +68,13 @@ ColumnLayout {
         RowLayout {
             anchors.fill: parent
 
-            GenericButton {
-                neutralColor: Stylesheet.colors.black
-                text: "New"
-                Layout.alignment: Qt.AlignLeft
-                Layout.fillHeight: true
-            }
+            // TODO: the C++ function for this button
+//            GenericButton {
+//                neutralColor: Stylesheet.colors.black
+//                text: "New"
+//                Layout.alignment: Qt.AlignLeft
+//                Layout.fillHeight: true
+//            }
 
             GenericButton {
                 neutralColor: Stylesheet.colors.black

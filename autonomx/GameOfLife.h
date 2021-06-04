@@ -8,6 +8,10 @@ class GameOfLife : public Generator
     Q_OBJECT
     Q_PROPERTY(int rule READ getRule WRITE writeRule NOTIFY ruleChanged)
 private:
+
+    // Debugging
+    bool  flagDebug = true;
+
     // computation variables here etc etc
     std::vector<double> cells;
 

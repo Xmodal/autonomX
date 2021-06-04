@@ -7,7 +7,15 @@
 
 GameOfLife::GameOfLife(int id) : Generator(id, "Game of Life", "GOL", "Game of Life description")
 {
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+        );
 
+        qDebug() << "constructor (WolframCA):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+    }
+
+    initialize();
 }
 
 GameOfLife::~GameOfLife()
@@ -24,21 +32,46 @@ void GameOfLife::initialize()
 
     // initialize cell values
     for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
-                cells[i] = false;
+               double magic = (float) rand()/RAND_MAX;
+               if (magic>0.7)
+                   cells[i]=1;
+               else
+                  cells[i]=0;
             }
 
-    // set last generation
-    lastGeneration = latticeHeight;
+    // start the iterations
     iterationNumber = 1;
 }
 
 void GameOfLife::computeIteration(double deltaTime)
 {
     // compute iteration here
+    if (iterationNumber%20==0){
+    for (int i=1; i<latticeWidth-1;i++){
+        for (int j=1;j<latticeHeight-1;j++){
+            // find index of the main cell, the cell just above it, and cell just below it; once we do that we can easily find the cells adjacent to those cells
+               int index = i % latticeWidth + j * latticeWidth;
+               int index_above = (i-1) % latticeWidth + j * latticeWidth;
+               int index_below = (i+1) % latticeWidth + j * latticeWidth;
+               // finding the total value of all the neighbors near to the main cell
+               int neighbors = cells[index_above-1] + cells[index_above] + cells[index_above+1]
+                       + cells[index-1] + cells[index+1]
+                       + cells[index_below-1] + cells[index_below] + cells[index_below+1];
+               // declare the cell alive or bad based on the rule below
+                if      ((cells[index] == 1) && (neighbors <  2)) cells[index] = 0;
+                //TO DO: Here neighbors should be 3 infront of 4 in the just below line. However, changed to 4 to make the GOL look decent. Artistic Lisence. Can discuss.
+                else if ((cells[index] == 1) && (neighbors >  4)) cells[index] = 0;
+                else if ((cells[index] == 0) && (neighbors == 3)) cells[index] = 1;
+        }
+
+    }
+    }
+    iterationNumber++;
 }
 
 void GameOfLife::resetParameters()
 {
+    initialize();
     // reset parameters here
     // this also implies emitting all property signals for QML to notice & change GUI consequently
     // we will eventually discuss an ideal implementation strategy for this action
@@ -46,13 +79,16 @@ void GameOfLife::resetParameters()
 
 double GameOfLife::getLatticeValue(int x, int y)
 {
-    // every value is 0 for now :-)
-    return 0.0;
+    int index = x % latticeWidth + y * latticeWidth;
+//  std::cout << "Index = " + index;
+    return cells[index];
 }
 
 void GameOfLife::writeLatticeValue(int x, int y, double value)
 {
-    // doesn't do anything for now
+    // write values to lattice
+    int index = x % latticeWidth + y * latticeWidth;
+    cells[index] = value;
 }
 
 int GameOfLife::getRule()

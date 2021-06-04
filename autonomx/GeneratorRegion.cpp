@@ -15,6 +15,7 @@
 
 #include <QQmlEngine>
 #include <QJsonObject>
+#include <QDebug>
 
 #include "GeneratorRegion.h"
 
@@ -51,7 +52,11 @@ int GeneratorRegion::getType() const {
 
 void GeneratorRegion::readJson(const QJsonObject &json)
 {
-    // read coords from object and apply
+    // create new rect from JSON
+    QRect newRect(json["x"].toInt(), json["y"].toInt(), json["w"].toInt(), json["h"].toInt());
+
+    // write to both GeneratorRegionSet and GeneratorRegionModel
+    writeMirroredRect(newRect);
 }
 
 void GeneratorRegion::writeJson(QJsonObject &json) const

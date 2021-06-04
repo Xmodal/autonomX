@@ -54,7 +54,10 @@ ColumnLayout {
 
             onAccepted: {
                 currentFileUri = currentFile
-                appModel.loadProject(currentFileUri)
+
+                if (appModel.loadProject(currentFileUri)) {
+                    activeGeneratorIndex = -1;
+                }
             }
         }
 

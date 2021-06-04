@@ -294,7 +294,53 @@ void Generator::writeLatticeHeight(int latticeHeight) {
 
 void Generator::readJson(const QJsonObject &json)
 {
+    // 000. GENERAL DATA
+    writeUserNotes(json["userNotes"].toString());
 
+
+    // 001. PROP DATA
+    const QMetaObject *metaObject = this->metaObject();
+    QJsonObject props = json["props"].toObject();
+
+    for (int i = 0; i < props.size(); i++) {
+        // get key and value
+        QString key = props.keys()[i];
+        QVariant value = props[key].toVariant();
+
+        // get index of property
+        int index = metaObject->indexOfProperty(key.toStdString().c_str());
+
+        // check if property exists; continue otherwise
+        if (index == -1)
+            continue;
+
+        // write to property if it exists
+        metaObject->property(index).write(this, value);
+    }
+
+
+    // 002. REGION DATA
+
+    // TODO: there's a bit of a problem here -
+    // by default, four inputs and four outputs already exist
+    // we can't just selectively readJson without considering the previous RegionSet counts
+    // might need to modify the Generator constructor ever so slightly to compensate for this...
+    // until then, we will assume that there are always four inputs and four outputs at any time
+
+    QJsonArray inputs = json["inputs"].toArray();
+    QJsonArray outputs = json["outputs"].toArray();
+
+    // inputs
+    for (int i = 0; i < inputs.size(); i++) {
+        GeneratorRegion *input = inputRegionSet->getRegion(i);
+        input->readJson(inputs[i].toObject());
+    }
+
+    // outputs
+    for (int i = 0; i < outputs.size(); i++) {
+        GeneratorRegion *output = outputRegionSet->getRegion(i);
+        output->readJson(outputs[i].toObject());
+    }
 }
 
 void Generator::writeJson(QJsonObject &json) const
@@ -319,6 +365,7 @@ void Generator::writeJson(QJsonObject &json) const
         QVariant v = target.read(this);
 
         // typecast enum values
+        // THIS CAN CAUSE BUGS IF THE ENUM ISN'T REGISTERED TO ENUMLABELS MEMBER!!!!!!
         if (meta->getEnumLabels().keys().contains(target.typeName()))
             v = v.toInt();
 

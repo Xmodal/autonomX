@@ -21,7 +21,7 @@
 
 class GeneratorRegion : public QObject {
     Q_OBJECT
-    Q_PROPERTY(QRect rect READ getRect WRITE writeSilentRect NOTIFY rectChanged)
+    Q_PROPERTY(QRect rect READ getRect WRITE writeMirroredRect NOTIFY rectChanged)
     Q_PROPERTY(double intensity READ getIntensity WRITE writeSilentIntensity NOTIFY intensityChanged)
     Q_PROPERTY(int type READ getType WRITE writeSilentType NOTIFY typeChanged)
 public:

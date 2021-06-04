@@ -127,7 +127,7 @@ QSharedPointer<OscEngine> AppModel::getOscEngine() const {
     return oscEngine;
 }
 
-void AppModel::createGenerator(QString type) {
+QSharedPointer<Generator> AppModel::createGenerator(QString type) {
     if(flagDebug) {
         qDebug() << "createGenerator (AppModel): finding a free id";
     }
@@ -218,6 +218,8 @@ void AppModel::createGenerator(QString type) {
 
     // once the list is changed, update the GeneratorModel connections
     generatorModel->relinkConnections();
+
+    return generator;
 }
 
 void AppModel::deleteGenerator(int id) {
@@ -355,8 +357,26 @@ QSharedPointer<GeneratorMetaModel> AppModel::getGeneratorMetaModel() const
 
 void AppModel::readJson(const QJsonObject &json)
 {
+    // version check
+    const QString version = QCoreApplication::applicationVersion();
+    if (json["version"].toString().compare(version) != 0) {
+        qDebug() << "save data version differs from app version. be careful!";
+    }
+
     // destroy all current generators
-    qDebug() << json["version"];
+    deleteAllGenerators();
+
+    // create generators based on JSON
+    QJsonArray generators = json["generators"].toArray();
+    for (int i = 0; i < generators.size(); i++) {
+        QJsonObject generatorData = generators[i].toObject();
+
+        // create a generator, retrieving the pointer
+        QSharedPointer<Generator> generator = createGenerator(generatorData["type"].toString());
+
+        // send save data to Generator function
+        generator->readJson(generatorData);
+    }
 }
 
 void AppModel::writeJson(QJsonObject &json) const
@@ -379,4 +399,11 @@ void AppModel::writeJson(QJsonObject &json) const
 
     // add to global JSON
     json["generators"] = generatorData;
+}
+
+void AppModel::deleteAllGenerators()
+{
+    for (QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
+        deleteGenerator((*it)->getID());
+    }
 }

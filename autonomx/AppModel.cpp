@@ -331,8 +331,8 @@ bool AppModel::saveProject(QString uri) {
     // write all data
     writeJson(saveObject);
     // save to file
-    // saveFile.write(QJsonDocument(saveObject).toJson(QJsonDocument::Compact));
-    saveFile.write(QJsonDocument(saveObject).toJson(QJsonDocument::Indented));
+    saveFile.write(QJsonDocument(saveObject).toJson(QJsonDocument::Compact));
+//    saveFile.write(QJsonDocument(saveObject).toJson(QJsonDocument::Indented));
 
     // success
     return true;

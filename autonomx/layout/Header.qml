@@ -9,6 +9,10 @@ import "../components/ui"
 ColumnLayout {
     property string currentFileUri
 
+    function basename(str) {
+        return (str.slice(str.lastIndexOf("/")+1));
+    }
+
     Layout.fillWidth: true
     spacing: 0
     z: 100
@@ -88,7 +92,11 @@ ColumnLayout {
 
                 onClicked: {
                     if (!currentFileUri) saveDialog.open()
-                    else appModel.saveProject(currentFileUri)
+                    else {
+                        if (appModel.saveProject(currentFileUri)) {
+                            // TODO: successful save animation :)
+                        }
+                    }
                 }
             }
 
@@ -104,6 +112,16 @@ ColumnLayout {
             Item {
                 Layout.fillWidth: true
             }
+        }
+
+        Label {
+            anchors.fill: parent
+            horizontalAlignment: Qt.AlignHCenter
+            verticalAlignment: Qt.AlignVCenter
+
+            text: currentFileUri ? basename(currentFileUri) : '<no project loaded>'
+            opacity: currentFileUri ? 1 : 0.5
+            font: Stylesheet.fonts.text
         }
     }
 

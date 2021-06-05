@@ -133,7 +133,7 @@ ApplicationWindow {
     }
     Shortcut {
         id: saveAsSC
-        sequence: "Ctrl+Alt+S"
+        sequence: "Ctrl+Shift+S"
 
         onActivated: saveManager.saveAs()
     }

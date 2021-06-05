@@ -5,6 +5,7 @@ import QtQuick.Window 2.11
 
 import "./stylesheet"
 import "./layout"
+import "./components/util"
 
 /**
  * Main window of this application
@@ -33,6 +34,11 @@ ApplicationWindow {
     property bool editingTextField: false
     property alias allowSlideDrag: slideDragger.visible
 
+    // saving stuff
+    property alias saveManager: saveManager
+    property alias currentFileName: saveManager.currentFileName
+
+    // changes when
     onEditingTextFieldChanged: {
         if (editingTextField) deAlt(mainContent)
     }
@@ -215,5 +221,9 @@ ApplicationWindow {
                 parent.y = 0
             }
         }
+    }
+
+    SaveManager {
+        id: saveManager
     }
 }

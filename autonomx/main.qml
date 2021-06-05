@@ -128,14 +128,20 @@ ApplicationWindow {
     Shortcut {
         id: saveSC
         sequence: "Ctrl+S"
+
+        onActivated: saveManager.save()
     }
     Shortcut {
         id: saveAsSC
         sequence: "Ctrl+Alt+S"
+
+        onActivated: saveManager.saveAs()
     }
     Shortcut {
         id: loadSC
         sequence: "Ctrl+L"
+
+        onActivated: saveManager.load()
     }
     Shortcut {
         id: newSC

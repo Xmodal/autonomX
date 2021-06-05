@@ -23,9 +23,11 @@ ApplicationWindow {
         metaModel = generatorMetaModel.at(generatorModel.at(activeGeneratorIndex).type)
     }
 
+    // UI switch flags
     property bool showGeneratorList: true
     property bool showGeneratorSettings: true
 
+    // global field helper flags
     property bool altPressed: false
     property bool shiftPressed: false
     property bool editingTextField: false
@@ -114,6 +116,32 @@ ApplicationWindow {
             if (i >= generatorModel.rowCount()) i--;
             activeGeneratorIndex = i;
         }
+    }
+
+    // serialization
+    Shortcut {
+        id: saveSC
+        sequence: "Ctrl+S"
+    }
+    Shortcut {
+        id: saveAsSC
+        sequence: "Ctrl+Alt+S"
+    }
+    Shortcut {
+        id: loadSC
+        sequence: "Ctrl+L"
+    }
+    Shortcut {
+        id: newSC
+        sequence: "Ctrl+N"
+    }
+    Shortcut {
+        id: undoSC
+        sequence: "Ctrl+Z"
+    }
+    Shortcut {
+        id: redoSC
+        sequence: "Ctrl+Y"
     }
 
     // main content

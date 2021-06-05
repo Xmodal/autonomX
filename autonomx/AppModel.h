@@ -46,8 +46,8 @@ public:
     QSharedPointer<GeneratorModel>      getGeneratorModel() const;
     QSharedPointer<GeneratorMetaModel>  getGeneratorMetaModel() const;
 
-    void                                readJson(const QJsonObject &json);
-    void                                writeJson(QJsonObject &json) const;
+    bool                                readJson(const QJsonObject &json);
+    bool                                writeJson(QJsonObject &json) const;
 
     void                                deleteAllGenerators();
 

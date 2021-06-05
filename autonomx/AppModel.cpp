@@ -295,6 +295,16 @@ bool AppModel::loadProject(QString uri)
     // create QFile at URI
     QFile loadFile(url.toLocalFile());
 
+    // check validity of file contents;
+    // we are reading from a binary MIME type
+    QMimeDatabase db;
+    QMimeType type = db.mimeTypeForFile(url.toLocalFile());
+
+    if (type.name().compare("application/octet-stream") != 0) {
+        qWarning() << "Couldn't open save file :: MIME type not acceptable.";
+        return false;
+    }
+
     // try to open file
     if (!loadFile.open(QIODevice::ReadOnly)) {
         qWarning() << "Couldn't open save file:" << uri;
@@ -303,12 +313,14 @@ bool AppModel::loadProject(QString uri)
 
     // read file
     QByteArray saveData = loadFile.readAll();
-
     // convert to JSON document
-    QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
+    QJsonDocument loadDoc(QCborValue::fromCbor(saveData).toMap().toJsonObject());
 
     // read data
-    readJson(loadDoc.object());
+    if (!readJson(loadDoc.object())) {
+        qWarning() << "Could not load project.";
+        return false;
+    };
 
     // success!
     return true;
@@ -328,11 +340,15 @@ bool AppModel::saveProject(QString uri) {
 
     // create JSON object
     QJsonObject saveObject;
+
     // write all data
-    writeJson(saveObject);
+    if (!writeJson(saveObject)) {
+        qWarning() << "Error writing to save file.";
+        return false;
+    }
+
     // save to file
-    saveFile.write(QJsonDocument(saveObject).toJson(QJsonDocument::Compact));
-//    saveFile.write(QJsonDocument(saveObject).toJson(QJsonDocument::Indented));
+    saveFile.write(QCborValue::fromJsonValue(saveObject).toCbor());
 
     // success
     return true;
@@ -355,7 +371,7 @@ QSharedPointer<GeneratorMetaModel> AppModel::getGeneratorMetaModel() const
     return generatorMetaModel;
 }
 
-void AppModel::readJson(const QJsonObject &json)
+bool AppModel::readJson(const QJsonObject &json)
 {
     // version check
     const QString version = QCoreApplication::applicationVersion();
@@ -377,10 +393,14 @@ void AppModel::readJson(const QJsonObject &json)
         // send save data to Generator function
         generator->readJson(generatorData);
     }
+
+    // success
+    return true;
 }
 
-void AppModel::writeJson(QJsonObject &json) const
+bool AppModel::writeJson(QJsonObject &json) const
 {
+    json["appName"] = QCoreApplication::applicationName();
     json["version"] = QCoreApplication::applicationVersion();
     json["savedAt"] = QJsonValue::fromVariant(QVariant::fromValue(std::time(0)));
 
@@ -397,6 +417,9 @@ void AppModel::writeJson(QJsonObject &json) const
 
     // add to global JSON
     json["generators"] = generatorData;
+
+    // success
+    return true;
 }
 
 void AppModel::deleteAllGenerators()

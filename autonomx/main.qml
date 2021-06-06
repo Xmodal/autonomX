@@ -103,7 +103,7 @@ ApplicationWindow {
         onActivated: toggleFullscreen()
     }
     Shortcut {
-        sequence: "Ctrl+Q"
+        sequence: [StandardKey.Quit, "Ctrl+Q"]
         onActivated: quitThisApp()
     }
     Shortcut {
@@ -127,33 +127,33 @@ ApplicationWindow {
     // serialization
     Shortcut {
         id: saveSC
-        sequence: "Ctrl+S"
+        sequence: [StandardKey.Save, "Ctrl+S"]
 
         onActivated: saveManager.save()
     }
     Shortcut {
         id: saveAsSC
-        sequence: "Ctrl+Shift+S"
+        sequence: [StandardKey.SaveAs, "Ctrl+Shift+S"]
 
         onActivated: saveManager.saveAs()
     }
     Shortcut {
         id: loadSC
-        sequence: "Ctrl+L"
+        sequence: [StandardKey.Open, "Ctrl+O", "Ctrl+L"]
 
         onActivated: saveManager.load()
     }
     Shortcut {
         id: newSC
-        sequence: "Ctrl+N"
+        sequence: [StandardKey.New, "Ctrl+N"]
     }
     Shortcut {
         id: undoSC
-        sequence: "Ctrl+Z"
+        sequence: [StandardKey.Undo, "Ctrl+Z"]
     }
     Shortcut {
         id: redoSC
-        sequence: "Ctrl+Y"
+        sequence: [StandardKey.Redo, "Ctrl+Y", "Ctrl+Shift+Z"]
     }
 
     // main content

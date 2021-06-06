@@ -40,8 +40,8 @@ Item {
     FileDialog {
         id: saveDialog
         title: "Save project file as..."
-        nameFilters: ["autonomX save files (*.atnx)"]
-        defaultSuffix: "atnx"
+        nameFilters: ["autonomX save files (*." + extensionName + ")"]
+        defaultSuffix: extensionName
         fileMode: FileDialog.SaveFile
 
         onAccepted: {
@@ -54,8 +54,8 @@ Item {
     FileDialog {
         id: loadDialog
         title: "Load project file..."
-        nameFilters: ["autonomX save files (*.atnx)"]
-        defaultSuffix: "atnx"
+        nameFilters: ["autonomX save files (*." + extensionName + ")"]
+        defaultSuffix: extensionName
         fileMode: FileDialog.OpenFile
 
         onAccepted: {

@@ -119,7 +119,7 @@ QSharedPointer<QThread> AppModel::getOscThread() const {
     return oscThread;
 }
 
-QSharedPointer<ComputeEngine>  AppModel::getComputeEngine() const {
+QSharedPointer<ComputeEngine> AppModel::getComputeEngine() const {
     return computeEngine;
 }
 
@@ -127,7 +127,7 @@ QSharedPointer<OscEngine> AppModel::getOscEngine() const {
     return oscEngine;
 }
 
-void AppModel::createGenerator(QString type) {
+QSharedPointer<Generator> AppModel::createGenerator(QString type) {
     if(flagDebug) {
         qDebug() << "createGenerator (AppModel): finding a free id";
     }
@@ -218,6 +218,8 @@ void AppModel::createGenerator(QString type) {
 
     // once the list is changed, update the GeneratorModel connections
     generatorModel->relinkConnections();
+
+    return generator;
 }
 
 void AppModel::deleteGenerator(int id) {
@@ -286,6 +288,72 @@ bool AppModel::validateNewGeneratorName(QString name) {
     return valid;
 }
 
+bool AppModel::loadProject(QString uri)
+{
+    // parse URI
+    QUrl url(uri);
+    // create QFile at URI
+    QFile loadFile(url.toLocalFile());
+
+    // check validity of file contents;
+    // we are reading from a binary MIME type
+    QMimeDatabase db;
+    QMimeType type = db.mimeTypeForFile(url.toLocalFile());
+
+    if (type.name().compare("application/octet-stream") != 0) {
+        qWarning() << "Couldn't open save file :: MIME type not acceptable.";
+        return false;
+    }
+
+    // try to open file
+    if (!loadFile.open(QIODevice::ReadOnly)) {
+        qWarning() << "Couldn't open save file:" << uri;
+        return false;
+    }
+
+    // read file
+    QByteArray saveData = loadFile.readAll();
+    // convert to JSON document
+    QJsonDocument loadDoc(QCborValue::fromCbor(saveData).toMap().toJsonObject());
+
+    // read data
+    if (!readJson(loadDoc.object())) {
+        qWarning() << "Could not load project.";
+        return false;
+    };
+
+    // success!
+    return true;
+}
+
+bool AppModel::saveProject(QString uri) {
+    // parse URI
+    QUrl url(uri);
+    // create QFile at URL
+    QFile saveFile(url.toLocalFile());
+
+    // try to open file
+    if (!saveFile.open(QIODevice::WriteOnly)) {
+        qWarning() << "Couldn't open save file:" << uri;
+        return false;
+    }
+
+    // create JSON object
+    QJsonObject saveObject;
+
+    // write all data
+    if (!writeJson(saveObject)) {
+        qWarning() << "Error writing to save file.";
+        return false;
+    }
+
+    // save to file
+    saveFile.write(QCborValue::fromJsonValue(saveObject).toCbor());
+
+    // success
+    return true;
+}
+
 QSharedPointer<Generator> AppModel::getGenerator(int id) const {
     return generatorsHashMap->value(id);
 }
@@ -301,4 +369,62 @@ QSharedPointer<GeneratorModel> AppModel::getGeneratorModel() const {
 QSharedPointer<GeneratorMetaModel> AppModel::getGeneratorMetaModel() const
 {
     return generatorMetaModel;
+}
+
+bool AppModel::readJson(const QJsonObject &json)
+{
+    // version check
+    const QString version = QCoreApplication::applicationVersion();
+    if (json["version"].toString().compare(version) != 0) {
+        qDebug() << "save data version differs from app version. be careful!";
+    }
+
+    // destroy all current generators
+    deleteAllGenerators();
+
+    // create generators based on JSON
+    QJsonArray generators = json["generators"].toArray();
+    for (int i = 0; i < generators.size(); i++) {
+        QJsonObject generatorData = generators[i].toObject();
+
+        // create a generator, retrieving the pointer
+        QSharedPointer<Generator> generator = createGenerator(generatorData["type"].toString());
+
+        // send save data to Generator function
+        generator->readJson(generatorData);
+    }
+
+    // success
+    return true;
+}
+
+bool AppModel::writeJson(QJsonObject &json) const
+{
+    json["appName"] = QCoreApplication::applicationName();
+    json["version"] = QCoreApplication::applicationVersion();
+    json["savedAt"] = QJsonValue::fromVariant(QVariant::fromValue(std::time(0)));
+
+    // TODO: global OSC I/O port numbers + send host
+
+    // write generator data
+    QJsonArray generatorData;
+
+    for (QSharedPointer<Generator> g : *generatorsList) {
+        QJsonObject singleGeneratorData;
+        g->writeJson(singleGeneratorData);
+        generatorData.append(singleGeneratorData);
+    }
+
+    // add to global JSON
+    json["generators"] = generatorData;
+
+    // success
+    return true;
+}
+
+void AppModel::deleteAllGenerators()
+{
+    for (QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
+        deleteGenerator((*it)->getID());
+    }
 }

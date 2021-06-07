@@ -46,9 +46,17 @@ public:
     QSharedPointer<GeneratorModel>      getGeneratorModel() const;
     QSharedPointer<GeneratorMetaModel>  getGeneratorMetaModel() const;
 
-    Q_INVOKABLE void    createGenerator(QString type);
-    Q_INVOKABLE void    deleteGenerator(int id);
-    Q_INVOKABLE bool    validateNewGeneratorName(QString name);
+    bool                                readJson(const QJsonObject &json);
+    bool                                writeJson(QJsonObject &json) const;
+
+    void                                deleteAllGenerators();
+
+Q_INVOKABLE QSharedPointer<Generator>   createGenerator(QString type);
+Q_INVOKABLE void                        deleteGenerator(int id);
+Q_INVOKABLE bool                        validateNewGeneratorName(QString name);
+
+Q_INVOKABLE bool                        loadProject(QString uri);
+Q_INVOKABLE bool                        saveProject(QString uri);
 private:
     AppModel();                                 // prevent instanciation
     AppModel(AppModel const&) = delete;         // prevent copy

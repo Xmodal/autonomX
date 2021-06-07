@@ -119,6 +119,10 @@ public:
     void writeLatticeWidth(int latticeWidth);
     void writeLatticeHeight(int latticeHeight);
 
+    // serialization methods
+    void readJson(const QJsonObject &json);
+    void writeJson(QJsonObject &json) const;
+
     // these are implemented by the derived class and allow reading / writing to the lattice.
     // this is called by applyInputRegion / applyOutputRegion
     virtual double getLatticeValue(int x, int y) = 0;

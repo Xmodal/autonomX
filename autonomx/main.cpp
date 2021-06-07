@@ -51,8 +51,18 @@ int main(int argc, char *argv[]) {
     #endif
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-
     QGuiApplication app(argc, argv);
+
+    // constant settings
+    const char* applicationName = "autonomX";
+    const char* applicationVersion = "0.1.1";
+    const char* organizationName = "Xmodal";
+    const char* extensionName = "atnx";
+
+    // global settings
+    QCoreApplication::setApplicationName(applicationName);
+    QCoreApplication::setApplicationVersion(applicationVersion);
+    QCoreApplication::setOrganizationName(organizationName);
 
 
     // load fonts in the project database
@@ -62,9 +72,9 @@ int main(int argc, char *argv[]) {
             qDebug() << "Failed to load font " << file;
     }
 
+
     qDebug() << "Built against Qt" << QT_VERSION_STR;
     qDebug() << "Using Qt" << QLibraryInfo::version() << "at runtime";
-
     qDebug() << "GUI id = " << QThread::currentThreadId();
 
 
@@ -100,6 +110,7 @@ int main(int argc, char *argv[]) {
     qmlEngine.rootContext()->setContextProperty("appModel", &AppModel::getInstance());
     qmlEngine.rootContext()->setContextProperty("generatorModel", AppModel::getInstance().getGeneratorModel().data());
     qmlEngine.rootContext()->setContextProperty("generatorMetaModel", AppModel::getInstance().getGeneratorMetaModel().data());
+    qmlEngine.rootContext()->setContextProperty("extensionName", extensionName);
     qmlEngine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (qmlEngine.rootObjects().isEmpty())
         return -1;

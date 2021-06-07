@@ -17,6 +17,8 @@
 #include <QThread>
 #include <QTimer>
 #include <QDebug>
+#include <QJsonObject>
+#include <QJsonArray>
 
 #include "Generator.h"
 
@@ -288,6 +290,124 @@ void Generator::writeLatticeHeight(int latticeHeight) {
 
     emit valueChanged("latticeHeight", latticeHeight);
     emit latticeHeightChanged(latticeHeight);
+}
+
+void Generator::readJson(const QJsonObject &json)
+{
+    // 000. GENERAL DATA
+    writeUserNotes(json["userNotes"].toString());
+
+
+    // 001. PROP DATA
+    const QMetaObject *metaObject = this->metaObject();
+    QJsonObject props = json["props"].toObject();
+
+    for (int i = 0; i < props.size(); i++) {
+        // get key and value
+        QString key = props.keys()[i];
+        QVariant value = props[key].toVariant();
+
+        // get index of property
+        int index = metaObject->indexOfProperty(key.toStdString().c_str());
+
+        // check if property exists; continue otherwise
+        if (index == -1)
+            continue;
+
+        // write to property if it exists
+        metaObject->property(index).write(this, value);
+    }
+
+
+    // 002. REGION DATA
+
+    // TODO: there's a bit of a problem here -
+    // by default, four inputs and four outputs already exist
+    // we can't just selectively readJson without considering the previous RegionSet counts
+    // might need to modify the Generator constructor ever so slightly to compensate for this...
+    // until then, we will assume that there are always four inputs and four outputs at any time
+
+    QJsonArray inputs = json["inputs"].toArray();
+    QJsonArray outputs = json["outputs"].toArray();
+
+    // inputs
+    for (int i = 0; i < inputs.size(); i++) {
+        GeneratorRegion *input = inputRegionSet->getRegion(i);
+        input->readJson(inputs[i].toObject());
+    }
+
+    // outputs
+    for (int i = 0; i < outputs.size(); i++) {
+        GeneratorRegion *output = outputRegionSet->getRegion(i);
+        output->readJson(outputs[i].toObject());
+    }
+}
+
+void Generator::writeJson(QJsonObject &json) const
+{
+    // 000. GENERAL DATA
+    json["id"] = id;
+    json["type"] = meta->property("type").toString();
+    json["userNotes"] = userNotes;
+
+
+    // 001. PROP DATA
+    QJsonObject props;
+
+    // start at oscInputPort
+    const QMetaObject *metaObject = this->metaObject();
+    for (int i = metaObject->indexOfProperty("oscInputPort"); i < metaObject->propertyCount(); i++) {
+        // retrieve target QMetaProperty
+        QMetaProperty target = metaObject->property(i);
+
+        // get key and value
+        QString k = target.name();
+        QVariant v = target.read(this);
+
+        // typecast enum values
+        // THIS CAN CAUSE BUGS IF THE ENUM ISN'T REGISTERED TO ENUMLABELS MEMBER!!!!!!
+        if (meta->getEnumLabels().keys().contains(target.typeName()))
+            v = v.toInt();
+
+        // write to props obj
+        props[k] = QJsonValue::fromVariant(v);
+    }
+
+    // write props to main JSON
+    json["props"] = props;
+
+
+    // 002. REGION DATA
+    QJsonArray inputRegions;
+    QJsonArray outputRegions;
+
+    // scan thru input regions
+    for (int i = 0; i < inputRegionSet->getRegionCount(); i++) {
+        GeneratorRegion* region = inputRegionSet->getRegion(i);
+
+        // write to obj
+        QJsonObject obj;
+        region->writeJson(obj);
+
+        // append
+        inputRegions.append(obj);
+    }
+
+    // scan thru output regions
+    for (int i = 0; i < outputRegionSet->getRegionCount(); i++) {
+        GeneratorRegion* region = outputRegionSet->getRegion(i);
+
+        // write to obj
+        QJsonObject obj;
+        region->writeJson(obj);
+
+        // append
+        outputRegions.append(obj);
+    }
+
+    // write to main JSON
+    json["inputs"] = inputRegions;
+    json["outputs"] = outputRegions;
 }
 
 void Generator::resetParameters()

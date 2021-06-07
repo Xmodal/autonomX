@@ -7,21 +7,26 @@ Button {
     id: genericButton
 
     property color activeColor: Stylesheet.colors.generator
+    property color neutralColor: Stylesheet.colors.darkGrey
+    property color hoverColor: Stylesheet.colors.black
 
-    topPadding: 4
-    bottomPadding: 4
-    leftPadding: 15
-    rightPadding: 15
+    property real paddingSide: 15
+
+    height: 24
+
+    leftPadding: paddingSide
+    rightPadding: paddingSide
 
     contentItem: Label {
         font: Stylesheet.fonts.label
         opacity: hovered ? 1 : 0.75
         text: genericButton.text
+        verticalAlignment: Qt.AlignVCenter
     }
 
     background: Rectangle {
-        anchors.fill: parent
-        color: pressed ? activeColor : (hovered ? Stylesheet.colors.black : Stylesheet.colors.darkGrey)
+        implicitHeight: parent.height
+        color: pressed ? activeColor : (hovered ? hoverColor : neutralColor)
     }
 
     CursorShaper {

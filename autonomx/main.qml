@@ -5,6 +5,7 @@ import QtQuick.Window 2.11
 
 import "./stylesheet"
 import "./layout"
+import "./components/util"
 
 /**
  * Main window of this application
@@ -23,18 +24,21 @@ ApplicationWindow {
         metaModel = generatorMetaModel.at(generatorModel.at(activeGeneratorIndex).type)
     }
 
+    // UI switch flags
     property bool showGeneratorList: true
     property bool showGeneratorSettings: true
 
-    // We update this version number each time we do a release/tag.
-    // We follow Semantic Versioning 2.0.0 https://semver.org/
-    readonly property string softwareVersion: "0.1.1-SNAPSHOT"
-
+    // global field helper flags
     property bool altPressed: false
     property bool shiftPressed: false
     property bool editingTextField: false
     property alias allowSlideDrag: slideDragger.visible
 
+    // saving stuff
+    property alias saveManager: saveManager
+    property alias currentFileName: saveManager.currentFileName
+
+    // changes when
     onEditingTextFieldChanged: {
         if (editingTextField) deAlt(mainContent)
     }
@@ -42,7 +46,7 @@ ApplicationWindow {
     visible: true
     width: 1440
     height: 720
-    title: qsTr("autonomX") + " " + softwareVersion
+    title: Qt.application.name + " " + Qt.application.version
 
     function toggleFullscreen() {
         if (visibility === Window.FullScreen) {
@@ -99,7 +103,7 @@ ApplicationWindow {
         onActivated: toggleFullscreen()
     }
     Shortcut {
-        sequence: "Ctrl+Q"
+        sequences: [StandardKey.Quit, "Ctrl+Q"]
         onActivated: quitThisApp()
     }
     Shortcut {
@@ -118,6 +122,44 @@ ApplicationWindow {
             if (i >= generatorModel.rowCount()) i--;
             activeGeneratorIndex = i;
         }
+    }
+
+    // serialization
+    Shortcut {
+        id: saveSC
+        sequences: [StandardKey.Save]
+
+        onActivated: saveManager.save()
+    }
+    Shortcut {
+        id: saveAsSC
+        sequences: [StandardKey.SaveAs, "Ctrl+Shift+S"]
+
+        onActivated: saveManager.saveAs()
+    }
+    Shortcut {
+        id: loadSC
+        sequences: [StandardKey.Open, "Ctrl+L"]
+
+        onActivated: saveManager.load()
+    }
+    Shortcut {
+        id: newSC
+        sequences: [StandardKey.New]
+
+        onActivated: console.log("new")
+    }
+    Shortcut {
+        id: undoSC
+        sequences: [StandardKey.Undo]
+
+        onActivated: console.log("undo");
+    }
+    Shortcut {
+        id: redoSC
+        sequences: [StandardKey.Redo, "Ctrl+Shift+Z"]
+
+        onActivated: console.log("redo");
     }
 
     // main content
@@ -191,5 +233,9 @@ ApplicationWindow {
                 parent.y = 0
             }
         }
+    }
+
+    SaveManager {
+        id: saveManager
     }
 }

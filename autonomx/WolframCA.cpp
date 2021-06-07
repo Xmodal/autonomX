@@ -72,7 +72,6 @@ void WolframCA::initialize() {
    // random seed bug
    // see below for temp fix and issue
    else {
-//       qDebug() << "random seed selected by user: " << getRandSeed();
        // initialize a random cell as starting cell
        for(int i = 0; i < (latticeHeight * latticeWidth); i++) {
            if (i >= latticeWidth) {
@@ -81,7 +80,6 @@ void WolframCA::initialize() {
            else {
                // generate a random number magic b/w 0-1 and initialize to 1 if magic>0.5 o/w magic -> 0
                 magic = (float) rand() / RAND_MAX;
-//               qDebug() << "magic value: " << magic;
                if (magic > getRandSeed()) {
                    cells[i] = 1;
                    seedChosen = true;
@@ -98,7 +96,8 @@ void WolframCA::initialize() {
        // selects one random cell from the first row to be the random seed
        // ensures that at least one cell is seleted as seed
        // otherwise, as the random seed approaches 1, the likelihood that no cell will be initialized increases
-       // at max value (1) it is 100% certain that a blank lattice will be generated
+       // at max value (1) it is 100% certain that no seed will be selected
+       // no seed selected = a blank lattice will be generated -> essentially breaks the generator until reset
        if(seedChosen == false) {
            magic = (float) rand() / RAND_MAX;
            qDebug() << "no cell was selected normally, temp fix triggered." << endl << "random cell selected for seed: " << (int)(magic * latticeWidth);

@@ -32,9 +32,7 @@ ColumnLayout {
                 // destroy previous fields
                 destroyGUI();
 
-                // reset fields
-                paramsSubRack.fields = [];
-
+                // define props
                 let fieldData = metaModel.fieldTree[modelData];
                 let fields = [];
 
@@ -81,16 +79,17 @@ ColumnLayout {
                     let fieldObj = componentToCreate.createObject(null, props);
 
                     // push to field array
-                    paramsSubRack.fields.push(fieldObj)
+                    fields.push(fieldObj)
                 }
+
+                paramsSubRack.fields = fields;
             }
 
             function destroyGUI() {
                 for (let i = 0; i < paramsSubRack.fields.length; i++) {
-                    if (!paramsSubRack.fields[i]) continue;
-
-                    paramsSubRack.fields[i].reset();
-                    paramsSubRack.fields[i].destroy();
+                    if (!this.fields[i]) continue;
+                    this.fields[i].reset();
+                    this.fields[i].destroy();
                 }
             }
         }

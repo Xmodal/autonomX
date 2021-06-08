@@ -35,6 +35,12 @@ Rectangle {
 
         area = rect.width * rect.height;
         area = area;
+
+        // assign connections once region is created
+        // (for some reason, having them initialized pre-completion
+        // causes uninvoked snapping when going from a generator to another)
+        region.latticeWidthChanged.connect(function() { region.snapToGrid("drag") } )
+        region.latticeHeightChanged.connect(function() { region.snapToGrid("drag") } )
     }
 
     // matrix.setMask() update slots
@@ -42,10 +48,6 @@ Rectangle {
     onYChanged: updateBounds()
     onWidthChanged: updateBounds()
     onHeightChanged: updateBounds()
-
-    // reposition region if out of bounds
-    onLatticeWidthChanged: snapToGrid("drag")
-    onLatticeHeightChanged: snapToGrid("drag")
 
     // animation triggers
     NumberAnimation on x { id: snapX; running: false; duration: 250; easing.type: Easing.OutCirc; }

@@ -446,7 +446,11 @@ void Generator::applyInputRegion() {
         // write region activation onto lattice in rect area
         for(int x = region->getRect().x(); x < xMax; x++) {
             for(int y = region->getRect().y(); y < yMax; y++) {
-                writeLatticeValue(x, y, region->getIntensity());
+                // only writes value if it is non-zero
+                if(region->getIntensity() != 0) {
+                    qDebug() << "region->getInsensity: " << region->getIntensity();
+                    writeLatticeValue(x, y, region->getIntensity());
+                }
             }
         }
     }

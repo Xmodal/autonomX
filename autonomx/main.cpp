@@ -96,9 +96,8 @@ int main(int argc, char *argv[]) {
     qmlRegisterUncreatableMetaObject(NeuronTypeNS::staticMetaObject, "ca.hexagram.xmodal.autonomx", 1, 0, "NeuronType", "Cannot instanciate NeuronType.");
 
 
-    // create initial generators
+    // create initial generator
     AppModel::getInstance().createGenerator("SpikingNet");
-    // AppModel::getInstance().createGenerator("WolframCA");
 
     QQmlApplicationEngine qmlEngine;
 

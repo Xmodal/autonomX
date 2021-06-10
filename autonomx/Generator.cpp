@@ -434,6 +434,17 @@ void Generator::resetParameters()
     }
 
     // TODO: reset input/output zones as well...?
+    // input rectangles reset
+   for(int i = 0; i < this->inputRegionSet->getRegionCount(); i++) {
+       QRect tempRect(1+(i*5), 3, 3, 3);
+       this->inputRegionSet->getRegion(i)->writeMirroredRect(tempRect);
+   }
+
+   // output rectangles reset
+   for(int i = 0; i < this->outputRegionSet->getRegionCount(); i++) {
+       QRect tempRect(1+(i*5), 14, 3, 3);
+       this->outputRegionSet->getRegion(i)->writeMirroredRect(tempRect);
+   }
 
     // re-initialize
     // probably unnecessary, some properties can call this when rewritten

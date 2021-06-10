@@ -71,6 +71,9 @@ void ComputeEngine::receiveOscData(int id, QVariantList data) {
         generator->getInputRegionSet()->getRegion(i)->writeMirroredIntensity(input);
     }
 
+    // alerts loop that new value was received via inputOSC and can be reflected in lattice
+    inputValueReceived = true;
+
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
@@ -135,9 +138,15 @@ void ComputeEngine::loop() {
     elapsedTimer.restart();
     elapsedTimer.start();
 
-    // apply input values
-    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
-        (*it)->applyInputRegion();
+    // check if input value received via OSC this loop
+    if(inputValueReceived) {
+        // apply input values
+        for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
+            (*it)->applyInputRegion();
+        }
+
+        // reset check to prevent values being erased on every loop
+        inputValueReceived = false;
     }
 
     // do the computation

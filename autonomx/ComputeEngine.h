@@ -34,6 +34,7 @@ private:
     QElapsedTimer elapsedTimer;
     double frequency = 60;
     bool firstFrame = true;
+    bool inputValueReceived = false;
     bool flagDebug = false;
     bool flagDummyOutputMonitor = false;
     bool flagDummyOscOutput = false;

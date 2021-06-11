@@ -47,7 +47,7 @@ private:
     int prev_rule;
 
     // WolframCA specific variables
-    int currentGeneration = 1;
+    int currentGeneration = 0;
     int lastGeneration;
 
 

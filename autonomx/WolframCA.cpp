@@ -68,9 +68,9 @@ else{
     }
    }
 
-
-    lastGeneration = latticeHeight;
-    iterationNumber = 1;
+   lastGeneration = latticeHeight;
+   currentGeneration = 0;
+   iterationNumber = 1;
 
     //generate the rule set array based on the defined rule
     int r = getRule();
@@ -88,14 +88,8 @@ void WolframCA::computeIteration(double deltaTime)
 {
     // execute CA here
 
-<<<<<<< Updated upstream
     ///// random float values on lattice version /////
 //    srand( (unsigned)time( NULL ) );
-=======
-   lastGeneration = latticeHeight;
-   currentGeneration = 0;
-   iterationNumber = 1;
->>>>>>> Stashed changes
 
 //    for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
 //            cells[i] = (float) rand()/RAND_MAX;
@@ -133,13 +127,9 @@ void WolframCA::computeIteration(double deltaTime)
     }
 
     //write the main logic here to get values of next generation -- remmeber the current generation starts from 1 hence current generation -1
-<<<<<<< Updated upstream
-
-    for(int i = 0 ; i <= latticeWidth-1; ++i) {
-=======
  if(currentGeneration>0){
+ for(int i = 0 ; i <= latticeWidth-1; ++i) {
     for(int i = 0 ; i < latticeWidth; i++) {
->>>>>>> Stashed changes
         // to check for the leftmost cell
         if (i==0){
             int left = cells[(currentGeneration-1) * latticeWidth + latticeWidth - 1];
@@ -147,34 +137,23 @@ void WolframCA::computeIteration(double deltaTime)
             int middle = cells[(currentGeneration-1) * latticeWidth + i];
             cells[(currentGeneration) * latticeWidth + i] = findCellValue(left,middle,right);
         }
-        // to check for the rightmost cell
-        else if (i==latticeWidth-1){
+         // to check for the rightmost cell
+         else if (i==latticeWidth-1){
             int left = cells[(currentGeneration-1) * latticeWidth + i - 1];
             int right = cells[(currentGeneration-1) * latticeWidth + i - (latticeWidth - 1)];
             int middle = cells[(currentGeneration-1) * latticeWidth + i];
             cells[(currentGeneration) * latticeWidth + i] = findCellValue(left,middle,right);
         }
-        //any other cell on the lattice
+            //any other cell on the lattice
         else{
-             int left = cells[(currentGeneration-1) * latticeWidth + i - 1];
-             int right = cells[(currentGeneration-1) * latticeWidth + i + 1];
-             int middle = cells[(currentGeneration-1) * latticeWidth + i];
-             cells[(currentGeneration) * latticeWidth + i] = findCellValue(left,middle,right);
+            int left = cells[(currentGeneration-1) * latticeWidth + i - 1];
+            int right = cells[(currentGeneration-1) * latticeWidth + i + 1];
+            int middle = cells[(currentGeneration-1) * latticeWidth + i];
+            cells[(currentGeneration) * latticeWidth + i] = findCellValue(left,middle,right);
         }
-<<<<<<< Updated upstream
-        //qDebug() << findCellValue(left,middle,right);
-        //cells[currentGeneration * latticeWidth + i] =  i*0.5; //currentGeneration / (double)latticeHeight;
-
-        }
-
-  /*  // set values of cells, brighter for each generation
-    for(int i = 0; i < latticeWidth; ++i) {
-        cells[currentGeneration * latticeWidth + i] =  i*0.5; //currentGeneration / (double)latticeHeight;
-    }*/
-=======
     }
  }
->>>>>>> Stashed changes
+ }
 
     //store the rule to check next time if the rule has changed
     prev_rule = rule;

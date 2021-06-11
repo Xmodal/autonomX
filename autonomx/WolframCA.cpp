@@ -21,7 +21,13 @@ WolframCA::WolframCA(int id) : Generator(id, "WolframCA", "WCA", "Wolfram CA des
 
 WolframCA::~WolframCA()
 {
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+        );
 
+        qDebug() << "destructor (WolframCA):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+    }
 }
 
 void WolframCA::initialize(){
@@ -75,6 +81,7 @@ void WolframCA::resetParameters()
 {
     // reset params here
     initialize();
+    qDebug()<<"We are intializing again";
 }
 
 void WolframCA::computeIteration(double deltaTime)

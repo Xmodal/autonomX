@@ -17,8 +17,8 @@
 
 #include "AppModel.h"
 //#include "SpikingNet.h"
-//#include "WolframCA.h"
-#include "GameOfLife.h"
+#include "WolframCA.h"
+//#include "GameOfLife.h"
 
 AppModel::AppModel() {
     if(flagDebug) {
@@ -154,8 +154,8 @@ void AppModel::createGenerator() {
 //        generator = QSharedPointer<Generator>(new SpikingNet(nextID));
 //    }
 //    if (type.compare("wolframCA")) {
-        //generator = QSharedPointer<Generator>(new WolframCA(nextID));
-        generator = QSharedPointer<Generator>(new GameOfLife(nextID));
+        generator = QSharedPointer<Generator>(new WolframCA(nextID));
+        //generator = QSharedPointer<Generator>(new GameOfLife(nextID));
 //    }
 
     // move the Generator to computeThread

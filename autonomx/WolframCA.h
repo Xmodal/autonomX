@@ -28,7 +28,7 @@ private:
     // cell values
     double* cellValues;
 
-    // properties and rules; default rule set to 90
+    // properties and rules; default rule set to 102
     int rule = 102;
 
     //random seed property
@@ -73,13 +73,9 @@ public:
     void writeTimeScale(double timeScale);
     double getTimeScale() const;
 
+    //random seed for random initialization
     void writeRandSeed(double randSeed);
     double getRandSeed() ;
-
-//    double getCellValue();
-//    void setCellValue(double);
-
-    int modValue = 1;
 
 signals:
     // QML signals

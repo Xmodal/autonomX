@@ -107,7 +107,7 @@ void WolframCA::initialize() {
 
 
    lastGeneration = latticeHeight;
-   currentGeneration = 1;
+   currentGeneration = 0;
    iterationNumber = 1;
 
    //generate the rule set array based on the defined rule
@@ -146,7 +146,7 @@ void WolframCA::computeIteration(double deltaTime) {
     }
 
     //write the main logic here to get values of next generation -- remmeber the current generation starts from 1 hence current generation -1
-
+if(currentGeneration>0){
     for(int i = 0 ; i < latticeWidth; i++) {
         // to check for the leftmost cell
         if (i == 0){
@@ -170,7 +170,7 @@ void WolframCA::computeIteration(double deltaTime) {
              cells[(currentGeneration) * latticeWidth + i] = findCellValue(left,middle,right);
         }
     }
-
+}
     //store the rule to check next time if the rule has changed
     prev_rule = rule;
 

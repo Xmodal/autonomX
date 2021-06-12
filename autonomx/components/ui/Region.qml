@@ -1,5 +1,5 @@
-import QtQuick 2.11
-import QtQuick.Controls 2.2
+import QtQuick 2.12
+import QtQuick.Controls 2.12
 
 import ca.hexagram.xmodal.autonomx 1.0
 
@@ -11,17 +11,15 @@ Control {
     // props
     property bool dragActive: dragArea.drag.active
     property bool inEdit: false
-
     // only changed by type=-1 region
     property bool allowUpdatingBounds: true
 
     property int latticeWidth: regions.latticeWidth
     property int latticeHeight: regions.latticeHeight
     property int ppc: latticeView.ppc
-
-    property int type: 0                        // 0 = input; 1 = output
-    property int resizeHitbox: 5                // zone padding
-    property int area
+    property int type: 0                       // 0 = input; 1 = output
+    property int resizeHitbox: 5            // zone padding
+    property int area: rect.width * rect.height
 
     property color currColor: type < 0 ? Stylesheet.colors.white : Stylesheet.colors[type == 0 ? "inputs" : "outputs"][(index < 0 ? 0 : index) % Stylesheet.colors.variations]
 
@@ -42,25 +40,14 @@ Control {
     antialiasing: true
 
     // position
-    width: regions.width * rect.width / regions.latticeWidth
-    height: regions.height * rect.height / regions.latticeHeight
-    x: regions.width * rect.x / regions.latticeWidth
-    y: regions.height * rect.y / regions.latticeHeight
-    z: focus ? 10 : 10 / area;
+    width: regions.width * rect.width / latticeWidth
+    height: regions.height * rect.height / latticeHeight
+    x: regions.width * rect.x / latticeWidth
+    y: regions.height * rect.y / latticeHeight
+    z: selected ? 10 : 10 / area;
 
     // break x/y property bindings
     Component.onCompleted: {
-        x = x;
-        y = y;
-        width = width;
-        height = height;
-
-        // full priority to added region
-        if (type < 0)
-            area = 0.00001;
-        else
-            area = rect.width * rect.height;
-
         // assign connections once region is created
         // (for some reason, having them initialized pre-completion
         // causes uninvoked snapping when going from a generator to another)
@@ -75,10 +62,29 @@ Control {
     onHeightChanged: updateBounds()
 
     // animation triggers
-    NumberAnimation on x { id: snapX; running: false; duration: 250; easing.type: Easing.OutCirc; }
-    NumberAnimation on y { id: snapY; running: false; duration: 250; easing.type: Easing.OutCirc; }
-    NumberAnimation on width { id: snapWidth; running: false; duration: 250; easing.type: Easing.OutCirc; }
-    NumberAnimation on height { id: snapHeight; running: false; duration: 250; easing.type: Easing.OutCirc; }
+    NumberAnimation on x { id: snapX; running: false; duration: 250; easing.type: Easing.OutCirc; onFinished: rebind("x"); }
+    NumberAnimation on y { id: snapY; running: false; duration: 250; easing.type: Easing.OutCirc; onFinished: rebind("y"); }
+    NumberAnimation on width { id: snapWidth; running: false; duration: 250; easing.type: Easing.OutCirc; onFinished: rebind("width"); }
+    NumberAnimation on height { id: snapHeight; running: false; duration: 250; easing.type: Easing.OutCirc; onFinished: rebind("height"); }
+
+    // rect coords rebinding process
+    // called when associated NumberAnimation is done
+    function rebind(prop) {
+        switch (prop) {
+            case "x":
+                x = Qt.binding(function() { return regions.width * rect.x / latticeWidth })
+                break
+            case "y":
+                y = Qt.binding(function() { return regions.height * rect.y / latticeHeight; })
+                break
+            case "width":
+                width = Qt.binding(function() { return regions.width * rect.width / latticeWidth })
+                break
+            case "height":
+                height = Qt.binding(function() { return regions.height * rect.height / latticeHeight })
+                break
+        }
+    }
 
     // snap to grid on drop / resize
     function snapToGrid(evtType) {
@@ -129,12 +135,7 @@ Control {
     // to limit calculation rate to what's necessary to calculate
     // (also find a way to only call matrix.setMask() once per mouse interaction)
     function updateBounds() {
-        matrix.setMask(Qt.rect(
-            x / ppc,
-            y / ppc,
-            (width - 1) / ppc,
-            (height - 1) / ppc
-        ));
+        matrix.setMask(Qt.rect(x, y, width - 1, height - 1));
     }
 
     // force cursor on event

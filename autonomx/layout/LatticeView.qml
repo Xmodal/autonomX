@@ -20,6 +20,9 @@ RowLayout {
         property int index: -1
     }
 
+    property alias inputsVisible: showInputsBtn.checked
+    property alias outputsVisible: showOutputsBtn.checked
+
     // layout
     Layout.fillWidth: true
     Layout.fillHeight: true
@@ -33,6 +36,10 @@ RowLayout {
         regions.rectSelected = currRegion.index >= 0;
 
         matrix.setMask();
+    }
+
+    function toggleRegions(type, visible) {
+
     }
 
     // matrix zone
@@ -106,6 +113,8 @@ RowLayout {
                 model: inputModel
                 Region {
                     type: 0
+                    visible: inputsVisible
+
                     latticeWidth: regions.latticeWidth
                     latticeHeight: regions.latticeHeight
                     ppc: latticeView.ppc
@@ -116,6 +125,8 @@ RowLayout {
                 model: outputModel
                 Region {
                     type: 1
+                    visible: outputsVisible
+
                     latticeWidth: regions.latticeWidth
                     latticeHeight: regions.latticeHeight
                     ppc: latticeView.ppc
@@ -152,27 +163,21 @@ RowLayout {
             }
 
             IOButton {
+                id: showInputsBtn
                 type: 0
                 checkable: true
                 checked: true
 
                 Layout.alignment: Qt.AlignHCenter
-
-                onClicked: {
-                    // show/hide input regions
-                }
             }
 
             IOButton {
+                id: showOutputsBtn
                 type: 1
                 checkable: true
                 checked: true
 
                 Layout.alignment: Qt.AlignHCenter
-
-                onClicked: {
-                    // show/hide input regions
-                }
             }
         }
 

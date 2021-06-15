@@ -86,13 +86,12 @@ int main(int argc, char *argv[]) {
     qmlRegisterType<GeneratorLattice>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorLattice");
     qRegisterMetaType<QSharedPointer<Generator>>();
 
-    // register generators to QML engine
+    //// Register All Generator Types to QML Engine Here ////
     // TODO: find a way to not have to declare these in main.cpp;
     // maybe on type registry initialization?
     qmlRegisterUncreatableType<SpikingNet>("ca.hexagram.xmodal.autonomx", 1, 0, "SpikingNet", "Cannot instanciate SpikingNet.");
-    qmlRegisterUncreatableType<WolframCA>("ca.hexagram.xmodal.autonomx", 1, 0, "WolframCA", "Cannot instanciate WolframCA.");
     qmlRegisterUncreatableMetaObject(NeuronTypeNS::staticMetaObject, "ca.hexagram.xmodal.autonomx", 1, 0, "NeuronType", "Cannot instanciate NeuronType.");
-
+    qmlRegisterUncreatableType<WolframCA>("ca.hexagram.xmodal.autonomx", 1, 0, "WolframCA", "Cannot instanciate WolframCA.");
 
     // create initial generator
     AppModel::getInstance().createGenerator("SpikingNet");

@@ -433,7 +433,6 @@ void Generator::resetParameters()
         }
     }
 
-    // TODO: reset input/output zones as well...?
     // input rectangles reset
    for(int i = 0; i < this->inputRegionSet->getRegionCount(); i++) {
        QRect tempRect(1+(i*5), 3, 3, 3);

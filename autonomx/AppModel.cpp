@@ -47,7 +47,8 @@ AppModel::AppModel() {
         qDebug() << "constructor (AppModel): initializing generatorMetaModel";
     }
 
-    // init data (type registry, sort of)
+    //// Add Every Generator (Subclass) Type Here ////
+    // init data (type registry)
     generatorMetaModel = QSharedPointer<GeneratorMetaModel>(new GeneratorMetaModel());
     generatorMetaModel->insertAtEnd("SpikingNet");
     generatorMetaModel->insertAtEnd("WolframCA");

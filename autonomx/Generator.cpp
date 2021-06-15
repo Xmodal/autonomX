@@ -21,10 +21,14 @@
 #include <QJsonArray>
 
 #include "Generator.h"
+#include "AppModel.h"
 
 Generator::Generator(int id, GeneratorMeta * meta) {
     this->id = id;
     this->meta = meta;
+    // create default generatorName from generator type + id
+    QString idString = QString::number(id);
+    this->generatorName = this->meta->getType() + idString;
     this->userNotes = "";
 
     if(flagDebug) {
@@ -64,6 +68,10 @@ int Generator::getID() {
 
 QString Generator::getDescription() {
     return meta->property("description").toString();
+}
+
+QString Generator::getGeneratorName() {
+    return generatorName;
 }
 
 QString Generator::getUserNotes() {
@@ -111,6 +119,32 @@ int Generator::getLatticeHeight() {
     return latticeHeight;
 }
 
+void Generator::writeGeneratorName(QString generatorName) {
+    if (this->generatorName == generatorName)
+        return;
+
+    if (flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "writeGeneratorName (Generator)\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\t value = " << generatorName;
+    }
+
+    // check if new generatorName is valid -> must be unique
+  QList<int> takenIDs;
+    if(!AppModel::getInstance().validateNewGeneratorName(generatorName)) {
+
+        // if name is not valid / unique, throw error / force to rename
+        qDebug() << "throw error / require new gernatorName";
+        return;
+    }
+
+    this->generatorName = generatorName;
+    emit valueChanged("generatorName", QVariant(generatorName));
+    emit generatorNameChanged(generatorName);
+}
+
 void Generator::writeUserNotes(QString userNotes) {
     if (this->userNotes == userNotes)
         return;
@@ -127,7 +161,6 @@ void Generator::writeUserNotes(QString userNotes) {
     emit valueChanged("userNotes", QVariant(userNotes));
     emit userNotesChanged(userNotes);
 
-    // qDebug() << userNotes << "\t" << this->userNotes;
 }
 
 void Generator::writeHistoryLatest(double historyLatest) {

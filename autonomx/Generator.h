@@ -37,6 +37,7 @@ class Generator : public QObject {
     Q_PROPERTY(GeneratorMeta* meta READ getMeta);
 
     // these do change
+    Q_PROPERTY(QString generatorName READ getGeneratorName WRITE writeGeneratorName NOTIFY generatorNameChanged)
     Q_PROPERTY(QString userNotes READ getUserNotes WRITE writeUserNotes NOTIFY userNotesChanged)
     Q_PROPERTY(double historyLatest READ getHistoryLatest NOTIFY historyLatestChanged)
     Q_PROPERTY(bool historyRefresher READ getHistoryRefresher NOTIFY historyRefresherChanged)
@@ -57,6 +58,7 @@ public:
         TypeRole,
         IDRole,
         DescriptionRole,
+        GeneratorNameRole,
         UserNotesRole,
         HistoryLatestRole,
         HistoryRefresherRole,
@@ -68,6 +70,7 @@ public:
         {TypeRole, "type"},
         {IDRole, "id"},
         {DescriptionRole, "description"},
+        {GeneratorNameRole, "generatorName"},
         {UserNotesRole, "userNotes"},
         {HistoryLatestRole, "historyLatest"},
         {HistoryRefresherRole, "historyRefresher"}
@@ -90,6 +93,7 @@ public:
     QString getType();
     int getID();
     QString getDescription();
+    QString getGeneratorName();
     QString getUserNotes();
     GeneratorMeta* getMeta() const;
     double getHistoryLatest();
@@ -106,6 +110,7 @@ public:
     int getLatticeHeight();
 
     // methods to write properties
+    void writeGeneratorName(QString generatorName);
     void writeUserNotes(QString userNotes);
     void writeHistoryLatest(double historyLatest);
     void flipHistoryRefresher(); // this inverts the historyRefresher's value
@@ -147,6 +152,7 @@ private:
     int id;                                     // generator id, generated automatically by ComputeEngine in constructor
 
     GeneratorMeta * meta;                       // contains name, type, description and all the rest
+    QString generatorName;                      // user-defined generator name, must be unique, modifiable
     QString userNotes;                          // user notes, modifiable
     double historyLatest = 0;                   // latest value for the history graph
     bool historyRefresher = false;              // bool that flips every time history latest is refreshed. this is an ugly workaround to prevent Qt from ignoring updates of historyLatest where the value doesn't change.
@@ -206,6 +212,7 @@ signals:
     void valueChanged(const QString &key, const QVariant &value);
 
     // usual signals for property changes
+    void generatorNameChanged(QString generatorName);
     void userNotesChanged(QString userNotes);
     void historyLatestChanged(double historyLatest);
     void historyRefresherChanged(bool historyRefresher);

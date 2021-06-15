@@ -123,6 +123,59 @@ RowLayout {
             }
         }
 
+        // visible toggles
+        ColumnLayout {
+            id: displayTool
+            visible: !(generatorIndex < 0)
+
+            anchors.left: parent.left
+            spacing: 10
+            anchors.verticalCenter: parent.verticalCenter
+
+            anchors.leftMargin: 20
+
+            Image {
+                source: "qrc:/assets/images/eye.svg"
+                width: 16
+                height: 9
+
+                Layout.alignment: Qt.AlignHCenter
+            }
+
+            Rectangle {
+                width: 25
+                height: 1
+                color: Stylesheet.colors.white
+                opacity: 0.5
+
+                Layout.alignment: Qt.AlignHCenter
+            }
+
+            IOButton {
+                type: 0
+                checkable: true
+                checked: true
+
+                Layout.alignment: Qt.AlignHCenter
+
+                onClicked: {
+                    // show/hide input regions
+                }
+            }
+
+            IOButton {
+                type: 1
+                checkable: true
+                checked: true
+
+                Layout.alignment: Qt.AlignHCenter
+
+                onClicked: {
+                    // show/hide input regions
+                }
+            }
+        }
+
         // tooltip (shown when no generator is selected)
         Label {
             anchors.verticalCenter: parent.verticalCenter

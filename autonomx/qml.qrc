@@ -57,5 +57,6 @@
         <file>generators/WolframCA/help/WolframCA_desc.html</file>
         <file>generators/WolframCA/help/WolframCA_params.html</file>
         <file>components/ui/IOButton.qml</file>
+        <file>assets/images/eye.svg</file>
     </qresource>
 </RCC>

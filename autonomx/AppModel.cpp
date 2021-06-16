@@ -164,6 +164,9 @@ QSharedPointer<Generator> AppModel::createGenerator(QString type) {
     } else if (type.compare("WolframCA") == 0) {
         generator = QSharedPointer<Generator>(new WolframCA(nextID, generatorMetaModel->at("WolframCA")));
     }
+    else if (type.compare("GameOfLife") == 0) {
+        generator = QSharedPointer<Generator>(new GameOfLife(nextID, generatorMetaModel->at("GameOfLife")));
+    }
 
     // move the Generator to computeThread
     if(flagDebug) {

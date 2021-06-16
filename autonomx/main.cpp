@@ -35,6 +35,7 @@
 #include "GeneratorMetaModel.h"
 #include "SpikingNet.h"
 #include "WolframCA.h"
+#include "GameOfLife.h"
 #include "AppModel.h"
 #include "CursorOverrider.h"
 
@@ -93,6 +94,7 @@ int main(int argc, char *argv[]) {
     // maybe on type registry initialization?
     qmlRegisterUncreatableType<SpikingNet>("ca.hexagram.xmodal.autonomx", 1, 0, "SpikingNet", "Cannot instanciate SpikingNet.");
     qmlRegisterUncreatableType<WolframCA>("ca.hexagram.xmodal.autonomx", 1, 0, "WolframCA", "Cannot instanciate WolframCA.");
+    qmlRegisterUncreatableType<GameOfLife>("ca.hexagram.xmodal.autonomx", 1, 0, "GameOfLife", "Cannot instanciate Game Of Life.");
     qmlRegisterUncreatableMetaObject(NeuronTypeNS::staticMetaObject, "ca.hexagram.xmodal.autonomx", 1, 0, "NeuronType", "Cannot instanciate NeuronType.");
 
 

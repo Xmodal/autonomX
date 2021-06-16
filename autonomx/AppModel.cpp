@@ -18,6 +18,7 @@
 #include "AppModel.h"
 #include "SpikingNet.h"
 #include "WolframCA.h"
+#include "GameOfLife.h"
 
 AppModel::AppModel() {
     if(flagDebug) {
@@ -51,6 +52,7 @@ AppModel::AppModel() {
     generatorMetaModel = QSharedPointer<GeneratorMetaModel>(new GeneratorMetaModel());
     generatorMetaModel->insertAtEnd("SpikingNet");
     generatorMetaModel->insertAtEnd("WolframCA");
+    generatorMetaModel->insertAtEnd("GameOfLife");
 
     if(flagDebug) {
         qDebug() << "constructor (AppModel): initializing engines";

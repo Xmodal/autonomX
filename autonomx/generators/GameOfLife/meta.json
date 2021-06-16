@@ -1,7 +1,7 @@
 {
-    "name": "Wolfram Cellular Automata",
-    "type": "WolframCA",
-    "description": "A two-dimensional rendering of Wolfram's rules for cellular automata.",
+    "name": "Game Of Life",
+    "type": "GameOfLife",
+    "description": "Conway's game of life on a 2-D Lattice",
 
     "racks": [
         {
@@ -26,7 +26,7 @@
             ]
         },
         {
-            "title": "Wolfram Properties",
+            "title": "GameOfLife Properties",
             "fields": [
                 {
                     "label": "Rule Number",
@@ -35,14 +35,6 @@
                     "min": 0,
                     "max": 255,
                     "default": 102
-                },
-                {
-                    "label": "Random Seed",
-                    "propName": "randSeed",
-                    "type": "slider",
-                     "min": 0,
-                     "max": 1,
-                     "default": 0
                 }
             ]
         }
@@ -50,12 +42,12 @@
 
     "help": [
         {
-            "title": "WolframCA Overview",
-            "html_path": "help/WolframCA_desc.html"
+            "title": "Game Of Life Overview",
+            "html_path": "help/GameOfLife_desc.html"
         },
         {
             "title": "Parameter help",
-            "html_path": "help/WolframCA_params.html"
+            "html_path": "help/GameOfLife_params.html"
         }
     ]
 }

@@ -36,6 +36,7 @@ SOURCES += \
     ComputeEngine.cpp \
     CursorOverrider.cpp \
     Facade.cpp \
+    GameOfLife.cpp \
     Generator.cpp \
     GeneratorFacade.cpp \
     GeneratorLattice.cpp \
@@ -88,6 +89,7 @@ HEADERS += \
     ComputeEngine.h \
     CursorOverrider.h \
     Facade.h \
+    GameOfLife.h \
     Generator.h \
     GeneratorFacade.h \
     GeneratorField.h \

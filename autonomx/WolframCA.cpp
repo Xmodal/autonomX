@@ -235,6 +235,16 @@ int WolframCA::getRule() {
 }
 
 void WolframCA::writeRule(int rule) {
+    if(this->rule == rule)
+        return;
+
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "Rule:\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+    }
     this->rule = rule;
     // make sure you follow this signal structure when you write a property!
     emit ruleChanged(rule);

@@ -170,6 +170,9 @@ QSharedPointer<Generator> AppModel::createGenerator(QString type, bool initRegio
     } else if (type.compare("WolframCA") == 0) {
         generator = QSharedPointer<Generator>(new WolframCA(nextID, generatorMetaModel->at("WolframCA")));
     }
+    else if (type.compare("GameOfLife") == 0) {
+        generator = QSharedPointer<Generator>(new GameOfLife(nextID, generatorMetaModel->at("GameOfLife")));
+    }
 
     // initialize regions
     if (initRegions)

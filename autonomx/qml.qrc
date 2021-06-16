@@ -73,5 +73,9 @@
         <file>components/util/ShortcutManager.qml</file>
         <file>components/ui/DummyRegion.qml</file>
         <file>components/ui/FocusOutline.qml</file>
+        <file>generators/GameOfLife/help/GameOfLife_desc.html</file>
+        <file>generators/GameOfLife/help/GameOfLife_params.html</file>
+        <file>generators/GameOfLife/meta.json</file>
+        <file>generators/README.md</file>
     </qresource>
 </RCC>

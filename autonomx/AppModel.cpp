@@ -163,12 +163,15 @@ QSharedPointer<Generator> AppModel::createGenerator(QString type, bool initRegio
         qDebug() << "createGenerator (AppModel): creating a new generator";
     }
 
+    //// Add New Generator Type Here ////
     // create a new generator
     QSharedPointer<Generator> generator;
     if (type.compare("SpikingNet") == 0) {
         generator = QSharedPointer<Generator>(new SpikingNet(nextID, generatorMetaModel->at("SpikingNet")));
     } else if (type.compare("WolframCA") == 0) {
         generator = QSharedPointer<Generator>(new WolframCA(nextID, generatorMetaModel->at("WolframCA")));
+    } else if (type.compare("GameOfLife") == 0) {
+        generator = QSharedPointer<Generator>(new GameOfLife(nextID, generatorMetaModel->at("GameOfLife")));
     }
     else if (type.compare("GameOfLife") == 0) {
         generator = QSharedPointer<Generator>(new GameOfLife(nextID, generatorMetaModel->at("GameOfLife")));

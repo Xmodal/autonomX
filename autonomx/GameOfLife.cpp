@@ -33,7 +33,7 @@ void GameOfLife::initialize()
     // initialize cell values
     for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
                double magic = (float) rand()/RAND_MAX;
-               if (magic>0.9)
+               if (magic>0.7)
                    cells[i]=1;
                else
                   cells[i]=0;
@@ -171,7 +171,7 @@ void GameOfLife::computeIteration(double deltaTime)
                       cells[index] = 1;
                   }
               // if cell is dead
-              } else {
+              } else if(cells[index] == 0) {
                   if(neighbourhood == 3) {
                       cells[index] == 1;
                   } else {

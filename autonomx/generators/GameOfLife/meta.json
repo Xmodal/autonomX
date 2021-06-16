@@ -35,6 +35,12 @@
                     "min": 0,
                     "max": 255,
                     "default": 102
+                },
+                {
+                "label": "Pattern Type",
+                "propName": "GOLPattern",
+                "type": "select",
+                "default": 4
                 }
             ]
         }

@@ -56,5 +56,9 @@
         <file>generators/WolframCA/meta.json</file>
         <file>generators/WolframCA/help/WolframCA_desc.html</file>
         <file>generators/WolframCA/help/WolframCA_params.html</file>
+        <file>generators/GameOfLife/help/GameOfLife_desc.html</file>
+        <file>generators/GameOfLife/help/GameOfLife_params.html</file>
+        <file>generators/GameOfLife/meta.json</file>
+        <file>generators/README.md</file>
     </qresource>
 </RCC>

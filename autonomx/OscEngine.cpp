@@ -73,7 +73,7 @@ void OscEngine::startGeneratorOsc(QSharedPointer<Generator> generator) {
     QString addressReceiver = generator->getOscInputAddress();
     QString addressSenderHost = generator->getOscOutputAddressHost();
     QString addressSenderTarget = generator->getOscOutputAddressTarget();
-    int portReceiver = generator->getOscInputPort();
+    int portReceiver = generator->createOSCInputPort();
     int portSender = generator->getOscOutputPort();
 
     createOscReceiver(id, addressReceiver, portReceiver);

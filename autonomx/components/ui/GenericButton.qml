@@ -9,6 +9,7 @@ Button {
     property color activeColor: Stylesheet.colors.generator
     property color neutralColor: Stylesheet.colors.darkGrey
     property color hoverColor: Stylesheet.colors.black
+    property color activeTextColor: Stylesheet.colors.white
 
     property real paddingSide: 15
 
@@ -18,8 +19,17 @@ Button {
     rightPadding: paddingSide
 
     contentItem: Label {
-        font: Stylesheet.fonts.label
-        opacity: hovered ? 1 : 0.75
+        color: pressed ? activeTextColor : Stylesheet.colors.white
+        font {
+            family: "Archivo"
+            weight: Font.Medium
+            pixelSize: 12
+            capitalization: Font.AllUppercase
+        }
+
+        lineHeight: 0.9
+
+        opacity: hovered || pressed ? 1 : 0.6
         text: genericButton.text
         verticalAlignment: Qt.AlignVCenter
     }

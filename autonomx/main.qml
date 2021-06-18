@@ -25,7 +25,7 @@ ApplicationWindow {
     }
 
     // UI switch flags
-    property bool showGeneratorList: true
+    property bool showGeneratorList: false
     property bool showGeneratorSettings: true
 
     // global field helper flags
@@ -45,7 +45,7 @@ ApplicationWindow {
 
     visible: true
     width: 1440
-    height: 720
+    height: 810
     title: Qt.application.name + " " + Qt.application.version
 
     function toggleFullscreen() {
@@ -180,7 +180,9 @@ ApplicationWindow {
                 visible: enabled
             }
 
-            LatticeView {}
+            LatticeView {
+                id: latticeView
+            }
 
             RackList {
                 visible: activeGeneratorIndex >= 0 && showGeneratorSettings

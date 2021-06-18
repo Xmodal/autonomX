@@ -135,7 +135,7 @@ ColumnLayout {
 
                 text: activeGeneratorIndex < 0 ? "" : generatorModel.at(activeGeneratorIndex).name
                 opacity: activeGeneratorIndex < 0 ? 0.4 : 1
-                font: Stylesheet.fonts.text
+                font: Stylesheet.fonts.fieldText
             }
 
             // filler

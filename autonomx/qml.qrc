@@ -58,5 +58,13 @@
         <file>generators/WolframCA/help/WolframCA_params.html</file>
         <file>components/ui/IOButton.qml</file>
         <file>assets/images/eye.svg</file>
+        <file>layout/IOToolbar.qml</file>
+        <file>components/ui/RegionNavButton.qml</file>
+        <file>assets/images/arrow.svg</file>
+        <file>shaders/toolbar_grad.frag</file>
+        <file>assets/images/input_counter.svg</file>
+        <file>assets/images/output_counter.svg</file>
+        <file>stylesheet/Colors.qml</file>
+        <file>stylesheet/Fonts.qml</file>
     </qresource>
 </RCC>

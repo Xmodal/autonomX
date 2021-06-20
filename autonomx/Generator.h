@@ -164,8 +164,8 @@ public:
     GeneratorRegionSet* getOutputRegionSet();
 
     // OSC experiments
-    QVector<int> OSCPorts;
-    int createOSCInputPort();
+//    QVector<int> OSCPorts;
+//    int createOSCInputPort();
 protected:
     int latticeWidth = 50;                      // lattice width
     int latticeHeight = 50;                     // lattice height
@@ -179,7 +179,7 @@ private:
     double historyLatest = 0;                   // latest value for the history graph
     bool historyRefresher = false;              // bool that flips every time history latest is refreshed. this is an ugly workaround to prevent Qt from ignoring updates of historyLatest where the value doesn't change.
 
-    int oscInputPort;                           // generator osc input port, assigned by user
+    int oscInputPort = 6668;                           // generator osc input port, assigned by user
     QString oscInputAddress = "/input";         // generator osc input address, assigned by user (this is an osc destination)
 
     int oscOutputPort = 6669;                   // generator osc output port, assigned by user

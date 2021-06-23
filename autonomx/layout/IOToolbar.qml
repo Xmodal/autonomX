@@ -75,6 +75,11 @@ Item {
             RegionNavButton {
                 type: RegionNavButton.Type.Prev
                 visible: selectedIndex >= 0 && !addingRegion
+
+                index: selectedIndex
+                maxIndex: selectedType < 0 ? 0 : (selectedType ? outputModel.rowCount() : inputModel.rowCount())
+
+                onClicked: latticeView.switchSelectedRegion(selectedType, selectedIndex - 1)
             }
         }
 
@@ -86,10 +91,11 @@ Item {
         }
 
         // -- column 2
-        // always contains input/output label and index shape
         RowLayout {
             spacing: 6
+            Layout.alignment: Qt.AlignVCenter
 
+            // region / output / input label
             Label {
                 font: Stylesheet.fonts.label
                 text: selectedType < 0 ? "Region" : (selectedType > 0 ? "Output" : "Input")
@@ -98,18 +104,21 @@ Item {
                 Layout.alignment: Qt.AlignVCenter
             }
 
+            // line joint
             LineJoint {
-                visible: selectedIndex >= 0
+                opacity: selectedIndex >= 0
                 Layout.alignment: Qt.AlignVCenter
             }
 
+            // counter image
             Image {
-                visible: selectedIndex >= 0
+                opacity: selectedIndex >= 0
 
                 source: selectedType > 0 ? "qrc:/assets/images/output_counter.svg" : "qrc:/assets/images/input_counter.svg"
                 height: 25
                 Layout.alignment: Qt.AlignVCenter
 
+                // counter text
                 Label {
                     font {
                         family: "Archivo"
@@ -119,7 +128,7 @@ Item {
                     width: selectedType > 0 ? 21 : 25
                     height: parent.height
                     anchors.left: parent.left
-                    text: "5"
+                    text: selectedIndex + 1
                     horizontalAlignment: Text.AlignHCenter
                 }
             }
@@ -128,11 +137,12 @@ Item {
         // -- column fill
         Item { Layout.fillWidth: true }
 
+        // -- column 3
         Item {
             Layout.preferredWidth: contentPusher.width
             Layout.preferredHeight: contentPusher.height
 
-            // region selected
+            // visible when >> region selected
             RowLayout {
                 id: contentPusher
                 spacing: 15
@@ -158,7 +168,6 @@ Item {
                     // add new/delete buttons
                     RowLayout {
                         spacing: 10
-                        Layout.alignment: Qt.AlignVCenter
 
                         // delete
                         IOEditButton {
@@ -197,26 +206,32 @@ Item {
                     }
                 }
 
-                // delimiter
+                // line joint
                 LineJoint {
                     vertical: true
                     opacity: 0.5
                     Layout.alignment: Qt.AlignVCenter
                 }
 
-                // contains next button
+                // next region button
                 RegionNavButton {
                     type: RegionNavButton.Type.Next
                     enabled: selectedIndex >= 0 && !addingRegion
+
+                    index: selectedIndex + 2
+                    maxIndex: selectedType < 0 ? 0 : (selectedType ? outputModel.rowCount() : inputModel.rowCount())
+
+                    onClicked: latticeView.switchSelectedRegion(selectedType, selectedIndex + 1)
                 }
             }
 
-            // adding region
+            // visible when >> adding region
             RowLayout {
                 spacing: 15
                 anchors.right: parent.right
                 visible: selectedIndex >= 0 && addingRegion
 
+                // help label
                 Label {
                     font {
                         family: "Archivo"
@@ -227,6 +242,7 @@ Item {
                     text: "Draw an area on the lattice to create a new region."
                 }
 
+                // cancel add button
                 GenericButton {
                     text: "Cancel"
                     activeColor: Stylesheet.colors.white

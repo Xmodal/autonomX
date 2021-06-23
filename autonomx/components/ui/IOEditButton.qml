@@ -9,7 +9,7 @@ IOButton {
     property int editType: 0        // remove = 0; add = 1
 
     Image {
-        source: "qrc:/assets/images/" + (editType ? 'minus' : 'plus') + '.svg'
+        source: "qrc:/assets/images/" + (editType ? 'plus' : 'minus') + '.svg'
         width: 9
         height: 9
         fillMode: Image.PreserveAspectFit

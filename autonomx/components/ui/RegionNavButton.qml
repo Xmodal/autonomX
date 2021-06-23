@@ -10,11 +10,16 @@ RowLayout {
     id: regionNavButton
     property int type: RegionNavButton.Type.Prev
     property bool isNext: type === RegionNavButton.Type.Next
+    property int index: 0
+    property int maxIndex: 0
+
+    // signal hook
+    signal clicked()
 
     spacing: 10
     layoutDirection: isNext ? Qt.LeftToRight : Qt.RightToLeft
 
-    opacity: enabled
+    opacity: enabled && index > 0 && index <= maxIndex
 
     // button
     GenericButton {
@@ -39,12 +44,17 @@ RowLayout {
                 fragmentShader: "qrc:/shaders/icon_button.frag"
             }
         }
+
+        // signal handling
+        onClicked: regionNavButton.clicked()
     }
 
     // index
     Label {
         id: navIndex
         font: Stylesheet.fonts.label
-        text: "6"
+        text: index
+
+        opacity: navButton.hovered ? 1 : 0.7
     }
 }

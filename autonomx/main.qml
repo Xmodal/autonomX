@@ -46,7 +46,7 @@ ApplicationWindow {
     visible: true
     width: 1440
     height: 810
-    title: Qt.application.name + " " + Qt.application.version
+    title: (currentFileName.length > 0 ? "[" + currentFileName + "] " : "") + Qt.application.name + " " + Qt.application.version
 
     function toggleFullscreen() {
         if (visibility === Window.FullScreen) {
@@ -175,13 +175,14 @@ ApplicationWindow {
             Layout.fillHeight: true
             spacing: 0
 
-            GeneratorList {
-                enabled: showGeneratorList
-                visible: enabled
-            }
-
             LatticeView {
                 id: latticeView
+
+                // as overlay
+                GeneratorList {
+                    enabled: showGeneratorList
+                    visible: enabled
+                }
             }
 
             RackList {

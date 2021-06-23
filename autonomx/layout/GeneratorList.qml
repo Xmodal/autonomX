@@ -8,8 +8,8 @@ import "../components/ui"
 Item {
     property bool choicesOpen: false
 
-    Layout.preferredWidth: 320
-    Layout.fillHeight: true
+    width: 320
+    height: parent.height
 
     // background
     Rectangle {

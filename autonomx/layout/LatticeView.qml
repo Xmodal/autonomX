@@ -83,7 +83,10 @@ Item {
     MouseArea {
         id: matrixMouseBg
         anchors.fill: parent
-        onClicked: latticeView.switchSelectedRegion(-1, -1)
+        onClicked: {
+            latticeView.switchSelectedRegion(-1, -1);
+            showGeneratorList = false
+        }
     }
 
     // I/O regions

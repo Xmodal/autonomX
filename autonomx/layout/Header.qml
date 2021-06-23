@@ -108,6 +108,15 @@ ColumnLayout {
                 checkable: true
                 checked: showGeneratorList
                 onCheckedChanged: showGeneratorList = checked
+
+                // right border
+                Rectangle {
+                    width: 1
+                    height: parent.height - 1
+                    color: Stylesheet.colors.white
+                    opacity: 0.25
+                    anchors.right: parent.right
+                }
             }
 
             // "Lattice view" label
@@ -173,7 +182,25 @@ ColumnLayout {
                 checked: showGeneratorSettings
                 onCheckedChanged: showGeneratorSettings = checked
                 enabled: activeGeneratorIndex >= 0
+
+                // left border
+                Rectangle {
+                    width: 1
+                    height: parent.height - 1
+                    color: Stylesheet.colors.white
+                    opacity: 0.25
+                    anchors.left: parent.left
+                }
             }
+        }
+
+        // bottom border
+        Rectangle {
+            width: parent.width
+            height: 1
+            color: Stylesheet.colors.white
+            opacity: 0.25
+            anchors.bottom: parent.bottom
         }
     }
 }

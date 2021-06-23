@@ -66,5 +66,7 @@
         <file>assets/images/output_counter.svg</file>
         <file>stylesheet/Colors.qml</file>
         <file>stylesheet/Fonts.qml</file>
+        <file>components/ui/IOEditButton.qml</file>
+        <file>components/ui/LineJoint.qml</file>
     </qresource>
 </RCC>

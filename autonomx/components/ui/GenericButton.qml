@@ -20,14 +20,7 @@ Button {
 
     contentItem: Label {
         color: pressed ? activeTextColor : Stylesheet.colors.white
-        font {
-            family: "Archivo"
-            weight: Font.Medium
-            pixelSize: 12
-            capitalization: Font.AllUppercase
-        }
-
-        lineHeight: 0.9
+        font: Stylesheet.fonts.label
 
         opacity: hovered || pressed ? 1 : 0.6
         text: genericButton.text

@@ -9,7 +9,7 @@ import "../components/ui"
 Item {
     id: ioToolbar
 
-    property int selectedType: -1           // -1 = none;   0 = input;  1 = output
+    property int selectedType: -1           // 0 = input;  1 = output
     property int selectedIndex: -1          // -1 = none
     property bool addingRegion: false
 
@@ -26,7 +26,7 @@ Item {
         opacity: addingRegion
         layer.enabled: true
         layer.effect: ShaderEffect {
-            property color srcColor: Stylesheet.colors.outputs[0]
+            property color srcColor: Stylesheet.colors[selectedType ? "outputs" : "inputs"][0]
             fragmentShader: "qrc:/shaders/toolbar_grad.frag"
         }
 
@@ -54,17 +54,6 @@ Item {
             Layout.preferredWidth: 50
             Layout.preferredHeight: 20
 
-            // "region" label
-            // visible when no region is selected
-            Label {
-                anchors.fill: parent
-                visible: selectedIndex < 0
-                text: "Region"
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                font: Stylesheet.fonts.label
-            }
-
             // "new" label
             // visible when a region is about to be added (ie. drawn on the board)
             Label {
@@ -77,7 +66,7 @@ Item {
                 verticalAlignment: Text.AlignVCenter
 
                 background: Rectangle {
-                    color: Stylesheet.colors.outputs[0]
+                    color: Stylesheet.colors[selectedType ? "outputs" : "inputs"][0]
                 }
             }
 
@@ -90,10 +79,8 @@ Item {
         }
 
         // delimiter
-        Rectangle {
-            width: 1
-            height: 30
-            color: Stylesheet.colors.white
+        LineJoint {
+            vertical: true
             opacity: 0.5
             Layout.alignment: Qt.AlignVCenter
         }
@@ -103,24 +90,22 @@ Item {
         RowLayout {
             spacing: 6
 
-            visible: selectedIndex >= 0 && !addingRegion
-
             Label {
                 font: Stylesheet.fonts.label
-                text: selectedType > 0 ? "Output" : "Input"
+                text: selectedType < 0 ? "Region" : (selectedType > 0 ? "Output" : "Input")
                 Layout.preferredWidth: 50
                 horizontalAlignment: Text.AlignHCenter
                 Layout.alignment: Qt.AlignVCenter
             }
 
-            Rectangle {
-                width: 30
-                height: 1
-                color: Stylesheet.colors.white
+            LineJoint {
+                visible: selectedIndex >= 0
                 Layout.alignment: Qt.AlignVCenter
             }
 
             Image {
+                visible: selectedIndex >= 0
+
                 source: selectedType > 0 ? "qrc:/assets/images/output_counter.svg" : "qrc:/assets/images/input_counter.svg"
                 height: 25
                 Layout.alignment: Qt.AlignVCenter
@@ -147,78 +132,88 @@ Item {
             Layout.preferredWidth: contentPusher.width
             Layout.preferredHeight: contentPusher.height
 
-            // no region selected
-            RowLayout {
-                spacing: 15
-                visible: selectedIndex < 0
-
-                // delimiter
-                Rectangle {
-                    width: 1
-                    height: 30
-                    color: Stylesheet.colors.white
-                    opacity: 0.5
-                    Layout.alignment: Qt.AlignVCenter
-                }
-
-                // "add new" label
-                Label {
-                    text: "Add new"
-                    width: 85
-                }
-            }
-
             // region selected
             RowLayout {
                 id: contentPusher
                 spacing: 15
+                visible: !addingRegion
 
-                visible: selectedIndex >= 0 && !addingRegion
+                RowLayout {
+                    spacing: 6
 
-                // -- column 3
-                // contains next button
-                RegionNavButton {
-                    type: RegionNavButton.Type.Next
+                    // "Add new" label
+                    Label {
+                        visible: selectedIndex < 0
+                        text: "Add new"
+                        font: Stylesheet.fonts.label
+                        Layout.alignment: Qt.AlignVCenter
+                    }
+
+                    // line joint
+                    LineJoint {
+                        visible: selectedIndex < 0
+                        Layout.alignment: Qt.AlignVCenter
+                    }
+
+                    // add new/delete buttons
+                    RowLayout {
+                        spacing: 10
+                        Layout.alignment: Qt.AlignVCenter
+
+                        // delete
+                        IOEditButton {
+                            visible: selectedIndex >= 0
+                            editType: 0
+                            onClicked: {
+
+                            }
+                        }
+                        // add
+                        IOEditButton {
+                            visible: selectedIndex >= 0
+                            editType: 1
+                            onClicked: {
+
+                            }
+                        }
+
+                        // add input
+                        IOButton {
+                            visible: selectedIndex < 0
+                            type: 0
+                            onClicked: {
+
+                            }
+                        }
+
+                        // add output
+                        IOButton {
+                            visible: selectedIndex < 0
+                            type: 1
+                            onClicked: {
+
+                            }
+                        }
+                    }
                 }
 
                 // delimiter
-                Rectangle {
-                    width: 1
-                    height: 30
-                    color: Stylesheet.colors.white
+                LineJoint {
+                    vertical: true
                     opacity: 0.5
                     Layout.alignment: Qt.AlignVCenter
                 }
 
-                // -- column 4
-                // add new, delete, cancel buttons
-                RowLayout {
-                    spacing: 5
-
-                    GenericButton {
-                        text: "Add new"
-                        activeColor: Stylesheet.colors.white
-                        activeTextColor: Stylesheet.colors.black
-
-                        onClicked: {
-
-                        }
-                    }
-
-                    GenericButton {
-                        text: "Delete"
-                        activeColor: Stylesheet.colors.white
-                        activeTextColor: Stylesheet.colors.black
-
-                        onClicked: {
-
-                        }
-                    }
+                // contains next button
+                RegionNavButton {
+                    type: RegionNavButton.Type.Next
+                    enabled: selectedIndex >= 0 && !addingRegion
                 }
             }
 
-            // region adding
+            // adding region
             RowLayout {
+                spacing: 15
                 anchors.right: parent.right
                 visible: selectedIndex >= 0 && addingRegion
 

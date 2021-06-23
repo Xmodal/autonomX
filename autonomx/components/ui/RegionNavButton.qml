@@ -14,6 +14,8 @@ RowLayout {
     spacing: 10
     layoutDirection: isNext ? Qt.LeftToRight : Qt.RightToLeft
 
+    opacity: enabled
+
     // button
     GenericButton {
         id: navButton

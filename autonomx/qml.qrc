@@ -68,5 +68,6 @@
         <file>stylesheet/Fonts.qml</file>
         <file>components/ui/IOEditButton.qml</file>
         <file>components/ui/LineJoint.qml</file>
+        <file>components/util/ShortcutManager.qml</file>
     </qresource>
 </RCC>

@@ -15,6 +15,7 @@ Item {
     property GeneratorRegionModel inputModel: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).getInputRegionModel()
     property GeneratorRegionModel outputModel: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).getOutputRegionModel()
     property int ppc: 20            // pixels per cell, ie. how wide a cell square is in pixels. this is animated within QML (scaled by the zoom factor)
+
     property QtObject currRegion: QtObject {
         property int type: -1
         property int index: -1
@@ -32,10 +33,19 @@ Item {
 
     // manage selected region
     function switchSelectedRegion(type, index) {
+        // manage bounds
+        if (type >= 0) {
+            let rowCount = type ? outputModel.rowCount() : inputModel.rowCount();
+            if (index < 0 || index >= rowCount) return;
+        }
+
+        // change current region props
         currRegion.type = type;
         currRegion.index = index;
+        // highlight selected region
         regions.rectSelected = currRegion.index >= 0;
 
+        // set lattice mask
         matrix.setMask();
     }
 
@@ -195,5 +205,8 @@ Item {
     IOToolbar {
         id: ioToolbar
         visible: generatorIndex >= 0
+
+        selectedType: currRegion.type
+        selectedIndex: currRegion.index
     }
 }

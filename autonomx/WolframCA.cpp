@@ -122,8 +122,8 @@ void WolframCA::computeIteration(double deltaTime) {
         generate(r);
     }
 
-    // every 50 iterations, currentGeneration increments and iterationNumber resets
-    if(iterationNumber % 50 == 0) {
+    // every 1000 iterations, currentGeneration increments and iterationNumber resets
+    if(iterationNumber % 10 == 0) {
         currentGeneration++;
         iterationNumber = 1;
     }

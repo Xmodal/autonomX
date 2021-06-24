@@ -88,6 +88,7 @@ HEADERS += \
     ComputeEngine.h \
     CursorOverrider.h \
     Facade.h \
+    GOLPatternType.h \
     GameOfLife.h \
     Generator.h \
     GeneratorFacade.h \

@@ -42,7 +42,7 @@ private:
     double* cellValues;
 
     // properties and rules; default rule set to 90
-    int rule = 102;
+    int rule = 90;
 
     //random seed property
     double randSeed = 0.0;

@@ -40,6 +40,7 @@
                 "label": "Pattern Type",
                 "propName": "GOLPattern",
                 "type": "select",
+                 "enumName": "GOLPatternType",
                 "default": 4
                 }
             ]
@@ -55,5 +56,15 @@
             "title": "Parameter help",
             "html_path": "help/GameOfLife_params.html"
         }
+    ],
+
+    "enumLabels": {
+    "GOLPatternType": [
+    "Random",
+    "Glider",
+    "SpaceShip",
+    "RPentoMino",
+    "SpaceShip3"
     ]
+}
 }

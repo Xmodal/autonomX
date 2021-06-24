@@ -96,6 +96,8 @@ int main(int argc, char *argv[]) {
     qmlRegisterUncreatableType<WolframCA>("ca.hexagram.xmodal.autonomx", 1, 0, "WolframCA", "Cannot instanciate WolframCA.");
     qmlRegisterUncreatableType<GameOfLife>("ca.hexagram.xmodal.autonomx", 1, 0, "GameOfLife", "Cannot instanciate Game Of Life.");
     qmlRegisterUncreatableMetaObject(NeuronTypeNS::staticMetaObject, "ca.hexagram.xmodal.autonomx", 1, 0, "NeuronType", "Cannot instanciate NeuronType.");
+    qmlRegisterUncreatableMetaObject(GOLType::staticMetaObject, "ca.hexagram.xmodal.autonomx", 1, 0, "GOLPatternType", "Cannot instanciate GOLType.");
+
 
 
     // create initial generators

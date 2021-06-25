@@ -23,8 +23,9 @@
 class WolframCA : public Generator
 {
     Q_OBJECT
+
     Q_PROPERTY(int rule READ getRule WRITE writeRule NOTIFY ruleChanged)
-    Q_PROPERTY(double timeScale READ getTimeScale WRITE writeTimeScale NOTIFY timeScaleChanged)
+    Q_PROPERTY(int timeScale READ getTimeScale WRITE writeTimeScale NOTIFY timeScaleChanged)
     Q_PROPERTY(double randSeed READ getRandSeed WRITE writeRandSeed NOTIFY randSeedChanged)
 
 private:
@@ -45,13 +46,13 @@ private:
     int rule = 90;
 
     //random seed property
-    double randSeed = 0.0;
+    double randSeed = false;
 
     //random generator to initialize cells
     std::mt19937 randomGenerator;
 
     // timeScale variable
-    double timeScale = 30.0 / 1000.0;
+    int timeScale = 20;
 
     // global iteration counter
     int iterationNumber;

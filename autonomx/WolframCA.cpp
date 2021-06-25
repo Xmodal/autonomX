@@ -62,7 +62,7 @@ void WolframCA::initialize() {
 
    // user choice: random starting seed or no?
    // if no random starting seed (default choice)
-   if (getRandSeed() == 0) {
+   if (getRandSeed() == false) {
        // middle cell on first line is starting seed
        cells[latticeWidth / 2] = 1;
    }
@@ -71,7 +71,7 @@ void WolframCA::initialize() {
    // TODO:
    // random seed bug
    // see below for temp fix and issue
-   else {
+   else if (getRandSeed()==true) {
        // initialize a random cell as starting cell
        for(int i = 0; i < (latticeHeight * latticeWidth); i++) {
            if (i >= latticeWidth) {
@@ -79,8 +79,9 @@ void WolframCA::initialize() {
            }
            else {
                // generate a random number magic b/w 0-1 and initialize to 1 if magic>0.5 o/w magic -> 0
-                magic = (float) rand() / RAND_MAX;
-               if (magic > getRandSeed()) {
+               magic = (float) rand() / RAND_MAX;
+               //if (magic > getRandSeed()) {
+               if (magic > 0.5) {
                    cells[i] = 1;
                    seedChosen = true;
                }
@@ -98,11 +99,12 @@ void WolframCA::initialize() {
        // otherwise, as the random seed approaches 1, the likelihood that no cell will be initialized increases
        // at max value (1) it is 100% certain that no seed will be selected
        // no seed selected = a blank lattice will be generated -> essentially breaks the generator until reset
-       if(seedChosen == false) {
+
+       /*if(seedChosen == false) {
            magic = (float) rand() / RAND_MAX;
            qDebug() << "no cell was selected normally, temp fix triggered." << endl << "random cell selected for seed: " << (int)(magic * latticeWidth);
            cells[(int)(magic * latticeWidth)] = 1;
-       }
+       }*/
    }
 
 
@@ -122,8 +124,10 @@ void WolframCA::computeIteration(double deltaTime) {
         generate(r);
     }
 
+    int timeScale = getTimeScale();
+
     // every 1000 iterations, currentGeneration increments and iterationNumber resets
-    if(iterationNumber % 10 == 0) {
+    if(iterationNumber % (100-timeScale+1) == 0) {
         currentGeneration++;
         iterationNumber = 1;
     }

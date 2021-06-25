@@ -126,13 +126,13 @@ void GameOfLife::computeIteration(double deltaTime)
               // int index_below = (i+1) % latticeWidth + j * latticeWidth;
 
                // finding the total value of all the neighbors near to the main cell
-//               int neighbors = cells[index_above-1] + cells[index_above] + cells[index_above+1]
-//                       + cells[index-1] + cells[index+1]
-//                       + cells[index_below-1] + cells[index_below] + cells[index_below+1];
+               int neighbors = cells[index_above-1] + cells[index_above] + cells[index_above+1]
+                      + cells[index-1] + cells[index+1]
+                    + cells[index_below-1] + cells[index_below] + cells[index_below+1];
 
-               int neighbors = cells[index - latticeWidth - 1] + cells[index - latticeWidth] + cells[index - latticeWidth + 1]
+         /*      int neighbors = cells[index - latticeWidth - 1] + cells[index - latticeWidth] + cells[index - latticeWidth + 1]
                        + cells[index - 1] + cells[index] + cells[index + 1]
-                       + cells[index + latticeWidth - 1] + cells[index + latticeWidth] + cells[index + latticeWidth + 1];
+                       + cells[index + latticeWidth - 1] + cells[index + latticeWidth] + cells[index + latticeWidth + 1]; */
 
            /*   // declare the cell alive or dead based on the rule below
                 if      ((cells[index] == 1) && (neighbors <  2)) cells[index] = 0;

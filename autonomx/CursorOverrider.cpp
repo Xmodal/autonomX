@@ -15,10 +15,17 @@
 
 #include "CursorOverrider.h"
 #include <QDebug>
+#include <QPixmap>
 
 CursorOverrider::CursorOverrider(QGuiApplication* app, QObject* parent) : QObject(parent=nullptr)
 {
     this->app = app;
+    this->crossbeam = QCursor(QPixmap{":/assets/images/crossbeam.png"});
+}
+
+void CursorOverrider::overrideWithBeam()
+{
+    app->setOverrideCursor(crossbeam);
 }
 
 void CursorOverrider::overrideCursor(Qt::CursorShape shape)

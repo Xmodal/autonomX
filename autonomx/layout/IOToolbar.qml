@@ -9,9 +9,9 @@ import "../components/ui"
 Item {
     id: ioToolbar
 
-    property int selectedType: -1           // 0 = input;  1 = output
-    property int selectedIndex: -1          // -1 = none
-    property bool addingRegion: false
+    property int selectedType: latticeView.currRegion.type            // 0 = input;  1 = output
+    property int selectedIndex: latticeView.currRegion.index          // -1 = none
+    property bool addingRegion: latticeView.currRegion.adding
 
     anchors {
         top: parent.top
@@ -19,6 +19,12 @@ Item {
         right: parent.right
     }
     height: 60
+
+    // event blocker
+    MouseArea {
+        anchors.fill: parent
+        hoverEnabled: true
+    }
 
     // background
     Item {
@@ -30,12 +36,13 @@ Item {
             fragmentShader: "qrc:/shaders/toolbar_grad.frag"
         }
 
-        Behavior on opacity {
-            NumberAnimation {
-                duration: 1000
-                easing.type: Easing.InOutCirc
-            }
-        }
+        // TODO: animations :)
+//        Behavior on opacity {
+//            NumberAnimation {
+//                duration: 1000
+//                easing.type: Easing.InOutCirc
+//            }
+//        }
     }
 
     // content
@@ -190,18 +197,14 @@ Item {
                         IOButton {
                             visible: selectedIndex < 0
                             type: 0
-                            onClicked: {
-
-                            }
+                            onClicked: switchSelectedRegion(0, inputModel.rowCount(), true)
                         }
 
                         // add output
                         IOButton {
                             visible: selectedIndex < 0
                             type: 1
-                            onClicked: {
-
-                            }
+                            onClicked: switchSelectedRegion(1, outputModel.rowCount(), true)
                         }
                     }
                 }
@@ -221,7 +224,7 @@ Item {
                     index: selectedIndex + 2
                     maxIndex: selectedType < 0 ? 0 : (selectedType ? outputModel.rowCount() : inputModel.rowCount())
 
-                    onClicked: latticeView.switchSelectedRegion(selectedType, selectedIndex + 1)
+                    onClicked: switchSelectedRegion(selectedType, selectedIndex + 1)
                 }
             }
 
@@ -248,9 +251,7 @@ Item {
                     activeColor: Stylesheet.colors.white
                     activeTextColor: Stylesheet.colors.black
 
-                    onClicked: {
-
-                    }
+                    onClicked: switchSelectedRegion(-1, -1)
                 }
             }
         }

@@ -1,7 +1,7 @@
 import QtQuick 2.11
 
 Item {
-    // Shortcuts:
+    // app state
     Shortcut {
         sequence: "Esc"
         onActivated: toggleFullscreen()
@@ -10,6 +10,8 @@ Item {
         sequences: [StandardKey.Quit, "Ctrl+Q"]
         onActivated: quitThisApp()
     }
+
+    // navigation
     Shortcut {
         sequence: "PgUp"
         onActivated: {

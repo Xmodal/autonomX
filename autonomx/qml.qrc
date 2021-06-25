@@ -68,6 +68,8 @@
         <file>stylesheet/Fonts.qml</file>
         <file>components/ui/IOEditButton.qml</file>
         <file>components/ui/LineJoint.qml</file>
+        <file>assets/images/crossbeam.png</file>
         <file>components/util/ShortcutManager.qml</file>
+        <file>components/ui/DummyRegion.qml</file>
     </qresource>
 </RCC>

@@ -10,12 +10,19 @@ Rectangle {
     property bool selected: type === latticeView.currRegion.type && index === latticeView.currRegion.index
     property bool dragActive: dragArea.drag.active
     property bool inEdit: false
-    property int latticeWidth
-    property int latticeHeight
-    property int type                       // 0 = input; 1 = output
-    property int resizeHitbox: 5            // zone padding
+
+    // only changed by type=-1 region
+    property bool allowUpdatingBounds: true
+
+    property int latticeWidth: regions.latticeWidth
+    property int latticeHeight: regions.latticeHeight
+    property int ppc: latticeView.ppc
+
+    property int type: 0                        // -1 = add; 0 = input; 1 = output
+    property int resizeHitbox: 5                // zone padding
     property int area
-    property int ppc
+
+    property color currColor: type < 0 ? Stylesheet.colors.white : Stylesheet.colors[type == 0 ? "inputs" : "outputs"][index % Stylesheet.colors.variations]
 
     antialiasing: true
 
@@ -33,8 +40,11 @@ Rectangle {
         width = width;
         height = height;
 
-        area = rect.width * rect.height;
-        area = area;
+        // full priority to added region
+        if (type < 0)
+            area = 0.00001;
+        else
+            area = rect.width * rect.height;
 
         // assign connections once region is created
         // (for some reason, having them initialized pre-completion
@@ -122,16 +132,16 @@ Rectangle {
     // external region boundary
     color: "transparent"
     border {
-        color: Stylesheet.colors[type == 0 ? "inputs" : "outputs"][index % Stylesheet.colors.variations]
-        width: 1
+        color: currColor
+        width: regions.rectSelected && selected ? 2 : 1
     }
     // border opacity
-    opacity: regions.rectSelected && !selected && !dragArea.containsMouse ? (latticeView.currRegion.type !== type ? 0.4 : 0.6) : 1
+    opacity: regions.rectSelected && !(type < 0) && !selected && !dragArea.containsMouse ? (latticeView.currRegion.type !== type ? 0.3 : 0.5) : 1
 
     // fill rectangle
     Rectangle {
         anchors.fill: parent
-        color: Stylesheet.colors[type == 0 ? "inputs" : "outputs"][index % Stylesheet.colors.variations]
+        color: currColor
         opacity: dragArea.containsMouse && (!selected || inEdit) ? 0.5 : (1.0 - Math.pow(1.0 - intensity, 3)) * 0.8
     }
 
@@ -155,9 +165,9 @@ Rectangle {
         width: ppc; height: ppc
         anchors.left: parent.right
         anchors.top: parent.top
-        color: Stylesheet.colors[type == 0 ? "inputs" : "outputs"][index % Stylesheet.colors.variations]
+        color: currColor
 
-        opacity: dragArea.containsMouse || selected ? 1 : 0
+        opacity: dragArea.containsMouse && !(type < 0) || selected ? 1 : 0
 
         Label {
             text: index + 1

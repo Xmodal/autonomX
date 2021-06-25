@@ -19,6 +19,7 @@ Item {
     property QtObject currRegion: QtObject {
         property int type: -1
         property int index: -1
+        property bool adding: false
     }
 
     property alias inputsVisible: showInputsBtn.checked
@@ -32,9 +33,11 @@ Item {
     z: -1
 
     // manage selected region
-    function switchSelectedRegion(type, index) {
+    function switchSelectedRegion(type, index, adding = false) {
+        currRegion.adding = adding;
+
         // manage bounds
-        if (type >= 0) {
+        if (type >= 0 && !adding) {
             let rowCount = type ? outputModel.rowCount() : inputModel.rowCount();
             if (index < 0 || index >= rowCount) return;
         }
@@ -42,11 +45,15 @@ Item {
         // change current region props
         currRegion.type = type;
         currRegion.index = index;
+
         // highlight selected region
         regions.rectSelected = currRegion.index >= 0;
 
         // set lattice mask
-        matrix.setMask();
+        if (!adding)
+            matrix.setMask();
+        else
+            matrix.setMask(Qt.rect(0, 0, 0, 0));
     }
 
     Rectangle {
@@ -76,8 +83,8 @@ Item {
 
             // otherwise, retrieve automatically from global properties
             // TODO: clean up function calls so that this block can be removed, instead directly using arguments every time
-            if (currRegion.type === 0) element = inputModel.at(currRegion.index);
-            else if (currRegion.type === 1) element = outputModel.at(currRegion.index);
+            if (currRegion.type === 0 && currRegion.index < inputModel.rowCount()) element = inputModel.at(currRegion.index);
+            else if (currRegion.type === 1 && currRegion.index < outputModel.rowCount()) element = outputModel.at(currRegion.index);
             mask = Qt.vector4d(element.rect.x, element.rect.y, element.rect.width, element.rect.height);
         }
 
@@ -95,7 +102,7 @@ Item {
         anchors.fill: parent
         onClicked: {
             latticeView.switchSelectedRegion(-1, -1);
-            showGeneratorList = false
+            showGeneratorList = false;
         }
     }
 
@@ -110,8 +117,8 @@ Item {
 
         width: ppc * latticeWidth
         height: ppc * latticeHeight
-        x: parent.width/2 - width/2
-        y: parent.height/2 - height/2
+        x: latticeView.width/2 - width/2
+        y: latticeView.height/2 - height/2
 
         // inputs
         Repeater {
@@ -119,10 +126,6 @@ Item {
             Region {
                 type: 0
                 visible: inputsVisible
-
-                latticeWidth: regions.latticeWidth
-                latticeHeight: regions.latticeHeight
-                ppc: latticeView.ppc
             }
         }
         // outputs
@@ -131,23 +134,29 @@ Item {
             Region {
                 type: 1
                 visible: outputsVisible
-
-                latticeWidth: regions.latticeWidth
-                latticeHeight: regions.latticeHeight
-                ppc: latticeView.ppc
             }
+        }
+
+        // dummy added region
+        DummyRegion {
+            id: dummyRegion
+            visible: currRegion.adding && crossbeamArea.containsMouse
+
+            // start/end corner anchors
+            // bindings altered by crossbeamArea > onPressedChanged
+            start: { crossbeamArea.mouseToCoords() }
+            end: { crossbeamArea.mouseToCoords() }
         }
     }
 
     // visible toggles
     ColumnLayout {
         id: displayTool
-        visible: !(generatorIndex < 0)
+        visible: !(generatorIndex < 0) && !currRegion.adding
+        spacing: 10
 
         anchors.left: parent.left
-        spacing: 10
         anchors.verticalCenter: parent.verticalCenter
-
         anchors.leftMargin: 20
 
         Image {
@@ -201,12 +210,70 @@ Item {
         opacity: 0.4
     }
 
+    // region creation area
+    MouseArea {
+        id: crossbeamArea
+
+        // start/end mouse positions
+        // determines the upper-left and down-right corners of a region
+        // TODO: ability to create a region in negatives axes as well
+        property point mouseStartPos
+        property point mouseEndPos
+
+        property bool outOfBounds: false
+
+        // compute mouse to lattice coords
+        // see DummyRegion above for usage
+        function mouseToCoords() {
+            return Qt.point(
+               Math.floor((crossbeamArea.mouseX - regions.x) / ppc),
+               Math.floor((crossbeamArea.mouseY - regions.y) / ppc));
+        }
+
+        anchors.fill: parent
+        enabled: currRegion.adding
+        visible: enabled
+        hoverEnabled: true
+
+        // manage crossbeam cursor
+        onContainsMouseChanged: {
+            if (containsMouse)
+                return overrideWithBeam();
+            restoreCursor();
+        }
+        onEnabledChanged: restoreCursor()
+
+        // manage press drag actions
+        onPressedChanged: {
+            if (pressed) {
+                // don't do anything if initial selection is out of bounds;
+                // also display a warning message, maybe
+                if (dummyRegion.start.x < 0 || dummyRegion.start.x >= regions.latticeWidth || dummyRegion.start.y < 0 || dummyRegion.start.y >= regions.latticeHeight)
+                    return outOfBounds = true;
+
+                // unbind start position
+                dummyRegion.start = dummyRegion.start;
+                // lock inside bounds
+                dummyRegion.dragging = true;
+            } else {
+                // don't do anything when out of bounds
+                if (outOfBounds) return outOfBounds = false;
+
+                // create new region based on new coordinates
+                // TODO
+                // console.log(dummyRegion.area);
+
+                // re-bind start/end position
+                dummyRegion.start = Qt.binding(mouseToCoords)
+                // unlock bounds
+                dummyRegion.dragging = false;
+            }
+        }
+    }
+
     // I/O toolbar
     IOToolbar {
         id: ioToolbar
         visible: generatorIndex >= 0
-
-        selectedType: currRegion.type
-        selectedIndex: currRegion.index
     }
 }

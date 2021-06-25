@@ -48,10 +48,10 @@ void OscEngine::connectReceiver(int id) {
         qDebug() << "connectReceiver (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id;
     }
 
-    if(!oscReceivers.contains(id)) {
-        throw std::runtime_error("osc receiver does not exist");
-    }
-    QSharedPointer<OscReceiver> receiver = oscReceivers.value(id);
+//    if(!oscReceivers.contains(id)) {
+//        throw std::runtime_error("osc receiver does not exist");
+//    }
+//    QSharedPointer<OscReceiver> receiver = oscReceivers.value(id);
 
     QObject::connect(receiver.data(), &OscReceiver::messageReceived, this, [this, id](const QString& oscAddress, const QVariantList& message){
         receiveOscDataHandler(id, oscAddress, message);
@@ -73,7 +73,8 @@ void OscEngine::startGeneratorOsc(QSharedPointer<Generator> generator) {
     QString addressReceiver = generator->getOscInputAddress();
     QString addressSenderHost = generator->getOscOutputAddressHost();
     QString addressSenderTarget = generator->getOscOutputAddressTarget();
-    int portReceiver = generator->getOscInputPort();
+//    int portReceiver = generator->getOscInputPort();
+    int portReceiver = 6668;
     int portSender = generator->getOscOutputPort();
 
     createOscReceiver(id, addressReceiver, portReceiver);
@@ -141,9 +142,9 @@ void OscEngine::receiveOscDataHandler(int id, const QString& oscAddress, const Q
         qDebug() << "receiveOscDataHandler (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\taddress = " << oscAddress << "\tmessage = " << message;
     }
 
-    if(!oscReceivers.contains(id)) {
-        throw std::runtime_error("osc receiver does not exist");
-    }
+//    if(!oscReceivers.contains(id)) {
+//        throw std::runtime_error("osc receiver does not exist");
+//    }
     QString oscAddressExpected = oscReceiverAddresses.value(id);
     if(oscAddress == oscAddressExpected) {
         // message received with right address
@@ -180,12 +181,18 @@ void OscEngine::createOscReceiver(int id, QString address, int port) {
         qDebug() << "createOscReceiver (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\taddress = " << address << "\tport = " << port;
     }
 
-    if(oscReceivers.contains(id)) {
-        throw std::runtime_error("osc receiver already exists");
+//    if(oscReceivers.contains(id)) {
+//        throw std::runtime_error("osc receiver already exists");
+//    }
+
+    if(createOscReceiverBoolean) {
+        receiver = QSharedPointer<OscReceiver>(new OscReceiver(port));
+
+        createOscReceiverBoolean = false;
     }
-    QSharedPointer<OscReceiver> receiver = QSharedPointer<OscReceiver>(new OscReceiver(port));
+
     // update hash maps
-    oscReceivers.insert(id, receiver);
+//    oscReceivers.insert(id, receiver);
     oscReceiverAddresses.insert(id, address);
     // connect receiver
     connectReceiver(id);
@@ -200,11 +207,11 @@ void OscEngine::deleteOscReceiver(int id) {
         qDebug() << "deleteOscReceiver (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id;
     }
 
-    if(!oscReceivers.contains(id)) {
-        throw std::runtime_error("osc receiver does not exist");
-    }
+//    if(!oscReceivers.contains(id)) {
+//        throw std::runtime_error("osc receiver does not exist");
+//    }
     // delete from hash maps
-    oscReceivers.remove(id);
+//    oscReceivers.remove(id);
     oscReceiverAddresses.remove(id);
 }
 
@@ -217,12 +224,12 @@ void OscEngine::updateOscReceiverAddress(int id, QString address) {
         qDebug() << "updateOscReceiverAddress (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\taddress = " << address;
     }
 
-    if(!oscReceivers.contains(id)) {
-        // we allow this to happen without an exception because this can occur when deleting a generator.
-        // there is a race condition between the deletion of the Generator and its associated OscReceiver when AppModel orders their respective threads (computeThread and oscThread) to delete them later.
-        // this makes it possible to attempt to edit the properties of an OscReceiver that doesn't exist.
-        return;
-    }
+//    if(!oscReceivers.contains(id)) {
+//        // we allow this to happen without an exception because this can occur when deleting a generator.
+//        // there is a race condition between the deletion of the Generator and its associated OscReceiver when AppModel orders their respective threads (computeThread and oscThread) to delete them later.
+//        // this makes it possible to attempt to edit the properties of an OscReceiver that doesn't exist.
+//        return;
+//    }
     oscReceiverAddresses.insert(id, address);
 }
 
@@ -235,13 +242,14 @@ void OscEngine::updateOscReceiverPort(int id, int port) {
         qDebug() << "updateOscReceiverPort (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\tport = " << port;
     }
 
-    if(!oscReceivers.contains(id)) {
-        // we allow this to happen without an exception because this can occur when deleting a generator.
-        // there is a race condition between the deletion of the Generator and its associated OscReceiver when AppModel orders their respective threads (computeThread and oscThread) to delete them later.
-        // this makes it possible to attempt to edit the properties of an OscReceiver that doesn't exist.
-        return;
-    }
-    oscReceivers.value(id)->setPort(port);
+//    if(!oscReceivers.contains(id)) {
+//        // we allow this to happen without an exception because this can occur when deleting a generator.
+//        // there is a race condition between the deletion of the Generator and its associated OscReceiver when AppModel orders their respective threads (computeThread and oscThread) to delete them later.
+//        // this makes it possible to attempt to edit the properties of an OscReceiver that doesn't exist.
+//        return;
+//    }
+//    oscReceivers.value(id)->setPort(port);
+    receiver->setPort(port);
 }
 
 void OscEngine::createOscSender(int id, QString addressHost, QString addressTarget, int port) {

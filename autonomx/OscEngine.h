@@ -31,8 +31,11 @@ public:
 private:
     QHash<int, QSharedPointer<OscSender>> oscSenders;
     QHash<int, QString> oscSenderAddresses;
-    QHash<int, QSharedPointer<OscReceiver>> oscReceivers;
+//    QHash<int, QSharedPointer<OscReceiver>> oscReceivers;
     QHash<int, QString> oscReceiverAddresses;
+    QString oscReceiverAddress = "127.0.0.1";
+    bool createOscReceiverBoolean = true;
+    QSharedPointer<OscReceiver> receiver;
 
     // connects OscReceiver::messageReceived to OscEngine::receiveOscDataHandler through a lambda that captures the generator id
     void connectReceiver(int id);

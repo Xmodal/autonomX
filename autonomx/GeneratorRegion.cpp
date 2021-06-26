@@ -54,9 +54,8 @@ void GeneratorRegion::readJson(const QJsonObject &json)
 {
     // create new rect from JSON
     QRect newRect(json["x"].toInt(), json["y"].toInt(), json["w"].toInt(), json["h"].toInt());
-
-    // write to both GeneratorRegionSet and GeneratorRegionModel
-    writeMirroredRect(newRect);
+    // write + signal to GeneratorRegionSet
+    writeRect(newRect);
 }
 
 void GeneratorRegion::writeJson(QJsonObject &json) const
@@ -68,34 +67,7 @@ void GeneratorRegion::writeJson(QJsonObject &json) const
     json["h"] = rect.height();
 }
 
-void GeneratorRegion::writeSilentRect(QRect rect) {
-    if(this->rect == rect) {
-        return;
-    }
-
-    this->rect = rect;
-    emit rectChanged(rect);
-}
-
-void GeneratorRegion::writeSilentIntensity(double intensity) {
-    if(this->intensity == intensity) {
-        return;
-    }
-
-    this->intensity = intensity;
-    emit intensityChanged(intensity);
-}
-
-void GeneratorRegion::writeSilentType(int type) {
-    if(this->type == type) {
-        return;
-    }
-
-    this->type = type;
-    emit typeChanged(type);
-}
-
-void GeneratorRegion::writeMirroredRect(QRect rect) {
+void GeneratorRegion::writeRect(QRect rect) {
     if(this->rect == rect) {
         return;
     }
@@ -105,7 +77,7 @@ void GeneratorRegion::writeMirroredRect(QRect rect) {
     emit valueChanged("rect", QVariant(rect));
 }
 
-void GeneratorRegion::writeMirroredIntensity(double intensity) {
+void GeneratorRegion::writeIntensity(double intensity) {
     if(this->intensity == intensity) {
         return;
     }
@@ -115,7 +87,7 @@ void GeneratorRegion::writeMirroredIntensity(double intensity) {
     emit valueChanged("intensity", QVariant(intensity));
 }
 
-void GeneratorRegion::writeMirroredType(int type) {
+void GeneratorRegion::writeType(int type) {
     if(this->type == type) {
         return;
     }

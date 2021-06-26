@@ -45,7 +45,6 @@ SOURCES += \
     GeneratorMetaModel.cpp \
     GeneratorModel.cpp \
     GeneratorRegion.cpp \
-    GeneratorRegionModel.cpp \
     GeneratorRegionSet.cpp \
     Izhikevich.cpp \
     OscEngine.cpp \
@@ -98,7 +97,6 @@ HEADERS += \
     GeneratorMetaModel.h \
     GeneratorModel.h \
     GeneratorRegion.h \
-    GeneratorRegionModel.h \
     GeneratorRegionSet.h \
     Izhikevich.h \
     NeuronType.h \

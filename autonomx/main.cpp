@@ -29,8 +29,6 @@
 #include "GeneratorField.h"
 #include "GeneratorFacade.h"
 #include "GeneratorModel.h"
-#include "GeneratorRegion.h"
-#include "GeneratorRegionModel.h"
 #include "GeneratorLattice.h"
 #include "GeneratorMetaModel.h"
 #include "SpikingNet.h"
@@ -83,7 +81,7 @@ int main(int argc, char *argv[]) {
     qmlRegisterUncreatableType<Generator>("ca.hexagram.xmodal.autonomx", 1, 0, "Generator", "Cannot instanciate Generator.");
     qmlRegisterUncreatableType<GeneratorFacade>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorFacade", "Cannot instanciate GeneratorFacade.");
     qmlRegisterUncreatableType<GeneratorRegion>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorRegion", "Cannot instanciate GeneratorRegion.");
-    qmlRegisterUncreatableType<GeneratorRegionModel>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorRegionModel", "Cannot instanciate GeneratorRegionModel.");
+    qmlRegisterUncreatableType<GeneratorRegionSet>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorRegionSet", "Cannot instanciate GeneratorRegionSet.");
     qmlRegisterUncreatableType<GeneratorMeta>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorMeta", "Cannot instanciate GeneratorMeta.");
     qmlRegisterType<GeneratorLattice>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorLattice");
     qRegisterMetaType<QSharedPointer<Generator>>();

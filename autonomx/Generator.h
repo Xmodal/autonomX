@@ -134,6 +134,9 @@ public:
     virtual void initialize() = 0;
     void resetParameters();
 
+    // this initializes the I/O region sets as default input/output configurations
+    void initializeRegionSets();
+
     // this updates the lattice / region from the corresponding region / lattice. this is called before / after the call to computeIteration from ComputeEngine
     void applyInputRegion();
     void applyOutputRegion();

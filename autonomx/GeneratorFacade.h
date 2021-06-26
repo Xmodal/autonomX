@@ -20,7 +20,6 @@
 #include <QSharedPointer>
 
 #include "Generator.h"
-#include "GeneratorRegionModel.h"
 
 class GeneratorFacade : public QQmlPropertyMap
 {
@@ -29,14 +28,14 @@ public:
     GeneratorFacade(Generator *alias);
     ~GeneratorFacade();
 
-    Q_INVOKABLE GeneratorRegionModel* getInputRegionModel();
-    Q_INVOKABLE GeneratorRegionModel* getOutputRegionModel();
+    Q_INVOKABLE GeneratorRegionSet* getInputRegionModel();
+    Q_INVOKABLE GeneratorRegionSet* getOutputRegionModel();
 
     Q_INVOKABLE void initialize();
     Q_INVOKABLE void resetParameters();
 private:
-    QSharedPointer<GeneratorRegionModel> inputRegionModel;
-    QSharedPointer<GeneratorRegionModel> outputRegionModel;
+//    QSharedPointer<GeneratorRegionModel> inputRegionModel;
+//    QSharedPointer<GeneratorRegionModel> outputRegionModel;
     bool flagDebug = false;
 
     Generator* generator;

@@ -12,8 +12,8 @@ Item {
 
     // props
     property int generatorIndex: window.activeGeneratorIndex
-    property GeneratorRegionModel inputModel: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).getInputRegionModel()
-    property GeneratorRegionModel outputModel: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).getOutputRegionModel()
+    property GeneratorRegionSet inputModel: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).getInputRegionModel()
+    property GeneratorRegionSet outputModel: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).getOutputRegionModel()
     property int ppc: 20            // pixels per cell, ie. how wide a cell square is in pixels. this is animated within QML (scaled by the zoom factor)
 
     property QtObject currRegion: QtObject {
@@ -260,13 +260,17 @@ Item {
                 if (outOfBounds) return outOfBounds = false;
 
                 // create new region based on new coordinates
-                // TODO
-                // console.log(dummyRegion.area);
+                if (currRegion.type === 0) {
+                    inputModel.addRegion(dummyRegion.area);
+                } else {
+                    outputModel.addRegion(dummyRegion.area);
+                }
 
                 // re-bind start/end position
                 dummyRegion.start = Qt.binding(mouseToCoords)
                 // unlock bounds
                 dummyRegion.dragging = false;
+                // go out
             }
         }
     }

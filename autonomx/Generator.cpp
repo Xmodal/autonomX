@@ -337,13 +337,13 @@ void Generator::readJson(const QJsonObject &json)
 
     // inputs
     for (int i = 0; i < inputs.size(); i++) {
-        GeneratorRegion *input = inputRegionSet->getRegion(i);
+        GeneratorRegion *input = inputRegionSet->at(i);
         input->readJson(inputs[i].toObject());
     }
 
     // outputs
     for (int i = 0; i < outputs.size(); i++) {
-        GeneratorRegion *output = outputRegionSet->getRegion(i);
+        GeneratorRegion *output = outputRegionSet->at(i);
         output->readJson(outputs[i].toObject());
     }
 }
@@ -387,8 +387,8 @@ void Generator::writeJson(QJsonObject &json) const
     QJsonArray outputRegions;
 
     // scan thru input regions
-    for (int i = 0; i < inputRegionSet->getRegionCount(); i++) {
-        GeneratorRegion* region = inputRegionSet->getRegion(i);
+    for (int i = 0; i < inputRegionSet->rowCount(); i++) {
+        GeneratorRegion* region = inputRegionSet->at(i);
 
         // write to obj
         QJsonObject obj;
@@ -399,8 +399,8 @@ void Generator::writeJson(QJsonObject &json) const
     }
 
     // scan thru output regions
-    for (int i = 0; i < outputRegionSet->getRegionCount(); i++) {
-        GeneratorRegion* region = outputRegionSet->getRegion(i);
+    for (int i = 0; i < outputRegionSet->rowCount(); i++) {
+        GeneratorRegion* region = outputRegionSet->at(i);
 
         // write to obj
         QJsonObject obj;
@@ -454,6 +454,12 @@ void Generator::resetParameters()
     // re-initialize
     // probably unnecessary, some properties can call this when rewritten
     initialize();
+}
+
+void Generator::initializeRegionSets()
+{
+    inputRegionSet->initialize();
+    outputRegionSet->initialize();
 }
 
 void Generator::updateValue(const QString &key, const QVariant &value) {
@@ -558,8 +564,8 @@ void Generator::unlockLatticeDataMutex() {
 
 void Generator::applyInputRegion() {
     // iterate over input regions
-    for(int i = 0; i < inputRegionSet->getRegionCount(); i++) {
-        GeneratorRegion* region = inputRegionSet->getRegion(i);
+    for(int i = 0; i < inputRegionSet->rowCount(); i++) {
+        GeneratorRegion* region = inputRegionSet->at(i);
 
         int xMax = region->getRect().x() + region->getRect().width();
         int yMax = region->getRect().y() + region->getRect().height();
@@ -575,8 +581,8 @@ void Generator::applyInputRegion() {
 
 void Generator::applyOutputRegion() {
     // iterate over output regions
-    for(int i = 0; i < inputRegionSet->getRegionCount(); i++) {
-        GeneratorRegion* region = outputRegionSet->getRegion(i);
+    for(int i = 0; i < outputRegionSet->rowCount(); i++) {
+        GeneratorRegion* region = outputRegionSet->at(i);
 
         int xMax = region->getRect().x() + region->getRect().width();
         int yMax = region->getRect().y() + region->getRect().height();
@@ -594,7 +600,7 @@ void Generator::applyOutputRegion() {
         sum /= (double) (region->getRect().width() * region->getRect().height());
 
         // write to region intensity
-        region->writeMirroredIntensity(sum);
+        region->writeIntensity(sum);
     }
 }
 

@@ -55,7 +55,7 @@ void ComputeEngine::receiveOscData(int id, QVariantList data) {
     int argumentsTotal = data.size();
     int argumentsValid = 0;
 
-    for(int i = 0; i < generator->getInputRegionSet()->getRegionCount(); i++) {
+    for(int i = 0; i < generator->getInputRegionSet()->rowCount(); i++) {
         // set default to 0
         double input = 0;
         // check that the message's list is long enough
@@ -68,7 +68,7 @@ void ComputeEngine::receiveOscData(int id, QVariantList data) {
             }
         }
         // write to input
-        generator->getInputRegionSet()->getRegion(i)->writeMirroredIntensity(input);
+        generator->getInputRegionSet()->at(i)->writeIntensity(input);
     }
 
     // alerts loop that new value was received via inputOSC and can be reflected in lattice
@@ -162,15 +162,15 @@ void ComputeEngine::loop() {
     // write to history
     for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
         double historyLatest = 0;
-        for(int i = 0; i < (*it)->getOutputRegionSet()->getRegionCount(); i++) {
-            historyLatest += (*it)->getOutputRegionSet()->getRegion(i)->getIntensity();
+        for(int i = 0; i < (*it)->getOutputRegionSet()->rowCount(); i++) {
+            historyLatest += (*it)->getOutputRegionSet()->at(i)->getIntensity();
         }
         if(flagDummyOutputMonitor) {
             // random output
             historyLatest = randomUniform(randomGenerator);
         } else {
             // dumb averaging
-            historyLatest /= (*it)->getOutputRegionSet()->getRegionCount();
+            historyLatest /= (*it)->getOutputRegionSet()->rowCount();
             // saturation polynomial
             historyLatest = (1.0 - pow(1.0 - historyLatest, 3));
         }
@@ -183,8 +183,8 @@ void ComputeEngine::loop() {
     // send output messages to osc engine
     for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
         QList<QVariant> outputs;
-        for(int i = 0; i < (*it)->getOutputRegionSet()->getRegionCount(); i++) {
-            double value = flagDummyOutputMonitor ? randomUniform(randomGenerator) : (*it)->getOutputRegionSet()->getRegion(i)->getIntensity();
+        for(int i = 0; i < (*it)->getOutputRegionSet()->rowCount(); i++) {
+            double value = flagDummyOutputMonitor ? randomUniform(randomGenerator) : (*it)->getOutputRegionSet()->at(i)->getIntensity();
             if(flagCastOutputToFloat) {
                 outputs.append((float)value);
             } else {

@@ -14,6 +14,8 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <QDebug>
+#include <QThread>
+#include <QQmlEngine>
 
 #include "GeneratorRegionSet.h"
 
@@ -22,16 +24,21 @@ GeneratorRegionSet::GeneratorRegionSet(int type) : type(type) {
         qDebug() << "constructor (GeneratorRegionSet)";
     }
 
-    if(type == 0) {
-        initializeAsInput();
-    } else {
-        initializeAsOutput();
-    }
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
 GeneratorRegionSet::~GeneratorRegionSet() {
     if(flagDebug) {
         qDebug() << "destructor (GeneratorRegionSet)";
+    }
+}
+
+void GeneratorRegionSet::initialize()
+{
+    if(type == 0) {
+        initializeAsInput();
+    } else {
+        initializeAsOutput();
     }
 }
 
@@ -51,12 +58,71 @@ void GeneratorRegionSet::initializeAsOutput() {
     createConnections();
 }
 
-GeneratorRegion* GeneratorRegionSet::getRegion(int index) {
-    return regionList.at(index).data();
+int GeneratorRegionSet::rowCount(const QModelIndex& parent) const {
+    return regionList.size();
 }
 
-int GeneratorRegionSet::getRegionCount() {
-    return regionList.size();
+int GeneratorRegionSet::columnCount(const QModelIndex& parent) const {
+    return 1;
+}
+
+QVariant GeneratorRegionSet::data(const QModelIndex &index, int role) const {
+    if(flagDebug) {
+        qDebug() << "data (GeneratorRegionModel)";
+    }
+
+    if(index.isValid()) {
+        // check if the index is valid
+        if(index.column() == 0 && index.row() >= 0 && index.row() < regionList.size()) {
+            // check if the key exists in the hash map
+            if(GeneratorRegion::roleMap.contains(role))
+                return regionList.at(index.row())->property(GeneratorRegion::roleMap.value(role));
+
+        }
+    }
+
+    if(flagDebug) {
+        qDebug() << "data (GeneratorRegionModel) failed to find valid entry";
+    }
+
+    return QVariant();
+}
+
+bool GeneratorRegionSet::setData(const QModelIndex &index, const QVariant &value, int role) {
+    if(flagDebug) {
+        qDebug() << "setData (GeneratorRegionModel) value: " << value;
+    }
+
+    if(index.isValid()) {
+        // check if the index is valid
+        if(index.column() == 0 && index.row() >= 0 && index.row() < regionList.size()) {
+            // check if the key exists in the hash map
+            if(GeneratorRegion::roleMap.contains(role)) {
+                regionList.at(index.row())->setProperty(GeneratorRegion::roleMap.value(role), value);
+                // emit writeRegionFromModel(value, role, index.row());
+                if(flagDebug) {
+                    qDebug() << "setData (GeneratorRegionModel): signal emitted";
+                }
+                return true;
+            }
+        }
+    }
+
+    if(flagDebug) {
+        qDebug() << "setData (GeneratorRegionModel) failed to find valid entry";
+    }
+
+    return false;
+}
+
+QHash<int, QByteArray> GeneratorRegionSet::roleNames() const {
+    return GeneratorRegion::roleMap;
+}
+
+GeneratorRegion* GeneratorRegionSet::at(int index) {
+    if (index < 0 || index >= regionList.size()) return nullptr;
+
+    return regionList.at(index).data();
 }
 
 void GeneratorRegionSet::addRegion(int x, int y, int width, int height) {
@@ -64,12 +130,25 @@ void GeneratorRegionSet::addRegion(int x, int y, int width, int height) {
         qDebug() << "addRegion (GeneratorRegionSet)";
     }
 
+    // tell the model we are about to add a row at the end of the list
+    int index = regionList.size();
+    beginInsertRows(QModelIndex(), index, index);
     // create copy of the region as a shared pointer and add to list
     QSharedPointer<GeneratorRegion> region = QSharedPointer<GeneratorRegion>(new GeneratorRegion(QRect(x, y, width, height), 0.0, type));
-    regionList.append(QSharedPointer<GeneratorRegion>(region));
+    regionList.append(region);
+    // tell the model we are done adding rows
+    endInsertRows();
 
     // relink connections
     relinkConnections();
+
+    // emit signal so that backend updates
+    // emit addRegionFromSet(x, y, width, height);
+}
+
+void GeneratorRegionSet::addRegion(QRect rect)
+{
+    addRegion(rect.x(), rect.y(), rect.width(), rect.height());
 }
 
 void GeneratorRegionSet::deleteRegion(int index) {
@@ -77,10 +156,18 @@ void GeneratorRegionSet::deleteRegion(int index) {
         qDebug() << "deleteRegion (GeneratorRegionSet)";
     }
 
+    // tell the model we are about to remove a row
+    beginRemoveRows(QModelIndex(), index, index);
+    // remove from list
     regionList.removeAt(index);
+    // tell the model we are done removing rows
+    endRemoveRows();
 
     // relink connections
     relinkConnections();
+
+    // emit signal so that backend updates
+    // emit deleteRegionFromSet(index);
 }
 
 void GeneratorRegionSet::writeRegion(QVariant value, int role, int index) {
@@ -132,7 +219,8 @@ void GeneratorRegionSet::createConnections() {
             QByteArray keyBuffer;
             keyBuffer.append(key);
 
-            emit writeRegionFromSet(value, GeneratorRegion::roleMap.key(keyBuffer), i);
+            // trigger QML update
+            emit dataChanged(index(i), index(i), QVector<int>{GeneratorRegion::roleMap.key(keyBuffer)});
         });
 
         connections.append(connection);

@@ -129,6 +129,11 @@ QSharedPointer<OscEngine> AppModel::getOscEngine() const {
 }
 
 QSharedPointer<Generator> AppModel::createGenerator(QString type) {
+    return createGenerator(type, true);
+}
+
+QSharedPointer<Generator> AppModel::createGenerator(QString type, bool initRegions)
+{
     if(flagDebug) {
         qDebug() << "createGenerator (AppModel): finding a free id";
     }
@@ -162,6 +167,10 @@ QSharedPointer<Generator> AppModel::createGenerator(QString type) {
     } else if (type.compare("WolframCA") == 0) {
         generator = QSharedPointer<Generator>(new WolframCA(nextID, generatorMetaModel->at("WolframCA")));
     }
+
+    // initialize regions
+    if (initRegions)
+        generator->initializeRegionSets();
 
     // move the Generator to computeThread
     if(flagDebug) {
@@ -391,7 +400,9 @@ bool AppModel::readJson(const QJsonObject &json)
         QJsonObject generatorData = generators[i].toObject();
 
         // create a generator, retrieving the pointer
-        QSharedPointer<Generator> generator = createGenerator(generatorData["type"].toString());
+        // IMPORTANT: notice the second argument!
+        // we're populating the region sets in Generator::readJSON here :)
+        QSharedPointer<Generator> generator = createGenerator(generatorData["type"].toString(), false);
 
         // send save data to Generator function
         generator->readJson(generatorData);

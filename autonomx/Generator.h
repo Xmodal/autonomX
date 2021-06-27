@@ -48,10 +48,17 @@ class Generator : public QObject {
     Q_PROPERTY(QString oscOutputAddressHost READ getOscOutputAddressHost WRITE writeOscOutputAddressHost NOTIFY oscOutputAddressHostChanged)
     Q_PROPERTY(QString oscOutputAddressTarget READ getOscOutputAddressTarget WRITE writeOscOutputAddressTarget NOTIFY oscOutputAddressTargetChanged)
 
+    // TODO: this shouldn't be serialized in the JSON
+    Q_PROPERTY(int inputCount READ getInputCount NOTIFY inputCountChanged)
+    Q_PROPERTY(int outputCount READ getOutputCount NOTIFY outputCountChanged)
+
     Q_PROPERTY(int latticeWidth READ getLatticeWidth WRITE writeLatticeWidth NOTIFY latticeWidthChanged)
     Q_PROPERTY(int latticeHeight READ getLatticeHeight WRITE writeLatticeHeight NOTIFY latticeHeightChanged)
 public:
     // enum used by GeneratorModel
+    // essentially, these are the properties we want to have ready
+    // for model purposes;
+    // if you're targeting a prop thru the at() method, you don't need it here
     enum GeneratorRoles {
         NameRole = Qt::UserRole + 1,
         TypeRole,
@@ -59,7 +66,7 @@ public:
         DescriptionRole,
         UserNotesRole,
         HistoryLatestRole,
-        HistoryRefresherRole,
+        HistoryRefresherRole
     };
 
     // role map used by GeneratorModel
@@ -101,6 +108,9 @@ public:
     int getOscOutputPort();
     QString getOscOutputAddressHost();
     QString getOscOutputAddressTarget();
+
+    int getInputCount() const;
+    int getOutputCount() const;
 
     int getLatticeWidth();
     int getLatticeHeight();
@@ -219,6 +229,9 @@ signals:
     void oscOutputPortChanged(int oscOutputPort);
     void oscOutputAddressHostChanged(QString oscOutputAddressHost);
     void oscOutputAddressTargetChanged(QString oscOutputAddressTarget);
+
+    void inputCountChanged(int inputCount);
+    void outputCountChanged(int outputCount);
 
     void latticeWidthChanged(int latticeWidth);
     void latticeHeightChanged(int latticeHeight);

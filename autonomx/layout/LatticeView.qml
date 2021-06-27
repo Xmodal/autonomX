@@ -38,7 +38,7 @@ Item {
 
         // manage bounds
         if (type >= 0 && !adding) {
-            let rowCount = type ? outputModel.rowCount() : inputModel.rowCount();
+            let rowCount = generatorModel.at(generatorIndex)[type ? "outputCount" : "inputCount"];
             if (index < 0 || index >= rowCount) return;
         }
 
@@ -54,6 +54,28 @@ Item {
             matrix.setMask();
         else
             matrix.setMask(Qt.rect(0, 0, 0, 0));
+    }
+
+    // delete currently selected region
+    function deleteCurrentRegion() {
+        if (currRegion.type < 0 || currRegion.index < 0) return;
+
+        let queuedIndex = currRegion.index;
+        let destIndex;
+
+        // input
+        if (currRegion.type === 0 && inputModel) {
+            destIndex = Math.min(queuedIndex, inputModel.length - 2);
+            inputModel.deleteRegion(queuedIndex);
+        }
+
+        // output
+        else if (currRegion.type === 1 && outputModel) {
+            destIndex = Math.min(queuedIndex, outputModel.length - 2);
+            outputModel.deleteRegion(queuedIndex);
+        }
+
+        currRegion.index = destIndex;
     }
 
     Rectangle {
@@ -83,8 +105,8 @@ Item {
 
             // otherwise, retrieve automatically from global properties
             // TODO: clean up function calls so that this block can be removed, instead directly using arguments every time
-            if (currRegion.type === 0 && currRegion.index < inputModel.rowCount()) element = inputModel.at(currRegion.index);
-            else if (currRegion.type === 1 && currRegion.index < outputModel.rowCount()) element = outputModel.at(currRegion.index);
+            if (currRegion.type === 0 && currRegion.index < generatorModel.at(generatorIndex).inputCount) element = inputModel.at(currRegion.index);
+            else if (currRegion.type === 1 && currRegion.index < generatorModel.at(generatorIndex).outputCount) element = outputModel.at(currRegion.index);
             mask = Qt.vector4d(element.rect.x, element.rect.y, element.rect.width, element.rect.height);
         }
 
@@ -270,7 +292,9 @@ Item {
                 dummyRegion.start = Qt.binding(mouseToCoords)
                 // unlock bounds
                 dummyRegion.dragging = false;
-                // go out
+                // go out of the add screen
+                // TODO: ONLY if Shift is not pressed
+                currRegion.adding = false;
             }
         }
     }

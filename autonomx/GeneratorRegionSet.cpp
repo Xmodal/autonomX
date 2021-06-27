@@ -16,6 +16,8 @@
 #include <QDebug>
 #include <QThread>
 #include <QQmlEngine>
+#include <QJsonObject>
+#include <QJsonArray>
 
 #include "GeneratorRegionSet.h"
 
@@ -35,6 +37,10 @@ GeneratorRegionSet::~GeneratorRegionSet() {
 
 void GeneratorRegionSet::initialize()
 {
+    // first, empty the list
+    deleteAllRegions();
+
+    // initialize as input or output
     if(type == 0) {
         initializeAsInput();
     } else {
@@ -43,6 +49,7 @@ void GeneratorRegionSet::initialize()
 }
 
 void GeneratorRegionSet::initializeAsInput() {
+    // optimized for 20x20 lattice size
     regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(1, 3, 3, 3), 0.0, 0));
     regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(6, 3, 3, 3), 0.0, 0));
     regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(11, 3, 3, 3), 0.0, 0));
@@ -51,6 +58,7 @@ void GeneratorRegionSet::initializeAsInput() {
 }
 
 void GeneratorRegionSet::initializeAsOutput() {
+    // optimized for 20x20 lattice size
     regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(1, 14, 3, 3), 0.0, 1));
     regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(6, 14, 3, 3), 0.0, 1));
     regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(11, 14, 3, 3), 0.0, 1));
@@ -139,6 +147,8 @@ void GeneratorRegionSet::addRegion(int x, int y, int width, int height) {
     // tell the model we are done adding rows
     endInsertRows();
 
+    emit rowCountChanged(regionList.size());
+
     // relink connections
     relinkConnections();
 
@@ -162,6 +172,8 @@ void GeneratorRegionSet::deleteRegion(int index) {
     regionList.removeAt(index);
     // tell the model we are done removing rows
     endRemoveRows();
+
+    emit rowCountChanged(regionList.size());
 
     // relink connections
     relinkConnections();
@@ -245,4 +257,38 @@ void GeneratorRegionSet::relinkConnections() {
     }
     deleteConnections();
     createConnections();
+}
+
+void GeneratorRegionSet::readJson(const QJsonArray &json)
+{
+    // we're assuming that regionList is empty (meaning size = 0) here
+    // because readJson is only called when loading a project,
+    // which supposes that we're creating sets already with no regions.
+    for (int i = 0; i < json.size(); i++) {
+        // create new region
+        QSharedPointer<GeneratorRegion> region = QSharedPointer<GeneratorRegion>(new GeneratorRegion(QRect(0, 0, 0, 0), 0.0, type));
+        region->readJson(json[i].toObject());
+
+        regionList.append(region);
+    }
+}
+
+void GeneratorRegionSet::writeJson(QJsonArray &json) const
+{
+    for (int i = 0; i < regionList.count(); i++) {
+        GeneratorRegion* region = regionList.at(i).data();
+
+        // write to obj
+        QJsonObject obj;
+        region->writeJson(obj);
+
+        // append
+        json.append(obj);
+    }
+}
+
+void GeneratorRegionSet::deleteAllRegions() {
+    for (QList<QSharedPointer<GeneratorRegion>>::iterator it = regionList.begin(); it != regionList.end(); it++) {
+        delete (*it).data();
+    }
 }

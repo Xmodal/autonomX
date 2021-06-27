@@ -35,8 +35,19 @@ Generator::Generator(int id, GeneratorMeta * meta) {
         qDebug() << "constructor (Generator)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id;
     }
 
+    // create empty sets
     inputRegionSet = QSharedPointer<GeneratorRegionSet>(new GeneratorRegionSet(0));
     outputRegionSet = QSharedPointer<GeneratorRegionSet>(new GeneratorRegionSet(1));
+
+    // connect row count signals
+    // we need to do this as a proxy measure
+    // because directly accessing a Qt property from GeneratorRegionSet throws an error
+    QObject::connect(inputRegionSet.data(), &GeneratorRegionSet::rowCountChanged, this, [=](int inputCount) {
+        emit valueChanged("inputCount", inputCount);
+    });
+    QObject::connect(outputRegionSet.data(), &GeneratorRegionSet::rowCountChanged, this, [=](int outputCount) {
+        emit valueChanged("outputCount", outputCount);
+    });
 }
 
 
@@ -101,6 +112,16 @@ QString Generator::getOscOutputAddressHost() {
 
 QString Generator::getOscOutputAddressTarget() {
     return oscOutputAddressTarget;
+}
+
+int Generator::getInputCount() const
+{
+    return inputRegionSet->rowCount();
+}
+
+int Generator::getOutputCount() const
+{
+    return outputRegionSet->rowCount();
 }
 
 int Generator::getLatticeWidth() {
@@ -325,27 +346,11 @@ void Generator::readJson(const QJsonObject &json)
 
 
     // 002. REGION DATA
-
-    // TODO: there's a bit of a problem here -
-    // by default, four inputs and four outputs already exist
-    // we can't just selectively readJson without considering the previous RegionSet counts
-    // might need to modify the Generator constructor ever so slightly to compensate for this...
-    // until then, we will assume that there are always four inputs and four outputs at any time
-
     QJsonArray inputs = json["inputs"].toArray();
     QJsonArray outputs = json["outputs"].toArray();
 
-    // inputs
-    for (int i = 0; i < inputs.size(); i++) {
-        GeneratorRegion *input = inputRegionSet->at(i);
-        input->readJson(inputs[i].toObject());
-    }
-
-    // outputs
-    for (int i = 0; i < outputs.size(); i++) {
-        GeneratorRegion *output = outputRegionSet->at(i);
-        output->readJson(outputs[i].toObject());
-    }
+    inputRegionSet->readJson(inputs);
+    outputRegionSet->readJson(outputs);
 }
 
 void Generator::writeJson(QJsonObject &json) const
@@ -386,29 +391,8 @@ void Generator::writeJson(QJsonObject &json) const
     QJsonArray inputRegions;
     QJsonArray outputRegions;
 
-    // scan thru input regions
-    for (int i = 0; i < inputRegionSet->rowCount(); i++) {
-        GeneratorRegion* region = inputRegionSet->at(i);
-
-        // write to obj
-        QJsonObject obj;
-        region->writeJson(obj);
-
-        // append
-        inputRegions.append(obj);
-    }
-
-    // scan thru output regions
-    for (int i = 0; i < outputRegionSet->rowCount(); i++) {
-        GeneratorRegion* region = outputRegionSet->at(i);
-
-        // write to obj
-        QJsonObject obj;
-        region->writeJson(obj);
-
-        // append
-        outputRegions.append(obj);
-    }
+    inputRegionSet->writeJson(inputRegions);
+    outputRegionSet->writeJson(outputRegions);
 
     // write to main JSON
     json["inputs"] = inputRegions;

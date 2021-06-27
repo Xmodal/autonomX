@@ -52,6 +52,7 @@ public:
     void                                deleteAllGenerators();
 
 Q_INVOKABLE QSharedPointer<Generator>   createGenerator(QString type);
+Q_INVOKABLE QSharedPointer<Generator>   createGenerator(QString type, bool initRegions);
 Q_INVOKABLE void                        deleteGenerator(int id);
 Q_INVOKABLE bool                        validateNewGeneratorName(QString name);
 

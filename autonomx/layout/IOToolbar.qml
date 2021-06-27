@@ -84,7 +84,7 @@ Item {
                 visible: selectedIndex >= 0 && !addingRegion
 
                 index: selectedIndex
-                maxIndex: selectedType < 0 ? 0 : (selectedType ? outputModel.rowCount() : inputModel.rowCount())
+                maxIndex: selectedType < 0 ? 0 : generatorModel.at(generatorIndex)[selectedType ? "outputCount" : "inputCount"]
 
                 onClicked: latticeView.switchSelectedRegion(selectedType, selectedIndex - 1)
             }
@@ -180,9 +180,7 @@ Item {
                         IOEditButton {
                             visible: selectedIndex >= 0
                             editType: 0
-                            onClicked: {
-
-                            }
+                            onClicked: deleteCurrentRegion()
                         }
                         // add
                         IOEditButton {
@@ -197,14 +195,14 @@ Item {
                         IOButton {
                             visible: selectedIndex < 0
                             type: 0
-                            onClicked: switchSelectedRegion(0, inputModel.rowCount(), true)
+                            onClicked: switchSelectedRegion(0, generatorModel.at(generatorIndex).inputCount, true)
                         }
 
                         // add output
                         IOButton {
                             visible: selectedIndex < 0
                             type: 1
-                            onClicked: switchSelectedRegion(1, outputModel.rowCount(), true)
+                            onClicked: switchSelectedRegion(1, generatorModel.at(generatorIndex).outputCount, true)
                         }
                     }
                 }
@@ -222,7 +220,7 @@ Item {
                     enabled: selectedIndex >= 0 && !addingRegion
 
                     index: selectedIndex + 2
-                    maxIndex: selectedType < 0 ? 0 : (selectedType ? outputModel.rowCount() : inputModel.rowCount())
+                    maxIndex: selectedType < 0 ? 0 : generatorModel.at(generatorIndex)[selectedType ? "outputCount" : "inputCount"]
 
                     onClicked: switchSelectedRegion(selectedType, selectedIndex + 1)
                 }

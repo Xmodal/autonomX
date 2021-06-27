@@ -43,6 +43,10 @@ public:
     // this simply deletes then creates the connections.
     void relinkConnections();
 
+    // serialization
+    void readJson(const QJsonArray &json);
+    void writeJson(QJsonArray &json) const;
+
     int rowCount(const QModelIndex& parent = QModelIndex()) const;
     int columnCount(const QModelIndex& parent = QModelIndex()) const;
 
@@ -53,22 +57,26 @@ public:
     QHash<int, QByteArray> roleNames() const;
 
     Q_INVOKABLE GeneratorRegion* at(int index);
+
 private:
     void initializeAsInput();
     void initializeAsOutput();
+    void deleteAllRegions();
 
     QList<QMetaObject::Connection> connections;
     QList<QSharedPointer<GeneratorRegion>> regionList;
     bool flagDebug = false;
     const int type; // region type. 0 = input, 1 = output
+
 public slots:
-    // these should only ever be called from a RegionModel. changes will not propagate back to the RegionModel if called directly
     Q_INVOKABLE void addRegion(int x, int y, int width, int height);
     Q_INVOKABLE void addRegion(QRect rect);
     Q_INVOKABLE void deleteRegion(int index);
     Q_INVOKABLE void writeRegion(QVariant value, int role, int index);
+
 signals:
-    // this can be called directly and will propagate back to its RegionModel
-    void writeRegionFromSet(QVariant value, int role, int index);
+    // [DEPRECATED] this can be called directly and will propagate back to its RegionModel
+    // void writeRegionFromSet(QVariant value, int role, int index);
+    void rowCountChanged(int rowCount);
 };
 

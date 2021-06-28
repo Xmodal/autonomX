@@ -61,6 +61,18 @@ Item {
             Layout.preferredWidth: 50
             Layout.preferredHeight: 20
 
+            // prev button
+            // visible when a region is selected and > 1
+            RegionNavButton {
+                type: RegionNavButton.Type.Prev
+                visible: selectedIndex >= 0 && !addingRegion
+
+                index: selectedIndex
+                maxIndex: selectedType < 0 ? 0 : generatorModel.at(generatorIndex)[selectedType ? "outputCount" : "inputCount"]
+
+                onClicked: latticeView.switchSelectedRegion(selectedType, selectedIndex - 1)
+            }
+
             // "new" label
             // visible when a region is about to be added (ie. drawn on the board)
             Label {
@@ -75,18 +87,6 @@ Item {
                 background: Rectangle {
                     color: Stylesheet.colors[selectedType ? "outputs" : "inputs"][0]
                 }
-            }
-
-            // prev button
-            // visible when a region is selected and > 1
-            RegionNavButton {
-                type: RegionNavButton.Type.Prev
-                visible: selectedIndex >= 0 && !addingRegion
-
-                index: selectedIndex
-                maxIndex: selectedType < 0 ? 0 : generatorModel.at(generatorIndex)[selectedType ? "outputCount" : "inputCount"]
-
-                onClicked: latticeView.switchSelectedRegion(selectedType, selectedIndex - 1)
             }
         }
 
@@ -186,23 +186,21 @@ Item {
                         IOEditButton {
                             visible: selectedIndex >= 0
                             editType: 1
-                            onClicked: {
-
-                            }
+                            onClicked: currRegion.type ? addNewOutput() : addNewInput()
                         }
 
                         // add input
                         IOButton {
                             visible: selectedIndex < 0
                             type: 0
-                            onClicked: switchSelectedRegion(0, generatorModel.at(generatorIndex).inputCount, true)
+                            onClicked: addNewInput()
                         }
 
                         // add output
                         IOButton {
                             visible: selectedIndex < 0
                             type: 1
-                            onClicked: switchSelectedRegion(1, generatorModel.at(generatorIndex).outputCount, true)
+                            onClicked: addNewOutput()
                         }
                     }
                 }
@@ -217,7 +215,7 @@ Item {
                 // next region button
                 RegionNavButton {
                     type: RegionNavButton.Type.Next
-                    enabled: selectedIndex >= 0 && !addingRegion
+                    visible: selectedIndex >= 0
 
                     index: selectedIndex + 2
                     maxIndex: selectedType < 0 ? 0 : generatorModel.at(generatorIndex)[selectedType ? "outputCount" : "inputCount"]

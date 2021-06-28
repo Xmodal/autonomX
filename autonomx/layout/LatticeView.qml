@@ -34,20 +34,12 @@ Item {
 
     // manage selected region
     function switchSelectedRegion(type, index, adding = false) {
-        currRegion.adding = adding;
-
-        // manage bounds
-        if (type >= 0 && !adding) {
-            let rowCount = generatorModel.at(generatorIndex)[type ? "outputCount" : "inputCount"];
-            if (index < 0 || index >= rowCount) return;
-        }
+        const rowCount = generatorModel.at(generatorIndex)[type ? "outputCount" : "inputCount"];
 
         // change current region props
         currRegion.type = type;
-        currRegion.index = index;
-
-        // highlight selected region
-        regions.rectSelected = currRegion.index >= 0;
+        currRegion.index = adding ? index : Math.max(-1, index);
+        currRegion.adding = adding;
 
         // set lattice mask
         if (!adding)
@@ -56,26 +48,58 @@ Item {
             matrix.setMask(Qt.rect(0, 0, 0, 0));
     }
 
+    // bound validator
+    function isWithinBounds() {
+        return !(currRegion.type < 0);
+    }
+
+    // navigation
+    function goToNextRegion() {
+        if (!isWithinBounds()) return;
+        return switchSelectedRegion(currRegion.type, currRegion.index + 1, false);
+    }
+    function goToPrevRegion() {
+        if (!isWithinBounds()) return;
+        return switchSelectedRegion(currRegion.type, currRegion.index - 1, false);
+    }
+    function switchCurrRegionType() {
+        if (currRegion.type < 0) return;
+    }
+
+    // add region
+    function addNewInput() {
+        switchSelectedRegion(0, inputModel.rowCount(), true);
+    }
+    function addNewOutput() {
+        switchSelectedRegion(1, outputModel.rowCount(), true);
+    }
+
     // delete currently selected region
     function deleteCurrentRegion() {
-        if (currRegion.type < 0 || currRegion.index < 0) return;
+        if (!isWithinBounds()) return;
 
         let queuedIndex = currRegion.index;
         let destIndex;
 
         // input
         if (currRegion.type === 0 && inputModel) {
-            destIndex = Math.min(queuedIndex, inputModel.length - 2);
+            destIndex = Math.min(queuedIndex, inputModel.rowCount() - 2);
             inputModel.deleteRegion(queuedIndex);
+
+            if (inputModel.rowCount() === 0)
+                return switchSelectedRegion(-1, -1);
         }
 
         // output
         else if (currRegion.type === 1 && outputModel) {
-            destIndex = Math.min(queuedIndex, outputModel.length - 2);
+            destIndex = Math.min(queuedIndex, outputModel.rowCount() - 2);
             outputModel.deleteRegion(queuedIndex);
+
+            if (outputModel.rowCount() === 0)
+                return switchSelectedRegion(-1, -1);
         }
 
-        currRegion.index = destIndex;
+        switchSelectedRegion(currRegion.type, destIndex);
     }
 
     Rectangle {
@@ -105,8 +129,8 @@ Item {
 
             // otherwise, retrieve automatically from global properties
             // TODO: clean up function calls so that this block can be removed, instead directly using arguments every time
-            if (currRegion.type === 0 && currRegion.index < generatorModel.at(generatorIndex).inputCount) element = inputModel.at(currRegion.index);
-            else if (currRegion.type === 1 && currRegion.index < generatorModel.at(generatorIndex).outputCount) element = outputModel.at(currRegion.index);
+            if (currRegion.type === 0 && currRegion.index < inputModel.rowCount()) element = inputModel.at(currRegion.index);
+            else if (currRegion.type === 1 && currRegion.index < outputModel.rowCount()) element = outputModel.at(currRegion.index);
             mask = Qt.vector4d(element.rect.x, element.rect.y, element.rect.width, element.rect.height);
         }
 
@@ -121,9 +145,11 @@ Item {
 
     MouseArea {
         id: matrixMouseBg
+        enabled: !(generatorIndex < 0)
         anchors.fill: parent
         onClicked: {
             latticeView.switchSelectedRegion(-1, -1);
+            mainContent.forceActiveFocus()
             showGeneratorList = false;
         }
     }
@@ -135,27 +161,33 @@ Item {
 
         property int latticeWidth: generatorIndex < 0 ? 20 : generatorModel.at(generatorIndex).latticeWidth
         property int latticeHeight: generatorIndex < 0 ? 20 : generatorModel.at(generatorIndex).latticeHeight
-        property bool rectSelected: false
+        property bool rectSelected: !(currRegion.index < 0)
 
         width: ppc * latticeWidth
         height: ppc * latticeHeight
         x: latticeView.width/2 - width/2
         y: latticeView.height/2 - height/2
 
-        // inputs
-        Repeater {
-            model: inputModel
-            Region {
-                type: 0
-                visible: inputsVisible
+        FocusScope {
+            // inputs
+            Repeater {
+                id: inputRepeater
+                model: inputModel
+
+                Region {
+                    type: 0
+                    visible: inputsVisible
+                }
             }
-        }
-        // outputs
-        Repeater {
-            model: outputModel
-            Region {
-                type: 1
-                visible: outputsVisible
+            // outputs
+            Repeater {
+                id: outputRepeater
+                model: outputModel
+
+                Region {
+                    type: 1
+                    visible: outputsVisible
+                }
             }
         }
 
@@ -292,9 +324,10 @@ Item {
                 dummyRegion.start = Qt.binding(mouseToCoords)
                 // unlock bounds
                 dummyRegion.dragging = false;
-                // go out of the add screen
-                // TODO: ONLY if Shift is not pressed
-                currRegion.adding = false;
+
+                // batch add regions on Shift hold
+                if (shiftPressed)
+                    switchSelectedRegion(currRegion.type, currRegion.index + 1, true)
             }
         }
     }

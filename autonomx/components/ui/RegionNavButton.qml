@@ -18,8 +18,8 @@ RowLayout {
 
     spacing: 10
     layoutDirection: isNext ? Qt.LeftToRight : Qt.RightToLeft
-
-    opacity: enabled && index > 0 && index <= maxIndex
+    enabled: index > 0 && index <= maxIndex
+    opacity: enabled
 
     // button
     GenericButton {

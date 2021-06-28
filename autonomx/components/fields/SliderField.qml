@@ -92,6 +92,7 @@ Field {
             anchors.leftMargin: -10
             implicitHeight: 4
             padding: 0
+            focusPolicy: Qt.NoFocus
 
             onHoveredChanged: fieldHovered = hovered
             onPressedChanged: fieldFocused = pressed

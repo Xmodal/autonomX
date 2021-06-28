@@ -30,6 +30,42 @@ Item {
         }
     }
 
+//    Shortcut {
+//        sequence: "Shift+PgUp"
+//        onActivated: latticeView.goToPrevRegion()
+//    }
+//    Shortcut {
+//        sequence: "Shift+PgDown"
+//        onActivated: latticeView.goToNextRegion()
+//    }
+//    Shortcut {
+//        sequence: ""
+//        onActivated: latticeView.switchCurrRegionType()
+//    }
+
+    // lattice view
+//    Shortcut {
+//        sequence: "Alt+I"
+//        onActivated: {
+
+//        }
+//    }
+//    Shortcut {
+//        sequence: "Alt+O"
+//        onActivated: {
+
+//        }
+//    }
+
+    Shortcut {
+        sequence: "Shift+I"
+        onActivated: latticeView.addNewInput()
+    }
+    Shortcut {
+        sequence: "Shift+O"
+        onActivated: latticeView.addNewOutput()
+    }
+
     // serialization
     Shortcut {
         id: saveSC

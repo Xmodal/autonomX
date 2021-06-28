@@ -1,13 +1,14 @@
 import QtQuick 2.11
 import QtQuick.Controls 2.2
 
+import ca.hexagram.xmodal.autonomx 1.0
+
 import "qrc:/stylesheet"
 
-Rectangle {
+Control {
     id: region
 
     // props
-    property bool selected: type === latticeView.currRegion.type && index === latticeView.currRegion.index
     property bool dragActive: dragArea.drag.active
     property bool inEdit: false
 
@@ -18,12 +19,26 @@ Rectangle {
     property int latticeHeight: regions.latticeHeight
     property int ppc: latticeView.ppc
 
-    property int type: 0                        // -1 = add; 0 = input; 1 = output
+    property int type: 0                        // 0 = input; 1 = output
     property int resizeHitbox: 5                // zone padding
     property int area
 
-    property color currColor: type < 0 ? Stylesheet.colors.white : Stylesheet.colors[type == 0 ? "inputs" : "outputs"][index % Stylesheet.colors.variations]
+    property color currColor: type < 0 ? Stylesheet.colors.white : Stylesheet.colors[type == 0 ? "inputs" : "outputs"][(index < 0 ? 0 : index) % Stylesheet.colors.variations]
 
+    // tab navigation enabled when selected
+    focus: type === latticeView.currRegion.type && index === latticeView.currRegion.index
+    onFocusChanged: {
+        if (focus) {
+            forceActiveFocus()
+            switchSelectedRegion(type, index)
+        }
+    }
+    // constrain tab navigation to region typeset when selected
+    focusPolicy: latticeView.currRegion.type === type ? Qt.TabFocus : Qt.NoFocus
+    KeyNavigation.backtab: index === 0 ? this : null
+    KeyNavigation.tab: index === generatorModel.at(generatorIndex)[type ? "outputCount" : "inputCount"] - 1 ? this : null
+
+    // antialiasing
     antialiasing: true
 
     // position
@@ -31,7 +46,7 @@ Rectangle {
     height: regions.height * rect.height / regions.latticeHeight
     x: regions.width * rect.x / regions.latticeWidth
     y: regions.height * rect.y / regions.latticeHeight
-    z: selected ? 10 : 10 / area;
+    z: focus ? 10 : 10 / area;
 
     // break x/y property bindings
     Component.onCompleted: {
@@ -129,20 +144,85 @@ Rectangle {
         matrixMouseBg.cursorShape = cursorShape || Qt.ArrowCursor;
     }
 
-    // external region boundary
-    color: "transparent"
-    border {
-        color: currColor
-        width: regions.rectSelected && selected ? 2 : 1
+
+    // region keyboard management
+    Keys.onPressed: {
+        let offset;
+
+        // region navigation
+        switch (event.key) {
+            case Qt.Key_Left:
+                offset = Qt.point(-1, 0);
+                break;
+            case Qt.Key_Right:
+                offset = Qt.point(1, 0);
+                break;
+            case Qt.Key_Up:
+                offset = Qt.point(0, -1);
+                break;
+            case Qt.Key_Down:
+                offset = Qt.point(0, 1);
+                break;
+
+            // delete
+            case Qt.Key_Delete:
+                return deleteCurrentRegion();
+
+            default:
+                return;
+        }
+
+        this[shiftPressed ? (altPressed ? "collapse" : "extend") : "nudge"](offset.x, offset.y);
     }
-    // border opacity
-    opacity: regions.rectSelected && !(type < 0) && !selected && !dragArea.containsMouse ? (latticeView.currRegion.type !== type ? 0.3 : 0.5) : 1
+
+    // nudge region
+    function nudge(xOff, yOff) {
+        x += xOff * ppc;
+        y += yOff * ppc;
+
+        snapToGrid("drag");
+    }
+    // extend edges
+    function extend(xOff, yOff) {
+        x += xOff < 0 ? xOff * ppc : 0;
+        y += yOff < 0 ? yOff * ppc : 0;
+        width += xOff !== 0 ? Math.abs(xOff * ppc) : 0;
+        height += yOff !== 0 ? Math.abs(yOff * ppc) : 0;
+        width = Math.max(width, ppc);
+        height = Math.max(height, ppc);
+
+        snapToGrid("drag");
+    }
+    // collapse edges
+    function collapse(xOff, yOff) {
+        x += xOff < 0 ? 0 : xOff * ppc;
+        y += yOff < 0 ? 0 : yOff * ppc;
+        width -= xOff !== 0 ? Math.abs(xOff * ppc) : 0;
+        height -= yOff !== 0 ? Math.abs(yOff * ppc) : 0;
+        width = Math.max(width, ppc);
+        height = Math.max(height, ppc);
+
+        snapToGrid("drag");
+    }
+
+
+    // external region boundary
+    Rectangle {
+        anchors.fill: parent
+        color: "transparent"
+        border {
+            color: currColor
+            width: regions.rectSelected && region.focus ? 2 : 1
+        }
+        // border opacity
+        opacity: regions.rectSelected && !(type < 0) && !region.focus && !dragArea.containsMouse ? (latticeView.currRegion.type !== type ? 0.3 : 0.5) : 1
+    }
 
     // fill rectangle
     Rectangle {
         anchors.fill: parent
         color: currColor
-        opacity: dragArea.containsMouse && (!selected || inEdit) ? 0.5 : (1.0 - Math.pow(1.0 - intensity, 3)) * 0.8
+        opacity: dragArea.containsMouse && (!region.focus || inEdit) ? 0.5 : (1.0 - Math.pow(1.0 - intensity, 3)) * 0.8
     }
 
     // drag configuration
@@ -167,7 +247,7 @@ Rectangle {
         anchors.top: parent.top
         color: currColor
 
-        opacity: dragArea.containsMouse && !(type < 0) || selected ? 1 : 0
+        opacity: dragArea.containsMouse && !(type < 0) || region.focus ? 1 : 0
 
         Label {
             text: index + 1
@@ -185,12 +265,12 @@ Rectangle {
         id: dragArea
 
         anchors.fill: parent
-        onClicked: latticeView.switchSelectedRegion(selected ? -1 : type, selected ? -1 : index)
+        onClicked: latticeView.switchSelectedRegion(region.focus ? -1 : type, region.focus ? -1 : index)
         propagateComposedEvents: true
         hoverEnabled: true
         drag.target: region
         drag.threshold: 0
-        cursorShape: selected ? Qt.SizeAllCursor : Qt.PointingHandCursor
+        cursorShape: region.focus ? Qt.SizeAllCursor : Qt.PointingHandCursor
     }
 
     // resize areas
@@ -199,7 +279,7 @@ Rectangle {
         model: ["ttV", "rrH", "bbV", "llH", "tlF", "trB", "brF", "blB"]
 
         MouseArea {
-            visible: selected
+            visible: region.focus
 
             anchors {
                 top: modelData.charAt(0) === "t" ? parent.top : undefined

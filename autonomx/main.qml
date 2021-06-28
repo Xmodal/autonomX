@@ -13,6 +13,14 @@ import "./components/util"
 ApplicationWindow {
     id: window
 
+    onFocusObjectChanged: {
+        if (!activeFocusItem) {
+            altPressed = shiftPressed = false;
+        }
+
+        // console.log(activeFocusItem)
+    }
+
     property string lastMessageReceived: ""
     property int activeGeneratorIndex: -1
 
@@ -88,7 +96,7 @@ ApplicationWindow {
         };
     }
 
-    Component.onCompleted: registerComponents()
+    Component.onCompleted: registerComponents();
 
 
     // background
@@ -101,30 +109,35 @@ ApplicationWindow {
     ShortcutManager {}
 
     // main content
-    ColumnLayout {
-        id: mainContent
+    FocusScope {
         anchors.fill: parent
-        spacing: 0
+        focus: true
 
-        Header {}
-
-        RowLayout {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+        ColumnLayout {
+            id: mainContent
+            anchors.fill: parent
             spacing: 0
 
-            LatticeView {
-                id: latticeView
+            Header {}
 
-                // as overlay
-                GeneratorList {
-                    enabled: showGeneratorList
-                    visible: enabled
+            RowLayout {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                spacing: 0
+
+                LatticeView {
+                    id: latticeView
+
+                    // as overlay
+                    GeneratorList {
+                        enabled: showGeneratorList
+                        visible: enabled
+                    }
                 }
-            }
 
-            RackList {
-                visible: activeGeneratorIndex >= 0 && showGeneratorSettings
+                RackList {
+                    visible: activeGeneratorIndex >= 0 && showGeneratorSettings
+                }
             }
         }
 
@@ -132,8 +145,9 @@ ApplicationWindow {
         Keys.onPressed: {
             if (editingTextField) return
 
+            // modifiers
             if (event.key === Qt.Key_Alt) altPressed = true
-            if (event.key === Qt.Key_Shift) shiftPressed = true
+            if (event.key === Qt.Key_Shift)shiftPressed = true
         }
         Keys.onReleased: {
             if (event.key === Qt.Key_Alt) {

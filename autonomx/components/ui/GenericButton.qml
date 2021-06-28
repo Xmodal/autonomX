@@ -32,6 +32,11 @@ Button {
         color: pressed ? activeColor : (hovered ? hoverColor : neutralColor)
     }
 
+    // tab nav outline
+    // TODO: apply this to every focusable element in the page
+    // except from regions because these have their own focus policies
+    // FocusOutline {}
+
     CursorShaper {
         id: mouseArea
     }

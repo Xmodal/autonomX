@@ -65,7 +65,7 @@ Item {
             // visible when a region is selected and > 1
             RegionNavButton {
                 type: RegionNavButton.Type.Prev
-                visible: selectedIndex >= 0 && !addingRegion
+                visible: !addingRegion
 
                 index: selectedIndex
                 maxIndex: selectedType < 0 ? 0 : generatorModel.at(generatorIndex)[selectedType ? "outputCount" : "inputCount"]
@@ -106,6 +106,7 @@ Item {
             Label {
                 font: Stylesheet.fonts.label
                 text: selectedType < 0 ? "Region" : (selectedType > 0 ? "Output" : "Input")
+                opacity: selectedType < 0 ? 0.5 : 1
                 Layout.preferredWidth: 50
                 horizontalAlignment: Text.AlignHCenter
                 Layout.alignment: Qt.AlignVCenter
@@ -132,6 +133,7 @@ Item {
                         weight: Font.Medium
                         pixelSize: 16
                     }
+                    color: Stylesheet.colors[selectedType > 0 ? "white" : "black"]
                     width: selectedType > 0 ? 21 : 25
                     height: parent.height
                     anchors.left: parent.left
@@ -215,7 +217,7 @@ Item {
                 // next region button
                 RegionNavButton {
                     type: RegionNavButton.Type.Next
-                    visible: selectedIndex >= 0
+                    visible: !addingRegion
 
                     index: selectedIndex + 2
                     maxIndex: selectedType < 0 ? 0 : generatorModel.at(generatorIndex)[selectedType ? "outputCount" : "inputCount"]

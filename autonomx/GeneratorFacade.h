@@ -30,9 +30,6 @@ public:
 
     Q_INVOKABLE GeneratorRegionSet* getInputRegionModel();
     Q_INVOKABLE GeneratorRegionSet* getOutputRegionModel();
-
-    Q_INVOKABLE void initialize();
-    Q_INVOKABLE void resetParameters();
 private:
 //    QSharedPointer<GeneratorRegionModel> inputRegionModel;
 //    QSharedPointer<GeneratorRegionModel> outputRegionModel;
@@ -41,7 +38,16 @@ private:
     Generator* generator;
 public slots:
     void updateValueFromAlias(const QString &key, const QVariant &value);
+
+    Q_INVOKABLE void initialize();
+    Q_INVOKABLE void resetParameters();
+    Q_INVOKABLE void resetRegions();
 signals:
+    // for generator methods
+    void initializeFired();
+    void resetParametersFired();
+    void resetRegionsFired();
+
     // this is fired when a value is changed from a call to the updateValueFromAlias function, in contrast to valueChanged, which fires when the underlying QQmlPropertyMap is updated from QML
     void valueChangedFromAlias(const QString &key, const QVariant &value);
 };

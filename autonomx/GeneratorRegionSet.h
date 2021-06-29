@@ -43,6 +43,9 @@ public:
     // this simply deletes then creates the connections.
     void relinkConnections();
 
+    // delete all regions
+    void deleteAllRegions();
+
     // serialization
     void readJson(const QJsonArray &json);
     void writeJson(QJsonArray &json) const;
@@ -61,7 +64,6 @@ public:
 private:
     void initializeAsInput();
     void initializeAsOutput();
-    void deleteAllRegions();
 
     QList<QMetaObject::Connection> connections;
     QList<QSharedPointer<GeneratorRegion>> regionList;

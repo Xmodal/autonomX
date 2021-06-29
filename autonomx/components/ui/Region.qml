@@ -44,7 +44,7 @@ Control {
     height: regions.height * rect.height / latticeHeight
     x: regions.width * rect.x / latticeWidth
     y: regions.height * rect.y / latticeHeight
-    z: selected ? 10 : 10 / area;
+    z: focus ? 10 : 10 / area;
 
     // break x/y property bindings
     Component.onCompleted: {

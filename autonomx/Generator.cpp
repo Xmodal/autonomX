@@ -433,21 +433,24 @@ void Generator::resetParameters()
         }
     }
 
-    // input rectangles reset
-   for(int i = 0; i < this->inputRegionSet->getRegionCount(); i++) {
-       QRect tempRect(1+(i*5), 3, 3, 3);
-       this->inputRegionSet->getRegion(i)->writeMirroredRect(tempRect);
-   }
-
-   // output rectangles reset
-   for(int i = 0; i < this->outputRegionSet->getRegionCount(); i++) {
-       QRect tempRect(1+(i*5), 14, 3, 3);
-       this->outputRegionSet->getRegion(i)->writeMirroredRect(tempRect);
-   }
-
     // re-initialize
     // probably unnecessary, some properties can call this when rewritten
-    initialize();
+   initialize();
+}
+
+void Generator::resetRegions()
+{
+    // input rectangles reset
+    inputRegionSet->deleteAllRegions();
+    for(int i = 0; i < 4; i++) {
+        inputRegionSet->addRegion(1+(i*5), 3, 3, 3);
+    }
+
+   // output rectangles reset
+   outputRegionSet->deleteAllRegions();
+   for(int i = 0; i < 4; i++) {
+       outputRegionSet->addRegion(1+(i*5), 14, 3, 3);
+   }
 }
 
 void Generator::initializeRegionSets()

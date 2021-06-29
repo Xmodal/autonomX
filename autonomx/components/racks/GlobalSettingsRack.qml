@@ -47,12 +47,25 @@ ColumnLayout {
                 }
             }
 
-            AreaField {
-                fieldWidth: -1
-                Layout.fillWidth: true
-                labelText: "User notes"
-                placeholder: "add anything relevant to your setup here!"
-                propName: "userNotes"
+            ColumnLayout {
+                spacing: 15
+
+                TextField {
+                    fieldWidth: parent.width / 2
+                    labelText: "Name"
+                    propName: "generatorName"
+                    //hasError: true
+                    // temporary
+                    enabled: false
+                }
+
+                AreaField {
+                    fieldWidth: -1
+                    Layout.fillWidth: true
+                    labelText: "User notes"
+                    placeholder: "add anything relevant to your setup here!"
+                    propName: "userNotes"
+                }
             }
         }
     }

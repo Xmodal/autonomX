@@ -26,16 +26,24 @@ ColumnLayout {
     property bool activated: flagName !== "" ? flag.checked : true
     // field prop
     property alias fieldContent: fieldContentLoader.sourceComponent
+    // signal error
+    // TODO: implement this properly in the next sprint
+    property bool hasError: false
 
     // signals
     signal valueChanged(variant newValue)
     signal flagChanged(bool newFlag)
+    signal errorReceived(string title, string errorText)
 
     onValueChanged: if (generatorModel.at(activeGeneratorIndex)) generatorModel.at(activeGeneratorIndex)[propName] = newValue
     onFlagChanged: if (generatorModel.at(activeGeneratorIndex)) generatorModel.at(activeGeneratorIndex)[flagName] = newFlag
+    onErrorReceived: {
+        hasError = true
+
+    }
 
     // layout
-    implicitWidth: fieldWidth
+    Layout.preferredWidth: fieldWidth
     spacing: 5
 
     // reset prop name + flag name to prevent void linking when changing generator type
@@ -73,10 +81,27 @@ ColumnLayout {
         Layout.preferredWidth: fieldWidth
         Layout.maximumWidth: fieldWidth
         Layout.fillHeight: parent.Layout.fillHeight
-        Layout.preferredHeight: childrenRect.height
+        Layout.preferredHeight: fieldContent.height
+
+        // popup
+        ErrorPopup {
+            id: errorPopup
+            enabled: hasError
+            opacity: hasError
+
+            anchors.left: parent.right
+            anchors.bottom: parent.bottom
+            anchors.leftMargin: 5
+
+            Behavior on opacity {
+                NumberAnimation { duration: 300 }
+            }
+        }
 
         // content
         ColumnLayout {
+            id: fieldContent
+
             spacing: 0
             anchors {
                 left: parent.left
@@ -119,6 +144,7 @@ ColumnLayout {
                     }
                 }
             }
+
 
             // mouse blocker
             MouseArea {

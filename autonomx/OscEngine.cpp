@@ -74,11 +74,11 @@ void OscEngine::startGeneratorOsc(QSharedPointer<Generator> generator) {
     QString addressSenderHost = generator->getOscOutputAddressHost();
     QString addressSenderTarget = generator->getOscOutputAddressTarget();
 //    int portReceiver = generator->getOscInputPort();
-    int portReceiver = 6668;
-    int portSender = generator->getOscOutputPort();
+//    int portReceiver = 6668;
+//    int portSender = 6669;
 
-    createOscReceiver(id, addressReceiver, portReceiver);
-    createOscSender(id, addressSenderHost, addressSenderTarget, portSender);
+    createOscReceiver(id, addressReceiver, oscReceiverPort);
+    createOscSender(id, addressSenderHost, addressSenderTarget, oscSenderPort);
 
     // connect input / receiver changes
     QObject::connect(generator.data(), &Generator::oscInputAddressChanged, this, [this, id](QString oscInputAddress){
@@ -168,8 +168,9 @@ void OscEngine::sendOscData(int id, QVariantList data) {
         return;
     }
     QSharedPointer<OscSender> sender = oscSenders.value(id);
-    QString address = oscSenderAddresses.value(id);
-    sender->send(address, data);
+//    QString address = oscSenderAddresses.value(id);
+//    qDebug() << "osc sender address = " << address;
+    sender->send(oscReceiverAddress, data);
 }
 
 void OscEngine::createOscReceiver(int id, QString address, int port) {
@@ -249,7 +250,9 @@ void OscEngine::updateOscReceiverPort(int id, int port) {
 //        return;
 //    }
 //    oscReceivers.value(id)->setPort(port);
-    receiver->setPort(port);
+    oscReceiverPort = port;
+
+//    receiver->setPort(port);
 }
 
 void OscEngine::createOscSender(int id, QString addressHost, QString addressTarget, int port) {
@@ -267,7 +270,7 @@ void OscEngine::createOscSender(int id, QString addressHost, QString addressTarg
     QSharedPointer<OscSender> sender = QSharedPointer<OscSender>(new OscSender(addressHost, port));
     // update hash maps
     oscSenders.insert(id, sender);
-    oscSenderAddresses.insert(id, addressTarget);
+//    oscSenderAddresses.insert(id, addressTarget);
 }
 
 void OscEngine::deleteOscSender(int id) {
@@ -314,13 +317,15 @@ void OscEngine::updateOscSenderAddressTarget(int id, QString addressTarget) {
         qDebug() << "updateOscSenderAddressTarget (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\taddressTarget = " << addressTarget;
     }
 
-    if(!oscSenders.contains(id)) {
-        // we allow this to happen without an exception because this can occur when deleting a generator.
-        // there is a race condition between the deletion of the Generator and its associated OscSender when AppModel orders their respective threads (computeThread and oscThread) to delete them later.
-        // this makes it possible to attempt to edit the properties of an OscSender that doesn't exist.
-        return;
-    }
-    oscSenderAddresses.insert(id, addressTarget);
+//    if(!oscSenders.contains(id)) {
+//        // we allow this to happen without an exception because this can occur when deleting a generator.
+//        // there is a race condition between the deletion of the Generator and its associated OscSender when AppModel orders their respective threads (computeThread and oscThread) to delete them later.
+//        // this makes it possible to attempt to edit the properties of an OscSender that doesn't exist.
+//        return;
+//    }
+//    oscSenderAddresses.insert(id, addressTarget);
+
+    oscSenderAddress = addressTarget;
 }
 
 void OscEngine::updateOscSenderPort(int id, int port) {
@@ -332,11 +337,16 @@ void OscEngine::updateOscSenderPort(int id, int port) {
         qDebug() << "updateOscSenderPort (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\tport = " << port;
     }
 
-    if(!oscSenders.contains(id)) {
-        // we allow this to happen without an exception because this can occur when deleting a generator.
-        // there is a race condition between the deletion of the Generator and its associated OscSender when AppModel orders their respective threads (computeThread and oscThread) to delete them later.
-        // this makes it possible to attempt to edit the properties of an OscSender that doesn't exist.
-        return;
+//    if(!oscSenders.contains(id)) {
+//        // we allow this to happen without an exception because this can occur when deleting a generator.
+//        // there is a race condition between the deletion of the Generator and its associated OscSender when AppModel orders their respective threads (computeThread and oscThread) to delete them later.
+//        // this makes it possible to attempt to edit the properties of an OscSender that doesn't exist.
+//        return;
+//    }
+//    oscSenders.value(id)->setPort(port);
+
+    QHash<int, QSharedPointer<OscSender>>::iterator i;
+    for(i = oscSenders.begin(); i !=oscSenders.end(); ++i) {
+        i.value()->setPort(oscSenderPort);
     }
-    oscSenders.value(id)->setPort(port);
 }

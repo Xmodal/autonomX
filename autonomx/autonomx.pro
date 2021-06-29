@@ -3,7 +3,7 @@ QT += core
 QT += qml
 QT += gui
 # QT += serialport
-CONFIG += c++11
+CONFIG += c++17
 
 # registers custom QML types
 CONFIG += qmltypes

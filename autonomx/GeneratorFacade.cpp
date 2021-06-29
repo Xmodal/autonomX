@@ -61,6 +61,10 @@ GeneratorFacade::GeneratorFacade(Generator *generator) : QQmlPropertyMap(this, n
     // connect facade changes to generator
     QObject::connect(this, &GeneratorFacade::valueChanged, generator, &Generator::updateValue, Qt::QueuedConnection);
 
+    // ba ba booey
+//    QObject::connect(this, &GeneratorFacade::initializeFired, generator, &Generator::initialize, Qt::QueuedConnection);
+//    QObject::connect(this, &GeneratorFacade::resetRegionsFired, generator, &Generator::resetRegions, Qt::QueuedConnection);
+
     // [DEPRECATED] connect facade region model changes to region set
     // NO LONGER NECESSARY! :) but i'll keep it here for reference in case things go to shit somehow
 //    QObject::connect(inputRegionModel.data(), &GeneratorRegionModel::addRegionFromModel, generator->getInputRegionSet(), &GeneratorRegionSet::addRegion, Qt::QueuedConnection);
@@ -122,4 +126,9 @@ void GeneratorFacade::initialize()
 void GeneratorFacade::resetParameters()
 {
     generator->resetParameters();
+}
+
+void GeneratorFacade::resetRegions()
+{
+    generator->resetRegions();
 }

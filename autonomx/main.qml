@@ -22,7 +22,7 @@ ApplicationWindow {
     }
 
     property string lastMessageReceived: ""
-    property int activeGeneratorIndex: -1
+    property int activeGeneratorIndex: 0
 
     // the meta model used to create the interface
     // will only change when the generator type changes

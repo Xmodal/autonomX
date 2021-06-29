@@ -153,24 +153,28 @@ ColumnLayout {
             }
 
             // restart/reset buttons
-            GenericButton {
-                id: restartButton
-                text: "Restart"
-                visible: activeGeneratorIndex >= 0
-
-                Layout.rightMargin: 5
-
-                onClicked: generatorModel.at(activeGeneratorIndex).initialize()
-            }
-
-            GenericButton {
-                id: resetParametersButton
-                text: "Reset params"
-                visible: activeGeneratorIndex >= 0
-
+            RowLayout {
+                spacing: 5
                 Layout.rightMargin: 15
+                visible: activeGeneratorIndex >= 0
 
-                onClicked: generatorModel.at(activeGeneratorIndex).resetParameters()
+                GenericButton {
+                    id: restartButton
+                    text: "Restart"
+                    onClicked: generatorModel.at(activeGeneratorIndex).initialize()
+                }
+
+                GenericButton {
+                    id: resetParametersButton
+                    text: "Reset params"
+                    onClicked: generatorModel.at(activeGeneratorIndex).resetParameters()
+                }
+
+                GenericButton {
+                    id: resetRegionsButton
+                    text: "Reset regions"
+                    onClicked: generatorModel.at(activeGeneratorIndex).resetRegions()
+                }
             }
 
             IconButton {

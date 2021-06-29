@@ -143,6 +143,7 @@ public:
     // reinitialize generator
     virtual void initialize() = 0;
     void resetParameters();
+    void resetRegions();
 
     // this initializes the I/O region sets as default input/output configurations
     void initializeRegionSets();

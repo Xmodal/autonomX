@@ -147,12 +147,11 @@ void GeneratorRegionSet::addRegion(int x, int y, int width, int height) {
     // tell the model we are done adding rows
     endInsertRows();
 
-    emit rowCountChanged(regionList.size());
-
     // relink connections
     relinkConnections();
 
     // emit signal so that backend updates
+    emit rowCountChanged(regionList.size());
     // emit addRegionFromSet(x, y, width, height);
 }
 
@@ -288,7 +287,13 @@ void GeneratorRegionSet::writeJson(QJsonArray &json) const
 }
 
 void GeneratorRegionSet::deleteAllRegions() {
-    for (QList<QSharedPointer<GeneratorRegion>>::iterator it = regionList.begin(); it != regionList.end(); it++) {
-        delete (*it).data();
-    }
+    // tell the model that we about to Fuck Shit Up
+    beginResetModel();
+
+    // Fuck Shit Up Here
+    deleteConnections();
+    regionList.clear();
+
+    // end shit fucking up
+    endResetModel();
 }

@@ -287,13 +287,13 @@ void GeneratorRegionSet::writeJson(QJsonArray &json) const
 }
 
 void GeneratorRegionSet::deleteAllRegions() {
-    // tell the model that we about to Fuck Shit Up
+    // anticipation
     beginResetModel();
 
-    // Fuck Shit Up Here
+    // execution
     deleteConnections();
     regionList.clear();
 
-    // end shit fucking up
+    // release
     endResetModel();
 }

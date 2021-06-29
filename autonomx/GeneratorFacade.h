@@ -43,11 +43,6 @@ public slots:
     Q_INVOKABLE void resetParameters();
     Q_INVOKABLE void resetRegions();
 signals:
-    // for generator methods
-    void initializeFired();
-    void resetParametersFired();
-    void resetRegionsFired();
-
     // this is fired when a value is changed from a call to the updateValueFromAlias function, in contrast to valueChanged, which fires when the underlying QQmlPropertyMap is updated from QML
     void valueChangedFromAlias(const QString &key, const QVariant &value);
 };

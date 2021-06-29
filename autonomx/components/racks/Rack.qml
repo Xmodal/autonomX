@@ -120,7 +120,9 @@ Item {
         // (called inside each discrete loaded component when content height is likely to change)
         Connections {
             target: contentLoader.item
-            onChangeContent: contentLoader.disableAnimation = true
+            function onChangeContent() {
+                contentLoader.disableAnimation = true
+            }
         }
     }
 

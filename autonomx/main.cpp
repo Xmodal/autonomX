@@ -75,7 +75,6 @@ int main(int argc, char *argv[]) {
 
     qDebug() << "Built against Qt" << QT_VERSION_STR;
     qDebug() << "Using Qt" << QLibraryInfo::version() << "at runtime";
-    qDebug() << "GUI id = " << QThread::currentThreadId();
 
 
     // expose custom types to QML and Qt's meta type system

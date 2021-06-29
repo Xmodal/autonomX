@@ -30,32 +30,15 @@ Item {
         }
     }
 
-//    Shortcut {
-//        sequence: "Shift+PgUp"
-//        onActivated: latticeView.goToPrevRegion()
-//    }
-//    Shortcut {
-//        sequence: "Shift+PgDown"
-//        onActivated: latticeView.goToNextRegion()
-//    }
-//    Shortcut {
-//        sequence: ""
-//        onActivated: latticeView.switchCurrRegionType()
-//    }
-
     // lattice view
-//    Shortcut {
-//        sequence: "Alt+I"
-//        onActivated: {
-
-//        }
-//    }
-//    Shortcut {
-//        sequence: "Alt+O"
-//        onActivated: {
-
-//        }
-//    }
+    Shortcut {
+        sequence: "Alt+I"
+        onActivated: latticeView.inputsVisible = !latticeView.inputsVisible
+    }
+    Shortcut {
+        sequence: "Alt+O"
+        onActivated: latticeView.outputsVisible = !latticeView.outputsVisible
+    }
 
     Shortcut {
         sequence: "Shift+I"

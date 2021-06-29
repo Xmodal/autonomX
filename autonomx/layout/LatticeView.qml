@@ -150,7 +150,6 @@ Item {
         onClicked: {
             latticeView.switchSelectedRegion(-1, -1);
             mainContent.forceActiveFocus()
-            showGeneratorList = false;
         }
     }
 

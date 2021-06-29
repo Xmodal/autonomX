@@ -120,23 +120,26 @@ ApplicationWindow {
 
             Header {}
 
-            RowLayout {
+            Item {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                spacing: 0
 
-                LatticeView {
-                    id: latticeView
+                RowLayout {
+                    anchors.fill: parent
+                    spacing: 0
 
-                    // as overlay
-                    GeneratorList {
-                        enabled: showGeneratorList
-                        visible: enabled
+                    LatticeView {
+                        id: latticeView
+                    }
+
+                    RackList {
+                        visible: activeGeneratorIndex >= 0 && showGeneratorSettings
                     }
                 }
 
-                RackList {
-                    visible: activeGeneratorIndex >= 0 && showGeneratorSettings
+                // as overlay
+                GeneratorList {
+                    enabled: showGeneratorList
                 }
             }
         }

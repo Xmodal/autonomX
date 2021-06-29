@@ -48,11 +48,23 @@ Control {
 
     // break x/y property bindings
     Component.onCompleted: {
-        // assign connections once region is created
+        // assign size change auto-drag once region is created
         // (for some reason, having them initialized pre-completion
         // causes uninvoked snapping when going from a generator to another)
-        region.latticeWidthChanged.connect(function() { region.snapToGrid("drag") } )
-        region.latticeHeightChanged.connect(function() { region.snapToGrid("drag") } )
+        const sizeDrag = () => region.snapToGrid("drag");
+
+        const connectWidth = () => {
+            region.latticeWidthChanged.disconnect(connectWidth);
+            region.latticeWidthChanged.connect(sizeDrag);
+        }
+
+        const connectHeight = () => {
+            region.latticeHeightChanged.disconnect(connectHeight);
+            region.latticeHeightChanged.connect(sizeDrag);
+        }
+
+        region.latticeWidthChanged.connect(connectWidth);
+        region.latticeHeightChanged.connect(connectHeight);
     }
 
     // matrix.setMask() update slots
@@ -88,6 +100,8 @@ Control {
 
     // snap to grid on drop / resize
     function snapToGrid(evtType) {
+        console.log("asdf")
+
         // clamp w/h when left corner/border dragged in the negatives
         var offsetW = 0, offsetH = 0;
         if (evtType === "resize") {
@@ -115,9 +129,14 @@ Control {
             if (newRect.y + newRect.height > regions.latticeHeight) newRect.y = regions.latticeHeight - newRect.height;
         }
 
+        // unbind
+        x = x;
+        y = y;
+        width = width;
+        height = height;
+
         // update model here
         rect = newRect;
-        area = rect.width * rect.height;
 
         // then reevaluate pixel coordinates by animating them
         snapX.to = regions.width * rect.x / regions.latticeWidth;
@@ -128,6 +147,8 @@ Control {
         snapY.restart();
         snapWidth.restart();
         snapHeight.restart();
+
+        // rebind individually on animation end
     }
 
     // update region bounds

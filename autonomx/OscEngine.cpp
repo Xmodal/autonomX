@@ -290,6 +290,39 @@ void OscEngine::deleteOscSender(int id) {
     oscSenders.remove(id);
 }
 
+int OscEngine::getReceiverPort() const
+{
+    return this->oscReceiverPort;
+}
+
+int OscEngine::getSenderPort() const
+{
+    return this->oscSenderPort;
+}
+
+QString OscEngine::getSenderHostAddress() const
+{
+    return this->senderHostAddress;
+}
+
+void OscEngine::writeReceiverPort(int port)
+{
+    this->oscReceiverPort = port;
+    emit receiverPortChanged(port);
+}
+
+void OscEngine::writeSenderPort(int port)
+{
+    this->oscSenderPort = port;
+    emit senderPortChanged(port);
+}
+
+void OscEngine::writeSenderHostAddress(QString address)
+{
+    this->senderHostAddress = address;
+    emit senderHostAddressChanged(address);
+}
+
 void OscEngine::updateOscSenderAddressHost(int id, QString addressHost) {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(

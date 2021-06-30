@@ -61,6 +61,11 @@ ColumnLayout {
             Item {
                 Layout.fillWidth: true
             }
+
+            OscSettings {
+                Layout.fillWidth: false
+                Layout.fillHeight: true
+            }
         }
 
         Label {
@@ -77,6 +82,7 @@ ColumnLayout {
     // generator bar
     Item {
         id: header
+        z: -1
 
         Layout.fillWidth: true
         Layout.preferredHeight: Stylesheet.headerHeight

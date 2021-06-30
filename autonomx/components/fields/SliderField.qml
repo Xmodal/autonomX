@@ -10,7 +10,7 @@ Field {
 
     property real minVal: 0.0
     property real maxVal: 1.0
-    property real currVal: propName && generatorModel.at(window.activeGeneratorIndex) ? generatorModel.at(window.activeGeneratorIndex)[propName] : 0.5
+    property real currVal: propName && target ? target[propName] : 0.5
     property real exponent: 1.0
     property int precision: 5
     property real step: 0.0

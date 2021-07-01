@@ -27,8 +27,10 @@ Generator::Generator(int id, GeneratorMeta * meta) {
     this->id = id;
     this->meta = meta;
     // create default generatorName from generator type + id
-    QString idString = QString::number(id);
+    QString idString = QString::number(id).prepend("_0");
     this->generatorName = this->meta->getType() + idString;
+//    QString idString = QString::number(id).prepend("0").append("_");
+//    this->generatorName = idString + this->meta->getType();
     this->userNotes = "";
 
     if(flagDebug) {

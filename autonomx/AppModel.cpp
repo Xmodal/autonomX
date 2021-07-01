@@ -143,7 +143,7 @@ QSharedPointer<Generator> AppModel::createGenerator(QString type) {
     // we sort the taken IDs
     std::sort(takenIDs.begin(), takenIDs.end());
     // we search for a free ID by looking through the sorted taken IDs, incrementing the next ID if it is already taken
-    int nextID = 0;
+    int nextID = 1;
     for(QList<int>::iterator it = takenIDs.begin(); it != takenIDs.end(); it++) {
         int takenID = (*it);
         if(nextID == takenID) {

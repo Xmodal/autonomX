@@ -62,8 +62,6 @@ void GeneratorMeta::registerMeta() {
     // by importing assets in the .qrc and reading them from there
     QString basePath = ":/generators/" + this->type + "/";
 
-//    qDebug() << basePath;
-
     // load meta file and open
     QFile loadFile{basePath + "meta.json"};
     if (!loadFile.open(QIODevice::ReadOnly | QIODevice::Text)) {

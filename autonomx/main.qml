@@ -150,7 +150,7 @@ ApplicationWindow {
 
             // modifiers
             if (event.key === Qt.Key_Alt) altPressed = true
-            if (event.key === Qt.Key_Shift)shiftPressed = true
+            if (event.key === Qt.Key_Shift) shiftPressed = true
         }
         Keys.onReleased: {
             if (event.key === Qt.Key_Alt) {

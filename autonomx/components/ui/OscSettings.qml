@@ -116,9 +116,9 @@ Item {
                     labelText: "In port"
                     fieldBg: Stylesheet.colors.darkGrey
 
-                    defaultNum: 7000
-                    // target: oscEngine
-                    // propName: "receiverPort"
+//                    defaultNum: 7000
+                    target: oscEngine
+                    propName: "receiverPort"
                 }
 
                 NumberField {

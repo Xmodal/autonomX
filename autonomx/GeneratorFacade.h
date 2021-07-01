@@ -20,7 +20,6 @@
 #include <QSharedPointer>
 
 #include "Generator.h"
-#include "GeneratorRegionModel.h"
 
 class GeneratorFacade : public QQmlPropertyMap
 {
@@ -29,19 +28,20 @@ public:
     GeneratorFacade(Generator *alias);
     ~GeneratorFacade();
 
-    Q_INVOKABLE GeneratorRegionModel* getInputRegionModel();
-    Q_INVOKABLE GeneratorRegionModel* getOutputRegionModel();
-
-    Q_INVOKABLE void initialize();
-    Q_INVOKABLE void resetParameters();
+    Q_INVOKABLE GeneratorRegionSet* getInputRegionModel();
+    Q_INVOKABLE GeneratorRegionSet* getOutputRegionModel();
 private:
-    QSharedPointer<GeneratorRegionModel> inputRegionModel;
-    QSharedPointer<GeneratorRegionModel> outputRegionModel;
+//    QSharedPointer<GeneratorRegionModel> inputRegionModel;
+//    QSharedPointer<GeneratorRegionModel> outputRegionModel;
     bool flagDebug = false;
 
     Generator* generator;
 public slots:
     void updateValueFromAlias(const QString &key, const QVariant &value);
+
+    Q_INVOKABLE void initialize();
+    Q_INVOKABLE void resetParameters();
+    Q_INVOKABLE void resetRegions();
 signals:
     // this is fired when a value is changed from a call to the updateValueFromAlias function, in contrast to valueChanged, which fires when the underlying QQmlPropertyMap is updated from QML
     void valueChangedFromAlias(const QString &key, const QVariant &value);

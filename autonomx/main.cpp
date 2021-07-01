@@ -29,8 +29,6 @@
 #include "GeneratorField.h"
 #include "GeneratorFacade.h"
 #include "GeneratorModel.h"
-#include "GeneratorRegion.h"
-#include "GeneratorRegionModel.h"
 #include "GeneratorLattice.h"
 #include "GeneratorMetaModel.h"
 #include "SpikingNet.h"
@@ -83,18 +81,17 @@ int main(int argc, char *argv[]) {
     qmlRegisterUncreatableType<Generator>("ca.hexagram.xmodal.autonomx", 1, 0, "Generator", "Cannot instanciate Generator.");
     qmlRegisterUncreatableType<GeneratorFacade>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorFacade", "Cannot instanciate GeneratorFacade.");
     qmlRegisterUncreatableType<GeneratorRegion>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorRegion", "Cannot instanciate GeneratorRegion.");
-    qmlRegisterUncreatableType<GeneratorRegionModel>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorRegionModel", "Cannot instanciate GeneratorRegionModel.");
+    qmlRegisterUncreatableType<GeneratorRegionSet>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorRegionSet", "Cannot instanciate GeneratorRegionSet.");
     qmlRegisterUncreatableType<GeneratorMeta>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorMeta", "Cannot instanciate GeneratorMeta.");
     qmlRegisterType<GeneratorLattice>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorLattice");
     qRegisterMetaType<QSharedPointer<Generator>>();
 
-    // register generators to QML engine
+    //// Register All Generator Types to QML Engine Here ////
     // TODO: find a way to not have to declare these in main.cpp;
     // maybe on type registry initialization?
     qmlRegisterUncreatableType<SpikingNet>("ca.hexagram.xmodal.autonomx", 1, 0, "SpikingNet", "Cannot instanciate SpikingNet.");
-    qmlRegisterUncreatableType<WolframCA>("ca.hexagram.xmodal.autonomx", 1, 0, "WolframCA", "Cannot instanciate WolframCA.");
     qmlRegisterUncreatableMetaObject(NeuronTypeNS::staticMetaObject, "ca.hexagram.xmodal.autonomx", 1, 0, "NeuronType", "Cannot instanciate NeuronType.");
-
+    qmlRegisterUncreatableType<WolframCA>("ca.hexagram.xmodal.autonomx", 1, 0, "WolframCA", "Cannot instanciate WolframCA.");
 
     // create initial generator
     AppModel::getInstance().createGenerator("SpikingNet");

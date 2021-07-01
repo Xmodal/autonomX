@@ -178,6 +178,7 @@ if(currentGeneration>0){
     iterationNumber++;
 }
 
+
 int WolframCA::findCellValue(int a, int b, int c) {
     if (a == 1 && b == 1 && c == 1) {
         return ruleset[7];

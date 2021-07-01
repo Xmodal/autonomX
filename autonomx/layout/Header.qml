@@ -108,6 +108,15 @@ ColumnLayout {
                 checkable: true
                 checked: showGeneratorList
                 onCheckedChanged: showGeneratorList = checked
+
+                // right border
+                Rectangle {
+                    width: 1
+                    height: parent.height - 1
+                    color: Stylesheet.colors.white
+                    opacity: 0.25
+                    anchors.right: parent.right
+                }
             }
 
             // "Lattice view" label
@@ -135,7 +144,7 @@ ColumnLayout {
 
                 text: activeGeneratorIndex < 0 ? "" : generatorModel.at(activeGeneratorIndex).generatorName
                 opacity: activeGeneratorIndex < 0 ? 0.4 : 1
-                font: Stylesheet.fonts.text
+                font: Stylesheet.fonts.fieldText
             }
 
             // filler
@@ -154,24 +163,28 @@ ColumnLayout {
             }
 
             // restart/reset buttons
-            GenericButton {
-                id: restartButton
-                text: "Restart"
-                visible: activeGeneratorIndex >= 0
-
-                Layout.rightMargin: 5
-
-                onClicked: generatorModel.at(activeGeneratorIndex).initialize()
-            }
-
-            GenericButton {
-                id: resetParametersButton
-                text: "Reset params"
-                visible: activeGeneratorIndex >= 0
-
+            RowLayout {
+                spacing: 5
                 Layout.rightMargin: 15
+                visible: activeGeneratorIndex >= 0
 
-                onClicked: generatorModel.at(activeGeneratorIndex).resetParameters()
+                GenericButton {
+                    id: restartButton
+                    text: "Restart"
+                    onClicked: generatorModel.at(activeGeneratorIndex).initialize()
+                }
+
+                GenericButton {
+                    id: resetParametersButton
+                    text: "Reset params"
+                    onClicked: generatorModel.at(activeGeneratorIndex).resetParameters()
+                }
+
+                GenericButton {
+                    id: resetRegionsButton
+                    text: "Reset regions"
+                    onClicked: generatorModel.at(activeGeneratorIndex).resetRegions()
+                }
             }
 
             IconButton {
@@ -183,7 +196,25 @@ ColumnLayout {
                 checked: showGeneratorSettings
                 onCheckedChanged: showGeneratorSettings = checked
                 enabled: activeGeneratorIndex >= 0
+
+                // left border
+                Rectangle {
+                    width: 1
+                    height: parent.height - 1
+                    color: Stylesheet.colors.white
+                    opacity: 0.25
+                    anchors.left: parent.left
+                }
             }
+        }
+
+        // bottom border
+        Rectangle {
+            width: parent.width
+            height: 1
+            color: Stylesheet.colors.white
+            opacity: 0.25
+            anchors.bottom: parent.bottom
         }
     }
 }

@@ -9,6 +9,7 @@ Button {
     property color activeColor: Stylesheet.colors.generator
     property color neutralColor: Stylesheet.colors.darkGrey
     property color hoverColor: Stylesheet.colors.black
+    property color activeTextColor: Stylesheet.colors.white
 
     property real paddingSide: 15
 
@@ -18,8 +19,10 @@ Button {
     rightPadding: paddingSide
 
     contentItem: Label {
+        color: pressed ? activeTextColor : Stylesheet.colors.white
         font: Stylesheet.fonts.label
-        opacity: hovered ? 1 : 0.75
+
+        opacity: hovered || pressed ? 1 : 0.6
         text: genericButton.text
         verticalAlignment: Qt.AlignVCenter
     }
@@ -28,6 +31,11 @@ Button {
         implicitHeight: parent.height
         color: pressed ? activeColor : (hovered ? hoverColor : neutralColor)
     }
+
+    // tab nav outline
+    // TODO: apply this to every focusable element in the page
+    // except from regions because these have their own focus policies
+    // FocusOutline {}
 
     CursorShaper {
         id: mouseArea

@@ -3,7 +3,7 @@ QT += core
 QT += qml
 QT += gui
 # QT += serialport
-CONFIG += c++11
+CONFIG += c++17
 
 # registers custom QML types
 CONFIG += qmltypes
@@ -45,7 +45,6 @@ SOURCES += \
     GeneratorMetaModel.cpp \
     GeneratorModel.cpp \
     GeneratorRegion.cpp \
-    GeneratorRegionModel.cpp \
     GeneratorRegionSet.cpp \
     Izhikevich.cpp \
     OscEngine.cpp \
@@ -98,7 +97,6 @@ HEADERS += \
     GeneratorMetaModel.h \
     GeneratorModel.h \
     GeneratorRegion.h \
-    GeneratorRegionModel.h \
     GeneratorRegionSet.h \
     Izhikevich.h \
     NeuronType.h \

@@ -25,9 +25,11 @@ class CursorOverrider : public QObject {
     Q_OBJECT
 private:
     QGuiApplication *app;
+    QCursor crossbeam;
 public:
     CursorOverrider(QGuiApplication* app, QObject* parent=nullptr);
 public slots:
+    void overrideWithBeam();
     void overrideCursor(Qt::CursorShape shape);
     void restoreCursor();
     void sendPress(QObject* object, QPointF pos, int button);

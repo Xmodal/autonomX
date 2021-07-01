@@ -52,27 +52,29 @@ GeneratorFacade::GeneratorFacade(Generator *generator) : QQmlPropertyMap(this, n
     }
 
     // init region models
-    inputRegionModel = QSharedPointer<GeneratorRegionModel>(new GeneratorRegionModel(0));
-    outputRegionModel = QSharedPointer<GeneratorRegionModel>(new GeneratorRegionModel(1));
+    // no longer necessary because we reference GeneratorRegionSet instances in Generator directly now
+//    inputRegionModel = QSharedPointer<GeneratorRegionModel>(new GeneratorRegionModel(0));
+//    outputRegionModel = QSharedPointer<GeneratorRegionModel>(new GeneratorRegionModel(1));
 
     // connect generator changes to facade
     QObject::connect(generator, &Generator::valueChanged, this, &GeneratorFacade::updateValueFromAlias, Qt::QueuedConnection);
     // connect facade changes to generator
     QObject::connect(this, &GeneratorFacade::valueChanged, generator, &Generator::updateValue, Qt::QueuedConnection);
 
-    // connect facade region model changes to region set
-    QObject::connect(inputRegionModel.data(), &GeneratorRegionModel::addRegionFromModel, generator->getInputRegionSet(), &GeneratorRegionSet::addRegion, Qt::QueuedConnection);
-    QObject::connect(outputRegionModel.data(), &GeneratorRegionModel::addRegionFromModel, generator->getOutputRegionSet(), &GeneratorRegionSet::addRegion, Qt::QueuedConnection);
+    // [DEPRECATED] connect facade region model changes to region set
+    // NO LONGER NECESSARY! :) but i'll keep it here for reference in case things go to shit somehow
+//    QObject::connect(inputRegionModel.data(), &GeneratorRegionModel::addRegionFromModel, generator->getInputRegionSet(), &GeneratorRegionSet::addRegion, Qt::QueuedConnection);
+//    QObject::connect(outputRegionModel.data(), &GeneratorRegionModel::addRegionFromModel, generator->getOutputRegionSet(), &GeneratorRegionSet::addRegion, Qt::QueuedConnection);
 
-    QObject::connect(inputRegionModel.data(), &GeneratorRegionModel::deleteRegionFromModel, generator->getInputRegionSet(), &GeneratorRegionSet::deleteRegion, Qt::QueuedConnection);
-    QObject::connect(outputRegionModel.data(), &GeneratorRegionModel::deleteRegionFromModel, generator->getOutputRegionSet(), &GeneratorRegionSet::deleteRegion, Qt::QueuedConnection);
+//    QObject::connect(inputRegionModel.data(), &GeneratorRegionModel::deleteRegionFromModel, generator->getInputRegionSet(), &GeneratorRegionSet::deleteRegion, Qt::QueuedConnection);
+//    QObject::connect(outputRegionModel.data(), &GeneratorRegionModel::deleteRegionFromModel, generator->getOutputRegionSet(), &GeneratorRegionSet::deleteRegion, Qt::QueuedConnection);
 
-    QObject::connect(inputRegionModel.data(), &GeneratorRegionModel::writeRegionFromModel, generator->getInputRegionSet(), &GeneratorRegionSet::writeRegion, Qt::QueuedConnection);
-    QObject::connect(outputRegionModel.data(), &GeneratorRegionModel::writeRegionFromModel, generator->getOutputRegionSet(), &GeneratorRegionSet::writeRegion, Qt::QueuedConnection);
+//    QObject::connect(inputRegionModel.data(), &GeneratorRegionModel::writeRegionFromModel, generator->getInputRegionSet(), &GeneratorRegionSet::writeRegion, Qt::QueuedConnection);
+//    QObject::connect(outputRegionModel.data(), &GeneratorRegionModel::writeRegionFromModel, generator->getOutputRegionSet(), &GeneratorRegionSet::writeRegion, Qt::QueuedConnection);
 
-    // connect facade region set changes to region model
-    QObject::connect(generator->getInputRegionSet(), &GeneratorRegionSet::writeRegionFromSet, inputRegionModel.data(), &GeneratorRegionModel::writeRegion, Qt::QueuedConnection);
-    QObject::connect(generator->getOutputRegionSet(), &GeneratorRegionSet::writeRegionFromSet, outputRegionModel.data(), &GeneratorRegionModel::writeRegion, Qt::QueuedConnection);
+//    // connect facade region set changes to region model
+//    QObject::connect(generator->getInputRegionSet(), &GeneratorRegionSet::writeRegionFromSet, inputRegionModel.data(), &GeneratorRegionModel::writeRegion, Qt::QueuedConnection);
+//    QObject::connect(generator->getOutputRegionSet(), &GeneratorRegionSet::writeRegionFromSet, outputRegionModel.data(), &GeneratorRegionModel::writeRegion, Qt::QueuedConnection);
 }
 
 GeneratorFacade::~GeneratorFacade() {
@@ -103,12 +105,12 @@ void GeneratorFacade::updateValueFromAlias(const QString &key, const QVariant &v
     }
 }
 
-GeneratorRegionModel* GeneratorFacade::getInputRegionModel() {
-    return inputRegionModel.data();
+GeneratorRegionSet* GeneratorFacade::getInputRegionModel() {
+    return generator->getInputRegionSet();
 }
 
-GeneratorRegionModel* GeneratorFacade::getOutputRegionModel() {
-    return outputRegionModel.data();
+GeneratorRegionSet* GeneratorFacade::getOutputRegionModel() {
+    return generator->getOutputRegionSet();
 }
 
 // i'll be quite frank... this is rather dumb
@@ -120,4 +122,9 @@ void GeneratorFacade::initialize()
 void GeneratorFacade::resetParameters()
 {
     generator->resetParameters();
+}
+
+void GeneratorFacade::resetRegions()
+{
+    generator->resetRegions();
 }

@@ -41,8 +41,19 @@ Generator::Generator(int id, GeneratorMeta * meta) {
         qDebug() << "constructor (Generator)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id;
     }
 
+    // create empty sets
     inputRegionSet = QSharedPointer<GeneratorRegionSet>(new GeneratorRegionSet(0));
     outputRegionSet = QSharedPointer<GeneratorRegionSet>(new GeneratorRegionSet(1));
+
+    // connect row count signals
+    // we need to do this as a proxy measure
+    // because directly accessing a Qt property from GeneratorRegionSet throws an error
+    QObject::connect(inputRegionSet.data(), &GeneratorRegionSet::rowCountChanged, this, [=](int inputCount) {
+        emit valueChanged("inputCount", inputCount);
+    });
+    QObject::connect(outputRegionSet.data(), &GeneratorRegionSet::rowCountChanged, this, [=](int outputCount) {
+        emit valueChanged("outputCount", outputCount);
+    });
 }
 
 
@@ -111,6 +122,16 @@ QString Generator::getOscOutputAddressHost() {
 
 QString Generator::getOscOutputAddressTarget() {
     return oscOutputAddressTarget;
+}
+
+int Generator::getInputCount() const
+{
+    return inputRegionSet->rowCount();
+}
+
+int Generator::getOutputCount() const
+{
+    return outputRegionSet->rowCount();
 }
 
 int Generator::getLatticeWidth() {
@@ -360,27 +381,11 @@ void Generator::readJson(const QJsonObject &json)
 
 
     // 002. REGION DATA
-
-    // TODO: there's a bit of a problem here -
-    // by default, four inputs and four outputs already exist
-    // we can't just selectively readJson without considering the previous RegionSet counts
-    // might need to modify the Generator constructor ever so slightly to compensate for this...
-    // until then, we will assume that there are always four inputs and four outputs at any time
-
     QJsonArray inputs = json["inputs"].toArray();
     QJsonArray outputs = json["outputs"].toArray();
 
-    // inputs
-    for (int i = 0; i < inputs.size(); i++) {
-        GeneratorRegion *input = inputRegionSet->getRegion(i);
-        input->readJson(inputs[i].toObject());
-    }
-
-    // outputs
-    for (int i = 0; i < outputs.size(); i++) {
-        GeneratorRegion *output = outputRegionSet->getRegion(i);
-        output->readJson(outputs[i].toObject());
-    }
+    inputRegionSet->readJson(inputs);
+    outputRegionSet->readJson(outputs);
 }
 
 void Generator::writeJson(QJsonObject &json) const
@@ -421,29 +426,8 @@ void Generator::writeJson(QJsonObject &json) const
     QJsonArray inputRegions;
     QJsonArray outputRegions;
 
-    // scan thru input regions
-    for (int i = 0; i < inputRegionSet->getRegionCount(); i++) {
-        GeneratorRegion* region = inputRegionSet->getRegion(i);
-
-        // write to obj
-        QJsonObject obj;
-        region->writeJson(obj);
-
-        // append
-        inputRegions.append(obj);
-    }
-
-    // scan thru output regions
-    for (int i = 0; i < outputRegionSet->getRegionCount(); i++) {
-        GeneratorRegion* region = outputRegionSet->getRegion(i);
-
-        // write to obj
-        QJsonObject obj;
-        region->writeJson(obj);
-
-        // append
-        outputRegions.append(obj);
-    }
+    inputRegionSet->writeJson(inputRegions);
+    outputRegionSet->writeJson(outputRegions);
 
     // write to main JSON
     json["inputs"] = inputRegions;
@@ -484,11 +468,30 @@ void Generator::resetParameters()
         }
     }
 
-    // TODO: reset input/output zones as well...?
-
     // re-initialize
     // probably unnecessary, some properties can call this when rewritten
-    initialize();
+   initialize();
+}
+
+void Generator::resetRegions()
+{
+    // input rectangles reset
+    inputRegionSet->deleteAllRegions();
+    for(int i = 0; i < 4; i++) {
+        inputRegionSet->addRegion(1+(i*5), 3, 3, 3);
+    }
+
+   // output rectangles reset
+   outputRegionSet->deleteAllRegions();
+   for(int i = 0; i < 4; i++) {
+       outputRegionSet->addRegion(1+(i*5), 14, 3, 3);
+   }
+}
+
+void Generator::initializeRegionSets()
+{
+    inputRegionSet->initialize();
+    outputRegionSet->initialize();
 }
 
 void Generator::updateValue(const QString &key, const QVariant &value) {
@@ -593,8 +596,8 @@ void Generator::unlockLatticeDataMutex() {
 
 void Generator::applyInputRegion() {
     // iterate over input regions
-    for(int i = 0; i < inputRegionSet->getRegionCount(); i++) {
-        GeneratorRegion* region = inputRegionSet->getRegion(i);
+    for(int i = 0; i < inputRegionSet->rowCount(); i++) {
+        GeneratorRegion* region = inputRegionSet->at(i);
 
         int xMax = region->getRect().x() + region->getRect().width();
         int yMax = region->getRect().y() + region->getRect().height();
@@ -610,8 +613,8 @@ void Generator::applyInputRegion() {
 
 void Generator::applyOutputRegion() {
     // iterate over output regions
-    for(int i = 0; i < inputRegionSet->getRegionCount(); i++) {
-        GeneratorRegion* region = outputRegionSet->getRegion(i);
+    for(int i = 0; i < outputRegionSet->rowCount(); i++) {
+        GeneratorRegion* region = outputRegionSet->at(i);
 
         int xMax = region->getRect().x() + region->getRect().width();
         int yMax = region->getRect().y() + region->getRect().height();
@@ -629,7 +632,7 @@ void Generator::applyOutputRegion() {
         sum /= (double) (region->getRect().width() * region->getRect().height());
 
         // write to region intensity
-        region->writeMirroredIntensity(sum);
+        region->writeIntensity(sum);
     }
 }
 

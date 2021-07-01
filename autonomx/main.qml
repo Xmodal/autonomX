@@ -13,6 +13,14 @@ import "./components/util"
 ApplicationWindow {
     id: window
 
+    onFocusObjectChanged: {
+        if (!activeFocusItem) {
+            altPressed = shiftPressed = false;
+        }
+
+        // console.log(activeFocusItem)
+    }
+
     property string lastMessageReceived: ""
     property int activeGeneratorIndex: -1
 
@@ -25,7 +33,7 @@ ApplicationWindow {
     }
 
     // UI switch flags
-    property bool showGeneratorList: true
+    property bool showGeneratorList: false
     property bool showGeneratorSettings: true
 
     // global field helper flags
@@ -45,8 +53,8 @@ ApplicationWindow {
 
     visible: true
     width: 1440
-    height: 720
-    title: Qt.application.name + " " + Qt.application.version
+    height: 810
+    title: (currentFileName.length > 0 ? "[" + currentFileName + "] " : "") + Qt.application.name + " " + Qt.application.version
 
     function toggleFullscreen() {
         if (visibility === Window.FullScreen) {
@@ -88,7 +96,7 @@ ApplicationWindow {
         };
     }
 
-    Component.onCompleted: registerComponents()
+    Component.onCompleted: registerComponents();
 
 
     // background
@@ -97,93 +105,42 @@ ApplicationWindow {
     }
 
 
-    // Shortcuts:
-    Shortcut {
-        sequence: "Esc"
-        onActivated: toggleFullscreen()
-    }
-    Shortcut {
-        sequences: [StandardKey.Quit, "Ctrl+Q"]
-        onActivated: quitThisApp()
-    }
-    Shortcut {
-        sequence: "PgUp"
-        onActivated: {
-            if (activeGeneratorIndex < 0) return;
-            var i = activeGeneratorIndex - 1;
-            if (i < 0) i++;
-            activeGeneratorIndex = i;
-        }
-    }
-    Shortcut {
-        sequence: "PgDown"
-        onActivated: {
-            var i = activeGeneratorIndex + 1;
-            if (i >= generatorModel.rowCount()) i--;
-            activeGeneratorIndex = i;
-        }
-    }
-
-    // serialization
-    Shortcut {
-        id: saveSC
-        sequences: [StandardKey.Save]
-
-        onActivated: saveManager.save()
-    }
-    Shortcut {
-        id: saveAsSC
-        sequences: [StandardKey.SaveAs, "Ctrl+Shift+S"]
-
-        onActivated: saveManager.saveAs()
-    }
-    Shortcut {
-        id: loadSC
-        sequences: [StandardKey.Open, "Ctrl+L"]
-
-        onActivated: saveManager.load()
-    }
-    Shortcut {
-        id: newSC
-        sequences: [StandardKey.New]
-
-        onActivated: console.log("new")
-    }
-    Shortcut {
-        id: undoSC
-        sequences: [StandardKey.Undo]
-
-        onActivated: console.log("undo");
-    }
-    Shortcut {
-        id: redoSC
-        sequences: [StandardKey.Redo, "Ctrl+Shift+Z"]
-
-        onActivated: console.log("redo");
-    }
+    // shortcut manager
+    ShortcutManager {}
 
     // main content
-    ColumnLayout {
-        id: mainContent
+    FocusScope {
         anchors.fill: parent
-        spacing: 0
+        focus: true
 
-        Header {}
-
-        RowLayout {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+        ColumnLayout {
+            id: mainContent
+            anchors.fill: parent
             spacing: 0
 
-            GeneratorList {
-                enabled: showGeneratorList
-                visible: enabled
-            }
+            Header {}
 
-            LatticeView {}
+            Item {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
 
-            RackList {
-                visible: activeGeneratorIndex >= 0 && showGeneratorSettings
+                RowLayout {
+                    anchors.fill: parent
+                    spacing: 0
+
+                    LatticeView {
+                        id: latticeView
+                    }
+
+                    RackList {
+                        visible: activeGeneratorIndex >= 0 && showGeneratorSettings
+                    }
+                }
+
+                // as overlay
+                GeneratorList {
+                    enabled: showGeneratorList
+                }
             }
         }
 
@@ -191,6 +148,7 @@ ApplicationWindow {
         Keys.onPressed: {
             if (editingTextField) return
 
+            // modifiers
             if (event.key === Qt.Key_Alt) altPressed = true
             if (event.key === Qt.Key_Shift) shiftPressed = true
         }

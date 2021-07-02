@@ -23,6 +23,7 @@
 
 #include "ComputeEngine.h"
 #include "OscEngine.h"
+#include "OscEngineFacade.h"
 #include "Generator.h"
 #include "GeneratorFacade.h"
 #include "GeneratorModel.h"
@@ -41,6 +42,7 @@ public:
     QSharedPointer<QThread>             getOscThread() const;
     QSharedPointer<ComputeEngine>       getComputeEngine() const;
     QSharedPointer<OscEngine>           getOscEngine() const;
+    QSharedPointer<OscEngineFacade>     getOscEngineFacade() const;
     QSharedPointer<Generator>           getGenerator(int id) const;
     QSharedPointer<GeneratorFacade>     getGeneratorFacade(int id) const;
     QSharedPointer<GeneratorModel>      getGeneratorModel() const;
@@ -78,6 +80,7 @@ private:
     // engines
     QSharedPointer<ComputeEngine> computeEngine;
     QSharedPointer<OscEngine> oscEngine;
+    QSharedPointer<OscEngineFacade> oscEngineFacade;
 
     // threads
     QSharedPointer<QThread> computeThread;

@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
     qmlEngine.rootContext()->setContextProperty("appModel", &AppModel::getInstance());
     qmlEngine.rootContext()->setContextProperty("generatorModel", AppModel::getInstance().getGeneratorModel().data());
     qmlEngine.rootContext()->setContextProperty("generatorMetaModel", AppModel::getInstance().getGeneratorMetaModel().data());
-    qmlEngine.rootContext()->setContextProperty("oscEngine", AppModel::getInstance().getOscEngine().data());
+    qmlEngine.rootContext()->setContextProperty("oscEngine", AppModel::getInstance().getOscEngineFacade().data());
     qmlEngine.rootContext()->setContextProperty("extensionName", extensionName);
     qmlEngine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (qmlEngine.rootObjects().isEmpty())

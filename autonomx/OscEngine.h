@@ -67,6 +67,9 @@ private:
     void writeSenderPort(int port);
     void writeSenderHostAddress(QString address);
 signals:
+    // to facade
+    void valueChanged(const QString &key, const QVariant &value);
+
     // relays updates to ComputeEngine::rec
     void receiveOscData(int id, QVariantList data);
 
@@ -78,6 +81,9 @@ private slots:
     // bridges OscReceiver::messageReceived to OscEngine::receiveOscData
     void receiveOscDataHandler(int id, const QString& oscAddress, const QVariantList& message);
 public slots:
+    // from facade
+    void updateValue(const QString &key, const QVariant &value);
+
     // starts processing for a generator using createOscReceiver and createOscSender and setups lambda connections from the generators to the updateOsc... methods. emitted from AppModel
     void startGeneratorOsc(QSharedPointer<Generator> generator);
     // stops processing for a generator using deleteOscReceiver and deleteOscSender. emitted by AppModel

@@ -152,6 +152,14 @@ void OscEngine::receiveOscDataHandler(int id, const QString& oscAddress, const Q
     }
 }
 
+void OscEngine::updateValue(const QString &key, const QVariant &value)
+{
+    QByteArray keyArray = key.toLocal8Bit();
+    char* keyBuffer = keyArray.data();
+
+    setProperty(keyBuffer, value);
+}
+
 void OscEngine::sendOscData(int id, QVariantList data) {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(

@@ -39,7 +39,7 @@ private:
     int rule = 102;
 
     //time scale to manipulate the speed of the iterations
-    int timeScale = 20;
+    int timeScale = 95;
 
     //pattern name
      GOLPatternType GOLPattern = GOLPatternType::Random;

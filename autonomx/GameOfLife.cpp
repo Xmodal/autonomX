@@ -30,6 +30,7 @@ void GameOfLife::initialize()
 
     // resize cells vector for current lattice size
     cells.resize(latticeHeight * latticeWidth);
+    //maintain a temporary cell to overwrite
     temp_cells.resize(latticeHeight * latticeWidth);
 
     //check the pattern before intializing; get the number and then map it to the pattern name
@@ -39,11 +40,11 @@ void GameOfLife::initialize()
         else if(typeNumber==1)
             drawPattern("Glider");
             else if(typeNumber==2)
-            drawPattern("SpaceShip");
+                drawPattern("SpaceShip");
                 else if(typeNumber==3)
-            drawPattern("RPentoMino");
+                    drawPattern("RPentoMino");
                     else if(typeNumber==4)
-            drawPattern("SpaceShip3");
+                         drawPattern("Pentadecathlon");
 
     // start the iterations
     iterationNumber = 1;
@@ -68,7 +69,7 @@ void GameOfLife::drawPattern(QString GOLPatternName){
                cells[i] = 0;
             }
             // assign cell values to 1 to make a glider in the middle of the lattice
-            int indexTop = (latticeHeight/2) % latticeWidth + latticeWidth/2  * latticeWidth;
+            int indexTop = (latticeWidth/2) % latticeWidth + latticeHeight/2  * latticeWidth;
             int indexMiddle = indexTop+latticeWidth;
             int indexBottom = indexMiddle+latticeWidth;
             cells[indexTop]=1; cells[indexTop+1]=1; cells[indexTop+2]=1;
@@ -81,7 +82,7 @@ void GameOfLife::drawPattern(QString GOLPatternName){
                 cells[i] = 0;
                 }
              // assign cell values to 1 to make a SpaceShip in the middle of the lattice
-                int indexTop = (latticeHeight/2) % latticeWidth + latticeWidth/2  * latticeWidth;
+                int indexTop = (latticeWidth/2) % latticeWidth + latticeHeight/2  * latticeWidth;
                 int indexMiddle = indexTop+latticeWidth;
                 int indexBottom = indexMiddle+latticeWidth;
                 int indexBottom2 = indexBottom+latticeWidth;
@@ -98,13 +99,27 @@ void GameOfLife::drawPattern(QString GOLPatternName){
                             cells[i] = 0;
                     }
                     // assign cell values to 1 to make a RPentoMino in the middle of the lattice
-                    int indexTop = (latticeHeight/2) % latticeWidth + latticeWidth/2  * latticeWidth;
+                    int indexTop = (latticeWidth/2) % latticeWidth + latticeHeight/2  * latticeWidth;
                     int indexMiddle = indexTop+latticeWidth;
                     int indexBottom = indexMiddle+latticeWidth;
                     cells[indexTop+1]=1; cells[indexTop+2]=1;
                     cells[indexMiddle]=1; cells[indexMiddle+1]=1;
                     cells[indexBottom+1]=1;
                     }
+                        else if (GOLPatternName=="Pentadecathlon"){
+                             // initialize all cell values to zero initially
+                            for(int i = 0; i < (latticeHeight * latticeWidth); ++i) {
+                                cells[i] = 0;
+                            }
+                            // assign cell values to 1 to make a Pentadecathlon in the middle of the lattice
+                            //index top here would refer to the leftmost cell of the middle rectangle here
+                            int indexTop = (latticeWidth/2) % latticeWidth + latticeHeight/2  * latticeWidth;
+                            int indexMiddle = indexTop+latticeWidth;
+                            int indexBottom = indexMiddle+latticeWidth;
+                            cells[indexTop] = 1; cells[indexTop+1]=1; cells[indexTop+3]=1;cells[indexTop+6]=1;cells[indexTop] = 1; cells[indexTop-1]=1; cells[indexTop-3]=1;cells[indexTop-6]=1;
+                            cells[indexMiddle]=1; cells[indexMiddle+1]=1; cells[indexMiddle+3]=1; cells[indexMiddle+4]=1; cells[indexMiddle+5]=1; cells[indexMiddle+6]=1;cells[indexMiddle]=1; cells[indexMiddle-1]=1; cells[indexMiddle-3]=1; cells[indexMiddle-4]=1; cells[indexMiddle-5]=1; cells[indexMiddle-6]=1;
+                            cells[indexBottom] = 1; cells[indexBottom+1]=1; cells[indexBottom+3]=1;cells[indexBottom+6]=1;cells[indexBottom] = 1; cells[indexBottom-1]=1; cells[indexBottom-3]=1;cells[indexBottom-6]=1;
+                        }
 }
 
 void GameOfLife::computeIteration(double deltaTime)
@@ -156,6 +171,20 @@ void GameOfLife::computeIteration(double deltaTime)
 
     }
     }
+    //TO DO: write a logic to reinitialize if all the cells are zero or may be if there is no change in pattern
+    //check if all the cells are zero to re-iterate
+    /*int check = 0;
+    for (int i=0; i<latticeWidth*latticeHeight;i++){
+           if(temp_cells[i]>0){
+               check=1;
+               qDebug()<<"cell no"<<i;
+           }
+       }
+
+    //check if all the cells are zero
+    if (check==0)
+     initialize();*/
+
     iterationNumber++;;
     cells = temp_cells;
 }

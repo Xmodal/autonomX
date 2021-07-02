@@ -48,7 +48,8 @@
                     "label": "Random Seed",
                     "propName": "randSeed",
                     "type": "check",
-                    "flag": "true"
+                    "flag": "true",
+                    "flagDefault": false
                 }
             ]
         }

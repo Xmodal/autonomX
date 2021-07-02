@@ -56,6 +56,7 @@
         <file>generators/WolframCA/meta.json</file>
         <file>generators/WolframCA/help/WolframCA_desc.html</file>
         <file>generators/WolframCA/help/WolframCA_params.html</file>
+        <file>components/ui/ErrorPopup.qml</file>
         <file>components/ui/IOButton.qml</file>
         <file>assets/images/eye.svg</file>
         <file>layout/IOToolbar.qml</file>

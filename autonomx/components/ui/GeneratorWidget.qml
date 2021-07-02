@@ -77,7 +77,7 @@ Button {
         Label {
             id: labelName
 
-            text: model.name
+            text: model.generatorName
             Layout.leftMargin: 45
             Layout.fillWidth: true
             color: Stylesheet.colors.white

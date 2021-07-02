@@ -142,7 +142,7 @@ ColumnLayout {
             Label {
                 Layout.alignment: Qt.AlignVCenter
 
-                text: activeGeneratorIndex < 0 ? "" : generatorModel.at(activeGeneratorIndex).name
+                text: activeGeneratorIndex < 0 ? "" : generatorModel.at(activeGeneratorIndex).generatorName
                 opacity: activeGeneratorIndex < 0 ? 0.4 : 1
                 font: Stylesheet.fonts.fieldText
             }
@@ -150,6 +150,16 @@ ColumnLayout {
             // filler
             Item {
                 Layout.fillWidth: true
+            }
+
+            // generator type label
+            Label {
+                Layout.alignment: Qt.AlignVCenter
+                Layout.rightMargin: 15
+
+                text: activeGeneratorIndex < 0 ? "" : generatorModel.at(activeGeneratorIndex).type
+                opacity: 1
+                font: Stylesheet.fonts.label
             }
 
             // restart/reset buttons

@@ -26,7 +26,8 @@ class WolframCA : public Generator
 
     Q_PROPERTY(int rule READ getRule WRITE writeRule NOTIFY ruleChanged)
     Q_PROPERTY(int timeScale READ getTimeScale WRITE writeTimeScale NOTIFY timeScaleChanged)
-    Q_PROPERTY(double randSeed READ getRandSeed WRITE writeRandSeed NOTIFY randSeedChanged)
+    //Q_PROPERTY(double randSeed READ getRandSeed WRITE writeRandSeed NOTIFY randSeedChanged)
+    Q_PROPERTY(bool flag_randSeed READ getFlagRandSeed WRITE writeFlagRandSeed NOTIFY flagRandSeedChanged)
 
 private:
 
@@ -47,12 +48,13 @@ private:
 
     //random seed property
     double randSeed = false;
+    bool flag_randSeed = false;
 
     //random generator to initialize cells
     std::mt19937 randomGenerator;
 
     // timeScale variable
-    int timeScale = 20;
+    int timeScale = 95;
 
     // global iteration counter
     int iterationNumber;
@@ -86,12 +88,16 @@ public:
     void writeTimeScale(double timeScale);
     double getTimeScale() const;
 
-    void writeRandSeed(double randSeed);
-    double getRandSeed() const;
+    //void writeRandSeed(double randSeed);
+    //double getRandSeed() const;
+
+    bool getFlagRandSeed() const;
+    void writeFlagRandSeed(bool flag_randSeed);
 
 signals:
     // QML signals
     void ruleChanged(int rule);
     void timeScaleChanged(double timeScale);
-    void randSeedChanged(double randSeed);
+    //void randSeedChanged(double randSeed);
+    void flagRandSeedChanged(bool flag_randSeed);
 };

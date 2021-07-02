@@ -40,72 +40,57 @@ WolframCA::~WolframCA() {
 
 void WolframCA::initialize() {
 
-   if(flagDebug) {
-       std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                   std::chrono::system_clock::now().time_since_epoch());
+if(flagDebug) {
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+    std::chrono::system_clock::now().time_since_epoch());
 
-       qDebug() << "initialize:\t\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
-   }
+   qDebug() << "initialize:\t\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+}
 
-   // re-init algorithm here
+// resize cells vector for current lattice size
+cells.resize(latticeHeight * latticeWidth);
 
-   // resize cells vector for current lattice size
-   cells.resize(latticeHeight * latticeWidth);
+// reset all cells to 0 / black
+for(int i = 0; i < (latticeHeight * latticeWidth); i++) {
+ cells[i] = 0;
+}
 
-   // reset all cells to 0 / black
-   for(int i = 0; i < (latticeHeight * latticeWidth); i++) {
-       cells[i] = 0;
-   }
+// a var to store a random number
+double magic;
 
-   bool seedChosen = false;
-   double magic;
-
-   // user choice: random starting seed or no?
-   // if no random starting seed (default choice)
-   if (getRandSeed() == false) {
-       // middle cell on first line is starting seed
-       cells[latticeWidth / 2] = 1;
-   }
-
-   // if random starting seed is selected by user
-   // TODO:
-   // random seed bug
-   // see below for temp fix and issue
-   else if (getRandSeed()==true) {
-       // initialize a random cell as starting cell
-       for(int i = 0; i < (latticeHeight * latticeWidth); i++) {
-           if (i >= latticeWidth) {
+if (!flag_randSeed) {
+   cells[latticeWidth / 2] = 1;    // middle cell on first line is starting seed
+}
+// if random starting seed is selected by user
+else {
+       for(int i = 0; i < (latticeHeight * latticeWidth); i++) {  //initialize a random cell as starting cell
+       //    for(int i = 0; i < latticeWidth; i++) {  // initialize a random cell as starting cell
+           if (i >= latticeWidth)
                cells[i] = 0;
-           }
            else {
-               // generate a random number magic b/w 0-1 and initialize to 1 if magic>0.5 o/w magic -> 0
-               magic = (float) rand() / RAND_MAX;
-               //if (magic > getRandSeed()) {
-               if (magic > 0.5) {
+               magic = (float) rand() / RAND_MAX;  // generate a random number magic b/w 0-1 and initialize to 1 if magic>0.5 o/w magic -> 0
+               if (magic > 0.5)
                    cells[i] = 1;
-                   seedChosen = true;
-               }
-               else {
-                   cells[i] = 0;
-               }
+               else
+                  cells[i] = 0;
            }
        }
+}
 
-       // TODO:
-       // fix this random seed bug
-       // temporary fix below
-       // selects one random cell from the first row to be the random seed
-       // ensures that at least one cell is seleted as seed
-       // otherwise, as the random seed approaches 1, the likelihood that no cell will be initialized increases
-       // at max value (1) it is 100% certain that no seed will be selected
-       // no seed selected = a blank lattice will be generated -> essentially breaks the generator until reset
+   // TODO:
+   // fix this random seed bug
+   // temporary fix below
+   // selects one random cell from the first row to be the random seed
+   // ensures that at least one cell is seleted as seed
+   // otherwise, as the random seed approaches 1, the likelihood that no cell will be initialized increases
+   // at max value (1) it is 100% certain that no seed will be selected
+   // no seed selected = a blank lattice will be generated -> essentially breaks the generator until reset
 
-       /*if(seedChosen == false) {
-           magic = (float) rand() / RAND_MAX;
-           qDebug() << "no cell was selected normally, temp fix triggered." << endl << "random cell selected for seed: " << (int)(magic * latticeWidth);
-           cells[(int)(magic * latticeWidth)] = 1;
-       }*/
-   }
+   /*if(seedChosen == false) {
+       magic = (float) rand() / RAND_MAX;
+       qDebug() << "no cell was selected normally, temp fix triggered." << endl << "random cell selected for seed: " << (int)(magic * latticeWidth);
+       cells[(int)(magic * latticeWidth)] = 1;
+   }*/
 
 
    lastGeneration = latticeHeight;
@@ -123,6 +108,12 @@ void WolframCA::computeIteration(double deltaTime) {
     if (iterationNumber >= 1 && (prev_rule!=rule)) {
         generate(r);
     }
+
+    //check if randomness radio button is selected or not
+    if(getFlagRandSeed())
+        flag_randSeed=true;
+    else
+        flag_randSeed=false;
 
     int timeScale = getTimeScale();
 
@@ -259,10 +250,6 @@ double WolframCA::getTimeScale() const {
     return this->timeScale;
 }
 
-double WolframCA::getRandSeed() const {
-    return this->randSeed;
-}
-
 void WolframCA::writeTimeScale(double timeScale) {
     if(this->timeScale == timeScale)
         return;
@@ -280,6 +267,11 @@ void WolframCA::writeTimeScale(double timeScale) {
     emit timeScaleChanged(timeScale);
 }
 
+/*double WolframCA::getRandSeed() const {
+    return this->randSeed;
+    qDebug()<<randSeed;
+}
+
 void WolframCA::writeRandSeed(double randSeed) {
     if(this->randSeed == randSeed)
         return;
@@ -291,8 +283,30 @@ void WolframCA::writeRandSeed(double randSeed) {
 
         qDebug() << "writeRandSeed:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
-
+        randSeed=0.5;
     this->randSeed = randSeed;
     emit valueChanged("randSeed", QVariant(randSeed));
     emit randSeedChanged(randSeed);
+}*/
+
+bool WolframCA::getFlagRandSeed() const{
+    return this->flag_randSeed;
+    qDebug()<<"flag_randSeed";
+}
+
+void WolframCA::writeFlagRandSeed(bool flag_randSeed){
+    if(this->flag_randSeed == flag_randSeed)
+        return;
+
+    if(flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    std::chrono::system_clock::now().time_since_epoch()
+        );
+
+        qDebug() << "writeFlagRandSeed:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+    }
+
+    this->flag_randSeed = flag_randSeed;
+    emit valueChanged("flag_randSeed", QVariant(flag_randSeed));
+    emit flagRandSeedChanged(flag_randSeed);
 }

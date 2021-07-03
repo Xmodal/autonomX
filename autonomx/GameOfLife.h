@@ -42,7 +42,7 @@ private:
     int timeScale = 95;
 
     //pattern name
-     GOLPatternType GOLPattern = GOLPatternType::Random;
+    GOLPatternType GOLPattern = GOLPatternType::Random;
 
     // global iteration counter
     int iterationNumber;
@@ -57,7 +57,7 @@ public:
      GameOfLife(int id, GeneratorMeta * meta);
     ~GameOfLife();
 
-     void drawPattern(QString GOLPatternName);
+     void drawPattern(GOLPatternType type);
 
     // overrides
     void computeIteration(double deltaTime) override;

@@ -14,6 +14,35 @@ ColumnLayout {
 
     signal changeContent()
 
+    // general
+    SubRack {
+        id: generalSubRack
+        subRackTitle: "General"
+
+        fields: [
+            NumberField {
+                labelText: "Width"
+                propName: "latticeWidth"
+                min: 1
+                max: 1000
+            },
+
+            NumberField {
+                labelText: "Height"
+                propName: "latticeHeight"
+                min: 1
+                max: 1000
+            },
+
+            SliderField {
+                labelText: "Time scale"
+                propName: "timeScale"
+                minVal: 1
+                maxVal: 100
+            }
+        ]
+    }
+
     Repeater {
         model: metaModel ? Object.keys(metaModel.fieldTree) : []
 

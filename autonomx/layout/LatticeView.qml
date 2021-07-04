@@ -14,7 +14,7 @@ Item {
     property int generatorIndex: window.activeGeneratorIndex
     property GeneratorRegionSet inputModel: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).getInputRegionModel()
     property GeneratorRegionSet outputModel: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).getOutputRegionModel()
-    property int ppc: 20            // pixels per cell, ie. how wide a cell square is in pixels. this is animated within QML (scaled by the zoom factor)
+    property int ppc: 10            // pixels per cell, ie. how wide a cell square is in pixels. this is animated within QML (scaled by the zoom factor)
 
     property QtObject currRegion: QtObject {
         property int type: -1

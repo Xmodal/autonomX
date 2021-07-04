@@ -5,34 +5,6 @@
 
     "racks": [
         {
-            "title": "General",
-            "fields": [
-                {
-                    "label": "Width",
-                    "propName": "latticeWidth",
-                    "type": "number",
-                    "min": 1,
-                    "max": 1000,
-                    "default": 20
-                },
-                {
-                    "label": "Height",
-                    "propName": "latticeHeight",
-                    "type": "number",
-                    "min": 1,
-                    "max": 1000,
-                    "default": 20
-                },
-                {
-                    "label": "Time scale",
-                    "propName": "timeScale",
-                    "type": "slider",
-                    "max": 0.03,
-                    "default": 0.03
-                }
-            ]
-        },
-        {
             "title": "Neuron behavior",
             "fields": [
                 {

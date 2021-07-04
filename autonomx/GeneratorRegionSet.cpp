@@ -50,19 +50,19 @@ void GeneratorRegionSet::initialize()
 
 void GeneratorRegionSet::initializeAsInput() {
     // optimized for 20x20 lattice size
-    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(1, 3, 3, 3), 0.0, 0));
-    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(6, 3, 3, 3), 0.0, 0));
-    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(11, 3, 3, 3), 0.0, 0));
-    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(16, 3, 3, 3), 0.0, 0));
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(3, 7, 8, 8), 0.0, 0));
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(15, 7, 8, 8), 0.0, 0));
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(27, 7, 8, 8), 0.0, 0));
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(39, 7, 8, 8), 0.0, 0));
     createConnections();
 }
 
 void GeneratorRegionSet::initializeAsOutput() {
     // optimized for 20x20 lattice size
-    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(1, 14, 3, 3), 0.0, 1));
-    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(6, 14, 3, 3), 0.0, 1));
-    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(11, 14, 3, 3), 0.0, 1));
-    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(16, 14, 3, 3), 0.0, 1));
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(3, 35, 8, 8), 0.0, 1));
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(15, 35, 8, 8), 0.0, 1));
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(27, 35, 8, 8), 0.0, 1));
+    regionList.append((QSharedPointer<GeneratorRegion>) new GeneratorRegion(QRect(39, 35, 8, 8), 0.0, 1));
     createConnections();
 }
 

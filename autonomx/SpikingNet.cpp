@@ -298,7 +298,7 @@ void SpikingNet::computeIteration(double deltaTime) {
     }
 
     // apply time scale
-    deltaTime *= timeScale;
+    deltaTime *= timeScale / 100.0 * 30.0 / 1000.0;
 
     // update routine
     if(flagDecay) applyDecay(deltaTime);
@@ -524,10 +524,6 @@ void SpikingNet::applyDecay(double deltaTime) {
 
 // ############################### Qt read / write ###############################
 
-double SpikingNet::getTimeScale() const {
-    return this->timeScale;
-}
-
 double SpikingNet::getInhibitoryPortion() const {
     return this->inhibitoryPortion;
 }
@@ -570,23 +566,6 @@ bool SpikingNet::getFlagSTDP() const {
 
 bool SpikingNet::getFlagDecay() const {
     return this->flagDecay;
-}
-
-void SpikingNet::writeTimeScale(double timeScale) {
-    if(this->timeScale == timeScale)
-        return;
-
-    if(flagDebug) {
-        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()
-        );
-
-        qDebug() << "writeTimeScale:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
-    }
-
-    this->timeScale = timeScale;
-    emit valueChanged("timeScale", QVariant(timeScale));
-    emit timeScaleChanged(timeScale);
 }
 
 void SpikingNet::writeInhibitoryPortion(double inhibitoryPortion) {

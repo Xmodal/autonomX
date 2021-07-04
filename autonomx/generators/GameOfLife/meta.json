@@ -5,43 +5,14 @@
 
     "racks": [
         {
-            "title": "General",
-            "fields": [
-                {
-                    "label": "Width",
-                    "propName": "latticeWidth",
-                    "type": "number",
-                    "min": 1,
-                    "max": 1000,
-                    "default": 20
-                },
-                {
-                    "label": "Height",
-                    "propName": "latticeHeight",
-                    "type": "number",
-                    "min": 1,
-                    "max": 1000,
-                    "default": 20
-                }
-            ]
-        },
-        {
             "title": "GameOfLife Properties",
             "fields": [
                 {
-                "label": "Pattern Type",
-                "propName": "GOLPattern",
-                "type": "select",
-                 "enumName": "GOLPatternType",
-                "default": 4
-                },
-                {
-                "label": "Time Scale",
-                "propName": "timeScale",
-                "type": "slider",
-                "min": 1,
-                "max": 100,
-                "default": 1
+                    "label": "Pattern Type",
+                    "propName": "GOLPattern",
+                    "type": "select",
+                     "enumName": "GOLPatternType",
+                    "default": 4
                 }
             ]
         }
@@ -59,12 +30,12 @@
     ],
 
     "enumLabels": {
-    "GOLPatternType": [
-    "Random",
-    "Glider",
-    "SpaceShip",
-    "RPentoMino",
-    "Pentadecathlon"
-    ]
-}
+        "GOLPatternType": [
+            "Random",
+            "Glider",
+            "SpaceShip",
+            "RPentoMino",
+            "Pentadecathlon"
+        ]
+    }
 }

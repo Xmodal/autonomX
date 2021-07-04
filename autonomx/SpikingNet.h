@@ -25,8 +25,6 @@
 class SpikingNet : public Generator {
     // TODO: figure out how we decide to add / remove inputs. this should probably be a property that belongs to the Generator abstract class, rather than this.
     Q_OBJECT
-    Q_PROPERTY(double timeScale READ getTimeScale WRITE writeTimeScale NOTIFY timeScaleChanged)
-
     Q_PROPERTY(double inhibitoryPortion READ getInhibitoryPortion WRITE writeInhibitoryPortion NOTIFY inhibitoryPortionChanged)
     Q_PROPERTY(NeuronType inhibitoryNeuronType READ getInhibitoryNeuronType WRITE writeInhibitoryNeuronType NOTIFY inhibitoryNeuronTypeChanged)
     Q_PROPERTY(NeuronType excitatoryNeuronType READ getExcitatoryNeuronType WRITE writeExcitatoryNeuronType NOTIFY excitatoryNeuronTypeChanged)
@@ -73,7 +71,7 @@ private:
     double      decayHalfLife = 10.0;
     double      decayConstant = std::pow(2.0, - 1.0 / decayHalfLife);
 
-    double      timeScale = 30.0 / 1000.0;
+    // double      timeScale = 30.0 / 1000.0;
 
     double STDPStrength = 1.0;
     double STPStrength = 1.0;
@@ -129,7 +127,6 @@ public:
     void writeLatticeValue(int x, int y, double value) override;
 
     int getNeuronSize() const;
-    double getTimeScale() const;
     double getInhibitoryPortion() const;
     NeuronType getInhibitoryNeuronType() const;
     NeuronType getExcitatoryNeuronType() const;
@@ -143,7 +140,6 @@ public:
     bool getFlagDecay() const;
 
     void writeNeuronSize(int neuronSize);
-    void writeTimeScale(double timeScale);
     void writeInhibitoryPortion(double inhibitoryPortion);
     void writeInhibitoryNeuronType(NeuronType inhibitoryNeuronType);
     void writeExcitatoryNeuronType(NeuronType excitatoryNeuronType);
@@ -158,7 +154,6 @@ public:
 
 signals:
     void neuronSizeChanged(int neuronSize);
-    void timeScaleChanged(double timeScale);
     void inhibitoryPortionChanged(double inhibitoryPortion);
     void inhibitoryNeuronTypeChanged(NeuronType inhibitoryNeuronType);
     void excitatoryNeuronTypeChanged(NeuronType excitatoryNeuronType);

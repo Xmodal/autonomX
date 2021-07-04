@@ -30,8 +30,9 @@ WolframCA::WolframCA(int id, GeneratorMeta * meta) : Generator(id, meta){
         qDebug() << "constructor (WolframCA):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    initialize();
+    timeScale = 95;
 
+    initialize();
 }
 
 WolframCA::~WolframCA() {
@@ -115,10 +116,8 @@ void WolframCA::computeIteration(double deltaTime) {
     else
         flag_randSeed=false;
 
-    int timeScale = getTimeScale();
-
     // every 1000 iterations, currentGeneration increments and iterationNumber resets
-    if(iterationNumber % (100-timeScale+1) == 0) {
+    if(iterationNumber % (100 - (int)(timeScale) + 1) == 0) {
         currentGeneration++;
         iterationNumber = 1;
     }
@@ -245,27 +244,6 @@ void WolframCA::writeRule(int rule) {
     // make sure you follow this signal structure when you write a property!
     emit ruleChanged(rule);
     emit valueChanged("rule", rule);
-}
-
-double WolframCA::getTimeScale() const {
-    return this->timeScale;
-}
-
-void WolframCA::writeTimeScale(double timeScale) {
-    if(this->timeScale == timeScale)
-        return;
-
-    if(flagDebug) {
-        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()
-        );
-
-        qDebug() << "writeTimeScale:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
-    }
-
-    this->timeScale = timeScale;
-    emit valueChanged("timeScale", QVariant(timeScale));
-    emit timeScaleChanged(timeScale);
 }
 
 /*double WolframCA::getRandSeed() const {

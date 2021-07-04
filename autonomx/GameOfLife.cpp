@@ -15,6 +15,7 @@ GameOfLife::GameOfLife(int id, GeneratorMeta * meta) : Generator(id, meta)
         qDebug() << "constructor (WolframCA):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
+    timeScale = 95;
     initialize();
 }
 
@@ -140,11 +141,8 @@ void GameOfLife::computeIteration(double deltaTime)
 {
     temp_cells = cells;
 
-    //get the time scale
-    int timeScale = getTimeScale();
-
     // compute iteration here
-    if (iterationNumber % (100 - timeScale + 1) == 0) {
+    if (iterationNumber % (100 - (int)(timeScale) + 1) == 0) {
         for (int i = 1; i < latticeHeight - 1; i++) {
             for (int j = 1; j < latticeWidth - 1; j++) {
 
@@ -218,28 +216,6 @@ void GameOfLife::writeLatticeValue(int x, int y, double value)
     // write values to lattice
     int index = x % latticeWidth + y * latticeWidth;
     cells[index] = value;
-}
-
-double GameOfLife::getTimeScale() const {
-    return this->timeScale;
-}
-
-
-void GameOfLife::writeTimeScale(double timeScale) {
-    if(this->timeScale == timeScale)
-        return;
-
-    if(flagDebug) {
-        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()
-        );
-
-        qDebug() << "writeTimeScale:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
-    }
-
-    this->timeScale = timeScale;
-    emit valueChanged("timeScale", QVariant(timeScale));
-    emit timeScaleChanged(timeScale);
 }
 
 int GameOfLife::getRule()

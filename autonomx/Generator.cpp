@@ -142,6 +142,11 @@ int Generator::getLatticeHeight() {
     return latticeHeight;
 }
 
+double Generator::getTimeScale() const
+{
+    return timeScale;
+}
+
 void Generator::writeGeneratorName(QString generatorName) {
     if (this->generatorName == generatorName)
         return;
@@ -353,6 +358,19 @@ void Generator::writeLatticeHeight(int latticeHeight) {
     emit latticeHeightChanged(latticeHeight);
 }
 
+void Generator::writeTimeScale(double timeScale)
+{
+    if (this->timeScale == timeScale) {
+        return;
+    }
+
+    // update property locally
+    this->timeScale = timeScale;
+
+    emit valueChanged("timeScale", timeScale);
+    emit timeScaleChanged(timeScale);
+}
+
 void Generator::readJson(const QJsonObject &json)
 {
     // 000. GENERAL DATA
@@ -477,15 +495,11 @@ void Generator::resetRegions()
 {
     // input rectangles reset
     inputRegionSet->deleteAllRegions();
-    for(int i = 0; i < 4; i++) {
-        inputRegionSet->addRegion(1+(i*5), 3, 3, 3);
-    }
+    inputRegionSet->initialize();
 
-   // output rectangles reset
-   outputRegionSet->deleteAllRegions();
-   for(int i = 0; i < 4; i++) {
-       outputRegionSet->addRegion(1+(i*5), 14, 3, 3);
-   }
+    // output rectangles reset
+    outputRegionSet->deleteAllRegions();
+    outputRegionSet->initialize();
 }
 
 void Generator::initializeRegionSets()

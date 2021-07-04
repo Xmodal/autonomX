@@ -22,7 +22,6 @@ class GameOfLife : public Generator
 {
     Q_OBJECT
 
-    Q_PROPERTY(int timeScale READ getTimeScale WRITE writeTimeScale NOTIFY timeScaleChanged)
     Q_PROPERTY(int rule READ getRule WRITE writeRule NOTIFY ruleChanged)
     Q_PROPERTY(GOLPatternType GOLPattern READ getGOLPattern WRITE writeGOLPattern NOTIFY GOLPatternChanged)
 
@@ -37,9 +36,6 @@ private:
 
     // properties and rules
     int rule = 102;
-
-    //time scale to manipulate the speed of the iterations
-    int timeScale = 95;
 
     //pattern name
     GOLPatternType GOLPattern = GOLPatternType::Random;
@@ -69,14 +65,11 @@ public:
     // prop hooks
     int getRule();
     void writeRule(int rule);
-    void writeTimeScale(double timeScale);
-    double getTimeScale() const;
     GOLPatternType getGOLPattern() const;
     void writeGOLPattern(GOLPatternType GOLPattern);
 
 signals:
     // QML signals
-    void timeScaleChanged(double timeScale);
     void randSeedChanged(double randSeed);
     void ruleChanged(int rule);
     void GOLPatternChanged(GOLPatternType GOLPattern);

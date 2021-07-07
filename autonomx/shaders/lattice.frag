@@ -12,6 +12,7 @@ uniform float   containerWidthInPixels;
 uniform float   containerHeightInPixels;
 uniform vec4    mask;
 uniform float   maskAlpha;
+uniform vec2    panInPixels;            // DON'T FORGET TO INVERT POLARITY THANK YOU VERY MUCH
 
 // padding between cells, in pixels
 float padding = 2.0;
@@ -29,7 +30,8 @@ vec2 squareInLattice = vec2(1.0) / vec2(latticeSizeInSquares);              // s
 
 void main() {
     // map to coordinates inside lattice
-    vec2 coordinatesInLattice = (coordinates * latticeScaleInverse) * 0.5 + 0.5;
+    vec2 coordinatesWithPan = coordinates + (panInPixels * vec2(4.0) / containerSizeInPixels);
+    vec2 coordinatesInLattice = (coordinatesWithPan * latticeScaleInverse) * 0.5 + 0.5;
 
     // hide pixels outside lattice
     if(
@@ -56,8 +58,7 @@ void main() {
         !(coordinatesInSquare.x > paddingInSquare * 0.5 && coordinatesInSquare.x < (1.0 - paddingInSquare * 0.5)) ||
         !(coordinatesInSquare.y > paddingInSquare * 0.5 && coordinatesInSquare.y < (1.0 - paddingInSquare * 0.5))
     ) {
-        gl_FragColor = vec4(0.0);
-        return;
+        discard;
     }
 
     // get floored texture coordinate
@@ -66,18 +67,22 @@ void main() {
     // sample intensity
     float intensity = texture2D(texture, coordinatesInLatticeFloored).r;
 
+    vec4 c = vec4(vec3(intensity), 1.0);
+
     // highlight selected zone if applicable
     if (mask.w > 0.0) {
         vec2 maskCornerInLattice = mask.xy / vec2(latticeSizeInSquares);   // upper left corner of the mask in lattice space
         vec2 maskSizeInLattice = mask.zw / vec2(latticeSizeInSquares);     // width and height of the mask in lattice space
-        intensity *= (
-            coordinatesInLattice.x < maskCornerInLattice.x ||
-            coordinatesInLattice.y < maskCornerInLattice.y ||
-            coordinatesInLattice.x >= maskCornerInLattice.x + maskSizeInLattice.x ||
-            coordinatesInLattice.y >= maskCornerInLattice.y + maskSizeInLattice.y
-        ) ? maskAlpha : 1.0;
+        bool showMask = (
+                    coordinatesInLattice.x < maskCornerInLattice.x ||
+                    coordinatesInLattice.y < maskCornerInLattice.y ||
+                    coordinatesInLattice.x >= maskCornerInLattice.x + maskSizeInLattice.x ||
+                    coordinatesInLattice.y >= maskCornerInLattice.y + maskSizeInLattice.y
+        );
+
+        c *= showMask ? maskAlpha : 1.0;
     }
 
     // export color
-    gl_FragColor = vec4(vec3(intensity), 1.0);
+    gl_FragColor = c;
 }

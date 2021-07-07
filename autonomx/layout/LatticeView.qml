@@ -14,7 +14,28 @@ Item {
     property int generatorIndex: window.activeGeneratorIndex
     property GeneratorRegionSet inputModel: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).getInputRegionModel()
     property GeneratorRegionSet outputModel: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).getOutputRegionModel()
-    property int ppc: 10            // pixels per cell, ie. how wide a cell square is in pixels. this is animated within QML (scaled by the zoom factor)
+
+    // pan/zoom properties
+    property real ppc: 10 * zoom            // pixels per cell, ie. how wide a cell square is in pixels. this is animated within QML (scaled by the zoom factor)
+    property real zoom: 1
+    property real prevZoom: 1
+    property vector2d pan: Qt.vector2d(0, 0)
+
+    // smooth zoom animation
+    NumberAnimation { id: smoothZoom; duration: 400; easing.type: Easing.OutExpo }
+    onZoomChanged: {
+        prevZoom = zoom;
+
+        smoothZoom.from = prevZoom;
+        smoothZoom.to = zoom;
+    }
+
+    Behavior on ppc {
+        NumberAnimation {
+            duration: 400
+            easing.type: Easing.OutExpo
+        }
+    }
 
     property QtObject currRegion: QtObject {
         property int type: -1
@@ -114,9 +135,10 @@ Item {
         anchors.fill: parent
 
         // uniforms
-        squareInPixels: ppc
+        squareInPixels: ppc     // = zooming
         mask: Qt.vector4d(-1, -1, -1, -1)
-        maskAlpha: 0.3
+        maskAlpha: 0.5
+        pan: latticeView.pan
 
         function setMask(rect) {
             var element;
@@ -153,10 +175,43 @@ Item {
         }
     }
 
+    // pan and zoom area
+    MouseArea {
+        id: panZone
+        enabled: !(generatorIndex < 0)
+        anchors.fill: parent
+        acceptedButtons: Qt.MiddleButton
+
+        preventStealing: true
+
+        onPressed: {
+            allowPanDrag = true
+        }
+
+        onReleased: {
+            allowPanDrag = false
+        }
+
+        // zoomies!!!!!! yeeeeehaaaaawwwwww
+        onWheel: {
+            // TODO: adjust zoom inc/dec value by delta intensity
+            if (wheel.angleDelta.y > 0)
+                zoom += 0.1;
+            else
+                zoom -= 0.1;
+        }
+    }
+
     // I/O regions
     Item {
         id: regions
         visible: !(generatorIndex < 0)
+
+        // panning
+        transform: Translate {
+            x: -pan.x
+            y: -pan.y
+        }
 
         property int latticeWidth: generatorIndex < 0 ? 20 : generatorModel.at(generatorIndex).latticeWidth
         property int latticeHeight: generatorIndex < 0 ? 20 : generatorModel.at(generatorIndex).latticeHeight
@@ -279,8 +334,8 @@ Item {
         // see DummyRegion above for usage
         function mouseToCoords() {
             return Qt.point(
-               Math.floor((crossbeamArea.mouseX - regions.x) / ppc),
-               Math.floor((crossbeamArea.mouseY - regions.y) / ppc));
+               Math.floor((crossbeamArea.mouseX - regions.x + pan.x) / ppc),
+               Math.floor((crossbeamArea.mouseY - regions.y + pan.y) / ppc));
         }
 
         anchors.fill: parent
@@ -335,5 +390,52 @@ Item {
     IOToolbar {
         id: ioToolbar
         visible: generatorIndex >= 0
+    }
+
+    // pan
+    MouseArea {
+        id: cursorShaper
+        anchors.fill: parent
+        visible: spacePressed && !currRegion.adding     // don't pan when adding...?
+        hoverEnabled: true
+
+        onVisibleChanged: updatePanCursor()
+
+        function updatePanCursor(restore = false) {
+            if (spacePressed) {
+                if (cursorShaper.containsMouse)
+                    return overrideCursor(Qt.OpenHandCursor)
+
+                if (restore) restoreCursor()
+            } else {
+                restoreCursor();
+            }
+        }
+
+        property vector2d drag: Qt.vector2d(panDragger.x, panDragger.y)
+        property vector2d prevDrag: Qt.vector2d(0, 0)
+        onDragChanged: {
+            if (!window.allowPanDrag) {
+                prevDrag = Qt.vector2d(0, 0);
+                return;
+            }
+
+            if (containsMouse) {
+                // calculate difference
+                var newDrag = prevDrag.minus(drag);
+
+                // add to pan value
+                latticeView.pan = latticeView.pan.plus(newDrag);
+                // reset previous drag
+                prevDrag = drag;
+            }
+        }
+
+        onHoveredChanged: {
+            updatePanCursor(true);
+
+            if (containsMouse) window.allowPanDrag = true;
+            else window.allowPanDrag = false;
+        }
     }
 }

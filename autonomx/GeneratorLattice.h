@@ -25,6 +25,7 @@ class GeneratorLattice : public QQuickFramebufferObject {
     Q_PROPERTY(float squareInPixels READ getSquareInPixels WRITE writeSquareInPixels NOTIFY squareInPixelsChanged)
     Q_PROPERTY(QVector4D mask READ getMask WRITE writeMask NOTIFY maskChanged)
     Q_PROPERTY(float maskAlpha READ getMaskAlpha WRITE writeMaskAlpha NOTIFY maskAlphaChanged)
+    Q_PROPERTY(QVector2D pan READ getPan WRITE writePan NOTIFY panChanged)
 public:
     GeneratorLattice();
     ~GeneratorLattice();
@@ -36,20 +37,24 @@ public:
     int getContainerHeightInPixels();
     QVector4D getMask();
     float getMaskAlpha();
+    QVector2D getPan();
 
     void writeGeneratorID(int generatorID);
     void writeSquareInPixels(float squareInPixels);
     void writeMask(QVector4D mask);
     void writeMaskAlpha(float maskAlpha);
+    void writePan(QVector2D pan);
 signals:
     void generatorIDChanged(int generatorID);
     void squareInPixelsChanged(float squareInPixels);
     void maskChanged(QVector4D mask);
     void maskAlphaChanged(float maskAlpha);
+    void panChanged(QVector2D pan);
 private:
     int generatorID;
-    float squareInPixels;       // uniform for pixel size of a lattice square
+    float squareInPixels;       // uniform for pixel size of a lattice square (aka zoom)
     QVector4D mask;             // uniform for mask shape (leftmost x, topmost y, width, height)
     float maskAlpha;            // uniform for mask alpha
+    QVector2D pan;              // uniform for lattice pan (managed in shader)
     bool flagDebug = false;
 };

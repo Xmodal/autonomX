@@ -39,8 +39,10 @@ ApplicationWindow {
     // global field helper flags
     property bool altPressed: false
     property bool shiftPressed: false
+    property bool spacePressed: false
     property bool editingTextField: false
     property alias allowSlideDrag: slideDragger.visible
+    property alias allowPanDrag: panDragger.visible
 
     // saving stuff
     property alias saveManager: saveManager
@@ -147,19 +149,28 @@ ApplicationWindow {
         // shift/alt press detection
         Keys.onPressed: {
             if (editingTextField) return
+            // do not allow auto repeating on modifiers
+            if (event.isAutoRepeat) return;
 
             // modifiers
             if (event.key === Qt.Key_Alt) altPressed = true
             if (event.key === Qt.Key_Shift) shiftPressed = true
+            if (event.key === Qt.Key_Space) spacePressed = true
         }
         Keys.onReleased: {
+            // do not allow auto repeating on modifiers
+            if (event.isAutoRepeat) return;
+
+            // special alt case
             if (event.key === Qt.Key_Alt) {
                 altPressed = false
                 allowSlideDrag = false
                 restoreCursor()
             }
 
+            // other modifiers
             if (event.key === Qt.Key_Shift) shiftPressed = false
+            if (event.key === Qt.Key_Space) spacePressed = false
         }
     }
 
@@ -172,21 +183,59 @@ ApplicationWindow {
         height: parent.height
         visible: false
 
-        property alias mouseArea: dragArea
-        Drag.active: dragArea.drag.active
+        onVisibleChanged: {
+            if (visible)
+                return overrideCursor(Qt.SizeHorCursor);
+            restoreCursor();
+        }
+
+        property alias mouseArea: slideDragArea
+        Drag.active: slideDragArea.drag.active
 
         MouseArea {
-            id: dragArea
+            id: slideDragArea
             anchors.fill: parent
 
             drag.target: parent
             drag.threshold: 0
             drag.smoothed: false
 
-            cursorShape: Qt.SizeHorCursor
-
             onReleased: {
                 window.allowSlideDrag = false
+                parent.x = 0
+                parent.y = 0
+            }
+        }
+    }
+
+    // slide drag detection/mgmt
+    Item {
+        id: panDragger
+        x: 0
+        y: 0
+        width: parent.width
+        height: parent.height
+        visible: false
+
+        property alias mouseArea: panDragArea
+        Drag.active: panDragArea.drag.active
+
+        MouseArea {
+            id: panDragArea
+            anchors.fill: parent
+
+            drag.target: parent
+            drag.threshold: 0
+            drag.smoothed: false
+
+            onPressed: {
+                overrideCursor(Qt.ClosedHandCursor);
+            }
+
+            onReleased: {
+                restoreCursor();
+
+                window.allowPanDrag = false
                 parent.x = 0
                 parent.y = 0
             }

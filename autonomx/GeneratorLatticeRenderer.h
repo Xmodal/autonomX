@@ -56,4 +56,5 @@ private:
     float squareInPixels;       // uniform for pixel size of a lattice square
     QVector4D mask;             // uniform for mask shape (leftmost x, topmost y, width, height)
     float maskAlpha;            // uniform for mask alpha
+    QVector2D pan;              // uniform for lattice pan
 };

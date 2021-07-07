@@ -55,6 +55,11 @@ float GeneratorLattice::getMaskAlpha() {
     return maskAlpha;
 }
 
+QVector2D GeneratorLattice::getPan()
+{
+    return pan;
+}
+
 void GeneratorLattice::writeSquareInPixels(float squareInPixels) {
     if(this->squareInPixels == squareInPixels) {
         return;
@@ -94,6 +99,18 @@ void GeneratorLattice::writeMaskAlpha(float maskAlpha) {
 
     this->maskAlpha = maskAlpha;
     emit maskAlphaChanged(maskAlpha);
+
+    // request a syncrhonize call to GeneratorLatticeRenderer
+    update();
+}
+
+void GeneratorLattice::writePan(QVector2D pan)
+{
+    if (this->pan == pan)
+        return;
+
+    this->pan = pan;
+    emit panChanged(pan);
 
     // request a syncrhonize call to GeneratorLatticeRenderer
     update();

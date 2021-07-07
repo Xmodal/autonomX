@@ -8,7 +8,7 @@ Rectangle {
 
     property int latticeWidth: regions.latticeWidth
     property int latticeHeight: regions.latticeHeight
-    property int ppc: latticeView.ppc
+    property real ppc: latticeView.ppc
 
     property point start
     property point end

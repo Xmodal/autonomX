@@ -199,6 +199,7 @@ void GeneratorLatticeRenderer::render() {
 
         program->setUniformValue("mask", mask);
         program->setUniformValue("maskAlpha", maskAlpha);
+        program->setUniformValue("panInPixels", pan);
 
         program->setUniformValue("latticeWidthInSquares", *allocatedWidth);
         program->setUniformValue("latticeHeightInSquares", *allocatedHeight);
@@ -314,6 +315,7 @@ void GeneratorLatticeRenderer::synchronize(QQuickFramebufferObject *item) {
     squareInPixels = generatorLattice->getSquareInPixels();
     mask = generatorLattice->getMask();
     maskAlpha = generatorLattice->getMaskAlpha();
+    pan = generatorLattice->getPan();
 
     // update visible
     visible = item->isVisible();

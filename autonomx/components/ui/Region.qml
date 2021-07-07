@@ -16,7 +16,7 @@ Control {
 
     property int latticeWidth: regions.latticeWidth
     property int latticeHeight: regions.latticeHeight
-    property int ppc: latticeView.ppc
+    property real ppc: latticeView.ppc
     property int type: 0                       // 0 = input; 1 = output
     property int resizeHitbox: 5            // zone padding
     property int area: rect.width * rect.height

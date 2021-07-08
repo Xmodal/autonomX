@@ -25,9 +25,9 @@
 
 class OscEngine : public QObject {
     Q_OBJECT
-    Q_PROPERTY(int receiverPort READ getReceiverPort WRITE writeReceiverPort NOTIFY receiverPortChanged)
-    Q_PROPERTY(int senderPort READ getSenderPort WRITE writeSenderPort NOTIFY senderPortChanged)
-    Q_PROPERTY(QString senderHostAddress READ getSenderHostAddress WRITE writeSenderHostAddress NOTIFY senderHostAddressChanged)
+    Q_PROPERTY(int receiverPort READ getOscReceiverPort WRITE writeOscReceiverPort NOTIFY OscReceiverPortChanged)
+    Q_PROPERTY(int senderPort READ getOscSenderPort WRITE writeOscSenderPort NOTIFY OscSenderPortChanged)
+    Q_PROPERTY(QString OscSenderHost READ getOscSenderHost WRITE writeOscSenderHost NOTIFY OscSenderHostChanged)
 public:
     OscEngine();
     ~OscEngine();
@@ -36,20 +36,20 @@ private:
 //    QHash<int, QString> oscSenderAddresses;
     QString oscSenderAddress = "/output";
 //    QHash<int, QSharedPointer<OscReceiver>> oscReceivers;
-    QHash<int, QString> oscReceiverAddresses;
+//    QHash<int, QString> oscReceiverAddresses;
     QString oscReceiverAddress = "/input";
     bool createOscReceiverBoolean = true;
     QSharedPointer<OscReceiver> receiver;
     int oscReceiverPort = 6668;
     int oscSenderPort = 6669;
-    QString senderHostAddress = "127.0.0.1";
+    QString OscSenderHost = "127.0.0.1";
 
     // connects OscReceiver::messageReceived to OscEngine::receiveOscDataHandler through a lambda that captures the generator id
     void connectReceiver(int id);
 
     // used internally by connectGenerator and disconnectGenerator
     void createOscReceiver(int id, QString address, int port);
-    void deleteOscReceiver(int id);
+//    void deleteOscReceiver(int id);
 
     // used internally by connectGenerator and disconnectGenerator
     void createOscSender(int id, QString addressHost, QString addressTarget, int port);
@@ -58,14 +58,14 @@ private:
     bool flagDebug = false;
 
     // getters
-    int getReceiverPort() const;
-    int getSenderPort() const;
-    QString getSenderHostAddress() const;
+    int getOscReceiverPort() const;
+    int getOscSenderPort() const;
+    QString getOscSenderHost() const;
 
     // setters
-    void writeReceiverPort(int port);
-    void writeSenderPort(int port);
-    void writeSenderHostAddress(QString address);
+    void writeOscReceiverPort(int port);
+    void writeOscSenderPort(int port);
+    void writeOscSenderHost(QString host);
 signals:
     // to facade
     void valueChanged(const QString &key, const QVariant &value);
@@ -74,9 +74,9 @@ signals:
     void receiveOscData(int id, QVariantList data);
 
     // notifiers
-    void receiverPortChanged(int receiverPort);
-    void senderPortChanged(int senderPort);
-    void senderHostAddressChanged(QString senderHostAddress);
+    void OscReceiverPortChanged(int receiverPort);
+    void OscSenderPortChanged(int senderPort);
+    void OscSenderHostChanged(QString host);
 private slots:
     // bridges OscReceiver::messageReceived to OscEngine::receiveOscData
     void receiveOscDataHandler(int id, const QString& oscAddress, const QVariantList& message);
@@ -93,11 +93,11 @@ public slots:
     void sendOscData(int id, QVariantList data);
 
     // updates receiver parameters
-    void updateOscReceiverAddress(int id, QString address);
+//    void updateOscReceiverAddress(int id, QString address);
     void updateOscReceiverPort(int id, int port);
 
     // updates receiver parameters
-    void updateOscSenderAddressHost(int id, QString addressHost);
-    void updateOscSenderAddressTarget(int id, QString addressHost);
+    void updateOscSenderHost(int id, QString host);
+//    void updateOscSenderAddressTarget(int id, QString addressHost);
     void updateOscSenderPort(int id, int port);
 };

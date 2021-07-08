@@ -117,7 +117,7 @@ Item {
                     fieldBg: Stylesheet.colors.darkGrey
 
                     target: oscEngine
-                    propName: "receiverPort"
+                    propName: "oscReceiverPort"
                 }
 
                 NumberField {
@@ -126,7 +126,7 @@ Item {
                     fieldBg: Stylesheet.colors.darkGrey
 
                     target: oscEngine
-                    propName: "senderPort"
+                    propName: "oscSenderPort"
                 }
             }
             TextField {
@@ -136,7 +136,7 @@ Item {
                 fieldBg: Stylesheet.colors.darkGrey
 
                 target: oscEngine
-                propName: "OscSenderHost"
+                propName: "oscSenderHost"
             }
 
             // delimiter

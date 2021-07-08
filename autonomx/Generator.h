@@ -42,11 +42,11 @@ class Generator : public QObject {
     Q_PROPERTY(double historyLatest READ getHistoryLatest NOTIFY historyLatestChanged)
     Q_PROPERTY(bool historyRefresher READ getHistoryRefresher NOTIFY historyRefresherChanged)
 
-    Q_PROPERTY(int oscInputPort READ getOscInputPort WRITE writeOscInputPort NOTIFY oscInputPortChanged)
+    Q_PROPERTY(int oscInputPort READ getOscInputPort WRITE writeOscInputPort NOTIFY oscReceiverPortChanged)
     Q_PROPERTY(QString oscInputAddress READ getOscInputAddress WRITE writeOscInputAddress NOTIFY oscInputAddressChanged)
 
     Q_PROPERTY(int oscOutputPort READ getOscOutputPort WRITE writeOscOutputPort NOTIFY oscOutputPortChanged)
-    Q_PROPERTY(QString oscOutputAddressHost READ getOscOutputAddressHost WRITE writeOscOutputAddressHost NOTIFY oscOutputAddressHostChanged)
+    Q_PROPERTY(QString oscOutputAddressHost READ getOscOutputAddressHost WRITE writeOscOutputAddressHost NOTIFY oscSenderHostChanged)
     Q_PROPERTY(QString oscOutputAddressTarget READ getOscOutputAddressTarget WRITE writeOscOutputAddressTarget NOTIFY oscOutputAddressTargetChanged)
 
     // TODO: this shouldn't be serialized in the JSON
@@ -239,11 +239,11 @@ signals:
     void historyLatestChanged(double historyLatest);
     void historyRefresherChanged(bool historyRefresher);
 
-    void oscInputPortChanged(int oscInputPort);
+    void oscReceiverPortChanged(int oscInputPort);
     void oscInputAddressChanged(QString oscInputAddress);
 
     void oscOutputPortChanged(int oscOutputPort);
-    void oscOutputAddressHostChanged(QString oscOutputAddressHost);
+    void oscSenderHostChanged(QString oscOutputAddressHost);
     void oscOutputAddressTargetChanged(QString oscOutputAddressTarget);
 
     void inputCountChanged(int inputCount);

@@ -116,7 +116,6 @@ Item {
                     labelText: "In port"
                     fieldBg: Stylesheet.colors.darkGrey
 
-//                    defaultNum: 7000
                     target: oscEngine
                     propName: "receiverPort"
                 }
@@ -124,16 +123,20 @@ Item {
                 NumberField {
                     Layout.fillWidth: true
                     labelText: "Out port"
-                    defaultNum: 7001
                     fieldBg: Stylesheet.colors.darkGrey
+
+                    target: oscEngine
+                    propName: "senderPort"
                 }
             }
             TextField {
                 Layout.fillWidth: true
                 fieldWidth: 320
                 labelText: "Out host"
-                defaultText: "127.0.0.1"
                 fieldBg: Stylesheet.colors.darkGrey
+
+                target: oscEngine
+                propName: "OscSenderHost"
             }
 
             // delimiter

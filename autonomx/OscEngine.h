@@ -33,29 +33,23 @@ public:
     ~OscEngine();
 private:
     QHash<int, QSharedPointer<OscSender>> oscSenders;
-//    QHash<int, QString> oscSenderAddresses;
-    QString oscSenderAddress = "/output";
-//    QHash<int, QSharedPointer<OscReceiver>> oscReceivers;
-//    QHash<int, QString> oscReceiverAddresses;
-    QString oscReceiverAddress = "/input";
-    bool createOscReceiverBoolean = true;
     QSharedPointer<OscReceiver> oscReceiver;
-    int oscReceiverPort = 6668;
+    QString oscSenderAddress = "/output";
+    QString oscReceiverAddress = "/input";
     int oscSenderPort = 6669;
+    int oscReceiverPort = 6668;
     QString oscSenderHost = "127.0.0.1";
+    bool createOscReceiverBoolean = true;
 
     // connects OscReceiver::messageReceived to OscEngine::receiveOscDataHandler through a lambda that captures the generator id
     void connectReceiver(int generatorId);
 
     // used internally by connectGenerator and disconnectGenerator
     void createOscReceiver(int generatorId, QString address, int port);
-//    void deleteOscReceiver(int id);
 
     // used internally by connectGenerator and disconnectGenerator
     void createOscSender(int generatorId, QString addressHost, QString addressTarget, int port);
     void deleteOscSender(int generatorId);
-
-    bool flagDebug = false;
 
     // getters
     int getOscReceiverPort() const;
@@ -66,6 +60,9 @@ private:
     void writeOscReceiverPort(int port);
     void writeOscSenderPort(int port);
     void writeOscSenderHost(QString host);
+
+    bool flagDebug = false;
+
 signals:
     // to facade
     void valueChanged(const QString &key, const QVariant &value);
@@ -77,9 +74,11 @@ signals:
     void OscReceiverPortChanged(int receiverPort);
     void OscSenderPortChanged(int senderPort);
     void OscSenderHostChanged(QString host);
+
 private slots:
     // bridges OscReceiver::messageReceived to OscEngine::receiveOscData
     void receiveOscDataHandler(int id, const QString& oscAddress, const QVariantList& message);
+
 public slots:
     // from facade
     void updateValue(const QString &key, const QVariant &value);
@@ -93,11 +92,9 @@ public slots:
     void sendOscData(int id, QVariantList data);
 
     // updates receiver parameters
-//    void updateOscReceiverAddress(int id, QString address);
     void updateOscReceiverPort(int port);
 
     // updates receiver parameters
     void updateOscSenderHost(QString host);
-//    void updateOscSenderAddressTarget(int id, QString addressHost);
     void updateOscSenderPort(int port);
 };

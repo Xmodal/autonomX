@@ -38,9 +38,6 @@ ColumnLayout {
 
     onValueChanged: if (target) target[propName] = newValue
     onFlagChanged: if (target) target[flagName] = newFlag
-    onErrorReceived: {
-        hasError = true
-    }
 
     // layout
     Layout.preferredWidth: fieldWidth

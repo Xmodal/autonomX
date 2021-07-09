@@ -100,8 +100,6 @@ Control {
 
     // snap to grid on drop / resize
     function snapToGrid(evtType) {
-        console.log("asdf")
-
         // clamp w/h when left corner/border dragged in the negatives
         var offsetW = 0, offsetH = 0;
         if (evtType === "resize") {
@@ -155,8 +153,13 @@ Control {
     // TODO: segment this into different functions
     // to limit calculation rate to what's necessary to calculate
     // (also find a way to only call matrix.setMask() once per mouse interaction)
+
+    // TODO: fix this
+    // this is called once for each region, on each zoom frame
+    // and essentially re-assigns mask to the last input every time
     function updateBounds() {
-        matrix.setMask(Qt.rect(x, y, width - 1, height - 1));
+        if (focus)
+            matrix.setMask(Qt.rect(x, y, width - 1, height - 1));
     }
 
     // force cursor on event

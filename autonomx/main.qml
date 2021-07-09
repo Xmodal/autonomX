@@ -42,7 +42,6 @@ ApplicationWindow {
     property bool spacePressed: false
     property bool editingTextField: false
     property alias allowSlideDrag: slideDragger.visible
-    property alias allowPanDrag: panDragger.visible
 
     // saving stuff
     property alias saveManager: saveManager
@@ -202,40 +201,6 @@ ApplicationWindow {
 
             onReleased: {
                 window.allowSlideDrag = false
-                parent.x = 0
-                parent.y = 0
-            }
-        }
-    }
-
-    // slide drag detection/mgmt
-    Item {
-        id: panDragger
-        x: 0
-        y: 0
-        width: parent.width
-        height: parent.height
-        visible: false
-
-        property alias mouseArea: panDragArea
-        Drag.active: panDragArea.drag.active
-
-        MouseArea {
-            id: panDragArea
-            anchors.fill: parent
-
-            drag.target: parent
-            drag.threshold: 0
-            drag.smoothed: false
-
-            onPressed: {
-                overrideCursor(Qt.ClosedHandCursor);
-            }
-
-            onReleased: {
-                restoreCursor();
-
-                window.allowPanDrag = false
                 parent.x = 0
                 parent.y = 0
             }

@@ -6,6 +6,8 @@ import ca.hexagram.xmodal.autonomx 1.0
 
 import "qrc:/stylesheet"
 import "../components/ui"
+import "../components/fields"
+import "../components/util"
 
 Item {
     id: latticeView
@@ -21,20 +23,8 @@ Item {
     property real prevZoom: 1
     property vector2d pan: Qt.vector2d(0, 0)
 
-    // smooth zoom animation
-    NumberAnimation { id: smoothZoom; duration: 400; easing.type: Easing.OutExpo }
-    onZoomChanged: {
-        prevZoom = zoom;
-
-        smoothZoom.from = prevZoom;
-        smoothZoom.to = zoom;
-    }
-
     Behavior on ppc {
-        NumberAnimation {
-            duration: 400
-            easing.type: Easing.OutExpo
-        }
+        SmoothedAnimation { velocity: 1000 }
     }
 
     property QtObject currRegion: QtObject {
@@ -144,10 +134,14 @@ Item {
             var element;
 
             // auto cancel if type is signed
-            if (currRegion.type === -1) return mask = Qt.vector4d(-1, -1, -1, -1);
+            if (currRegion.type === -1) {
+                return mask = Qt.vector4d(-1, -1, -1, -1);
+            }
 
             // set selected to function arguments if applicable
-            if (rect !== undefined) return mask = Qt.vector4d(rect.x/ppc, rect.y/ppc, rect.width/ppc, rect.height/ppc);
+            if (rect !== undefined) {
+                return mask = Qt.vector4d(rect.x/ppc, rect.y/ppc, rect.width/ppc, rect.height/ppc);
+            }
 
             // otherwise, retrieve automatically from global properties
             // TODO: clean up function calls so that this block can be removed, instead directly using arguments every time
@@ -176,31 +170,7 @@ Item {
     }
 
     // pan and zoom area
-    MouseArea {
-        id: panZone
-        enabled: !(generatorIndex < 0)
-        anchors.fill: parent
-        acceptedButtons: Qt.MiddleButton
-
-        preventStealing: true
-
-        onPressed: {
-            allowPanDrag = true
-        }
-
-        onReleased: {
-            allowPanDrag = false
-        }
-
-        // zoomies!!!!!! yeeeeehaaaaawwwwww
-        onWheel: {
-            // TODO: adjust zoom inc/dec value by delta intensity
-            if (wheel.angleDelta.y > 0)
-                zoom += 0.1;
-            else
-                zoom -= 0.1;
-        }
-    }
+    PanManager {}
 
     // I/O regions
     Item {
@@ -392,50 +362,19 @@ Item {
         visible: generatorIndex >= 0
     }
 
-    // pan
-    MouseArea {
-        id: cursorShaper
-        anchors.fill: parent
-        visible: spacePressed && !currRegion.adding     // don't pan when adding...?
-        hoverEnabled: true
+    // zoom field
+    NumberField {
+        id: zoomField
+        visible: !(generatorIndex < 0)
 
-        onVisibleChanged: updatePanCursor()
-
-        function updatePanCursor(restore = false) {
-            if (spacePressed) {
-                if (cursorShaper.containsMouse)
-                    return overrideCursor(Qt.OpenHandCursor)
-
-                if (restore) restoreCursor()
-            } else {
-                restoreCursor();
-            }
+        anchors {
+            left: parent.left
+            bottom: parent.bottom
+            margins: 20
         }
 
-        property vector2d drag: Qt.vector2d(panDragger.x, panDragger.y)
-        property vector2d prevDrag: Qt.vector2d(0, 0)
-        onDragChanged: {
-            if (!window.allowPanDrag) {
-                prevDrag = Qt.vector2d(0, 0);
-                return;
-            }
-
-            if (containsMouse) {
-                // calculate difference
-                var newDrag = prevDrag.minus(drag);
-
-                // add to pan value
-                latticeView.pan = latticeView.pan.plus(newDrag);
-                // reset previous drag
-                prevDrag = drag;
-            }
-        }
-
-        onHoveredChanged: {
-            updatePanCursor(true);
-
-            if (containsMouse) window.allowPanDrag = true;
-            else window.allowPanDrag = false;
-        }
+        fieldWidth: 100
+        labelText: "Zoom"
+        defaultNum: 100
     }
 }

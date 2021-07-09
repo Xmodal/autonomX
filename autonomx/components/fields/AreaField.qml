@@ -8,7 +8,7 @@ Field {
     id: areaField
 
     property string placeholder: ""
-    property string defaultText: propName && generatorModel.at(window.activeGeneratorIndex) ? generatorModel.at(window.activeGeneratorIndex)[propName] : "Text Field"
+    property string defaultText: propName && target ? target[propName] : "Text Field"
 
     fieldContent: Flickable {
         id: flickable

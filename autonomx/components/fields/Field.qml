@@ -10,9 +10,10 @@ ColumnLayout {
 
     // general props
     property string labelText: "Label"
+    property var target: generatorModel.at(activeGeneratorIndex)
     property string propName
-
     property real fieldWidth: 160
+    property color fieldBg: Stylesheet.colors.black
     // state props
     property bool showLabel: true
     property bool showFrame: true
@@ -22,7 +23,7 @@ ColumnLayout {
     property real frameMaskWidth: 0
     // flag props
     property string flagName: ""
-    property bool flagValue: flagName !== "" && generatorModel.at(activeGeneratorIndex) ? generatorModel.at(activeGeneratorIndex)[flagName] : false
+    property bool flagValue: flagName !== "" && target ? target[flagName] : false
     property bool activated: flagName !== "" ? flag.checked : true
     // field prop
     property alias fieldContent: fieldContentLoader.sourceComponent
@@ -35,12 +36,8 @@ ColumnLayout {
     signal flagChanged(bool newFlag)
     signal errorReceived(string title, string errorText)
 
-    onValueChanged: if (generatorModel.at(activeGeneratorIndex)) generatorModel.at(activeGeneratorIndex)[propName] = newValue
-    onFlagChanged: if (generatorModel.at(activeGeneratorIndex)) generatorModel.at(activeGeneratorIndex)[flagName] = newFlag
-    onErrorReceived: {
-        hasError = true
-
-    }
+    onValueChanged: if (target) target[propName] = newValue
+    onFlagChanged: if (target) target[flagName] = newFlag
 
     // layout
     Layout.preferredWidth: fieldWidth
@@ -65,7 +62,7 @@ ColumnLayout {
     Item {
         Rectangle {
             anchors.fill: parent
-            color: Stylesheet.colors.black
+            color: fieldBg
             opacity: fieldFocused || fieldHovered ? 1 : 0.5
 
             Behavior on opacity {

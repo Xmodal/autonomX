@@ -8,7 +8,7 @@ import "../ui"
 Field {
     id: selectField
 
-    property int index: propName && generatorModel.at(window.activeGeneratorIndex) ? generatorModel.at(window.activeGeneratorIndex)[propName] : 0
+    property int index: propName && target ? target[propName] : 0
     property variant options
 
     fieldContent: ComboBox {

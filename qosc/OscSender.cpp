@@ -46,7 +46,7 @@ void OscSender::setPort(quint16 port)
     m_udpSocket->connectToHost(m_hostAddress , m_port);
 }
 
-void OscSender::setHostAddress(const QString& hostAddress)
+void OscSender::setOscSenderHost(const QString& hostAddress)
 {
     m_hostAddress = QHostAddress(hostAddress);
     m_udpSocket->disconnectFromHost();

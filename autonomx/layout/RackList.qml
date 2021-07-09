@@ -44,10 +44,10 @@ Rectangle {
                 content: ParametersRack {}
             }
 
-            Rack {
-                rackName: "OSC settings"
-                content: OscSettingsRack {}
-            }
+//            Rack {
+//                rackName: "OSC settings"
+//                content: OscSettingsRack {}
+//            }
         }
     }
 }

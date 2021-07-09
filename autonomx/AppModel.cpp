@@ -62,6 +62,7 @@ AppModel::AppModel() {
     // init engines
     computeEngine = QSharedPointer<ComputeEngine>(new ComputeEngine(generatorsList, generatorsHashMap));
     oscEngine = QSharedPointer<OscEngine>(new OscEngine());
+    oscEngineFacade = QSharedPointer<OscEngineFacade>(new OscEngineFacade(oscEngine));
 
     if(flagDebug) {
         qDebug() << "constructor (AppModel): initializing threads";
@@ -129,6 +130,11 @@ QSharedPointer<ComputeEngine> AppModel::getComputeEngine() const {
 
 QSharedPointer<OscEngine> AppModel::getOscEngine() const {
     return oscEngine;
+}
+
+QSharedPointer<OscEngineFacade> AppModel::getOscEngineFacade() const
+{
+    return oscEngineFacade;
 }
 
 QSharedPointer<Generator> AppModel::createGenerator(QString type) {

@@ -42,11 +42,11 @@ class Generator : public QObject {
     Q_PROPERTY(double historyLatest READ getHistoryLatest NOTIFY historyLatestChanged)
     Q_PROPERTY(bool historyRefresher READ getHistoryRefresher NOTIFY historyRefresherChanged)
 
-    Q_PROPERTY(int oscInputPort READ getOscInputPort WRITE writeOscInputPort NOTIFY oscInputPortChanged)
+    Q_PROPERTY(int oscInputPort READ getOscInputPort WRITE writeOscInputPort NOTIFY oscReceiverPortChanged)
     Q_PROPERTY(QString oscInputAddress READ getOscInputAddress WRITE writeOscInputAddress NOTIFY oscInputAddressChanged)
 
     Q_PROPERTY(int oscOutputPort READ getOscOutputPort WRITE writeOscOutputPort NOTIFY oscOutputPortChanged)
-    Q_PROPERTY(QString oscOutputAddressHost READ getOscOutputAddressHost WRITE writeOscOutputAddressHost NOTIFY oscOutputAddressHostChanged)
+    Q_PROPERTY(QString oscOutputAddressHost READ getOscOutputAddressHost WRITE writeOscOutputAddressHost NOTIFY oscSenderHostChanged)
     Q_PROPERTY(QString oscOutputAddressTarget READ getOscOutputAddressTarget WRITE writeOscOutputAddressTarget NOTIFY oscOutputAddressTargetChanged)
 
     // TODO: this shouldn't be serialized in the JSON
@@ -162,6 +162,10 @@ public:
 
     GeneratorRegionSet* getInputRegionSet();
     GeneratorRegionSet* getOutputRegionSet();
+
+    // OSC experiments
+//    QVector<int> OSCPorts;
+//    int createOSCInputPort();
 protected:
     int latticeWidth = 50;                      // lattice width
     int latticeHeight = 50;                     // lattice height
@@ -175,7 +179,7 @@ private:
     double historyLatest = 0;                   // latest value for the history graph
     bool historyRefresher = false;              // bool that flips every time history latest is refreshed. this is an ugly workaround to prevent Qt from ignoring updates of historyLatest where the value doesn't change.
 
-    int oscInputPort = 6668;                    // generator osc input port, assigned by user
+    int oscInputPort = 6668;                           // generator osc input port, assigned by user
     QString oscInputAddress = "/input";         // generator osc input address, assigned by user (this is an osc destination)
 
     int oscOutputPort = 6669;                   // generator osc output port, assigned by user
@@ -235,11 +239,11 @@ signals:
     void historyLatestChanged(double historyLatest);
     void historyRefresherChanged(bool historyRefresher);
 
-    void oscInputPortChanged(int oscInputPort);
+    void oscReceiverPortChanged(int oscInputPort);
     void oscInputAddressChanged(QString oscInputAddress);
 
     void oscOutputPortChanged(int oscOutputPort);
-    void oscOutputAddressHostChanged(QString oscOutputAddressHost);
+    void oscSenderHostChanged(QString oscOutputAddressHost);
     void oscOutputAddressTargetChanged(QString oscOutputAddressTarget);
 
     void inputCountChanged(int inputCount);

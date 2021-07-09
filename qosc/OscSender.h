@@ -29,10 +29,10 @@ public:
      * @param port
      * @param parent
      */
-    explicit OscSender(const QString& hostAddress, quint16 port, QObject* parent = nullptr);
+    explicit OscSender(const QString& host, quint16 port, QObject* parent = nullptr);
     ~OscSender();
     void setPort(quint16 port);
-    void setHostAddress(const QString& hostAddress);
+    void setOscSenderHost(const QString& host);
 
     /**
      * @brief Sends an OSC message to the host and address that this sender is configured to send to.

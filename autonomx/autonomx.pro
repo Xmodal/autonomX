@@ -49,6 +49,7 @@ SOURCES += \
     GeneratorRegionSet.cpp \
     Izhikevich.cpp \
     OscEngine.cpp \
+    OscEngineFacade.cpp \
     SpikingNet.cpp \
     WolframCA.cpp \
     main.cpp
@@ -104,6 +105,7 @@ HEADERS += \
     Izhikevich.h \
     NeuronType.h \
     OscEngine.h \
+    OscEngineFacade.h \
     SpikingNet.h \
     WolframCA.h
 

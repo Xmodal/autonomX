@@ -24,7 +24,6 @@ OscEngine::OscEngine() {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );
-
         qDebug() << "constructor (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 }
@@ -34,301 +33,243 @@ OscEngine::~OscEngine() {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );
-
         qDebug() << "destructor (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 }
 
-void OscEngine::connectReceiver(int id) {
+void OscEngine::connectReceiver(int generatorId) {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );
-
-        qDebug() << "connectReceiver (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id;
+        qDebug() << "connectReceiver (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << generatorId;
     }
 
-    if(!oscReceivers.contains(id)) {
-        throw std::runtime_error("osc receiver does not exist");
-    }
-    QSharedPointer<OscReceiver> receiver = oscReceivers.value(id);
-
-    QObject::connect(receiver.data(), &OscReceiver::messageReceived, this, [this, id](const QString& oscAddress, const QVariantList& message){
-        receiveOscDataHandler(id, oscAddress, message);
+    QObject::connect(oscReceiver.data(), &OscReceiver::messageReceived, this, [this, generatorId](const QString& oscAddress, const QVariantList& message){
+        receiveOscDataHandler(generatorId, oscAddress, message);
     });
 }
 
 void OscEngine::startGeneratorOsc(QSharedPointer<Generator> generator) {
     // get parameter values
-    int id = generator->getID();
+    int generatorId = generator->getID();
 
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );
-
-        qDebug() << "startGeneratorOsc (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id;
+        qDebug() << "startGeneratorOsc (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << generatorId;
     }
 
     QString addressReceiver = generator->getOscInputAddress();
     QString addressSenderHost = generator->getOscOutputAddressHost();
     QString addressSenderTarget = generator->getOscOutputAddressTarget();
-    int portReceiver = generator->getOscInputPort();
-    int portSender = generator->getOscOutputPort();
 
-    createOscReceiver(id, addressReceiver, portReceiver);
-    createOscSender(id, addressSenderHost, addressSenderTarget, portSender);
+    createOscReceiver(generatorId, addressReceiver, oscReceiverPort);
+    createOscSender(generatorId, addressSenderHost, addressSenderTarget, oscSenderPort);
 
-    // connect input / receiver changes
-    QObject::connect(generator.data(), &Generator::oscInputAddressChanged, this, [this, id](QString oscInputAddress){
-        if(flagDebug) {
-            qDebug() << "oscInputAddressChanged (lambda)";
-        }
-        emit updateOscReceiverAddress(id, oscInputAddress);
-    });
-
-    QObject::connect(generator.data(), &Generator::oscInputPortChanged, this, [this, id](int oscInputPort){
+    // connect oscReceiver object port to generator(s)
+    QObject::connect(generator.data(), &Generator::oscReceiverPortChanged, this, [this](int oscReceiverPort){
         if(flagDebug) {
             qDebug() << "oscInputPortChanged (lambda)";
         }
-        emit updateOscReceiverPort(id, oscInputPort);
+        emit updateOscReceiverPort(oscReceiverPort);
     });
 
-    // connect output / sender changes
-    QObject::connect(generator.data(), &Generator::oscOutputAddressHostChanged, this, [this, id](QString oscOutputAddressHost){
+    // connect oscSender object host to generator(s)
+    QObject::connect(generator.data(), &Generator::oscSenderHostChanged, this, [this](QString oscSenderHost){
         if(flagDebug) {
             qDebug() << "oscOutputAddressHostChanged (lambda)";
         }
-        emit updateOscSenderAddressHost(id, oscOutputAddressHost);
+        emit updateOscSenderHost(oscSenderHost);
     });
 
-    QObject::connect(generator.data(), &Generator::oscOutputAddressTargetChanged, this, [this, id](QString oscOutputAddressTarget){
+    // connect oscSender object port to generator(s)
+    QObject::connect(generator.data(), &Generator::oscOutputPortChanged, this, [this](int oscSenderPort){
         if(flagDebug) {
             qDebug() << "oscOutputAddressTargetChanged (lambda)";
         }
-        emit updateOscSenderAddressTarget(id, oscOutputAddressTarget);
-    });
-
-    QObject::connect(generator.data(), &Generator::oscOutputPortChanged, this, [this, id](int oscOutputPort){
-        if(flagDebug) {
-            qDebug() << "oscOutputAddressTargetChanged (lambda)";
-        }
-        emit updateOscSenderPort(id, oscOutputPort);
+        emit updateOscSenderPort(oscSenderPort);
     });
 }
 
 void OscEngine::stopGeneratorOsc(QSharedPointer<Generator> generator) {
-    int id = generator->getID();
+    int generatorId = generator->getID();
 
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );
-
-        qDebug() << "stopGeneratorOsc (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id;
+        qDebug() << "stopGeneratorOsc (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << generatorId;
     }
 
-    deleteOscReceiver(id);
-    deleteOscSender(id);
+    deleteOscSender(generatorId);
 }
 
-void OscEngine::receiveOscDataHandler(int id, const QString& oscAddress, const QVariantList& message) {
+void OscEngine::receiveOscDataHandler(int generatorId, const QString& oscAddress, const QVariantList& message) {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "receiveOscDataHandler (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\taddress = " << oscAddress << "\tmessage = " << message;
+        qDebug() << "receiveOscDataHandler (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << generatorId << "\taddress = " << oscAddress << "\tmessage = " << message;
     }
 
-    if(!oscReceivers.contains(id)) {
-        throw std::runtime_error("osc receiver does not exist");
-    }
-    QString oscAddressExpected = oscReceiverAddresses.value(id);
+    QString oscAddressExpected = oscReceiverAddress;
     if(oscAddress == oscAddressExpected) {
         // message received with right address
-        emit receiveOscData(id, message);
+        emit receiveOscData(generatorId, message);
     }
 }
 
-void OscEngine::sendOscData(int id, QVariantList data) {
+void OscEngine::updateValue(const QString &key, const QVariant &value) {
+    QByteArray keyArray = key.toLocal8Bit();
+    char* keyBuffer = keyArray.data();
+
+    setProperty(keyBuffer, value);
+}
+
+void OscEngine::sendOscData(int generatorId, QVariantList data) {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );
 
-        qDebug() << "sendOscData (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\tmessage = " << data;
+        qDebug() << "sendOscData (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << generatorId << "\tmessage = " << data;
     }
 
-    if(!oscSenders.contains(id)) {
+    if(!oscSenders.contains(generatorId)) {
         // we allow this to happen without an exception because this can occur when deleting a generator.
         // there is a race condition between the deletion of the Generator and its associated OscSender when AppModel orders their respective threads (computeThread and oscThread) to delete them later.
         // if the OscSender is deleted first and the ComputeEngine renders an iteration before it deletes the Generator, it will attempt to send a message through an OscSender that doesn't exist.
         return;
     }
-    QSharedPointer<OscSender> sender = oscSenders.value(id);
-    QString address = oscSenderAddresses.value(id);
-    sender->send(address, data);
+    QSharedPointer<OscSender> sender = oscSenders.value(generatorId);
+    sender->send(oscReceiverAddress, data);
 }
 
-void OscEngine::createOscReceiver(int id, QString address, int port) {
+void OscEngine::createOscReceiver(int generatorId, QString address, int port) {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );
-
-        qDebug() << "createOscReceiver (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\taddress = " << address << "\tport = " << port;
+        qDebug() << "createOscReceiver (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << generatorId << "\taddress = " << address << "\tport = " << port;
     }
 
-    if(oscReceivers.contains(id)) {
-        throw std::runtime_error("osc receiver already exists");
+    // check if it's the first time creating a receiver object
+    // only one osc receiver object needed
+    if(createOscReceiverBoolean) {
+        oscReceiver = QSharedPointer<OscReceiver>(new OscReceiver(port));
+        createOscReceiverBoolean = false;
     }
-    QSharedPointer<OscReceiver> receiver = QSharedPointer<OscReceiver>(new OscReceiver(port));
-    // update hash maps
-    oscReceivers.insert(id, receiver);
-    oscReceiverAddresses.insert(id, address);
+
     // connect receiver
-    connectReceiver(id);
+    connectReceiver(generatorId);
 }
 
-void OscEngine::deleteOscReceiver(int id) {
+void OscEngine::createOscSender(int generatorId, QString addressHost, QString addressTarget, int port) {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );
-
-        qDebug() << "deleteOscReceiver (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id;
+        qDebug() << "createOscSender (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << generatorId << "\taddressHost = " << addressHost << "\taddressTarget = " << addressTarget << "\tport = " << port;
     }
 
-    if(!oscReceivers.contains(id)) {
-        throw std::runtime_error("osc receiver does not exist");
-    }
-    // delete from hash maps
-    oscReceivers.remove(id);
-    oscReceiverAddresses.remove(id);
-}
-
-void OscEngine::updateOscReceiverAddress(int id, QString address) {
-    if(flagDebug) {
-        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()
-        );
-
-        qDebug() << "updateOscReceiverAddress (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\taddress = " << address;
-    }
-
-    if(!oscReceivers.contains(id)) {
-        // we allow this to happen without an exception because this can occur when deleting a generator.
-        // there is a race condition between the deletion of the Generator and its associated OscReceiver when AppModel orders their respective threads (computeThread and oscThread) to delete them later.
-        // this makes it possible to attempt to edit the properties of an OscReceiver that doesn't exist.
-        return;
-    }
-    oscReceiverAddresses.insert(id, address);
-}
-
-void OscEngine::updateOscReceiverPort(int id, int port) {
-    if(flagDebug) {
-        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()
-        );
-
-        qDebug() << "updateOscReceiverPort (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\tport = " << port;
-    }
-
-    if(!oscReceivers.contains(id)) {
-        // we allow this to happen without an exception because this can occur when deleting a generator.
-        // there is a race condition between the deletion of the Generator and its associated OscReceiver when AppModel orders their respective threads (computeThread and oscThread) to delete them later.
-        // this makes it possible to attempt to edit the properties of an OscReceiver that doesn't exist.
-        return;
-    }
-    oscReceivers.value(id)->setPort(port);
-}
-
-void OscEngine::createOscSender(int id, QString addressHost, QString addressTarget, int port) {
-    if(flagDebug) {
-        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()
-        );
-
-        qDebug() << "createOscSender (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\taddressHost = " << addressHost << "\taddressTarget = " << addressTarget << "\tport = " << port;
-    }
-
-    if(oscSenders.contains(id)) {
+    if(oscSenders.contains(generatorId)) {
         throw std::runtime_error("osc sender already exists");
     }
     QSharedPointer<OscSender> sender = QSharedPointer<OscSender>(new OscSender(addressHost, port));
+
     // update hash maps
-    oscSenders.insert(id, sender);
-    oscSenderAddresses.insert(id, addressTarget);
+    oscSenders.insert(generatorId, sender);
 }
 
-void OscEngine::deleteOscSender(int id) {
+void OscEngine::deleteOscSender(int generatorId) {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );
-
-        qDebug() << "deleteOscSender (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id;
+        qDebug() << "deleteOscSender (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << generatorId;
     }
 
-    if(!oscSenders.contains(id)) {
+    if(!oscSenders.contains(generatorId)) {
         throw std::runtime_error("osc sender does not exist");
     }
     // delete from hash maps
-    oscSenders.remove(id);
-    oscSenders.remove(id);
+    oscSenders.remove(generatorId);
 }
 
-void OscEngine::updateOscSenderAddressHost(int id, QString addressHost) {
+int OscEngine::getOscReceiverPort() const {
+    return this->oscReceiverPort;
+}
+
+int OscEngine::getOscSenderPort() const {
+    return this->oscSenderPort;
+}
+
+QString OscEngine::getOscSenderHost() const {
+    return this->oscSenderHost;
+}
+
+void OscEngine::writeOscReceiverPort(int port) {
+    // change global receiverPort variable
+    this->oscReceiverPort = port;
+    // update oscReceiver object to global value
+    updateOscReceiverPort(port);
+    emit OscReceiverPortChanged(port);
+}
+
+void OscEngine::updateOscReceiverPort(int port) {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );
-
-        qDebug() << "updateOscSenderAddressHost (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\taddressHost = " << addressHost;
+        qDebug() << "updateOscReceiverPort (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tport = " << port;
     }
 
-    if(!oscSenders.contains(id)) {
-        // we allow this to happen without an exception because this can occur when deleting a generator.
-        // there is a race condition between the deletion of the Generator and its associated OscSender when AppModel orders their respective threads (computeThread and oscThread) to delete them later.
-        // this makes it possible to attempt to edit the properties of an OscSender that doesn't exist.
-        return;
-    }
-    oscSenders.value(id)->setHostAddress(addressHost);
+    oscReceiver->setPort(port);
 }
 
-void OscEngine::updateOscSenderAddressTarget(int id, QString addressTarget) {
+void OscEngine::writeOscSenderPort(int port) {
+    // change global senderPort variable
+    this->oscSenderPort = port;
+    // update all oscSender objects to global value
+    updateOscSenderPort(port);
+    emit OscSenderPortChanged(port);
+}
+
+void OscEngine::updateOscSenderPort(int port) {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );
-
-        qDebug() << "updateOscSenderAddressTarget (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\taddressTarget = " << addressTarget;
+        qDebug() << "updateOscSenderPort (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tport = " << port;
     }
 
-    if(!oscSenders.contains(id)) {
-        // we allow this to happen without an exception because this can occur when deleting a generator.
-        // there is a race condition between the deletion of the Generator and its associated OscSender when AppModel orders their respective threads (computeThread and oscThread) to delete them later.
-        // this makes it possible to attempt to edit the properties of an OscSender that doesn't exist.
-        return;
+    QHash<int, QSharedPointer<OscSender>>::iterator i;
+    for(i = oscSenders.begin(); i !=oscSenders.end(); ++i) {
+        i.value()->setPort(oscSenderPort);
     }
-    oscSenderAddresses.insert(id, addressTarget);
 }
 
-void OscEngine::updateOscSenderPort(int id, int port) {
+void OscEngine::writeOscSenderHost(QString host) {
+    // change global host variable
+    this->oscSenderHost = host;
+    // update all osc sender objects to global value
+    updateOscSenderHost(host);
+    emit OscSenderHostChanged(host);
+}
+
+void OscEngine::updateOscSenderHost(QString host) {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );
-
-        qDebug() << "updateOscSenderPort (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\tport = " << port;
+        qDebug() << "updateOscSenderAddressHost (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\taddressHost = " << host;
     }
 
-    if(!oscSenders.contains(id)) {
-        // we allow this to happen without an exception because this can occur when deleting a generator.
-        // there is a race condition between the deletion of the Generator and its associated OscSender when AppModel orders their respective threads (computeThread and oscThread) to delete them later.
-        // this makes it possible to attempt to edit the properties of an OscSender that doesn't exist.
-        return;
+    QHash<int, QSharedPointer<OscSender>>::iterator i;
+    for(i = oscSenders.begin(); i !=oscSenders.end(); ++i) {
+        i.value()->setOscSenderHost(host);
     }
-    oscSenders.value(id)->setPort(port);
 }

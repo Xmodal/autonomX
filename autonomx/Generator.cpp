@@ -239,7 +239,7 @@ void Generator::writeOscInputPort(int oscInputPort) {
 
     this->oscInputPort = oscInputPort;
     emit valueChanged("oscInputPort", QVariant(oscInputPort));
-    emit oscInputPortChanged(oscInputPort);
+    emit oscReceiverPortChanged(oscInputPort);
 }
 
 void Generator::writeOscInputAddress(QString oscInputAddress) {
@@ -293,7 +293,7 @@ void Generator::writeOscOutputAddressHost(QString oscOutputAddressHost) {
 
     this->oscOutputAddressHost = oscOutputAddressHost;
     emit valueChanged("oscOutputAddressHost", QVariant(oscOutputAddressHost));
-    emit oscOutputAddressHostChanged(oscOutputAddressHost);
+    emit oscSenderHostChanged(oscOutputAddressHost);
 }
 
 void Generator::writeOscOutputAddressTarget(QString oscOutputAddressTarget) {

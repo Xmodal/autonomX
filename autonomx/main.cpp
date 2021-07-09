@@ -75,7 +75,6 @@ int main(int argc, char *argv[]) {
 
     qDebug() << "Built against Qt" << QT_VERSION_STR;
     qDebug() << "Using Qt" << QLibraryInfo::version() << "at runtime";
-    qDebug() << "GUI id = " << QThread::currentThreadId();
 
 
     // expose custom types to QML and Qt's meta type system
@@ -84,6 +83,7 @@ int main(int argc, char *argv[]) {
     qmlRegisterUncreatableType<GeneratorRegion>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorRegion", "Cannot instanciate GeneratorRegion.");
     qmlRegisterUncreatableType<GeneratorRegionSet>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorRegionSet", "Cannot instanciate GeneratorRegionSet.");
     qmlRegisterUncreatableType<GeneratorMeta>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorMeta", "Cannot instanciate GeneratorMeta.");
+    qmlRegisterUncreatableType<OscEngine>("ca.hexagram.xmodal.autonomx", 1, 0, "OscEngine", "Cannot instanciate OscEngine.");
     qmlRegisterType<GeneratorLattice>("ca.hexagram.xmodal.autonomx", 1, 0, "GeneratorLattice");
     qRegisterMetaType<QSharedPointer<Generator>>();
 
@@ -112,6 +112,7 @@ int main(int argc, char *argv[]) {
     qmlEngine.rootContext()->setContextProperty("appModel", &AppModel::getInstance());
     qmlEngine.rootContext()->setContextProperty("generatorModel", AppModel::getInstance().getGeneratorModel().data());
     qmlEngine.rootContext()->setContextProperty("generatorMetaModel", AppModel::getInstance().getGeneratorMetaModel().data());
+    qmlEngine.rootContext()->setContextProperty("oscEngine", AppModel::getInstance().getOscEngineFacade().data());
     qmlEngine.rootContext()->setContextProperty("extensionName", extensionName);
     qmlEngine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (qmlEngine.rootObjects().isEmpty())

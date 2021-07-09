@@ -104,31 +104,6 @@ bool Generator::getHistoryRefresher() {
     return historyRefresher;
 }
 
-//int Generator::createOSCInputPort() {
-//    int port = 6668;
-
-//    if(OSCPorts.size() < 1) {
-//        OSCPorts.resize(1);
-//    }
-
-//    qDebug() << "OSCPORTS size: " << OSCPorts.length();
-
-//    for(int i = 0; i < OSCPorts.length(); i++) {
-//        if(OSCPorts.at(i) == port) {
-//            qDebug() << "port already used";
-//            port--;
-//        } else {
-//            OSCPorts.append(port);
-//            qDebug() << "port added to vector, i=" << i;
-//            OSCPorts.resize(OSCPorts.size() + 1);
-//        }
-//        qDebug() << "Port: " << OSCPorts.at(i);
-//    }
-
-//    writeOscInputPort(port);
-//    return port;
-//}
-
 int Generator::getOscInputPort() {
     return oscInputPort;
 }

@@ -15,6 +15,7 @@ Field {
     property real min               // minimum accepted range value
     property real max               // maximum accepted range value
     property real incStep: 1        // inc/dec widget step value
+    property string unit
 
     // inc/dec functions
     function increment() {

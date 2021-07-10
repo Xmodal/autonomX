@@ -25,7 +25,6 @@ class WolframCA : public Generator
     Q_OBJECT
 
     Q_PROPERTY(int rule READ getRule WRITE writeRule NOTIFY ruleChanged)
-    Q_PROPERTY(int timeScale READ getTimeScale WRITE writeTimeScale NOTIFY timeScaleChanged)
     //Q_PROPERTY(double randSeed READ getRandSeed WRITE writeRandSeed NOTIFY randSeedChanged)
     Q_PROPERTY(bool flag_randSeed READ getFlagRandSeed WRITE writeFlagRandSeed NOTIFY flagRandSeedChanged)
 
@@ -36,6 +35,8 @@ private:
 
     // cells of lattice
     std::vector<double> cells;
+
+    std::vector<double> nextGenCells;
 
     // Binary conversion of decimal user input in future starting by rule 90
     int ruleset[8];// = {0,1,0,1,1,0,1,0};// {1,1,0,1,1,1,1,0};
@@ -52,9 +53,6 @@ private:
 
     //random generator to initialize cells
     std::mt19937 randomGenerator;
-
-    // timeScale variable
-    int timeScale = 95;
 
     // global iteration counter
     int iterationNumber;
@@ -80,13 +78,11 @@ public:
     double sigmoid(double value);
     void generate(int r);
     int findCellValue(int left,int middle, int right);
+    void moveDrone(std::vector<double>);       //a fancy name to move the automata up the lattice as if a drone shot was being taken
 
     // accessors / mutators
     int getRule();
     void writeRule(int rule);
-
-    void writeTimeScale(double timeScale);
-    double getTimeScale() const;
 
     //void writeRandSeed(double randSeed);
     //double getRandSeed() const;
@@ -97,7 +93,6 @@ public:
 signals:
     // QML signals
     void ruleChanged(int rule);
-    void timeScaleChanged(double timeScale);
     //void randSeedChanged(double randSeed);
     void flagRandSeedChanged(bool flag_randSeed);
 };

@@ -39,6 +39,8 @@ WolframCA::~WolframCA() {
 
 }
 
+/*
+
 void WolframCA::initialize() {
 
 if(flagDebug) {
@@ -87,11 +89,11 @@ else {
    // at max value (1) it is 100% certain that no seed will be selected
    // no seed selected = a blank lattice will be generated -> essentially breaks the generator until reset
 
-   /*if(seedChosen == false) {
-       magic = (float) rand() / RAND_MAX;
-       qDebug() << "no cell was selected normally, temp fix triggered." << endl << "random cell selected for seed: " << (int)(magic * latticeWidth);
-       cells[(int)(magic * latticeWidth)] = 1;
-   }*/
+ //  if(seedChosen == false) {
+  //     magic = (float) rand() / RAND_MAX;
+   //    qDebug() << "no cell was selected normally, temp fix triggered." << endl << "random cell selected for seed: " << (int)(magic * latticeWidth);
+  //     cells[(int)(magic * latticeWidth)] = 1;
+ //  }
 
 
    lastGeneration = latticeHeight;
@@ -170,6 +172,116 @@ if(currentGeneration>0){
 
     // every iteration, iterationNumber increments
     iterationNumber++;
+}
+
+*/
+
+void WolframCA::initialize() {
+
+if(flagDebug) {
+    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+    std::chrono::system_clock::now().time_since_epoch());
+
+   qDebug() << "initialize:\t\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+}
+
+// resize cells vector for current lattice size
+cells.resize(latticeHeight * latticeWidth);
+
+// to store the cells in the next generation
+nextGenCells.resize(latticeWidth);
+
+// reset all cells to 0 / black
+for(int i = 0; i < (latticeHeight * latticeWidth); i++) {
+ cells[i] = 0;
+ if (i<latticeWidth) nextGenCells[i]=0;
+}
+
+// a var to store a random number
+double magic;
+
+if (!flag_randSeed) {
+   cells[latticeWidth*latticeHeight-1-latticeWidth/2] = 1;    // middle cell on last line of the lattice is the starting seed
+}
+// if random starting seed is selected by user
+else {
+       for(int i = 0; i < (latticeHeight * latticeWidth); i++) {  //initialize a random cell as starting cell
+           if (i <= latticeWidth*latticeHeight-latticeWidth)
+               cells[i] = 0;
+           else {
+               magic = (float) rand() / RAND_MAX;  // generate a random number magic b/w 0-1 and initialize to 1 if magic>0.5 o/w magic -> 0
+               if (magic > 0.5)
+                   cells[i] = 1;
+               else
+                   cells[i] = 0;
+           }
+       }
+}
+
+   lastGeneration = latticeHeight;
+   // current generation represents the generation number of the automata
+   currentGeneration = 0;
+   iterationNumber = 1;
+
+   //generate the rule set array based on the defined rule
+   int r = getRule();
+   generate(r);
+}
+
+void WolframCA::computeIteration(double deltaTime) {
+
+//set ruleset using the determined rule after checking if the rule has changed by the user
+int r = getRule();
+
+// change rule set if changed by the user
+if (iterationNumber >= 1 && (prev_rule!=rule)) {
+    generate(r);
+}
+
+//check if randomness radio button is selected or not
+if(getFlagRandSeed())
+   flag_randSeed=true;
+else
+   flag_randSeed=false;
+
+// every 1000 iterations, currentGeneration increments and iterationNumber resets
+if(iterationNumber % (100 - (int)(timeScale) + 1) == 0) {
+    currentGeneration++;
+    iterationNumber = 1;
+    //qDebug()<<"Current Generation is "<<currentGeneration;
+}
+
+//move the drone shot
+if(iterationNumber==1 && currentGeneration>0){
+    //qDebug()<<"Im here";
+    for (int i = 1 ; i < latticeWidth-1; i++){
+        int left = cells[latticeWidth*latticeHeight - latticeWidth + i - 1];
+        int middle = cells[latticeWidth*latticeHeight - latticeWidth + i];
+        int right = cells[latticeWidth*latticeHeight - latticeWidth + i + 1];
+        nextGenCells[i] = findCellValue(left,middle,right);
+    }
+    moveDrone(nextGenCells);    //shift the entire automata one line above
+}
+
+//store the rule to check next time if the rule has changed
+prev_rule = rule;
+
+// every iteration, iterationNumber increments
+iterationNumber++;
+
+}
+
+void WolframCA::moveDrone(std::vector<double> nextGencells){
+    //shift cells starting from the top of the lattice till n-1 line - one line above
+    for (int i=latticeWidth; i<latticeWidth*latticeHeight; i++){
+        cells[i-latticeWidth] = cells[i];
+    }
+    //create the new generation on the last line of the lattice
+    int iter =0;
+    for (int j = latticeWidth*latticeHeight - latticeWidth; j <latticeWidth*latticeHeight; j++){
+        cells[j] = nextGencells[iter];
+        iter++;
+    }
 }
 
 

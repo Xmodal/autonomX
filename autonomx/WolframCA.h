@@ -36,6 +36,8 @@ private:
     // cells of lattice
     std::vector<double> cells;
 
+    std::vector<double> nextGenCells;
+
     // Binary conversion of decimal user input in future starting by rule 90
     int ruleset[8];// = {0,1,0,1,1,0,1,0};// {1,1,0,1,1,1,1,0};
 
@@ -76,6 +78,7 @@ public:
     double sigmoid(double value);
     void generate(int r);
     int findCellValue(int left,int middle, int right);
+    void moveDrone(std::vector<double>);       //a fancy name to move the automata up the lattice as if a drone shot was being taken
 
     // accessors / mutators
     int getRule();

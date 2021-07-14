@@ -19,13 +19,13 @@ Item {
 
     // pan/zoom properties
     property real ppc: 10 * zoom            // pixels per cell, ie. how wide a cell square is in pixels. this is animated within QML (scaled by the zoom factor)
-    property real zoom: 1
-    property real prevZoom: 1
+    property real zoom: zoomPercent / 100
+    property real zoomPercent: 100
     property vector2d pan: Qt.vector2d(0, 0)
 
-    Behavior on ppc {
-        SmoothedAnimation { velocity: 1000 }
-    }
+//    Behavior on ppc {
+//        SmoothedAnimation { velocity: 1000 }
+//    }
 
     property QtObject currRegion: QtObject {
         property int type: -1
@@ -375,6 +375,9 @@ Item {
 
         fieldWidth: 100
         labelText: "Zoom"
-        defaultNum: 100
+        incStep: 5
+
+        target: latticeView
+        propName: "zoomPercent"
     }
 }

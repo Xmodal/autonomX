@@ -53,11 +53,27 @@ Item {
 
         // zoomies!!!!!! yeeeeehaaaaawwwwww
         onWheel: {
+            // get coords of mouse where the wheel evt was triggered
+            // map to [-size/2, size/2] range
+            let wheelDiff = Qt.vector2d(wheel.x, wheel.y).minus(Qt.vector2d(width / 2, height / 2));
+
+            // increment or decrement zoom
             // TODO: adjust zoom inc/dec value by delta intensity
-            if (wheel.angleDelta.y > 0)
-                zoom += 0.1;
-            else
-                zoom -= 0.1;
+            if (wheel.angleDelta.y > 0) {
+                zoomPercent += 5;
+                if (zoomPercent >= 500) zoomPercent = 500;
+            } else {
+                zoomPercent -= 5;
+                if (zoomPercent <= 10) zoomPercent = 10;
+            }
+
+            // zoom according to mouse position
+            // (Epic Formula TM in the Line Below)
+            wheelDiff = wheelDiff.plus(latticeView.pan).times(0.05 * (1 / zoom));
+            if (wheel.angleDelta.y < 0) wheelDiff = wheelDiff.times(-1);
+
+            // add to global pan vector
+            latticeView.pan = latticeView.pan.plus(wheelDiff);
         }
     }
 }

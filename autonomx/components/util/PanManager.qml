@@ -12,7 +12,8 @@ Item {
 
     property vector2d dragValue: Qt.vector2d(x, y)
     property vector2d prevDragValue: Qt.vector2d(0, 0);
-    property bool allowPan: false       // used so that the pan doesn't snap back to (0, 0) on button release
+    property bool allowPan: false               // used so that the pan doesn't snap back to (0, 0) on button release
+    property bool isDraggingRegion: false       // changed by Region dragging and/or resizing
 
     // master props
     property vector2d panCoarse: Qt.vector2d(panX, panY)
@@ -53,16 +54,16 @@ Item {
     }
 
     onDragValueChanged: {
-        if (allowPan) {
-            // calculate difference
-            var newDrag = prevDragValue.minus(dragValue);
+        if (!allowPan || isDraggingRegion) return;
 
-            // add to pan value
-            panX += newDrag.x;
-            panY += newDrag.y;
-            // reset previous drag
-            prevDragValue = dragValue;
-        }
+        // calculate difference
+        var newDrag = prevDragValue.minus(dragValue);
+
+        // add to pan value
+        panX += newDrag.x;
+        panY += newDrag.y;
+        // reset previous drag
+        prevDragValue = dragValue;
     }
 
     MouseArea {
@@ -93,6 +94,8 @@ Item {
 
         // zoom handling
         onWheel: {
+            if (isDraggingRegion) return;
+
             // get coords of mouse where the wheel evt was triggered
             // map to [-size/2, size/2] range
             let wheelDiff = Qt.vector2d(wheel.x, wheel.y).minus(Qt.vector2d(width / 2, height / 2));

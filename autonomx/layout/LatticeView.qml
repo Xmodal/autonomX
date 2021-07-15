@@ -22,10 +22,7 @@ Item {
     property alias zoom: panManager.zoom        // in percents
     property alias zoomCoarse: panManager.zoomCoarse
     property alias pan: panManager.pan          // in pixels
-
-//    Behavior on ppc {
-//        SmoothedAnimation { velocity: 1000 }
-//    }
+    property alias isDraggingRegion: panManager.isDraggingRegion
 
     property QtObject currRegion: QtObject {
         property int type: -1

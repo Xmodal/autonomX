@@ -74,6 +74,14 @@ Item {
         if (currRegion.type < 0) return;
     }
 
+    // zoom
+    function zoomIn() {
+        panManager.zoomIn();
+    }
+    function zoomOut() {
+        panManager.zoomOut();
+    }
+
     // add region
     function addNewInput() {
         switchSelectedRegion(0, inputModel.rowCount(), true);

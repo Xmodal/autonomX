@@ -252,6 +252,8 @@ Control {
 
     // drag configuration
     onDragActiveChanged: {
+        latticeView.isDraggingRegion = dragActive;
+
         if (dragActive) {
             Drag.start();
             latticeView.switchSelectedRegion(type, index);
@@ -329,6 +331,8 @@ Control {
                 // unified cursor change on press/release
                 changeCursor(pressed ? cursorShape : null);
                 inEdit = pressed;
+
+                latticeView.isDraggingRegion = pressed;
 
                 // on mouse release
                 if (!pressed) snapToGrid("resize");

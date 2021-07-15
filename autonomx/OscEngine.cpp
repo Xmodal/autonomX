@@ -144,6 +144,7 @@ void OscEngine::sendOscData(int generatorId, QVariantList data) {
         // if the OscSender is deleted first and the ComputeEngine renders an iteration before it deletes the Generator, it will attempt to send a message through an OscSender that doesn't exist.
         return;
     }
+
     QSharedPointer<OscSender> sender = oscSenders.value(generatorId);
     sender->send(oscReceiverAddress, data);
 }

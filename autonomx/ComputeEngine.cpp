@@ -182,16 +182,31 @@ void ComputeEngine::loop() {
 
     // send output messages to osc engine
     for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
-        QList<QVariant> outputs;
+        QList<QVariant> oscOutputsList;
+        QList<QVariant> oscOutputRegion;
+
         for(int i = 0; i < (*it)->getOutputRegionSet()->rowCount(); i++) {
             double value = flagDummyOutputMonitor ? randomUniform(randomGenerator) : (*it)->getOutputRegionSet()->at(i)->getIntensity();
             if(flagCastOutputToFloat) {
-                outputs.append((float)value);
+                oscOutputsList.append((float)value);
+                oscOutputRegion.append((float)value);
             } else {
-                outputs.append(value);
+                oscOutputsList.append(value);
+                oscOutputRegion.append(value);
             }
+
+            // write and send individual output region osc messages
+            QString outputRegionNumber = QString::number(i+1);
+            oscOutputRegion.prepend("/" + (*it)->getGeneratorName() + "/output/" + outputRegionNumber);
+            emit sendOscData((*it)->getID(), oscOutputRegion);
+            oscOutputRegion.clear();
         }
-        emit sendOscData((*it)->getID(), outputs);
+
+        // write generator info to osc output list message
+        oscOutputsList.prepend("/" + (*it)->getGeneratorName() + "/output");
+
+        // send osc output list message
+        emit sendOscData((*it)->getID(), oscOutputsList);
     }
 
     // measure the time used to do the computation

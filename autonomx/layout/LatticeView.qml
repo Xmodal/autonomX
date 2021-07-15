@@ -18,10 +18,10 @@ Item {
     property GeneratorRegionSet outputModel: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).getOutputRegionModel()
 
     // pan/zoom properties
-    property real ppc: 10 * zoom            // pixels per cell, ie. how wide a cell square is in pixels. this is animated within QML (scaled by the zoom factor)
-    property real zoom: zoomPercent / 100
-    property real zoomPercent: 100
-    property vector2d pan: Qt.vector2d(0, 0)
+    property real ppc: 0.1 * zoom               // pixels per cell, ie. how wide a cell square is in pixels. this is animated within QML (scaled by the zoom factor)
+    property alias zoom: panManager.zoom        // in percents
+    property alias zoomCoarse: panManager.zoomCoarse
+    property alias pan: panManager.pan          // in pixels
 
 //    Behavior on ppc {
 //        SmoothedAnimation { velocity: 1000 }
@@ -170,7 +170,9 @@ Item {
     }
 
     // pan and zoom area
-    PanManager {}
+    PanManager {
+        id: panManager
+    }
 
     // I/O regions
     Item {
@@ -378,6 +380,6 @@ Item {
         incStep: 5
 
         target: latticeView
-        propName: "zoomPercent"
+        propName: "zoomCoarse"
     }
 }

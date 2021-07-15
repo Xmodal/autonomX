@@ -24,7 +24,8 @@ Field {
         // field frame events
         onHoveredChanged: fieldHovered = hovered
         onActiveFocusChanged: {
-            window.editingTextField = activeFocus
+            focusAlias =
+            window.editingTextField =
             fieldFocused = activeFocus
         }
 

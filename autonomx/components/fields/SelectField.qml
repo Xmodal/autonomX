@@ -24,6 +24,10 @@ Field {
 
         background: Item {}
 
+        onActiveFocusChanged: {
+            focusAlias = activeFocus;
+        }
+
         // options delegate
         delegate: ItemDelegate {
             id: itemDlgt

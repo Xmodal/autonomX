@@ -15,7 +15,7 @@ Field {
     property real min               // minimum accepted range value
     property real max               // maximum accepted range value
     property real incStep: 1        // inc/dec widget step value
-    property string unit
+    property string unit            // non-editable suffix
 
     // inc/dec functions
     function increment() {
@@ -50,7 +50,7 @@ Field {
         leftPadding: 0
 
         // text
-        text: defaultNum
+        text: activeFocus ? defaultNum : (unit ? defaultNum + unit : defaultNum)
         placeholderText: placeholder
 
         // background
@@ -70,6 +70,7 @@ Field {
         // field frame
         onHoveredChanged: fieldHovered = hovered
         onActiveFocusChanged: {
+            focusAlias = activeFocus;
             window.editingTextField = activeFocus
             fieldFocused = activeFocus
         }

@@ -365,6 +365,7 @@ Item {
     NumberField {
         id: zoomField
         visible: !(generatorIndex < 0)
+        unit: "%"
 
         anchors {
             left: parent.left
@@ -372,7 +373,7 @@ Item {
             margins: 20
         }
 
-        fieldWidth: 100
+        fieldWidth: 120
         labelText: "Zoom"
         incStep: 5
 

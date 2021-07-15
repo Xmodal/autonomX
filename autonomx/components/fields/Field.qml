@@ -31,6 +31,8 @@ ColumnLayout {
     // TODO: implement this properly in the next sprint
     property bool hasError: false
 
+    property bool focusAlias
+
     // signals
     signal valueChanged(variant newValue)
     signal flagChanged(bool newFlag)
@@ -60,6 +62,7 @@ ColumnLayout {
     }
 
     Item {
+        // background
         Rectangle {
             anchors.fill: parent
             color: fieldBg
@@ -154,6 +157,17 @@ ColumnLayout {
 
                 visible: !field.activated
                 cursorShape: Qt.ForbiddenCursor
+            }
+        }
+
+        // border
+        Rectangle {
+            anchors.fill: parent
+            color: "transparent"
+            opacity: focusAlias ? 0.6 : 0
+            border {
+                width: 1
+                color: Stylesheet.colors.white
             }
         }
     }

@@ -25,6 +25,19 @@ Item {
     property real zoomCoarse: 100
     property real zoom: zoomCoarse
 
+    readonly property real maxZoom: 500
+    readonly property real minZoom: 10
+
+    // shortcut functions
+    function zoomIn(offset = 10) {
+        zoomCoarse += offset;
+        if (zoomCoarse >= maxZoom) zoomCoarse = maxZoom;
+    }
+    function zoomOut(offset = 10) {
+        zoomCoarse -= offset;
+        if (zoomCoarse <= minZoom) zoomCoarse = minZoom;
+    }
+
     // animations
     Behavior on easedPanX {
         enabled: !allowPan
@@ -103,13 +116,10 @@ Item {
 
             // increment or decrement zoom
             // TODO: adjust zoom inc/dec value by delta intensity
-            if (wheel.angleDelta.y > 0) {
-                zoomCoarse += offset;
-                if (zoomCoarse >= 500) zoomCoarse = 500;
-            } else {
-                zoomCoarse -= offset;
-                if (zoomCoarse <= 10) zoomCoarse = 10;
-            }
+            if (wheel.angleDelta.y > 0)
+                zoomIn(offset);
+            else
+                zoomOut(offset);
 
             // zoom according to mouse position
             // (Epic Formula TM in the Line Below)

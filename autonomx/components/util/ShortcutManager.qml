@@ -30,6 +30,21 @@ Item {
         }
     }
 
+    // zoom
+    Shortcut {
+        sequence: "Ctrl+="
+        onActivated: {
+            latticeView.zoomIn();
+        }
+    }
+
+    Shortcut {
+        sequence: "Ctrl+-"
+        onActivated: {
+            latticeView.zoomOut();
+        }
+    }
+
     // lattice view
     Shortcut {
         sequence: "Alt+I"

@@ -196,6 +196,7 @@ void ComputeEngine::loop() {
             }
 
             // write and send individual output region osc messages
+            // format is: "/[generator_name]/output/[output_region_number]/float"
             QString outputRegionNumber = QString::number(i+1);
             oscOutputRegion.prepend("/" + (*it)->getGeneratorName() + "/output/" + outputRegionNumber);
             emit sendOscData((*it)->getID(), oscOutputRegion);
@@ -203,6 +204,7 @@ void ComputeEngine::loop() {
         }
 
         // write generator info to osc output list message
+        // format is: "/[generator_name]/output/float float float float" (or however many floats are needed to express every output region)
         oscOutputsList.prepend("/" + (*it)->getGeneratorName() + "/output");
 
         // send osc output list message

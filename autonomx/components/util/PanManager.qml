@@ -16,45 +16,50 @@ Item {
     property bool isDraggingRegion: false       // changed by Region dragging and/or resizing
 
     // master props
-    property vector2d panCoarse: Qt.vector2d(panX, panY)
-    property vector2d pan: Qt.vector2d(easedPanX, easedPanY)
+    property real zoomExp: 0
+    property real zoom: zoomCoarse
+    property real zoomCoarse: Math.pow(2, zoomExp) * 100
     property real panX: 0
     property real panY: 0
+    property vector2d panCoarse: Qt.vector2d(panX, panY)
     property real easedPanX: panX
     property real easedPanY: panY
-    property real zoomCoarse: 100
-    property real zoom: zoomCoarse
+    property vector2d pan: Qt.vector2d(easedPanX, easedPanY)
 
-    readonly property real maxZoom: 500
-    readonly property real minZoom: 10
+    // minmax range values for zoomExp, not zoomCoarse!
+    readonly property real maxZoom: 2.5
+    readonly property real minZoom: -2.5
 
     // shortcut functions
     function zoomIn(offset = 10) {
-        zoomCoarse += offset;
-        if (zoomCoarse >= maxZoom) zoomCoarse = maxZoom;
+        zoomExp += offset;
+        if (zoomExp >= maxZoom) zoomExp = maxZoom;
     }
     function zoomOut(offset = 10) {
-        zoomCoarse -= offset;
-        if (zoomCoarse <= minZoom) zoomCoarse = minZoom;
+        zoomExp -= offset;
+        if (zoomExp <= minZoom) zoomExp = minZoom;
+    }
+    function resetView() {
+        zoomExp = panX = panY = 0;
     }
 
     // animations
     Behavior on easedPanX {
-        enabled: !allowPan
+        enabled: !allowPan      // do not ease on middle mouse panning
         SpringAnimation {
             spring: 5
             epsilon: 0.25
             damping: 1
-            mass: 3
+            mass: 1
         }
     }
     Behavior on easedPanY {
-        enabled: !allowPan
+        enabled: !allowPan      // do not ease on middle mouse panning
         SpringAnimation {
             spring: 5
             epsilon: 0.25
             damping: 1
-            mass: 3
+            mass: 1
         }
     }
     Behavior on zoom {
@@ -62,7 +67,7 @@ Item {
             spring: 5
             epsilon: 0.25
             damping: 1
-            mass: 3
+            mass: 1
         }
     }
 
@@ -112,10 +117,14 @@ Item {
             // get coords of mouse where the wheel evt was triggered
             // map to [-size/2, size/2] range
             let wheelDiff = Qt.vector2d(wheel.x, wheel.y).minus(Qt.vector2d(width / 2, height / 2));
-            let offset = 10;
+            let offset = 0.1;
+
+            // save previous zoom to calculate offset
+            // because the above prop is relative to the exponent, not the power
+            const prevCoarse = zoomCoarse;
 
             // increment or decrement zoom
-            // TODO: adjust zoom inc/dec value by delta intensity
+            // TODO: adjust zoom inc/dec value by delta intensity (not necessary actually)
             if (wheel.angleDelta.y > 0)
                 zoomIn(offset);
             else
@@ -123,8 +132,7 @@ Item {
 
             // zoom according to mouse position
             // (Epic Formula TM in the Line Below)
-            wheelDiff = wheelDiff.plus(panCoarse).times(offset / zoomCoarse);
-            if (wheel.angleDelta.y < 0) wheelDiff = wheelDiff.times(-1);
+            wheelDiff = wheelDiff.plus(panCoarse).times((zoomCoarse - prevCoarse) / zoomCoarse);
 
             // add to global pan vector
             panX += wheelDiff.x;

@@ -31,15 +31,24 @@ ColumnLayout {
     // TODO: implement this properly in the next sprint
     property bool hasError: false
 
-    property bool focusAlias
-
     // signals
     signal valueChanged(variant newValue)
     signal flagChanged(bool newFlag)
     signal errorReceived(string title, string errorText)
 
-    onValueChanged: if (target) target[propName] = newValue
-    onFlagChanged: if (target) target[flagName] = newFlag
+    // signal handlers
+    property var valueChangedHandler: function(newValue) {
+        if (target) target[propName] = newValue
+    }
+    property var flagChangedHandler: function(newFlag) {
+        if (target) taregt[flagName] = newFlag
+    }
+
+    // signal assigners
+    // this is so that handlers are always unique
+    // and can be overridden
+    onValueChanged: valueChangedHandler(newValue)
+    onFlagChanged: flagChangedHandler(newFlag)
 
     // layout
     Layout.preferredWidth: fieldWidth
@@ -164,7 +173,7 @@ ColumnLayout {
         Rectangle {
             anchors.fill: parent
             color: "transparent"
-            opacity: focusAlias ? 0.6 : 0
+            opacity: fieldFocused ? 0.6 : 0
             border {
                 width: 1
                 color: Stylesheet.colors.white

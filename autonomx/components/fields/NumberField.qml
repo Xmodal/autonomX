@@ -10,6 +10,8 @@ Field {
     property string placeholder: ""
     property real defaultNum: propName && target ? target[propName] : 0
 
+    readonly property string fieldText: fieldFocused ? defaultNum : (unit ? defaultNum + unit : defaultNum)
+
     property bool unsigned: false   // when true: negative values allowed
     property int type: 0            // 0 = int; 1 = real
     property real min               // minimum accepted range value
@@ -43,6 +45,7 @@ Field {
 
     // this is essentially just a TextField with Int/Double validation
     // and fancy increment/decrement controls :)
+    // TODO: change to SpinBox
     fieldContent: TextField {
         id: fieldInput
 
@@ -50,13 +53,13 @@ Field {
         leftPadding: 0
 
         // text
-        text: activeFocus ? defaultNum : (unit ? defaultNum + unit : defaultNum)
+        text: type === 0 ? parseInt(fieldText, 10) : parseFloat(fieldText, 10)
         placeholderText: placeholder
 
         // background
         background: Item {}
 
-        validator: type === 0 ? intValidator : doubleValidator
+        validator: numberField.type === 0 ? intValidator : doubleValidator
 
         // interactivity
         selectByMouse: true
@@ -70,7 +73,6 @@ Field {
         // field frame
         onHoveredChanged: fieldHovered = hovered
         onActiveFocusChanged: {
-            focusAlias = activeFocus;
             window.editingTextField = activeFocus
             fieldFocused = activeFocus
         }

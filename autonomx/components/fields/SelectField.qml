@@ -25,7 +25,7 @@ Field {
         background: Item {}
 
         onActiveFocusChanged: {
-            focusAlias = activeFocus;
+            fieldFocused = activeFocus;
         }
 
         // options delegate

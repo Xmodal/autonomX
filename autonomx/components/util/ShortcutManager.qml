@@ -33,16 +33,15 @@ Item {
     // zoom
     Shortcut {
         sequence: "Ctrl+="
-        onActivated: {
-            latticeView.zoomIn();
-        }
+        onActivated: latticeView.zoomIn()
     }
-
     Shortcut {
         sequence: "Ctrl+-"
-        onActivated: {
-            latticeView.zoomOut();
-        }
+        onActivated: latticeView.zoomOut()
+    }
+    Shortcut {
+        sequence: "Shift+0"
+        onActivated: latticeView.resetView()
     }
 
     // lattice view

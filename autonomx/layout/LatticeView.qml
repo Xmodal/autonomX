@@ -74,13 +74,10 @@ Item {
         if (currRegion.type < 0) return;
     }
 
-    // zoom
-    function zoomIn() {
-        panManager.zoomIn();
-    }
-    function zoomOut() {
-        panManager.zoomOut();
-    }
+    // PanManager function aliases
+    property var zoomIn: panManager.zoomIn
+    property var zoomOut: panManager.zoomOut
+    property var resetView: panManager.resetView
 
     // add region
     function addNewInput() {
@@ -387,5 +384,12 @@ Item {
 
         target: latticeView
         propName: "zoomCoarse"
+
+        // override this because we want to change the exponent here
+        valueChangedHandler: function(newValue) {
+            if (target) {
+                panManager.zoomExp = Math.log2(newValue / 100);
+            }
+        }
     }
 }

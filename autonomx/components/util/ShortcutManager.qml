@@ -31,6 +31,7 @@ Item {
     }
 
     // zoom
+    // Ctrl = Cmd
     Shortcut {
         sequence: "Ctrl+="
         onActivated: latticeView.zoomIn()
@@ -40,7 +41,7 @@ Item {
         onActivated: latticeView.zoomOut()
     }
     Shortcut {
-        sequence: "Shift+0"
+        sequence: "Ctrl+0"
         onActivated: latticeView.resetView()
     }
 

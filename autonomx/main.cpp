@@ -22,6 +22,7 @@
 #include <QFontDatabase>
 #include <QQmlPropertyMap>
 #include <QFile>
+#include <QSettings>
 
 #include "OscEngine.h"
 #include "ComputeEngine.h"
@@ -36,6 +37,7 @@
 #include "GameOfLife.h"
 #include "AppModel.h"
 #include "CursorOverrider.h"
+#include "Settings.h"
 
 // only include AppNap code if platform is macOS
 #ifdef Q_OS_MAC
@@ -56,6 +58,7 @@ int main(int argc, char *argv[]) {
     // constant settings
     const char* applicationName = "autonomX";
     const char* applicationVersion = "0.1.1";
+    const char* applicationReleaseDate = "22-09-2020";
     const char* organizationName = "Xmodal";
     const char* extensionName = "atnx";
 
@@ -63,6 +66,9 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setApplicationName(applicationName);
     QCoreApplication::setApplicationVersion(applicationVersion);
     QCoreApplication::setOrganizationName(organizationName);
+
+    Settings* settings = new Settings();
+    settings->setValue("global/releaseDate", applicationReleaseDate);
 
 
     // load fonts in the project database
@@ -114,6 +120,7 @@ int main(int argc, char *argv[]) {
     qmlEngine.rootContext()->setContextProperty("generatorMetaModel", AppModel::getInstance().getGeneratorMetaModel().data());
     qmlEngine.rootContext()->setContextProperty("oscEngine", AppModel::getInstance().getOscEngineFacade().data());
     qmlEngine.rootContext()->setContextProperty("extensionName", extensionName);
+    qmlEngine.rootContext()->setContextProperty("settings", settings);
     qmlEngine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (qmlEngine.rootObjects().isEmpty())
         return -1;

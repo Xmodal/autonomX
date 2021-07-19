@@ -58,7 +58,6 @@ int main(int argc, char *argv[]) {
     // constant settings
     const char* applicationName = "autonomX";
     const char* applicationVersion = "0.1.1";
-    const char* applicationReleaseDate = "22-09-2020";
     const char* organizationName = "Xmodal";
     const char* extensionName = "atnx";
 
@@ -68,7 +67,7 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setOrganizationName(organizationName);
 
     Settings* settings = new Settings();
-    settings->setValue("global/releaseDate", applicationReleaseDate);
+    settings->setValue("global/extensionName", extensionName);
 
 
     // load fonts in the project database
@@ -119,7 +118,6 @@ int main(int argc, char *argv[]) {
     qmlEngine.rootContext()->setContextProperty("generatorModel", AppModel::getInstance().getGeneratorModel().data());
     qmlEngine.rootContext()->setContextProperty("generatorMetaModel", AppModel::getInstance().getGeneratorMetaModel().data());
     qmlEngine.rootContext()->setContextProperty("oscEngine", AppModel::getInstance().getOscEngineFacade().data());
-    qmlEngine.rootContext()->setContextProperty("extensionName", extensionName);
     qmlEngine.rootContext()->setContextProperty("settings", settings);
     qmlEngine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (qmlEngine.rootObjects().isEmpty())

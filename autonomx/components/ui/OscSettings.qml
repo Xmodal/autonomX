@@ -164,9 +164,10 @@ Item {
                 Item { Layout.fillWidth: true }
 
                 Label {
-                    text: "version " + Qt.application.version + "\n" + settings.value("global/releaseDate", "n/a")
+                    text: "version " + Qt.application.version
                     lineHeight: 1
                     horizontalAlignment: Text.AlignRight
+                    Layout.alignment: Qt.AlignBottom
                     font {
                         family: "Archivo"
                         pixelSize: 10

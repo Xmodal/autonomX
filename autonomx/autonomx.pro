@@ -50,6 +50,7 @@ SOURCES += \
     Izhikevich.cpp \
     OscEngine.cpp \
     OscEngineFacade.cpp \
+    Settings.cpp \
     SpikingNet.cpp \
     WolframCA.cpp \
     main.cpp
@@ -106,6 +107,7 @@ HEADERS += \
     NeuronType.h \
     OscEngine.h \
     OscEngineFacade.h \
+    Settings.h \
     SpikingNet.h \
     WolframCA.h
 

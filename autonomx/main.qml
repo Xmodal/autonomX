@@ -54,7 +54,7 @@ ApplicationWindow {
     visible: true
     width: 1440
     height: 810
-    title: (currentFileName.length > 0 ? "[" + currentFileName + "] " : "") + Qt.application.name + " " + Qt.application.version
+    title: (currentFileName.length > 0 ? "[" + currentFileName + "] " : "") + Qt.application.name + " - version " + Qt.application.version
 
     function toggleFullscreen() {
         if (visibility === Window.FullScreen) {

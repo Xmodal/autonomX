@@ -153,7 +153,7 @@ Item {
                 Layout.bottomMargin: 15
 
                 Label {
-                    text: "autonomX\nby Xmodal"
+                    text: Qt.application.name + "\nby " + Qt.application.organization
                     lineHeight: 1
                     font {
                         family: "Archivo"
@@ -164,7 +164,7 @@ Item {
                 Item { Layout.fillWidth: true }
 
                 Label {
-                    text: "version 0.1.0\n22-09-2020"
+                    text: "version " + Qt.application.version + "\n" + settings.value("global/releaseDate", "n/a")
                     lineHeight: 1
                     horizontalAlignment: Text.AlignRight
                     font {

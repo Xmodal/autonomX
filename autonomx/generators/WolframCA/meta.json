@@ -1,7 +1,7 @@
 {
     "name": "Wolfram Cellular Automata",
     "type": "WolframCA",
-    "description": "A two-dimensional rendering of Wolfram's rules for cellular automata.",
+    "description": "Wolfram cellular automata on a 2-D lattice.",
 
     "racks": [
         {

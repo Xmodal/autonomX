@@ -1,7 +1,7 @@
 {
     "name": "Game Of Life",
     "type": "GameOfLife",
-    "description": "Conway's game of life on a 2-D Lattice",
+    "description": "Conway's game of life on a 2-D Lattice.",
 
     "racks": [
         {

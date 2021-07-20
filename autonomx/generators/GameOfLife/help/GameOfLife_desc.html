@@ -1,12 +1,15 @@
-<h2>Wolfram Cellular Automata Description</h2>
+<h2>Conway's Game of Life Description</h2>
 
-<p>Wolfram's rules for cellular automata, also known as the Wolfram Code, is a classification system used to describe rulesets for one-dimensional automata.</p>
-<p>First described by Stephen Wolfram in a 1983 paper and further detailed in his book <i>A New Kind of Science</i>, Wolfram lays out 256 unique rulesets describing particular behaviour of cellular automata.</p>
-<p>The new state of each individual automaton is determined by a function of the states of the other automata in the same neighbourhood.</p>
-<p>The function for describing particular rulesets can be described as the following (taken from Wikipedia):</p>
-<li>List all the S<sup>2n + 1</sup> possible state configurations of the neighbourhood of a given cell.</li>
-<li>Interpreting each configuration as a number as described above, sort them in descending numerical order.</li>
-<li>For each configuration, list the state which the given cell will have, according to this rule, on the next iteration.</li>
-<li>Interpret the resulting list of states again as an S-ary number, and convert this number to decimal. The resulting decimal number is the Wolfram code.</li>
+<p>The Game of Life, also known simply as Life, is a cellular automaton devised by the British mathematician John Horton Conway in 1970. It's evolution is determined by its initial state (also known as the intial seed) with no requirement of further input.</p>
+<p>The universe of the Game of Life is mostly visualized on a two-dimensional grid of square cells, each of which can have the two possible states - live or dead, (or populated and unpopulated, respectively).</p>
+<p>Here in AutonomX such a state is described by a white cell (live) or a black (dead). In each iteration (also known as a generation) every cell interacts with its eight neighbors horizontally, diagonally adjacent, and vertically resulting into another set of live or dead cells in the next generation.</p>
+<p>While there can be many patterns possible in the Game of Life based on the initial seed, the current version of AutonomX provides the Random, Glider, SpaceShip, RpentoMino, and PentaDecathlon as some common patterns to explore.</p>
+<p>The lattice is considered to a folded lattice abstractly so that the cells on the extreme left and extreme right can consider the cells on extreme right and extreme left respectively as their neighbors too.</p>
+<p>The rules for describing whether a cell should be alive or dead in the next iteration is determined by the following (taken from Wikipedia):</p>
+<li>Any <i>live</i> cell with fewer than two live neighbours <i>dies</i>, as if by underpopulation.</li>
+<li>Any <i>live</i>  cell with two or three live neighbours <i>lives</i> on to the next generation.</li>
+<li>Any <i>live</i>  cell with more than three live neighbours <i>dies</i>, as if by overpopulation.</li>
+<li>Any <i>dead</i>  cell with exactly three live neighbours becomes a <i>live</i>  cell, as if by reproduction.</li>
 <p>For more information:</p>
-<a href="https://en.wikipedia.org/wiki/Wolfram_code">Wolfram Code Wikipedia Entry</a>
+<a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">Conway's Game of Life Wikipedia Entry</a>
+

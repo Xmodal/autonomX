@@ -253,12 +253,27 @@ if(iterationNumber % (100 - (int)(timeScale) + 1) == 0) {
 
 //move the drone shot
 if(iterationNumber==1 && currentGeneration>0){
-    //qDebug()<<"Im here";
-    for (int i = 1 ; i < latticeWidth-1; i++){
-        int left = cells[latticeWidth*latticeHeight - latticeWidth + i - 1];
-        int middle = cells[latticeWidth*latticeHeight - latticeWidth + i];
-        int right = cells[latticeWidth*latticeHeight - latticeWidth + i + 1];
-        nextGenCells[i] = findCellValue(left,middle,right);
+    for (int i = 0 ; i < latticeWidth; i++){
+        //if the cell is the leftmost cell
+        if (i==0){
+            int left = cells[latticeWidth*latticeHeight - 1];
+            int middle = cells[latticeWidth*latticeHeight - latticeWidth + i];
+            int right = cells[latticeWidth*latticeHeight - latticeWidth + i + 1];
+            nextGenCells[i] = findCellValue(left,middle,right);
+        }
+        //if the cell is the rightmost cell
+        else if(i==latticeWidth-1){
+            int left = cells[latticeWidth*latticeHeight - latticeWidth + i - 1];
+            int middle = cells[latticeWidth*latticeHeight - latticeWidth + i];
+            int right = cells[latticeWidth*latticeHeight - latticeWidth];
+            nextGenCells[i] = findCellValue(left,middle,right);
+        }
+        else{
+            int left = cells[latticeWidth*latticeHeight - latticeWidth + i - 1];
+            int middle = cells[latticeWidth*latticeHeight - latticeWidth + i];
+            int right = cells[latticeWidth*latticeHeight - latticeWidth + i + 1];
+            nextGenCells[i] = findCellValue(left,middle,right);
+        }
     }
     moveDrone(nextGenCells);    //shift the entire automata one line above
 }
@@ -278,7 +293,7 @@ void WolframCA::moveDrone(std::vector<double> nextGencells){
     }
     //create the new generation on the last line of the lattice
     int iter =0;
-    for (int j = latticeWidth*latticeHeight - latticeWidth; j <latticeWidth*latticeHeight; j++){
+    for (int j = latticeWidth*latticeHeight - latticeWidth; j < latticeWidth*latticeHeight; j++){
         cells[j] = nextGencells[iter];
         iter++;
     }

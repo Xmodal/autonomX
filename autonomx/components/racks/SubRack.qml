@@ -23,6 +23,7 @@ ColumnLayout {
     //property alias activated: subRackFlag.checked
     property bool activated: true
     property bool collapsed: false
+    property bool disableAnimation: false
 
     property string headerTitle
     property string headerDesc
@@ -31,7 +32,7 @@ ColumnLayout {
     spacing: 0
 
     // to prevent bouncing on initial load
-    Component.onCompleted: heightAnim.duration = 500
+    Component.onCompleted: heightAnim.duration = Qt.binding(function() { return disableAnimation ? 0 : 500 })
 
     // top label
     Item {
@@ -69,6 +70,7 @@ ColumnLayout {
                 onClicked: {
                     // this will prevent height from being animated in parent rack
                     // (see Loader comments for more behavior info)
+                    disableAnimation = false;
                     subRack.parent.parent.disableAnimation = true
                     collapsed = !collapsed
                 }

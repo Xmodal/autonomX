@@ -22,14 +22,20 @@ ApplicationWindow {
     }
 
     property string lastMessageReceived: ""
-    property int activeGeneratorIndex: -1
+    property int activeGeneratorIndex: 0
 
     // the meta model used to create the interface
     // will only change when the generator type changes
-    property var metaModel
+    property var metaModel: generatorModel.at(activeGeneratorIndex).meta
     onActiveGeneratorIndexChanged: {
         if (activeGeneratorIndex < 0) return;
         metaModel = generatorModel.at(activeGeneratorIndex).meta
+    }
+
+    // break metaModel property on app launch
+    // since it will be managed by separate signal (see above)
+    Component.onCompleted: {
+        metaModel = metaModel
     }
 
     // UI switch flags
@@ -84,20 +90,15 @@ ApplicationWindow {
     // component creation
     // used by ParametersRack to dynamically generate field structure
     // from field tree provided by each generator type
-    property var components
-    function registerComponents() {
-        components = {
-            SubRack: Qt.createComponent("qrc:/components/racks/SubRack.qml"),
+    property var components: ({
+        SubRack: Qt.createComponent("qrc:/components/racks/SubRack.qml"),
 
-            SliderField: Qt.createComponent("qrc:/components/fields/SliderField.qml"),
-            NumberField: Qt.createComponent("qrc:/components/fields/NumberField.qml"),
-            SelectField: Qt.createComponent("qrc:/components/fields/SelectField.qml"),
-            TextField: Qt.createComponent("qrc:/components/fields/TextField.qml"),
-            AreaField: Qt.createComponent("qrc:/components/fields/AreaField.qml")
-        };
-    }
-
-    Component.onCompleted: registerComponents();
+        SliderField: Qt.createComponent("qrc:/components/fields/SliderField.qml"),
+        NumberField: Qt.createComponent("qrc:/components/fields/NumberField.qml"),
+        SelectField: Qt.createComponent("qrc:/components/fields/SelectField.qml"),
+        TextField: Qt.createComponent("qrc:/components/fields/TextField.qml"),
+        AreaField: Qt.createComponent("qrc:/components/fields/AreaField.qml")
+    })
 
 
     // background

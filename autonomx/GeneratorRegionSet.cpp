@@ -260,7 +260,12 @@ void GeneratorRegionSet::readJson(const QJsonArray &json)
 {
     // we're assuming that regionList is empty (meaning size = 0) here
     // because readJson is only called when loading a project,
-    // which supposes that we're creating sets already with no regions.
+    // which means that both I/O sets are already empty.
+
+    // first off, we announce a model reset
+    beginResetModel();
+
+    // then we populate the regionList array
     for (int i = 0; i < json.size(); i++) {
         // create new region
         QSharedPointer<GeneratorRegion> region = QSharedPointer<GeneratorRegion>(new GeneratorRegion(QRect(0, 0, 0, 0), 0.0, type));
@@ -268,6 +273,13 @@ void GeneratorRegionSet::readJson(const QJsonArray &json)
 
         regionList.append(region);
     }
+
+    // announce end of modifications
+    endResetModel();
+    // signal row count change
+    rowCountChanged(regionList.count());
+    // create connections with regions
+    createConnections();
 }
 
 void GeneratorRegionSet::writeJson(QJsonArray &json) const

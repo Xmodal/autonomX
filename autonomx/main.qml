@@ -32,6 +32,12 @@ ApplicationWindow {
         metaModel = generatorModel.at(activeGeneratorIndex).meta
     }
 
+    // break metaModel property on app launch
+    // since it will be managed by separate signal (see above)
+    Component.onCompleted: {
+        metaModel = metaModel
+    }
+
     // UI switch flags
     property bool showGeneratorList: false
     property bool showGeneratorSettings: true

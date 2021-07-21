@@ -650,10 +650,10 @@ void Generator::applyOutputRegion() {
     }
 }
 
-GeneratorRegionSet* Generator::getInputRegionSet() {
+GeneratorRegionSet* Generator::getInputRegionSet() const {
     return inputRegionSet.data();
 }
 
-GeneratorRegionSet* Generator::getOutputRegionSet() {
+GeneratorRegionSet* Generator::getOutputRegionSet() const {
     return outputRegionSet.data();
 }

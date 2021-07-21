@@ -51,6 +51,7 @@ ColumnLayout {
 
             subRackTitle: modelData.slice(3)
             onSubRackTitleChanged: regenerateGUI()
+            Component.onCompleted: regenerateGUI()
             Component.onDestruction: destroyGUI()
 
             // this function is/should be executed everytime the generator type changes

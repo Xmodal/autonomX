@@ -14,8 +14,8 @@ Item {
 
     // props
     property int generatorIndex: window.activeGeneratorIndex
-    property GeneratorRegionSet inputModel: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).getInputRegionModel()
-    property GeneratorRegionSet outputModel: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).getOutputRegionModel()
+    property GeneratorRegionSet inputModel: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).inputModel
+    property GeneratorRegionSet outputModel: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).outputModel
 
     // pan/zoom properties
     property real ppc: 0.1 * zoom               // pixels per cell, ie. how wide a cell square is in pixels. this is animated within QML (scaled by the zoom factor)

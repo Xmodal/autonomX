@@ -41,7 +41,7 @@ ColumnLayout {
         if (target) target[propName] = newValue
     }
     property var flagChangedHandler: function(newFlag) {
-        if (target) taregt[flagName] = newFlag
+        if (target) target[flagName] = newFlag
     }
 
     // signal assigners

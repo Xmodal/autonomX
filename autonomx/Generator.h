@@ -29,6 +29,9 @@
 class Generator : public QObject {
     Q_OBJECT
 
+    Q_PROPERTY(GeneratorRegionSet* inputModel READ getInputRegionSet)
+    Q_PROPERTY(GeneratorRegionSet* outputModel READ getOutputRegionSet)
+
     // these do not change
     Q_PROPERTY(int id READ getID)
     Q_PROPERTY(QString name READ getName)
@@ -160,8 +163,8 @@ public:
     void applyInputRegion();
     void applyOutputRegion();
 
-    GeneratorRegionSet* getInputRegionSet();
-    GeneratorRegionSet* getOutputRegionSet();
+    GeneratorRegionSet* getInputRegionSet() const;
+    GeneratorRegionSet* getOutputRegionSet() const;
 
     // OSC experiments
 //    QVector<int> OSCPorts;

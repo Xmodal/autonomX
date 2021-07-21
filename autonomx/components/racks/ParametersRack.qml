@@ -50,14 +50,19 @@ ColumnLayout {
             id: paramsSubRack
 
             subRackTitle: modelData.slice(3)
-            onSubRackTitleChanged: regenerateGUI()
-            Component.onCompleted: regenerateGUI()
+            Component.onCompleted: {
+                regenerateGUI();
+                subRackTitleChanged.connect(regenerateGUI)
+            }
+
             Component.onDestruction: destroyGUI()
 
             // this function is/should be executed everytime the generator type changes
             function regenerateGUI() {
-                // disable animations
+                // disable animations (parent)
                 paramsRack.changeContent();
+                // disable animations (child)
+                paramsSubRack.disableAnimation = true;
 
                 // destroy previous fields
                 destroyGUI();
@@ -113,6 +118,8 @@ ColumnLayout {
                 }
 
                 paramsSubRack.fields = fields;
+
+                // enable animations (child)
             }
 
             function destroyGUI() {

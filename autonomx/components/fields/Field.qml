@@ -93,19 +93,19 @@ ColumnLayout {
         Layout.preferredHeight: fieldContent.height
 
         // popup
-        ErrorPopup {
-            id: errorPopup
-            enabled: hasError
-            opacity: hasError
+//        ErrorPopup {
+//            id: errorPopup
+//            enabled: hasError
+//            opacity: hasError
 
-            anchors.left: parent.right
-            anchors.bottom: parent.bottom
-            anchors.leftMargin: 5
+//            anchors.left: parent.right
+//            anchors.bottom: parent.bottom
+//            anchors.leftMargin: 5
 
-            Behavior on opacity {
-                NumberAnimation { duration: 300 }
-            }
-        }
+//            Behavior on opacity {
+//                NumberAnimation { duration: 300 }
+//            }
+//        }
 
         // content
         ColumnLayout {

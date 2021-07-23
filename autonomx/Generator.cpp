@@ -612,14 +612,27 @@ void Generator::applyInputRegion() {
     // iterate over input regions
     for(int i = 0; i < inputRegionSet->rowCount(); i++) {
         GeneratorRegion* region = inputRegionSet->at(i);
-
         int xMax = region->getRect().x() + region->getRect().width();
         int yMax = region->getRect().y() + region->getRect().height();
-
         // write region activation onto lattice in rect area
-        for(int x = region->getRect().x(); x < xMax; x++) {
+            for(int x = region->getRect().x(); x < xMax; x++) {
             for(int y = region->getRect().y(); y < yMax; y++) {
-                writeLatticeValue(x, y, region->getIntensity());
+                QString wolframCA = "WolframCA";
+                QString gameOfLife = "GameOfLife";
+                double valueToWrite;
+                double inputValue;
+                if(this->getType() == wolframCA || this->getType() == gameOfLife) {
+                    inputValue = region->getIntensity();
+                    if(inputValue >= 0.1) {
+                        valueToWrite = 1;
+                    } else {
+                        valueToWrite = 0;
+                    }
+                    qDebug() << "wolfram or GOL value: " << valueToWrite;
+                    writeLatticeValue(x, y, valueToWrite);
+                } else {
+                    writeLatticeValue(x, y, region->getIntensity());
+                }
             }
         }
     }

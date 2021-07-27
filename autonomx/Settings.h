@@ -28,5 +28,6 @@ public:
     Settings(QObject *parent = 0);
     virtual ~Settings();
 
+    Q_INVOKABLE QVariant value(const QString &key);
     Q_INVOKABLE QVariant value(const QString &key, const QVariant &defaultValue);
 };

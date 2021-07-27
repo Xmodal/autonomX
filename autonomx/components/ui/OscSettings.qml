@@ -149,12 +149,12 @@ Item {
 
             // application info
             RowLayout {
-                opacity: 0.5
                 Layout.bottomMargin: 15
 
                 Label {
                     text: Qt.application.name + "\nby " + Qt.application.organization
                     lineHeight: 1
+                    color: Stylesheet.setAlpha(Stylesheet.colors.white, 0.5)
                     font {
                         family: "Archivo"
                         pixelSize: 10
@@ -164,14 +164,22 @@ Item {
                 Item { Layout.fillWidth: true }
 
                 Label {
-                    text: "version " + Qt.application.version
+                    text: "version " + Qt.application.version + "<br><font color=\"#437C61\"><a href=\"" + settings.value("global/repoUrl") + "\">view on GitHub</a></font>"
+                    textFormat: Text.StyledText
                     lineHeight: 1
                     horizontalAlignment: Text.AlignRight
                     Layout.alignment: Qt.AlignBottom
+                    color: Stylesheet.setAlpha(Stylesheet.colors.white, 0.5)
                     font {
                         family: "Archivo"
                         pixelSize: 10
                     }
+
+                    onLinkHovered: {
+                        if (link.length > 0) overrideCursor(Qt.PointingHandCursor);
+                        else restoreCursor();
+                    }
+                    onLinkActivated: Qt.openUrlExternally(link)
                 }
             }
         }

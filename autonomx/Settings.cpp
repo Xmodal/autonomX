@@ -3,6 +3,11 @@
 Settings::Settings(QObject* parent) : QSettings(parent) {}
 Settings::~Settings() {}
 
+QVariant Settings::value(const QString &key)
+{
+    return value(key, "");
+}
+
 QVariant Settings::value(const QString &key, const QVariant &defaultValue = QVariant())
 {
     return QSettings::value(key, defaultValue);

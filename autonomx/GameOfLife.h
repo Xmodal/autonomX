@@ -48,6 +48,8 @@ private:
     int lastGeneration;
     bool gameOver = false;
 
+    int neighbors;
+
 
 public:
      GameOfLife(int id, GeneratorMeta * meta);

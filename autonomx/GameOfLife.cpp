@@ -143,42 +143,56 @@ void GameOfLife::computeIteration(double deltaTime)
 
     // compute iteration here
     if (iterationNumber % (100 - (int)(timeScale) + 1) == 0) {
-        for (int i = 1; i < latticeHeight - 1; i++) {
-            for (int j = 1; j < latticeWidth - 1; j++) {
+        for (int i = 0; i < latticeHeight; i++) {
+            for (int j = 0; j < latticeWidth; j++) {
 
                 // find index of the main cell, the cell just above it, and cell just below it; once we do that we can easily find the cells adjacent to those cells
-                //int index = i % latticeWidth + j * latticeWidth;
                 int index = i * latticeWidth + j;
                 int index_above = index-latticeWidth;
                 int index_below = index+latticeWidth;
-                //qDebug()<<"Top cell value" <<index;
-                // qDebug()<<"Middle cell value" <<index_above;
-                // int index_above = (i-1) % latticeWidth + j * latticeWidth;
-                // int index_below = (i+1) % latticeWidth + j * latticeWidth;
 
                 // finding the total value of all the neighbors near to the main cell
-                int neighbors = cells[index_above-1] + cells[index_above] + cells[index_above+1]
-                        + cells[index-1] + cells[index+1]
-                        + cells[index_below-1] + cells[index_below] + cells[index_below+1];
+                neighbors = 0; //initializing a default value
+                // if the cells are on the extreme left of the lattice consider the cells on the extreme right as their neighbors :ignoring the 4 corner cells
+                if (j==0 && i!=0 && i!=latticeHeight-1){
+                    neighbors = cells[index_above+latticeWidth-1] + cells[index_above] + cells[index_above+1]
+                        + cells[index+latticeWidth-1] + cells[index+1]
+                        + cells[index_below+latticeWidth-1] + cells[index_below] + cells[index_below+1];
+                }
+                // if the cells are on the extreme right of the lattice consider the cells on the extreme left as their neighbors:ignoring the 4 corner cells
+                else if (j==latticeWidth-1 && i!=0 && i!=latticeHeight-1){
+                    neighbors = cells[index_above-1] + cells[index_above] + cells[index_above-latticeWidth+1]
+                    + cells[index-1] + cells[index-latticeWidth+1]
+                    + cells[index_below-1] + cells[index_below] + cells[index_below-latticeWidth+1];
+                }
+                //if the cells are on the upper most layer consider the cells on the extreme down as their neighbors:ignoring the 4 corner cells
+                else if (i==0 && j!=0 && j!=latticeWidth-1){
+                    index_above = index+(latticeWidth)*(latticeHeight-1);
+                    neighbors = cells[index_above-1] + cells[index_above] + cells[index_above-latticeWidth+1]
+                    + cells[index-1] + cells[index-latticeWidth+1]
+                    + cells[index_below-1] + cells[index_below] + cells[index_below-latticeWidth+1];
+                }
+                 //if the cells are on the last layer consider the cells on the extreme upper side of the lattice as their neighbors:ignoring the 4 corner cells
+                else if (i==latticeHeight-1 && j!=0 && j!=latticeWidth-1){
+                    index_below = index-(latticeWidth)*(latticeHeight-1);
+                    neighbors = cells[index_above-1] + cells[index_above] + cells[index_above-latticeWidth+1]
+                    + cells[index-1] + cells[index-latticeWidth+1]
+                    + cells[index_below-1] + cells[index_below] + cells[index_below-latticeWidth+1];
+                }
+                //for any other cell on the lattice
+                else{
+                    neighbors = cells[index_above-1] + cells[index_above] + cells[index_above+1]
+                            + cells[index-1] + cells[index+1]
+                            + cells[index_below-1] + cells[index_below] + cells[index_below+1];
+                }
 
-                /* int neighbors = cells[index - latticeWidth - 1] + cells[index - latticeWidth] + cells[index - latticeWidth + 1]
-                        + cells[index - 1] + cells[index] + cells[index + 1]
-                        + cells[index + latticeWidth - 1] + cells[index + latticeWidth] + cells[index + latticeWidth + 1]; */
 
-                /*   // declare the cell alive or dead based on the rule below
-                if      ((cells[index] == 1) && (neighbors <  2)) cells[index] = 0;
-                //TO DO: Here neighbors should be 3 infront of 4 in the just below line. However, changed to 4 to make the GOL look decent. Artistic Lisence. Can discuss.
-                else if ((cells[index] == 1) && (neighbors >  3)) cells[index] = 0;
-                else if ((cells[index] == 0) && (neighbors == 3)) cells[index] = 1; */
-
-                // declare the cell alive or dead based on the rule below
+                // declare the cell alive or dead based on the rules below - check Wikipedia for these rules
                 if ((cells[index] == 1) && (neighbors < 2)) temp_cells[index] = 0;
-                //TO DO: Here neighbors should be 3 infront of 4 in the just below line. However, changed to 4 to make the GOL look decent. Artistic Lisence. Can discuss.
                 else if ((cells[index] == 1) && (neighbors >  3)) temp_cells[index] = 0;
                 else if ((cells[index] == 0) && (neighbors == 3)) temp_cells[index] = 1;
                 else temp_cells[index] = cells[index];
 
-                //qDebug()<<"The value of index is "<<index<<" and the value of temp_cell is"<<temp_cells[index];
             }
         }
     }

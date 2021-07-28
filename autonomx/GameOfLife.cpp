@@ -2,6 +2,7 @@
 #include <QThread>
 #include <QDebug>
 #include <time.h>
+#include <math.h>
 
 #include "GameOfLife.h"
 
@@ -142,9 +143,10 @@ void GameOfLife::computeIteration(double deltaTime)
     temp_cells = cells;
 
     // compute iteration here
-    if (iterationNumber % (100 - (int)(timeScale) + 1) == 0) {
-        for (int i = 0; i < latticeHeight; i++) {
-            for (int j = 0; j < latticeWidth; j++) {
+    if (timeScale > 0 && iterationNumber > (int)(1 / (pow(timeScale / 100, 2)))) {
+        iterationNumber = 0;
+        for (int i = 1; i < latticeHeight - 1; i++) {
+            for (int j = 1; j < latticeWidth - 1; j++) {
 
                 // find index of the main cell, the cell just above it, and cell just below it; once we do that we can easily find the cells adjacent to those cells
                 int index = i * latticeWidth + j;
@@ -213,7 +215,7 @@ void GameOfLife::computeIteration(double deltaTime)
         initialize();
     */
 
-    iterationNumber++;;
+    iterationNumber++;
     cells = temp_cells;
 }
 

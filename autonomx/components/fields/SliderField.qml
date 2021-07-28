@@ -25,6 +25,11 @@ Field {
     fieldContent: TextField {
         readonly property string fieldText: fieldFocused ? parseValue(slider.value) : (unit ? parseValue(slider.value) + unit : parseValue(slider.value))
 
+        property real currVal: sliderField.currVal
+        onCurrValChanged: {
+            slider.value = currVal
+        }
+
         property bool altPressed: window.altPressed
         onAltPressedChanged: updateDragCursor()
 

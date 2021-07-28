@@ -37,6 +37,7 @@ struct GeneratorField {
     Q_PROPERTY(QString placeholder MEMBER placeholder)
     Q_PROPERTY(QVariant min MEMBER min)
     Q_PROPERTY(QVariant max MEMBER max)
+    Q_PROPERTY(QVariant updateLag MEMBER updateLag)
     Q_PROPERTY(QString enumName MEMBER enumName)
 public:
     GeneratorField() {}
@@ -55,6 +56,7 @@ public:
             QString placeholder,
             QVariant min,
             QVariant max,
+            QVariant updateLag,
             QString enumName)
 
         : propName(propName),
@@ -69,6 +71,7 @@ public:
           placeholder(placeholder),
           min(min),
           max(max),
+          updateLag(updateLag),
           enumName(enumName)
     {}
 
@@ -85,6 +88,7 @@ public:
         placeholder = fieldProps["placeholder"].toString();
         min = fieldProps["min"];
         max = fieldProps["max"];
+        updateLag = fieldProps["updateLag"];
         enumName = fieldProps["enumName"].toString();
     }
 
@@ -101,6 +105,7 @@ public:
     QString placeholder = "";
     QVariant min = 0;
     QVariant max = 1;
+    QVariant updateLag = 0;
     QString enumName;
 };
 Q_DECLARE_METATYPE(GeneratorField)

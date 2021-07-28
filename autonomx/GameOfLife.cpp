@@ -16,7 +16,7 @@ GameOfLife::GameOfLife(int id, GeneratorMeta * meta) : Generator(id, meta)
         qDebug() << "constructor (WolframCA):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    timeScale = 95;
+    timeScale = 50;
     initialize();
 }
 

@@ -142,9 +142,9 @@ int Generator::getLatticeHeight() {
     return latticeHeight;
 }
 
-double Generator::getTimeScale() const
+double Generator::getSpeed() const
 {
-    return timeScale;
+    return speed;
 }
 
 void Generator::writeGeneratorName(QString generatorName) {
@@ -358,17 +358,17 @@ void Generator::writeLatticeHeight(int latticeHeight) {
     emit latticeHeightChanged(latticeHeight);
 }
 
-void Generator::writeTimeScale(double timeScale)
+void Generator::writeSpeed(double speed)
 {
-    if (this->timeScale == timeScale) {
+    if (this->speed == speed) {
         return;
     }
 
     // update property locally
-    this->timeScale = timeScale;
+    this->speed = speed;
 
-    emit valueChanged("timeScale", timeScale);
-    emit timeScaleChanged(timeScale);
+    emit valueChanged("speed", speed);
+    emit speedChanged(speed);
 }
 
 void Generator::readJson(const QJsonObject &json)

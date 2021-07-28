@@ -35,8 +35,8 @@ ColumnLayout {
             },
 
             SliderField {
-                labelText: "Time scale"
-                propName: "timeScale"
+                labelText: "Speed"
+                propName: "speed"
                 minVal: 0
                 maxVal: 100
                 precision: 0

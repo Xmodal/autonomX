@@ -58,7 +58,7 @@ class Generator : public QObject {
 
     Q_PROPERTY(int latticeWidth READ getLatticeWidth WRITE writeLatticeWidth NOTIFY latticeWidthChanged)
     Q_PROPERTY(int latticeHeight READ getLatticeHeight WRITE writeLatticeHeight NOTIFY latticeHeightChanged)
-    Q_PROPERTY(double timeScale READ getTimeScale WRITE writeTimeScale NOTIFY timeScaleChanged)
+    Q_PROPERTY(double speed READ getSpeed WRITE writeSpeed NOTIFY speedChanged)
 public:
     // enum used by GeneratorModel
     // essentially, these are the properties we want to have ready
@@ -122,7 +122,7 @@ public:
 
     int getLatticeWidth();
     int getLatticeHeight();
-    double getTimeScale() const;
+    double getSpeed() const;
 
     // methods to write properties
     void writeGeneratorName(QString generatorName);
@@ -140,7 +140,7 @@ public:
     // these only take care of doing the signaling
     void writeLatticeWidth(int latticeWidth);
     void writeLatticeHeight(int latticeHeight);
-    void writeTimeScale(double timeScale);
+    void writeSpeed(double speed);
 
     // serialization methods
     void readJson(const QJsonObject &json);
@@ -172,7 +172,7 @@ public:
 protected:
     int latticeWidth = 50;                      // lattice width
     int latticeHeight = 50;                     // lattice height
-    double timeScale = 100;
+    double speed = 100;
 private:
     int id;                                     // generator id, generated automatically by ComputeEngine in constructor
 
@@ -254,7 +254,7 @@ signals:
 
     void latticeWidthChanged(int latticeWidth);
     void latticeHeightChanged(int latticeHeight);
-    void timeScaleChanged(double timeScale);
+    void speedChanged(double speed);
 
     // tells the GeneratorLatticeCommunicator that the previously created writeLatticeData request is completed, and that a new one can be started at the end of the current render frame.
     //

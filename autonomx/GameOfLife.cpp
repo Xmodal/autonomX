@@ -16,7 +16,7 @@ GameOfLife::GameOfLife(int id, GeneratorMeta * meta) : Generator(id, meta)
         qDebug() << "constructor (WolframCA):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    timeScale = 50;
+    speed = 50;
     initialize();
 }
 
@@ -143,7 +143,7 @@ void GameOfLife::computeIteration(double deltaTime)
     temp_cells = cells;
 
     // compute iteration here
-    if (timeScale > 0 && iterationNumber > (int)(1 / (pow(timeScale / 100, 2)))) {
+    if (speed > 0 && iterationNumber > (int)(1 / (pow(speed / 100, 2)))) {
         iterationNumber = 0;
         for (int i = 1; i < latticeHeight - 1; i++) {
             for (int j = 1; j < latticeWidth - 1; j++) {

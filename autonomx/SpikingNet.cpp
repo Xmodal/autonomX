@@ -298,7 +298,7 @@ void SpikingNet::computeIteration(double deltaTime) {
     }
 
     // apply time scale
-    deltaTime *= timeScale / 100.0 * 30.0 / 1000.0;
+    deltaTime *= speed / 100.0 * 30.0 / 1000.0;
 
     // update routine
     if(flagDecay) applyDecay(deltaTime);

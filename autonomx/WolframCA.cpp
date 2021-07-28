@@ -30,7 +30,7 @@ WolframCA::WolframCA(int id, GeneratorMeta * meta) : Generator(id, meta){
         qDebug() << "constructor (WolframCA):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    timeScale = 50;
+    speed = 50;
     initialize();
 }
 
@@ -105,7 +105,7 @@ else {
 }
 
 void WolframCA::computeIteration(double deltaTime) {
-    if (timeScale == 0) return;
+    if (speed == 0) return;
 
     //set ruleset using the determined rule after checking if the rule has changed by the user
     int r = getRule();
@@ -120,7 +120,7 @@ void WolframCA::computeIteration(double deltaTime) {
         flag_randSeed=false;
 
     // every 1000 iterations, currentGeneration increments and iterationNumber resets
-    if (timeScale > 0 && iterationNumber > (int)(1 / (pow(timeScale / 100, 2)))) {
+    if (speed > 0 && iterationNumber > (int)(1 / (pow(speed / 100, 2)))) {
         currentGeneration++;
         iterationNumber = 1;
     }

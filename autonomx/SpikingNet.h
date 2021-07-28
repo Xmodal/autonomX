@@ -71,7 +71,7 @@ private:
     double      decayHalfLife = 10.0;
     double      decayConstant = std::pow(2.0, - 1.0 / decayHalfLife);
 
-    // double      timeScale = 30.0 / 1000.0;
+    // double      speed = 30.0 / 1000.0;
 
     double STDPStrength = 1.0;
     double STPStrength = 1.0;

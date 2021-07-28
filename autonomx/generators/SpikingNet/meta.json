@@ -25,7 +25,8 @@
                     "label": "Inh. portion",
                     "propName": "inhibitoryPortion",
                     "type": "slider",
-                    "default": 0.2
+                    "default": 0.2,
+                    "updateLag": 60
                 },
                 {
                     "label": "Inh. neuron type",

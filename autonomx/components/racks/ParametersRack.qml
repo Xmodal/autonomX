@@ -37,8 +37,10 @@ ColumnLayout {
             SliderField {
                 labelText: "Time scale"
                 propName: "timeScale"
-                minVal: 1
+                minVal: 0
                 maxVal: 100
+                precision: 0
+                unit: "%"
             }
         ]
     }
@@ -97,6 +99,7 @@ ColumnLayout {
                     } else if (field.type === "slider") {
                         props.minVal = field.min;
                         props.maxVal = field.max;
+                        props.updateLag = field.updateLag;
 
                         componentToCreate = components.SliderField;
 

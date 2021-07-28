@@ -15,6 +15,7 @@ Field {
     property int precision: 5
     property real step: 0.0
     property real updateLag: 0.0
+    property string unit            // non-editable suffix
 
     function parseValue(v) {
         return Number(v.toFixed(precision))
@@ -22,6 +23,8 @@ Field {
 
     // main slider area
     fieldContent: TextField {
+        readonly property string fieldText: fieldFocused ? parseValue(slider.value) : (unit ? parseValue(slider.value) + unit : parseValue(slider.value))
+
         property bool altPressed: window.altPressed
         onAltPressedChanged: updateDragCursor()
 
@@ -41,7 +44,11 @@ Field {
             interval: updateLag; repeat: false; running: false
             triggeredOnStart: false
 
-            onTriggered: sliderField.valueChanged(slider.value)
+            onTriggered: {
+                sliderField.valueChanged(slider.value)
+                slider.value = currVal;
+                //slider.value = Qt.binding(function() { return currVal })
+            }
         }
 
         id: sliderValue
@@ -50,7 +57,7 @@ Field {
         leftPadding: 0
 
         // text
-        text: parseValue(slider.value)
+        text: fieldText
         validator: DoubleValidator { bottom: minVal; top: maxVal }
         selectByMouse: true
 
@@ -60,6 +67,8 @@ Field {
             window.editingTextField = activeFocus
             fieldFocused = activeFocus
         }
+
+        Component.onCompleted: slider.value = currVal;
 
         // background (none)
         background: Item {}
@@ -76,6 +85,7 @@ Field {
 
             // signal to facade
             sliderField.valueChanged(newValue);
+            slider.value = newValue;
 
             // blur
             focus = false;
@@ -100,12 +110,11 @@ Field {
             // slider params
             from: minVal
             to: maxVal
-            value: currVal
             stepSize: step
 
             // value bar
             background: Rectangle {
-                width: parent.width * slider.visualPosition
+                width: ((parent.width - 3) * slider.visualPosition) + 3
                 anchors.left: parent.left
                 height: parent.height
                 color: Stylesheet.colors.generator
@@ -119,15 +128,8 @@ Field {
 
             // signals
             onValueChanged: {
-                if (updateLag > 0) sliderLagTimer.restart();
-                else sliderField.valueChanged(value)
-
-                // to prevent binding from being disconnected midway into a slider drag operation;
-                // i don't really know why QML does this but it seems to occur on
-                // very quick value changes are triggered, so that the binding doesn't have enough time to
-                // re-update itself before it's overwritten, effectively breaking the connection
-                // (that's my current take, at least)
-                value = Qt.binding(function() { return currVal })
+                // restart lag timer
+                sliderLagTimer.restart();
             }
         }
 

@@ -13,19 +13,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-
-#include <chrono>
-#include <QThread>
-#include <QDebug>
-#include <time.h>
-#include <random>
-
 #include "WolframCA.h"
 
-WolframCA::WolframCA(int id, GeneratorMeta * meta) : Generator(id, meta){
-    if(flagDebug) {
+#include <time.h>
+
+#include <QDebug>
+#include <QThread>
+#include <chrono>
+#include <random>
+
+WolframCA::WolframCA(int id, GeneratorMeta* meta) : Generator(id, meta) {
+    if (flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now().time_since_epoch());
+            std::chrono::system_clock::now().time_since_epoch());
 
         qDebug() << "constructor (WolframCA):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
@@ -35,58 +35,55 @@ WolframCA::WolframCA(int id, GeneratorMeta * meta) : Generator(id, meta){
 }
 
 WolframCA::~WolframCA() {
-
 }
 
 /*
 
 void WolframCA::initialize() {
+    if (flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch());
 
-if(flagDebug) {
-    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-    std::chrono::system_clock::now().time_since_epoch());
+        qDebug() << "initialize:\t\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+    }
 
-   qDebug() << "initialize:\t\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
-}
+    // resize cells vector for current lattice size
+    cells.resize(latticeHeight * latticeWidth);
 
-// resize cells vector for current lattice size
-cells.resize(latticeHeight * latticeWidth);
+    // reset all cells to 0 / black
+    for (int i = 0; i < (latticeHeight * latticeWidth); i++) {
+        cells[i] = 0;
+    }
 
-// reset all cells to 0 / black
-for(int i = 0; i < (latticeHeight * latticeWidth); i++) {
- cells[i] = 0;
-}
+    // a var to store a random number
+    double magic;
 
-// a var to store a random number
-double magic;
+    if (!flag_randSeed) {
+        cells[latticeWidth / 2] = 1;  // middle cell on first line is starting seed
+    }
+    // if random starting seed is selected by user
+    else {
+        for (int i = 0; i < (latticeHeight * latticeWidth); i++) {  //initialize a random cell as starting cell
+            if (i >= latticeWidth)
+                cells[i] = 0;
+            else {
+                magic = (float)rand() / RAND_MAX;  // generate a random number magic b/w 0-1 and initialize to 1 if magic>0.5 o/w magic -> 0
+                if (magic > 0.5)
+                    cells[i] = 1;
+                else
+                    cells[i] = 0;
+            }
+        }
+    }
 
-if (!flag_randSeed) {
-   cells[latticeWidth / 2] = 1;    // middle cell on first line is starting seed
-}
-// if random starting seed is selected by user
-else {
-       for(int i = 0; i < (latticeHeight * latticeWidth); i++) {  //initialize a random cell as starting cell
-       //    for(int i = 0; i < latticeWidth; i++) {  // initialize a random cell as starting cell
-           if (i >= latticeWidth)
-               cells[i] = 0;
-           else {
-               magic = (float) rand() / RAND_MAX;  // generate a random number magic b/w 0-1 and initialize to 1 if magic>0.5 o/w magic -> 0
-               if (magic > 0.5)
-                   cells[i] = 1;
-               else
-                  cells[i] = 0;
-           }
-       }
-}
-
-   // TODO:
-   // fix this random seed bug
-   // temporary fix below
-   // selects one random cell from the first row to be the random seed
-   // ensures that at least one cell is seleted as seed
-   // otherwise, as the random seed approaches 1, the likelihood that no cell will be initialized increases
-   // at max value (1) it is 100% certain that no seed will be selected
-   // no seed selected = a blank lattice will be generated -> essentially breaks the generator until reset
+    // TODO:
+    // fix this random seed bug
+    // temporary fix below
+    // selects one random cell from the first row to be the random seed
+    // ensures that at least one cell is seleted as seed
+    // otherwise, as the random seed approaches 1, the likelihood that no cell will be initialized increases
+    // at max value (1) it is 100% certain that no seed will be selected
+    // no seed selected = a blank lattice will be generated -> essentially breaks the generator until reset
 
  //  if(seedChosen == false) {
   //     magic = (float) rand() / RAND_MAX;
@@ -94,14 +91,13 @@ else {
   //     cells[(int)(magic * latticeWidth)] = 1;
  //  }
 
+    lastGeneration = latticeHeight;
+    currentGeneration = 0;
+    iterationNumber = 1;
 
-   lastGeneration = latticeHeight;
-   currentGeneration = 0;
-   iterationNumber = 1;
-
-   //generate the rule set array based on the defined rule
-   int r = getRule();
-   generate(r);
+    //generate the rule set array based on the defined rule
+    int r = getRule();
+    generate(r);
 }
 
 void WolframCA::computeIteration(double deltaTime) {
@@ -109,15 +105,15 @@ void WolframCA::computeIteration(double deltaTime) {
 
     //set ruleset using the determined rule after checking if the rule has changed by the user
     int r = getRule();
-    if (iterationNumber >= 1 && (prev_rule!=rule)) {
+    if (iterationNumber >= 1 && (prev_rule != rule)) {
         generate(r);
     }
 
     //check if randomness radio button is selected or not
-    if(getFlagRandSeed())
-        flag_randSeed=true;
+    if (getFlagRandSeed())
+        flag_randSeed = true;
     else
-        flag_randSeed=false;
+        flag_randSeed = false;
 
     // every 1000 iterations, currentGeneration increments and iterationNumber resets
     if (speed > 0 && iterationNumber > (int)(1 / (pow(speed / 100, 2)))) {
@@ -126,14 +122,14 @@ void WolframCA::computeIteration(double deltaTime) {
     }
 
     // if last generation has been passed, currentGeneration resets so lattice can begin writing from top
-    if(currentGeneration == lastGeneration) {
+    if (currentGeneration == lastGeneration) {
         currentGeneration = 1;
 
         //continuing the lattice from the top as the cells have fallen to the bottom
-        for(int i = 0; i < (latticeHeight * latticeWidth); i++) {
-            if (i == 0){
+        for (int i = 0; i < (latticeHeight * latticeWidth); i++) {
+            if (i == 0) {
                 // to restart the cells from the top but with a continuing pattern from below; hence intializing the topmost layer once again
-                for (int j = 1 ; j < latticeWidth - 1; j++){
+                for (int j = 1; j < latticeWidth - 1; j++) {
                     cells[j] = cells[(latticeHeight) * (latticeHeight - 1) + j];
                 }
             }
@@ -143,28 +139,28 @@ void WolframCA::computeIteration(double deltaTime) {
     }
 
     //write the main logic here to get values of next generation -- remmeber the current generation starts from 1 hence current generation -1
-    if(currentGeneration>0){
-        for(int i = 0 ; i < latticeWidth; i++) {
+    if (currentGeneration > 0) {
+        for (int i = 0; i < latticeWidth; i++) {
             // to check for the leftmost cell
-            if (i == 0){
+            if (i == 0) {
                 int left = cells[(currentGeneration - 1) * latticeWidth + latticeWidth - 1];
                 int right = cells[(currentGeneration - 1) * latticeWidth + i + 1];
                 int middle = cells[(currentGeneration - 1) * latticeWidth + i];
-                cells[(currentGeneration) * latticeWidth + i] = findCellValue(left,middle,right);
+                cells[(currentGeneration)*latticeWidth + i] = findCellValue(left, middle, right);
             }
             // to check for the rightmost cell
-            else if (i == latticeWidth - 1){
+            else if (i == latticeWidth - 1) {
                 int left = cells[(currentGeneration - 1) * latticeWidth + i - 1];
                 int right = cells[(currentGeneration - 1) * latticeWidth + i - (latticeWidth - 1)];
                 int middle = cells[(currentGeneration - 1) * latticeWidth + i];
-                cells[(currentGeneration) * latticeWidth + i] = findCellValue(left,middle,right);
+                cells[(currentGeneration)*latticeWidth + i] = findCellValue(left, middle, right);
             }
             //any other cell on the lattice
-            else{
+            else {
                 int left = cells[(currentGeneration - 1) * latticeWidth + i - 1];
                 int right = cells[(currentGeneration - 1) * latticeWidth + i + 1];
                 int middle = cells[(currentGeneration - 1) * latticeWidth + i];
-                cells[(currentGeneration) * latticeWidth + i] = findCellValue(left,middle,right);
+                cells[(currentGeneration)*latticeWidth + i] = findCellValue(left, middle, right);
             }
         }
     }
@@ -178,128 +174,126 @@ void WolframCA::computeIteration(double deltaTime) {
 */
 
 void WolframCA::initialize() {
+    if (flagDebug) {
+        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::system_clock::now().time_since_epoch());
 
-if(flagDebug) {
-    std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-    std::chrono::system_clock::now().time_since_epoch());
+        qDebug() << "initialize:\t\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
+    }
 
-   qDebug() << "initialize:\t\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
-}
+    // resize cells vector for current lattice size
+    cells.resize(latticeHeight * latticeWidth);
 
-// resize cells vector for current lattice size
-cells.resize(latticeHeight * latticeWidth);
+    // to store the cells in the next generation
+    nextGenCells.resize(latticeWidth);
 
-// to store the cells in the next generation
-nextGenCells.resize(latticeWidth);
+    // reset all cells to 0 / black
+    for (int i = 0; i < (latticeHeight * latticeWidth); i++) {
+        cells[i] = 0;
+        if (i < latticeWidth) nextGenCells[i] = 0;
+    }
 
-// reset all cells to 0 / black
-for(int i = 0; i < (latticeHeight * latticeWidth); i++) {
- cells[i] = 0;
- if (i<latticeWidth) nextGenCells[i]=0;
-}
+    // a var to store a random number
+    double magic;
 
-// a var to store a random number
-double magic;
+    if (!flag_randSeed) {
+        cells[latticeWidth * latticeHeight - 1 - latticeWidth / 2] = 1;  // middle cell on last line of the lattice is the starting seed
+    }
+    // if random starting seed is selected by user
+    else {
+        for (int i = 0; i < (latticeHeight * latticeWidth); i++) {  //initialize a random cell as starting cell
+            if (i <= latticeWidth * latticeHeight - latticeWidth)
+                cells[i] = 0;
+            else {
+                magic = (float)rand() / RAND_MAX;  // generate a random number magic b/w 0-1 and initialize to 1 if magic>0.5 o/w magic -> 0
+                if (magic > 0.5)
+                    cells[i] = 1;
+                else
+                    cells[i] = 0;
+            }
+        }
+    }
 
-if (!flag_randSeed) {
-   cells[latticeWidth*latticeHeight-1-latticeWidth/2] = 1;    // middle cell on last line of the lattice is the starting seed
-}
-// if random starting seed is selected by user
-else {
-       for(int i = 0; i < (latticeHeight * latticeWidth); i++) {  //initialize a random cell as starting cell
-           if (i <= latticeWidth*latticeHeight-latticeWidth)
-               cells[i] = 0;
-           else {
-               magic = (float) rand() / RAND_MAX;  // generate a random number magic b/w 0-1 and initialize to 1 if magic>0.5 o/w magic -> 0
-               if (magic > 0.5)
-                   cells[i] = 1;
-               else
-                   cells[i] = 0;
-           }
-       }
-}
+    lastGeneration = latticeHeight;
+    // current generation represents the generation number of the automata
+    currentGeneration = 0;
+    iterationNumber = 1;
 
-   lastGeneration = latticeHeight;
-   // current generation represents the generation number of the automata
-   currentGeneration = 0;
-   iterationNumber = 1;
-
-   //generate the rule set array based on the defined rule
-   int r = getRule();
-   generate(r);
-}
-
-void WolframCA::computeIteration(double deltaTime) {
-
-//set ruleset using the determined rule after checking if the rule has changed by the user
-int r = getRule();
-
-// change rule set if changed by the user
-if (iterationNumber >= 1 && (prev_rule!=rule)) {
+    //generate the rule set array based on the defined rule
+    int r = getRule();
     generate(r);
 }
 
-//check if randomness radio button is selected or not
-if(getFlagRandSeed())
-   flag_randSeed=true;
-else
-   flag_randSeed=false;
+void WolframCA::computeIteration(double deltaTime) {
+    totalTime += deltaTime * (speed / 100);
 
-// every 1000 iterations, currentGeneration increments and iterationNumber resets
-if(iterationNumber % (100 - (int)(timeScale) + 1) == 0) {
-    currentGeneration++;
-    iterationNumber = 1;
-    //qDebug()<<"Current Generation is "<<currentGeneration;
-}
+    //set ruleset using the determined rule after checking if the rule has changed by the user
+    int r = getRule();
 
-//move the drone shot
-if(iterationNumber==1 && currentGeneration>0){
-    for (int i = 0 ; i < latticeWidth; i++){
-        //if the cell is the leftmost cell
-        if (i==0){
-            int left = cells[latticeWidth*latticeHeight - 1];
-            int middle = cells[latticeWidth*latticeHeight - latticeWidth + i];
-            int right = cells[latticeWidth*latticeHeight - latticeWidth + i + 1];
-            nextGenCells[i] = findCellValue(left,middle,right);
-        }
-        //if the cell is the rightmost cell
-        else if(i==latticeWidth-1){
-            int left = cells[latticeWidth*latticeHeight - latticeWidth + i - 1];
-            int middle = cells[latticeWidth*latticeHeight - latticeWidth + i];
-            int right = cells[latticeWidth*latticeHeight - latticeWidth];
-            nextGenCells[i] = findCellValue(left,middle,right);
-        }
-        else{
-            int left = cells[latticeWidth*latticeHeight - latticeWidth + i - 1];
-            int middle = cells[latticeWidth*latticeHeight - latticeWidth + i];
-            int right = cells[latticeWidth*latticeHeight - latticeWidth + i + 1];
-            nextGenCells[i] = findCellValue(left,middle,right);
-        }
+    // change rule set if changed by the user
+    if (iterationNumber >= 1 && (prev_rule != rule)) {
+        generate(r);
     }
-    moveDrone(nextGenCells);    //shift the entire automata one line above
+
+    //check if randomness radio button is selected or not
+    if (getFlagRandSeed())
+        flag_randSeed = true;
+    else
+        flag_randSeed = false;
+
+    // every 1000 iterations, currentGeneration increments and iterationNumber resets
+    if (totalTime >= 1.0 / 60.0) {
+        totalTime -= (1.0 / 60.0);
+        currentGeneration++;
+        iterationNumber = 1;
+        //qDebug()<<"Current Generation is "<<currentGeneration;
+    }
+
+    //move the drone shot
+    if (iterationNumber == 1 && currentGeneration > 0) {
+        for (int i = 0; i < latticeWidth; i++) {
+            //if the cell is the leftmost cell
+            if (i == 0) {
+                int left = cells[latticeWidth * latticeHeight - 1];
+                int middle = cells[latticeWidth * latticeHeight - latticeWidth + i];
+                int right = cells[latticeWidth * latticeHeight - latticeWidth + i + 1];
+                nextGenCells[i] = findCellValue(left, middle, right);
+            }
+            //if the cell is the rightmost cell
+            else if (i == latticeWidth - 1) {
+                int left = cells[latticeWidth * latticeHeight - latticeWidth + i - 1];
+                int middle = cells[latticeWidth * latticeHeight - latticeWidth + i];
+                int right = cells[latticeWidth * latticeHeight - latticeWidth];
+                nextGenCells[i] = findCellValue(left, middle, right);
+            } else {
+                int left = cells[latticeWidth * latticeHeight - latticeWidth + i - 1];
+                int middle = cells[latticeWidth * latticeHeight - latticeWidth + i];
+                int right = cells[latticeWidth * latticeHeight - latticeWidth + i + 1];
+                nextGenCells[i] = findCellValue(left, middle, right);
+            }
+        }
+        moveDrone(nextGenCells);  //shift the entire automata one line above
+    }
+
+    //store the rule to check next time if the rule has changed
+    prev_rule = rule;
+
+    // every iteration, iterationNumber increments
+    iterationNumber++;
 }
 
-//store the rule to check next time if the rule has changed
-prev_rule = rule;
-
-// every iteration, iterationNumber increments
-iterationNumber++;
-
-}
-
-void WolframCA::moveDrone(std::vector<double> nextGencells){
+void WolframCA::moveDrone(std::vector<double> nextGencells) {
     //shift cells starting from the top of the lattice till n-1 line - one line above
-    for (int i=latticeWidth; i<latticeWidth*latticeHeight; i++){
-        cells[i-latticeWidth] = cells[i];
+    for (int i = latticeWidth; i < latticeWidth * latticeHeight; i++) {
+        cells[i - latticeWidth] = cells[i];
     }
     //create the new generation on the last line of the lattice
-    int iter =0;
-    for (int j = latticeWidth*latticeHeight - latticeWidth; j < latticeWidth*latticeHeight; j++){
+    int iter = 0;
+    for (int j = latticeWidth * latticeHeight - latticeWidth; j < latticeWidth * latticeHeight; j++) {
         cells[j] = nextGencells[iter];
         iter++;
     }
 }
-
 
 int WolframCA::findCellValue(int a, int b, int c) {
     if (a == 1 && b == 1 && c == 1) {
@@ -324,21 +318,19 @@ int WolframCA::findCellValue(int a, int b, int c) {
         return ruleset[1];
     }
     // else (a == 0 && b == 0 && c == 0) {
-        return ruleset[0];
+    return ruleset[0];
     // }
 }
 
-void WolframCA::generate(int r){
-
+void WolframCA::generate(int r) {
     //Grabs the binary value from the int and inserts into array
-       for (int i = sizeof(r) * CHAR_BIT; i--; )
-       {
-           if (i < 8) {
-               char temp = ('0' + ((r >> i) & 1));
-               int x = temp - '0';
-               ruleset[i] = x;
-           }
-       }
+    for (int i = sizeof(r) * CHAR_BIT; i--;) {
+        if (i < 8) {
+            char temp = ('0' + ((r >> i) & 1));
+            int x = temp - '0';
+            ruleset[i] = x;
+        }
+    }
 }
 
 double WolframCA::getLatticeValue(int x, int y) {
@@ -358,13 +350,12 @@ int WolframCA::getRule() {
 }
 
 void WolframCA::writeRule(int rule) {
-    if(this->rule == rule)
+    if (this->rule == rule)
         return;
 
-    if(flagDebug) {
+    if (flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()
-        );
+            std::chrono::system_clock::now().time_since_epoch());
 
         qDebug() << "Rule:\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
@@ -396,19 +387,18 @@ void WolframCA::writeRandSeed(double randSeed) {
     emit randSeedChanged(randSeed);
 }*/
 
-bool WolframCA::getFlagRandSeed() const{
+bool WolframCA::getFlagRandSeed() const {
     return this->flag_randSeed;
-    qDebug()<<"flag_randSeed";
+    qDebug() << "flag_randSeed";
 }
 
-void WolframCA::writeFlagRandSeed(bool flag_randSeed){
-    if(this->flag_randSeed == flag_randSeed)
+void WolframCA::writeFlagRandSeed(bool flag_randSeed) {
+    if (this->flag_randSeed == flag_randSeed)
         return;
 
-    if(flagDebug) {
+    if (flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()
-        );
+            std::chrono::system_clock::now().time_since_epoch());
 
         qDebug() << "writeFlagRandSeed:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }

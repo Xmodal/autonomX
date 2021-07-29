@@ -59,6 +59,9 @@ int main(int argc, char *argv[]) {
     const char* applicationName = "autonomX";
     const char* applicationVersion = "0.1.1";
     const char* organizationName = "Xmodal";
+    
+    const char* extensionName = "atnx";
+    const char* repoUrl = "https://github.com/Xmodal/autonomX";
 
     // global settings
     QCoreApplication::setApplicationName(applicationName);
@@ -66,8 +69,8 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setOrganizationName(organizationName);
 
     Settings* settings = new Settings();
-    settings->setValue("global/extensionName", "atnx");
-    settings->setValue("global/repoUrl", "https://github.com/Xmodal/autonomX");
+    settings->setValue("global/extensionName", extensionName);
+    settings->setValue("global/repoUrl", repoUrl);
 
 
     // load fonts in the project database

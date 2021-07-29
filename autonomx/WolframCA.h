@@ -35,7 +35,6 @@ private:
 
     // cells of lattice
     std::vector<double> cells;
-
     std::vector<double> nextGenCells;
 
     // Binary conversion of decimal user input in future starting by rule 90
@@ -63,6 +62,7 @@ private:
     // WolframCA specific variables
     int currentGeneration = 0;
     int lastGeneration;
+    double totalTime = 0;
 
 
 public:

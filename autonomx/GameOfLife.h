@@ -40,8 +40,8 @@ private:
     //pattern name
     GOLPatternType GOLPattern = GOLPatternType::Random;
 
-    // global iteration counter
-    int iterationNumber;
+    // iteration tracker
+    double totalTime = 0;
 
     // GOL specific variables
     int currentGeneration;

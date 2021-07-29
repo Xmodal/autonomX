@@ -37,9 +37,6 @@ void GameOfLife::initialize()
 
     // draw pattern when initializing
     drawPattern(GOLPattern);
-
-    // start the iterations
-    iterationNumber = 1;
 }
 
 
@@ -140,11 +137,15 @@ void GameOfLife::drawPattern(GOLPatternType type) {
 
 void GameOfLife::computeIteration(double deltaTime)
 {
+    // update total time scaled to speed factor
+    totalTime += deltaTime * (speed / 100);
+
+    // store cells
     temp_cells = cells;
 
     // compute iteration here
-    if (speed > 0 && iterationNumber > (int)(1 / (pow(speed / 100, 2)))) {
-        iterationNumber = 0;
+    if (totalTime >= 1.0 / 60.0) {
+        totalTime -= (1.0 / 60.0);
         for (int i = 1; i < latticeHeight - 1; i++) {
             for (int j = 1; j < latticeWidth - 1; j++) {
 
@@ -215,7 +216,6 @@ void GameOfLife::computeIteration(double deltaTime)
         initialize();
     */
 
-    iterationNumber++;
     cells = temp_cells;
 }
 

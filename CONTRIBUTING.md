@@ -19,8 +19,14 @@ make
 
 # Coding style
 
-We follow the Qt style guide for C++ and QML.
+We follow the [Qt style guide](https://wiki.qt.io/Qt_Coding_Style) for C++ and QML.
 
+We also recommend using the [Prettier extension for VS Code](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) to quickly and automatically format large C++ files simply by **pressing Shift+Alt+F inside a document** (only works on C++ files; QML is not supported). This extension, however, will enforce its own C++ formatting style out-of-the-box, which diverges from our aforementioned preferred scheme, so here are the steps to correct it:
+
+1. Go to `File` > `Preferences` > `Settings`
+2. In the search bar, input `C_Cpp.clang_format_fallbackStyle`
+3. In the appropriate setting field, replace `Visual Studio` with `{ BasedOnStyle: Google, IndentWidth: 4, ColumnLimit: 0 }`
+4. Close and reopen VS Code
 
 ## Version number
 

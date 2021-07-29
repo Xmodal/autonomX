@@ -37,7 +37,6 @@
 #include "GameOfLife.h"
 #include "AppModel.h"
 #include "CursorOverrider.h"
-#include "Settings.h"
 
 // only include AppNap code if platform is macOS
 #ifdef Q_OS_MAC
@@ -59,7 +58,6 @@ int main(int argc, char *argv[]) {
     const char* applicationName = "autonomX";
     const char* applicationVersion = "0.1.1";
     const char* organizationName = "Xmodal";
-    
     const char* extensionName = "atnx";
     const char* repoUrl = "https://github.com/Xmodal/autonomX";
 
@@ -67,10 +65,6 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setApplicationName(applicationName);
     QCoreApplication::setApplicationVersion(applicationVersion);
     QCoreApplication::setOrganizationName(organizationName);
-
-    Settings* settings = new Settings();
-    settings->setValue("global/extensionName", extensionName);
-    settings->setValue("global/repoUrl", repoUrl);
 
 
     // load fonts in the project database
@@ -121,7 +115,11 @@ int main(int argc, char *argv[]) {
     qmlEngine.rootContext()->setContextProperty("generatorModel", AppModel::getInstance().getGeneratorModel().data());
     qmlEngine.rootContext()->setContextProperty("generatorMetaModel", AppModel::getInstance().getGeneratorMetaModel().data());
     qmlEngine.rootContext()->setContextProperty("oscEngine", AppModel::getInstance().getOscEngineFacade().data());
-    qmlEngine.rootContext()->setContextProperty("settings", settings);
+
+    // constants
+    qmlEngine.rootContext()->setContextProperty("extensionName", extensionName);
+    qmlEngine.rootContext()->setContextProperty("repoUrl", repoUrl);
+
     qmlEngine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (qmlEngine.rootObjects().isEmpty())
         return -1;

@@ -164,7 +164,7 @@ Item {
                 Item { Layout.fillWidth: true }
 
                 Label {
-                    text: "version " + Qt.application.version + "<br><font color=\"#437C61\"><a href=\"" + settings.value("global/repoUrl") + "\">view on GitHub</a></font>"
+                    text: "version " + Qt.application.version + "<br><font color=\"#437C61\"><a href=\"" + repoUrl + "\">view on GitHub</a></font>"
                     textFormat: Text.StyledText
                     lineHeight: 1
                     horizontalAlignment: Text.AlignRight

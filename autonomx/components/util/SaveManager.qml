@@ -6,7 +6,6 @@ Item {
 
     property string currentFileUri
     property string currentFileName: basename(currentFileUri)
-    property string extensionName: settings.value("global/extensionName")
 
     function basename(str) {
         return (str.slice(str.lastIndexOf("/")+1));

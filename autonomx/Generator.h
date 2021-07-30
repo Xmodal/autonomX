@@ -124,6 +124,8 @@ public:
     int getLatticeHeight();
     double getSpeed() const;
 
+    double sigmoid(double intensity);
+
     // methods to write properties
     void writeGeneratorName(QString generatorName);
     void writeUserNotes(QString userNotes);

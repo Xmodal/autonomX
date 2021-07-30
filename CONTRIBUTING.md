@@ -17,6 +17,16 @@ qmake ..
 make
 ```
 
+### macOS app bundle
+
+To create the macOS app bundle, run this script:
+
+```
+./scripts/sh_mac_deploy_qt.sh
+```
+
+You might need to manually edit these scripts in order to configure the version number of Qt you have installed.
+
 # Coding style
 
 We follow the [Qt style guide](https://wiki.qt.io/Qt_Coding_Style) for C++ and QML.

@@ -657,7 +657,6 @@ void Generator::applyInputRegion() {
             }
         }
     }
-}
 
 double Generator::sigmoid(double intensity){
     return intensity/(1+exp(-intensity));

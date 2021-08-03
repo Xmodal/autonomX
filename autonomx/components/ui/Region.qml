@@ -14,6 +14,7 @@ Control {
     // only changed by type=-1 region
     property bool allowUpdatingBounds: true
 
+    property int generatorIndex: activeGeneratorIndex
     property int latticeWidth: regions.latticeWidth
     property int latticeHeight: regions.latticeHeight
     property real ppc: latticeView.ppc
@@ -45,27 +46,6 @@ Control {
     x: regions.width * rect.x / latticeWidth
     y: regions.height * rect.y / latticeHeight
     z: focus ? 10 : 10 / area;
-
-    // break x/y property bindings
-    Component.onCompleted: {
-        // assign size change auto-drag once region is created
-        // (for some reason, having them initialized pre-completion
-        // causes uninvoked snapping when going from a generator to another)
-        const sizeDrag = () => region.snapToGrid("drag");
-
-        const connectWidth = () => {
-            region.latticeWidthChanged.disconnect(connectWidth);
-            region.latticeWidthChanged.connect(sizeDrag);
-        }
-
-        const connectHeight = () => {
-            region.latticeHeightChanged.disconnect(connectHeight);
-            region.latticeHeightChanged.connect(sizeDrag);
-        }
-
-        region.latticeWidthChanged.connect(connectWidth);
-        region.latticeHeightChanged.connect(connectHeight);
-    }
 
     // matrix.setMask() update slots
     onXChanged: updateBounds()
@@ -99,7 +79,12 @@ Control {
     }
 
     // snap to grid on drop / resize
-    function snapToGrid(evtType) {
+    function snapToGrid(evtType, w, h, lW, lH) {
+        w = w || regions.width;
+        h = h || regions.height;
+        lW = lW || regions.latticeWidth;
+        lH = lH || regions.latticeHeight;
+
         // clamp w/h when left corner/border dragged in the negatives
         var offsetW = 0, offsetH = 0;
         if (evtType === "resize") {
@@ -115,16 +100,16 @@ Control {
                     Math.max(Math.round((height - 1 + offsetH) / ppc), 0)
                     );
 
-        if (newRect.width > regions.latticeWidth) newRect.width = regions.latticeWidth;
-        if (newRect.height > regions.latticeHeight) newRect.height = regions.latticeHeight;
+        if (newRect.width > lW) newRect.width = lW;
+        if (newRect.height > lH) newRect.height = lH;
 
         // clamp depending on event type
         if (evtType === "resize") {
-            if (newRect.x + newRect.width > regions.latticeWidth)  newRect.width = regions.latticeWidth - newRect.x;
-            if (newRect.y + newRect.height > regions.latticeHeight) newRect.height = regions.latticeHeight - newRect.y;
+            if (newRect.x + newRect.width > lW)  newRect.width = lW - newRect.x;
+            if (newRect.y + newRect.height > lH) newRect.height = lH - newRect.y;
         } else if (evtType === "drag") {
-            if (newRect.x + newRect.width > regions.latticeWidth)  newRect.x = regions.latticeWidth - newRect.width;
-            if (newRect.y + newRect.height > regions.latticeHeight) newRect.y = regions.latticeHeight - newRect.height;
+            if (newRect.x + newRect.width > lW)  newRect.x = lW - newRect.width;
+            if (newRect.y + newRect.height > lH) newRect.y = lH - newRect.height;
         }
 
         // unbind
@@ -137,10 +122,10 @@ Control {
         rect = newRect;
 
         // then reevaluate pixel coordinates by animating them
-        snapX.to = regions.width * rect.x / regions.latticeWidth;
-        snapY.to = regions.height * rect.y / regions.latticeHeight;
-        snapWidth.to = regions.width * rect.width / regions.latticeWidth;
-        snapHeight.to = regions.height * rect.height / regions.latticeHeight;
+        snapX.to = w * rect.x / lW;
+        snapY.to = h * rect.y / lH;
+        snapWidth.to = w * rect.width / lW;
+        snapHeight.to = h * rect.height / lH;
         snapX.restart();
         snapY.restart();
         snapWidth.restart();

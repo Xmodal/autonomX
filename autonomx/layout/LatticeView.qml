@@ -45,6 +45,12 @@ Item {
     Layout.fillHeight: true
     z: -1
 
+    // prevents snapping when changing generators
+    // see code in #regions element below
+    property alias allowSnapW: regions.allowSnapW
+    property alias allowSnapH: regions.allowSnapH
+    onGeneratorIndexChanged: allowSnapW = allowSnapH = false
+
     // manage selected region
     function switchSelectedRegion(type, index, adding = false) {
         const rowCount = generatorModel.at(generatorIndex)[type ? "outputCount" : "inputCount"];
@@ -195,6 +201,30 @@ Item {
         property int latticeWidth: generatorIndex < 0 ? 20 : generatorModel.at(generatorIndex).latticeWidth
         property int latticeHeight: generatorIndex < 0 ? 20 : generatorModel.at(generatorIndex).latticeHeight
         property bool rectSelected: !(currRegion.index < 0)
+
+        property bool allowSnapW: true
+        property bool allowSnapH: true
+
+        onLatticeWidthChanged: {
+            if (!allowSnapW) return allowSnapW = true;
+            snapAllRegions()
+        }
+
+        onLatticeHeightChanged: {
+            if (!allowSnapH) return allowSnapH = true;
+            snapAllRegions()
+        }
+
+        function snapAllRegions() {
+            let i;
+
+            for (i = 0; i < inputRepeater.count; i++) {
+                inputRepeater.itemAt(i).snapToGrid("drag", ppc * latticeWidth, ppc * latticeHeight, latticeWidth, latticeHeight);
+            }
+            for (i = 0; i < outputRepeater.count; i++) {
+                outputRepeater.itemAt(i).snapToGrid("drag", ppc * latticeWidth, ppc * latticeHeight, latticeWidth, latticeHeight);
+            }
+        }
 
         width: ppc * latticeWidth
         height: ppc * latticeHeight

@@ -47,6 +47,7 @@ SOURCES += \
     GeneratorModel.cpp \
     GeneratorRegion.cpp \
     GeneratorRegionSet.cpp \
+    GeneratorTemplate.cpp \
     Izhikevich.cpp \
     OscEngine.cpp \
     OscEngineFacade.cpp \
@@ -103,6 +104,7 @@ HEADERS += \
     GeneratorModel.h \
     GeneratorRegion.h \
     GeneratorRegionSet.h \
+    GeneratorTemplate.h \
     Izhikevich.h \
     NeuronType.h \
     OscEngine.h \

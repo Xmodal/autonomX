@@ -45,7 +45,7 @@ private:
     bool visible;                           // indicates if the object is visible in QML and turns on and off the render loop accordingly
     bool synchronized = false;              // indicates if there was a call to synchronize since the last render call
     bool synchronizedFirstDone = false;     // indicates if the object was ever synchronized
-    bool flagSuper = true;                  // enables supersampling
+    bool flagSuper = false;                  // enables supersampling
     bool flagDebug = false;                 // enables debug
     int generatorID;                        // associated generator id
     QSharedPointer<Generator> generator;    // associated generator

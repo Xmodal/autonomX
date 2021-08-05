@@ -15,7 +15,7 @@ uniform float   maskAlpha;
 uniform vec2    panInPixels;            // DON'T FORGET TO INVERT POLARITY THANK YOU VERY MUCH
 
 // padding between cells, in pixels
-float padding = 2.0;
+float padding = 1.0;
 
 // container width and height vector, in pixels
 vec2 containerSizeInPixels = vec2(containerWidthInPixels, containerHeightInPixels);                                                 // container size, in pixels
@@ -30,7 +30,7 @@ vec2 squareInLattice = vec2(1.0) / vec2(latticeSizeInSquares);              // s
 
 void main() {
     // map to coordinates inside lattice
-    vec2 coordinatesWithPan = coordinates + (panInPixels * vec2(4.0) / containerSizeInPixels);
+    vec2 coordinatesWithPan = coordinates + (panInPixels * vec2(2.0) / containerSizeInPixels);
     vec2 coordinatesInLattice = (coordinatesWithPan * latticeScaleInverse) * 0.5 + 0.5;
 
     // hide pixels outside lattice

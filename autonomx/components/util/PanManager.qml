@@ -13,18 +13,26 @@ Item {
     property vector2d dragValue: Qt.vector2d(x, y)
     property vector2d prevDragValue: Qt.vector2d(0, 0);
     property bool allowPan: false               // used so that the pan doesn't snap back to (0, 0) on button release
+    property bool disableAnimations: false      // used to temporarily disable animations
     property bool isDraggingRegion: false       // changed by Region dragging and/or resizing
 
-    // master props
-    property real zoomExp: 0
-    property real zoom: zoomCoarse
-    property real zoomCoarse: Math.pow(2, zoomExp) * 100
+    // pan
     property real panX: 0
     property real panY: 0
     property vector2d panCoarse: Qt.vector2d(panX, panY)
     property real easedPanX: panX
     property real easedPanY: panY
     property vector2d pan: Qt.vector2d(easedPanX, easedPanY)
+
+    // zoom
+    property real zoomExp: 0
+    property real zoom: zoomCoarse
+    property real zoomCoarse: Math.pow(2, zoomExp) * 100
+
+    // backend write signals
+    onPanXChanged: if (generatorIndex >= 0) generatorModel.at(generatorIndex).panX = panX;
+    onPanYChanged: if (generatorIndex >= 0) generatorModel.at(generatorIndex).panY = panY;
+    onZoomExpChanged: if (generatorIndex >= 0) generatorModel.at(generatorIndex).zoom = zoomExp;
 
     // minmax range values for zoomExp, not zoomCoarse!
     readonly property real maxZoom: 2.5
@@ -43,9 +51,26 @@ Item {
         zoomExp = panX = panY = 0;
     }
 
+    // backend read signals
+    // triggered from LatticeView every time the generatorIndex changes
+    function setFromLatticeView(generator) {
+        if (!generator) return;
+
+        // disable animations
+        disableAnimations = true;
+
+        // apply values
+        panManager.panX = generator.panX;
+        panManager.panY = generator.panY;
+        panManager.zoomExp = generator.zoom;
+
+        // re-enable animations
+        disableAnimations = false;
+    }
+
     // animations
     Behavior on easedPanX {
-        enabled: !allowPan      // do not ease on middle mouse panning
+        enabled: !allowPan && !disableAnimations      // do not ease on middle mouse panning
         SpringAnimation {
             spring: 5
             epsilon: 0.25
@@ -54,7 +79,7 @@ Item {
         }
     }
     Behavior on easedPanY {
-        enabled: !allowPan      // do not ease on middle mouse panning
+        enabled: !allowPan && !disableAnimations      // do not ease on middle mouse panning
         SpringAnimation {
             spring: 5
             epsilon: 0.25
@@ -63,6 +88,7 @@ Item {
         }
     }
     Behavior on zoom {
+        enabled: !disableAnimations
         SpringAnimation {
             spring: 5
             epsilon: 0.25

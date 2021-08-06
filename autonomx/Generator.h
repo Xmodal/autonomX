@@ -45,6 +45,10 @@ class Generator : public QObject {
     Q_PROPERTY(double historyLatest READ getHistoryLatest NOTIFY historyLatestChanged)
     Q_PROPERTY(bool historyRefresher READ getHistoryRefresher NOTIFY historyRefresherChanged)
 
+    Q_PROPERTY(int inputCount READ getInputCount NOTIFY inputCountChanged)
+    Q_PROPERTY(int outputCount READ getOutputCount NOTIFY outputCountChanged)
+
+    // THIS IS WHERE SERIALIZATION BEGINS
     Q_PROPERTY(int oscInputPort READ getOscInputPort WRITE writeOscInputPort NOTIFY oscReceiverPortChanged)
     Q_PROPERTY(QString oscInputAddress READ getOscInputAddress WRITE writeOscInputAddress NOTIFY oscInputAddressChanged)
 
@@ -52,9 +56,9 @@ class Generator : public QObject {
     Q_PROPERTY(QString oscOutputAddressHost READ getOscOutputAddressHost WRITE writeOscOutputAddressHost NOTIFY oscSenderHostChanged)
     Q_PROPERTY(QString oscOutputAddressTarget READ getOscOutputAddressTarget WRITE writeOscOutputAddressTarget NOTIFY oscOutputAddressTargetChanged)
 
-    // TODO: this shouldn't be serialized in the JSON
-    Q_PROPERTY(int inputCount READ getInputCount NOTIFY inputCountChanged)
-    Q_PROPERTY(int outputCount READ getOutputCount NOTIFY outputCountChanged)
+    Q_PROPERTY(double zoom READ getZoom WRITE writeZoom NOTIFY zoomChanged)
+    Q_PROPERTY(double panX READ getPanX WRITE writePanX NOTIFY panXChanged)
+    Q_PROPERTY(double panY READ getPanY WRITE writePanY NOTIFY panYChanged)
 
     Q_PROPERTY(int latticeWidth READ getLatticeWidth WRITE writeLatticeWidth NOTIFY latticeWidthChanged)
     Q_PROPERTY(int latticeHeight READ getLatticeHeight WRITE writeLatticeHeight NOTIFY latticeHeightChanged)
@@ -104,11 +108,16 @@ public:
     QString getType();
     int getID();
     QString getDescription();
+
     QString getGeneratorName();
     QString getUserNotes();
     GeneratorMeta* getMeta() const;
     double getHistoryLatest();
     bool getHistoryRefresher();
+
+    double getZoom() const;
+    double getPanX() const;
+    double getPanY() const;
 
     int getOscInputPort();
     QString getOscInputAddress();
@@ -129,6 +138,10 @@ public:
     void writeUserNotes(QString userNotes);
     void writeHistoryLatest(double historyLatest);
     void flipHistoryRefresher(); // this inverts the historyRefresher's value
+
+    void writeZoom(double zoom);
+    void writePanX(double panX);
+    void writePanY(double panY);
 
     void writeOscInputPort(int oscInputPort);
     void writeOscInputAddress(QString oscInputAddress);
@@ -182,7 +195,11 @@ private:
     double historyLatest = 0;                   // latest value for the history graph
     bool historyRefresher = false;              // bool that flips every time history latest is refreshed. this is an ugly workaround to prevent Qt from ignoring updates of historyLatest where the value doesn't change.
 
-    int oscInputPort = 6668;                           // generator osc input port, assigned by user
+    double zoom = 0;                            // zoom exponent (see PanManager for specs)
+    double panX = 0;                            // lattice pan X (in px)
+    double panY = 0;                            // lattice pan Y (in px)
+
+    int oscInputPort = 6668;                    // generator osc input port, assigned by user
     QString oscInputAddress = "/input";         // generator osc input address, assigned by user (this is an osc destination)
 
     int oscOutputPort = 6669;                   // generator osc output port, assigned by user
@@ -241,6 +258,10 @@ signals:
     void userNotesChanged(QString userNotes);
     void historyLatestChanged(double historyLatest);
     void historyRefresherChanged(bool historyRefresher);
+
+    void zoomChanged(double zoom);
+    void panXChanged(double panX);
+    void panYChanged(double panY);
 
     void oscReceiverPortChanged(int oscInputPort);
     void oscInputAddressChanged(QString oscInputAddress);

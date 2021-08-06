@@ -104,6 +104,21 @@ bool Generator::getHistoryRefresher() {
     return historyRefresher;
 }
 
+double Generator::getZoom() const
+{
+    return zoom;
+}
+
+double Generator::getPanX() const
+{
+    return panX;
+}
+
+double Generator::getPanY() const
+{
+    return panY;
+}
+
 int Generator::getOscInputPort() {
     return oscInputPort;
 }
@@ -222,6 +237,33 @@ void Generator::flipHistoryRefresher() {
 
     emit valueChanged("historyRefresher", QVariant(historyRefresher));
     emit historyRefresherChanged(historyRefresher);
+}
+
+void Generator::writeZoom(double zoom)
+{
+    if (this->zoom == zoom) return;
+
+    this->zoom = zoom;
+    emit valueChanged("zoom", QVariant(zoom));
+    emit zoomChanged(zoom);
+}
+
+void Generator::writePanX(double panX)
+{
+    if (this->panX == panX) return;
+
+    this->panX = panX;
+    emit valueChanged("panX", QVariant(panX));
+    emit panXChanged(panX);
+}
+
+void Generator::writePanY(double panY)
+{
+    if (this->panY == panY) return;
+
+    this->panY = panY;
+    emit valueChanged("panY", QVariant(panY));
+    emit panYChanged(panY);
 }
 
 void Generator::writeOscInputPort(int oscInputPort) {

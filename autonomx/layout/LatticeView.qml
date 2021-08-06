@@ -18,11 +18,16 @@ Item {
     property GeneratorRegionSet outputModel: generatorIndex < 0 ? null : generatorModel.at(generatorIndex).outputModel
 
     // pan/zoom properties
-    property real ppc: 0.1 * zoom               // pixels per cell, ie. how wide a cell square is in pixels. this is animated within QML (scaled by the zoom factor)
-    property alias zoom: panManager.zoom        // in percents
-    property alias zoomCoarse: panManager.zoomCoarse
-    property alias pan: panManager.pan          // in pixels
+    property real ppc: 0.1 * zoom                       // pixels per cell, ie. how wide a cell square is in pixels. this is animated within QML (scaled by the zoom factor)
+    property alias zoom: panManager.zoom                // in percents
+    property alias zoomCoarse: panManager.zoomCoarse    // in percents
+    property alias pan: panManager.pan                  // in pixels
     property alias isDraggingRegion: panManager.isDraggingRegion
+
+    // backend read
+    onGeneratorIndexChanged: {
+        panManager.setFromLatticeView(generatorModel.at(generatorIndex));
+    }
 
     property QtObject currRegion: QtObject {
         property int type: -1
@@ -370,6 +375,8 @@ Item {
     NumberField {
         id: zoomField
         visible: !(generatorIndex < 0)
+        propName: "zoomCoarse"
+        target: latticeView
         unit: "%"
 
         anchors {
@@ -381,9 +388,6 @@ Item {
         fieldWidth: 120
         labelText: "Zoom"
         incStep: 5
-
-        target: latticeView
-        propName: "zoomCoarse"
 
         // override this because we want to change the exponent here
         valueChangedHandler: function(newValue) {

@@ -76,7 +76,6 @@
         <file>generators/GameOfLife/help/GameOfLife_desc.html</file>
         <file>generators/GameOfLife/help/GameOfLife_params.html</file>
         <file>generators/GameOfLife/meta.json</file>
-        <file>generators/README.md</file>
         <file>components/ui/OscSettings.qml</file>
         <file>components/util/PanManager.qml</file>
     </qresource>

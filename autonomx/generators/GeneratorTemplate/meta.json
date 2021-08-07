@@ -1,0 +1,27 @@
+{
+    "name": "Generator Template",
+    "type": "GeneratorTemplate",
+    "description": "A generator template.",
+
+    "racks": [
+        {
+            "title": "Template rack",
+            "fields": [
+                {
+                    "label": "Noise",
+                    "propName": "noise",
+                    "type": "slider",
+                    "max": 5,
+                    "default": 2
+                }
+            ]
+        }
+    ],
+
+    "help": [
+        {
+            "title": "Template documentation",
+            "html_path": "help/temp_doc.html"
+        }
+    ]
+}

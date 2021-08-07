@@ -20,7 +20,7 @@ There are **four methods** to override from the base `Generator` class:
 3. `getLatticeValue(int x, int y)`: this method retrieves the value of a single cell located at (x, y) **The value that is returned here directly correlates to the intensity of the corresponding cell in the GUI representation of the grid, and it must range between 0 (completely off) and 1 (completely on)**. As such, if you are working with "cell-objects" with non-normalized values (as is the case for the SNN), this is where you may want to remap its value;
 4. `writeLatticeValue(int x, int y, double value)`: this method writes a value passed as an argument to a single cell located at (x, y). This method is called by the compute engine when receiving a correctly-formatted OSC message, for all cells that the represented GUI input region contains. Again, **the `value` argument always ranges between 0 and 1**, so be cautious if your algorithm uses different value ranges.
 
-## C++ template notes
+## About the template
 
 A `GeneratorTemplate` boilerplate class has been included in the repository as simple reference for the most basic possible implementation of a `Generator` subclass. Please note that **this template is not in any way declared to the application!** A few more steps are required for the generator to be fully functional; see below.
 
@@ -28,7 +28,8 @@ Some things to notice in the aforementioned template:
 1. the cell values are grouped into a 1D vector array of `double`s, and all cell operations are done to that vector;
 2. `initialize` resets the cells array to a `(latticeWidth * latticeSize)` size;
 3. all operations involving 2D coordinates remap the (x, y) values to a flattened 1D index;
-4. `computeIteration` implements a simple timer that scales the execution rate to the `speed` factor (a similar strategy is employed in WolframCA and GameOfLife).
+4. `computeIteration` implements a simple timer that scales the execution rate to the `speed` factor (a similar strategy is employed in WolframCA and GameOfLife);
+5. a dummy Qt property named `noise` was implemented in this subclass to demonstrate the process of exposing Qt properties in the backend; [see here for full frontend integration](#exploring-metajson-in-depth).
 
 ## Preparing the metadata directory
 When a generator is declared to the application [(see here for the procedure)](#tying-it-all-back-to-c), a single argument is passed: the generator type. **This string corresponds to the name of the sub-directory the ensuing registration process will look for, in the `generators` main directory**. Therefore, you need to make sure that such a folder exists when building the application, and that its name corresponds to the passed string argument.

@@ -372,27 +372,46 @@ Item {
     }
 
     // zoom field
-    NumberField {
-        id: zoomField
-        visible: !(generatorIndex < 0)
-        propName: "zoomCoarse"
-        target: latticeView
-        unit: "%"
-
+    RowLayout {
+        spacing: 0
         anchors {
             left: parent.left
+            right: parent.right
             bottom: parent.bottom
             margins: 20
         }
 
-        fieldWidth: 120
-        labelText: "Zoom"
-        incStep: 5
+        NumberField {
+            id: zoomField
+            visible: !(generatorIndex < 0)
+            propName: "zoomCoarse"
+            target: latticeView
+            unit: "%"
 
-        // override this because we want to change the exponent here
-        valueChangedHandler: function(newValue) {
-            if (target) {
-                panManager.zoomExp = Math.log2(newValue / 100);
+            fieldWidth: 120
+            labelText: "Zoom"
+            incStep: 5
+
+            // override this because we want to change the exponent here
+            valueChangedHandler: function(newValue) {
+                if (target) {
+                    panManager.zoomExp = Math.log2(newValue / 100);
+                }
+            }
+        }
+
+        Item { Layout.fillWidth: true }
+
+        GenericButton {
+            visible: panManager.zoomExp !== 0 || panManager.panX !== 0 || panManager.panY !== 0
+            id: resetView
+            text: "Reset view"
+            Layout.alignment: Qt.AlignBottom
+
+            onClicked: {
+                panManager.zoomExp = 0;
+                panManager.panX = 0;
+                panManager.panY = 0;
             }
         }
     }

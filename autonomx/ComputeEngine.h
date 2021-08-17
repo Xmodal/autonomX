@@ -31,9 +31,11 @@ class ComputeEngine : public QObject {
 private:
     QSharedPointer<QList<QSharedPointer<Generator>>> generatorsList;
     QSharedPointer<QHash<int, QSharedPointer<Generator>>> generatorsHashMap;
+    QMap<QString, QString> parameterControlList;
     QElapsedTimer elapsedTimer;
     double frequency = 60;
     bool firstFrame = true;
+    bool firstPass = true;
     bool inputValueReceived = false;
     bool flagDebug = false;
     bool flagDummyOutputMonitor = false;
@@ -41,16 +43,26 @@ private:
     bool flagDisableProcessing = false;
     bool flagCastOutputToFloat = true; // needed for Max as it doesn't support doubles
     std::mt19937 randomGenerator;
-std::uniform_real_distribution<> randomUniform;
+    std::uniform_real_distribution<> randomUniform;
+
 public:
     ComputeEngine(QSharedPointer<QList<QSharedPointer<Generator>>> generatorsList, QSharedPointer<QHash<int, QSharedPointer<Generator>>> generatorsHashMap);
     ~ComputeEngine();
+
+    QList<QString> registeredGeneratorTypes;
+    void registerParameterControls(int generatorId);
+//    void addGeneratorType(QString generatorType);
 signals:
     // sends data through OscEngine::sendOscData
-    void sendOscData(int id, QVariantList data);
+    void sendOscData(int generatorId, QVariantList data);
 public slots:
     // handles data received from OscEngine::receiveOscData
-    void receiveOscData(int id, QVariantList data);
+    void receiveOscData(int generatorId, QVariantList data);
+    void receiveOscGeneratorControlMessage(int generatorId, QVariantList data, QString controlMessage);
+
+
+    // parses and directs received OSC messages that control generator parameters
+//    void receiveGeneratorControlMessage(int generatorId, QVariantList data);
 
     // adds a generator to the list and hash map
     void addGenerator(QSharedPointer<Generator> generator);

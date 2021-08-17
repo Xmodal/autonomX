@@ -29,15 +29,12 @@ Generator::Generator(int id, GeneratorMeta * meta) {
     // create default generatorName from generator type + id
     QString idString = QString::number(id).prepend("_0");
     this->generatorName = this->meta->getType() + idString;
-//    QString idString = QString::number(id).prepend("0").append("_");
-//    this->generatorName = idString + this->meta->getType();
     this->userNotes = "";
 
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
             std::chrono::system_clock::now().time_since_epoch()
         );
-
         qDebug() << "constructor (Generator)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id;
     }
 
@@ -122,6 +119,10 @@ QString Generator::getOscOutputAddressHost() {
 
 QString Generator::getOscOutputAddressTarget() {
     return oscOutputAddressTarget;
+}
+
+QMap<QString, QString> Generator::getGeneratorsParameterList() {
+    return receivedGeneratorsParameterList;
 }
 
 int Generator::getInputCount() const

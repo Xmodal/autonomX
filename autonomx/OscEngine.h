@@ -44,6 +44,9 @@ private:
     // connects OscReceiver::messageReceived to OscEngine::receiveOscDataHandler through a lambda that captures the generator id
     void connectReceiver(int generatorId);
 
+    //
+//    void connectControlReceiver(int generatorId);
+
     // used internally by connectGenerator and disconnectGenerator
     void createOscReceiver(int generatorId, QString address, int port);
 
@@ -68,7 +71,13 @@ signals:
     void valueChanged(const QString &key, const QVariant &value);
 
     // relays updates to ComputeEngine::rec
-    void receiveOscData(int id, QVariantList data);
+    void receiveOscData(int generatorId, QVariantList data);
+    // relays generator control messages to ComputeEngine::rec
+    void receiveOscGeneratorControlMessage(int generatorId, QVariantList data, QString controlMessage);
+
+
+    //
+//    void receiveOscControlMessage(int generatorId, QVariantList controlMessage);
 
     // notifiers
     void OscReceiverPortChanged(int receiverPort);
@@ -77,7 +86,10 @@ signals:
 
 private slots:
     // bridges OscReceiver::messageReceived to OscEngine::receiveOscData
-    void receiveOscDataHandler(int id, const QString& oscAddress, const QVariantList& message);
+    void receiveOscDataHandler(int generatorId, const QString& oscAddress, const QVariantList& message, bool controlMessageBool);
+
+    //
+//    void receiveOscControlMessageHandler(int generatorId, const QString& oscAddress, const QVariantList& controlMessage);
 
 public slots:
     // from facade

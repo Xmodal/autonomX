@@ -20,6 +20,8 @@
 
 #include "ComputeEngine.h"
 #include "AppModel.h"
+#include "NeuronType.h"
+#include "GOLPatternType.h"
 
 ComputeEngine::ComputeEngine(QSharedPointer<QList<QSharedPointer<Generator>>> generatorsList, QSharedPointer<QHash<int, QSharedPointer<Generator>>> generatorsHashMap) : randomUniform(0.0, 1.0) {
     if(flagDebug) {
@@ -44,14 +46,13 @@ ComputeEngine::~ComputeEngine() {
     }
 }
 
-void ComputeEngine::receiveOscData(int id, QVariantList data) {
-    if(!generatorsHashMap->contains(id)) {
+void ComputeEngine::receiveOscData(int generatorId, QVariantList data) {
+    if(!generatorsHashMap->contains(generatorId)) {
         throw std::runtime_error("generator does not exist");
     }
-    QSharedPointer<Generator> generator = generatorsHashMap->value(id);
+    QSharedPointer<Generator> generator = generatorsHashMap->value(generatorId);
 
     QList<QVariant> dataAsList = data;
-
     int argumentsTotal = data.size();
     int argumentsValid = 0;
 
@@ -78,8 +79,230 @@ void ComputeEngine::receiveOscData(int id, QVariantList data) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );
+        qDebug() << "receiveOscData (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << generatorId << "\tdata = " << data << "\t(" << argumentsValid << " of " << argumentsTotal << " valid)";
+    }
+}
 
-        qDebug() << "receiveOscData (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << id << "\tdata = " << data << "\t(" << argumentsValid << " of " << argumentsTotal << " valid)";
+void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantList data, QString controlMessage) {
+    QString generatorName, inputType, parameter1, parameter2;
+    QList<QVariant> dataAsList = data;
+    int inputValue = 0;
+
+    // check if generator exists -> if not, ignore
+    if(!generatorsHashMap->contains(generatorId)) return;
+
+    // split input osc control message into pieces
+    QStringList controlMessageList = controlMessage.split(QLatin1Char('/'), Qt::SkipEmptyParts);
+    if(controlMessageList.length() < 2) return;
+
+    // assign split osc message pieces to corresponding variables
+    for(int i = 0; i < controlMessageList.length(); i++) {
+        switch(i) {
+        case 0:
+            generatorName = controlMessageList.at(0).toLower();
+            break;
+        case 1:
+            inputType = controlMessageList.at(1).toLower();
+            break;
+        case 2:
+            parameter1 = controlMessageList.at(2).toLower();
+            break;
+        case 3:
+            parameter2 = controlMessageList.at(3).toLower();
+            break;
+        }
+    }
+
+    // if the first parameter is empty, message was entered incorrectly
+    if(parameter1 == "") {
+        qDebug() << "empty control message entered!";
+        return;
+    }
+
+    // check if targetted generator name exists -> else, ignore
+    QSharedPointer<Generator> generator = generatorsHashMap->value(generatorId);
+    if(!(generatorName == generator->getGeneratorName().toLower())) {
+        // name not found -> skip and return
+        return;
+    }
+
+    // verify dataList isn't empty
+    if(!dataAsList.isEmpty()) {
+        if(dataAsList.length() == 1) {
+            inputValue = dataAsList.at(0).toInt();
+        }
+    }
+
+    // check if control message is global or generator-specific
+    if(parameterControlList.value(parameter1) == "global") {
+        if(inputValue < 1) inputValue = 1;
+
+        // control message is global parameter
+        if(parameter1 == "width") {
+            qDebug() << "width message received";
+            generator->writeLatticeWidth(inputValue);
+        } else if(parameter1 == "height") {
+            qDebug() << "height message received";
+            generator->writeLatticeHeight(inputValue);
+        } else if(parameter1 == "time_scale") {
+            qDebug() << "timeScale message received";
+            generator->writeTimeScale(inputValue);
+        } else if(parameter1 == "restart") {
+            qDebug() << "restart message received";
+            generator->initialize();
+        } else if(parameter1 == "reset") {
+            qDebug() << "reset message received";
+            generator->resetParameters();
+        } else if(parameter1 == "reset_regions") {
+            qDebug() << "reset_regions message received";
+            generator->resetRegions();
+        }
+    }
+    // control message is not global param
+    else {
+
+        // TODO: codify control messages with internal naming system
+        // -> this will maximize advantage of QProperty system
+        // -> can condense code below to a fraction of the size
+
+        // now handles control message separately dependending on the type of generator
+        if(generator->getType() == "SpikingNet") {
+
+            if(parameter1.contains("neuron_type")) {
+                QString neuronType = parameter2;
+                NeuronType neuron;
+
+                // search for / assign neuron type
+                if(neuronType == "spiking") {
+                    neuron = NeuronType::SpikingNeuron;
+                } else if(neuronType == "spiking_rand") {
+                    neuron = NeuronType::SpikingNeuronRandomized;
+                } else if(neuronType == "resonator") {
+                    neuron = NeuronType::ResonatorNeuron;
+                } else if(neuronType == "resonator_rand") {
+                    neuron = NeuronType::ResonatorNeuronRandomized;
+                } else if(neuronType == "chattering") {
+                    neuron = NeuronType::ChatteringNeuron;
+                } else {
+                    qDebug() << "WARNING: invalid neuron type";
+                    return;
+                }
+
+                if(parameter1 == "excitatory_neuron_type") {
+                    generator->setProperty("excitatoryNeuronType", neuron);
+                } else if(parameter1 == "inhibitory_neuron_type") {
+                    generator->setProperty("inhibitoryNeuronType", neuron);
+                } else {
+                    qDebug() << "WARNING: invalid neuron meta type";
+                }
+            } else if(parameter1 == "stp_strength") {
+                parameter1 = "STPStrength";
+            } else if(parameter1 == "stpd_strength") {
+                parameter1 = "STDPStrength";
+            } else if(parameter1 == "decay_half_life") {
+                parameter1 = "decayHalfLife";
+            }
+
+            // indicates a learning control message
+            if(parameter2 == "on" || parameter2 == "off") {
+                bool toggleDirection = false;
+                parameter1.prepend("flag_");
+                if(parameter2 == "on") toggleDirection = true;
+
+                QByteArray neuronMessageArray = parameter1.toLocal8Bit();
+                const char *neuronMessageChar = neuronMessageArray.data();
+
+                // execute learning control message
+                generator->setProperty(neuronMessageChar, toggleDirection);
+                return;
+            }
+
+            if(parameter1 == "inhibitory_neuron_noise") {
+                parameter1 = "inhibitoryNoise";
+            } else if(parameter1 == "excitatory_neuron_noise") {
+                parameter1 = "excitatoryNoise";
+            } else if(parameter1 == "inhibitory_portion") {
+                parameter1 = "inhibitoryPortion";
+            }
+
+            // message has now been sorted and formatted
+            // make changes uses QProperty system
+            QByteArray controlMessageArray = parameter1.toLocal8Bit();
+            const char *controlMessageArrayChar = controlMessageArray.data();
+            generator->setProperty(controlMessageArrayChar, inputValue);
+
+        } else if(generator->getType() == "GameOfLife") {
+            QString enumType, enumValue;
+            GOLPatternType golPattern;
+
+            if(parameter1 == "gol_pattern_type") {
+                if(parameter2 == "random") {
+                    golPattern = GOLPatternType::Random;
+                } else if(parameter2 == "glider") {
+                    golPattern = GOLPatternType::Glider;
+                } else if(parameter2 == "spaceship") {
+                    golPattern = GOLPatternType::SpaceShip;
+                } else if(parameter2 == "rpentomino") {
+                    golPattern = GOLPatternType::RPentoMino;
+                } else if(parameter2 == "pentadecathlon") {
+                    golPattern = GOLPatternType::Pentadecathlon;
+                } else {
+                    qDebug() << "WARNING: invalid GameOfLife pattern type";
+                    return;
+                }
+            }
+
+            // TODO: FIX GOLPattern QProperty
+            // -> only accepts QString "GOLPattern"
+            // -> should generically accept char array as commented out below ->
+//                QByteArray patternTypeArray = parameter1.toLocal8Bit();
+//                const char *patternTypeArrayChar = patternTypeArray.data();
+//                generator->setProperty(patternTypeArrayChar, golPattern);
+
+            // set GOL pattern type
+            generator->setProperty("GOLPattern", golPattern);
+
+        } else if(generator->getType() == "WolframCA") {
+
+            // check if message targets random_seed
+            if(parameter1 == "random_seed") {
+                parameter1 = "flag_randSeed";
+
+                if(parameter2 == "on" || parameter2 == "off") {
+                    bool toggleDirection = false;
+                    if(parameter2 == "on") toggleDirection = true;
+
+                    QByteArray randSeedArray = parameter1.toLocal8Bit();
+                    const char *randSeedArrayChar = randSeedArray.data();
+                    // execute randomSeed toggle
+                    generator->setProperty(randSeedArrayChar, toggleDirection);
+                }
+            }
+
+            // otherwise must be targetting rule number
+            else {
+                // TODO: FIX WolframCA rule QProperty
+                // -> only accepts QString "rule"
+                // but should generically accept char array as commented out below ->
+//                QByteArray ruleArray = parameter1.toLocal8Bit();
+//                const char *ruleArrayChar = ruleArray.data();
+//                generator->setProperty(ruleArrayChar, inputValue);
+                generator->setProperty("rule", inputValue);
+            }
+        }
+        // if not any pre-built generator type or global parameter
+        // param change will only execute if osc control message matches the associated QProperty *exactly*
+        // -> see documentation for more details
+        else {
+            int input = dataAsList.at(0).toInt();
+            double inputDouble = input;
+
+            QByteArray controlMessageArray = controlMessage.toLocal8Bit();
+            const char *controlMessageChar = controlMessageArray.data();
+
+            // execute control message of any generic format that was not for pre-built generators
+            generator->setProperty(controlMessageChar, inputDouble);
+        }
     }
 }
 
@@ -94,6 +317,9 @@ void ComputeEngine::addGenerator(QSharedPointer<Generator> generator) {
 
     generatorsList->append(generator);
     generatorsHashMap->insert(generator->getID(), generator);
+
+    registerParameterControls(generator->getID());
+
 }
 
 void ComputeEngine::removeGenerator(QSharedPointer<Generator> generator) {
@@ -130,6 +356,7 @@ void ComputeEngine::loop() {
     if(firstFrame) {
         firstFrame = false;
         millisLastFrame = 1.0 / frequency * 1000.0;
+
     } else {
         millisLastFrame = elapsedTimer.nsecsElapsed() / 1000000.0;
     }
@@ -209,3 +436,45 @@ void ComputeEngine::loop() {
         qDebug() << "loop (ComputeEngine):\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\trefresh (ms) = " << millisLastFrame << "\tcompute (ms) = " << millisCompute;
     }
 }
+
+void ComputeEngine::registerParameterControls(int generatorId) {
+
+    QSharedPointer<Generator> generator = generatorsHashMap->value(generatorId);
+    GeneratorMeta* meta = generator->getMeta();
+
+    // register global parameters if first pass
+    if(firstPass) {
+        parameterControlList["width"] = "global";
+        parameterControlList["height"] = "global";
+        parameterControlList["time_scale"] = "global";
+        parameterControlList["restart"] = "global";
+        parameterControlList["reset"] = "global";
+        parameterControlList["reset_regions"] = "global";
+
+        firstPass = false;
+    }
+
+     if(!registeredGeneratorTypes.contains(generator->getType())) {
+
+//         addGeneratorType(generator->getType());
+
+        QMapIterator<QString, QString> iter(meta->getGeneratorsParameterList());
+        while(iter.hasNext()) {
+            iter.next();
+            parameterControlList[iter.key()] = iter.value();
+        }
+
+        QMapIterator<QString, QString> iterCheck(parameterControlList);
+        while(iterCheck.hasNext()) {
+            iterCheck.next();
+        }
+     }
+}
+
+//void ComputeEngine::addGeneratorType(QString generatorType) {
+//    registeredGeneratorTypes.append(generatorType);
+//    qDebug() << "ComputeEngine::addGeneratorTypes > registeredGeneratorTypes List: ";
+//    for(int i = 0; i < registeredGeneratorTypes.size(); i++) {
+//        qDebug() << registeredGeneratorTypes[i];
+//    }
+//}

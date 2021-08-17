@@ -110,6 +110,7 @@ private:
     inline void computeSTP(double deltaTime);
     inline double computeSTPForNeuron(int index, bool isFiring, double deltaTime);
 
+    void writeNetworkType(QString networkType);
     void setRandomNetwork();
     void setSparseGraph();
     void setSparseNetwork();
@@ -141,6 +142,7 @@ public:
 
     void writeNeuronSize(int neuronSize);
     void writeInhibitoryPortion(double inhibitoryPortion);
+//    void writeNeuronType(QString neuronMetaType, QString neuronType);
     void writeInhibitoryNeuronType(NeuronType inhibitoryNeuronType);
     void writeExcitatoryNeuronType(NeuronType excitatoryNeuronType);
     void writeInhibitoryNoise(double inhibitoryNoise);

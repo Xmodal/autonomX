@@ -11,7 +11,7 @@
                     "label": "Pattern Type",
                     "propName": "GOLPattern",
                     "type": "select",
-                     "enumName": "GOLPatternType",
+                    "enumName": "GOLPatternType",
                     "default": 4
                 }
             ]

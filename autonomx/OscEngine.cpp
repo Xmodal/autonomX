@@ -58,19 +58,6 @@ void OscEngine::connectReceiver(int generatorId) {
 
 }
 
-//void OscEngine::connectControlReceiver(int generatorId) {
-//    if(flagDebug) {
-//        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-//                    std::chrono::system_clock::now().time_since_epoch()
-//        );
-//        qDebug() << "connectControlReceiver (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << generatorId;
-//    }
-
-//    QObject::connect(oscReceiver.data(), &OscReceiver::controlMessageReceived, this, [this, generatorId](const QString& oscAddress, const QVariantList& controlMessage){
-//        receiveOscControlMessageHandler(generatorId, oscAddress, controlMessage);
-//    });
-//}
-
 void OscEngine::startGeneratorOsc(QSharedPointer<Generator> generator) {
     // get parameter values
     int generatorId = generator->getID();
@@ -161,22 +148,6 @@ void OscEngine::receiveOscDataHandler(int generatorId, const QString& oscAddress
         }
     }
 }
-
-//void OscEngine::receiveOscControlMessageHandler(int generatorId, const QString &oscAddress, const QVariantList& controlMessage) {
-//    if(flagDebug) {
-//        std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
-//                    std::chrono::system_clock::now().time_since_epoch()
-//        );
-
-//        qDebug() << "receiveOscControlMessageHandler (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << generatorId << "\taddress = " << oscAddress << "\tmessage = " << controlMessage;
-//    }
-
-//    QString oscAddressExpected = oscReceiverAddress;
-//    if(oscAddress == oscAddressExpected) {
-//        // message received with right address
-//        emit receiveOscControlMessage(generatorId, controlMessage);
-//    }
-//}
 
 void OscEngine::updateValue(const QString &key, const QVariant &value) {
     QByteArray keyArray = key.toLocal8Bit();

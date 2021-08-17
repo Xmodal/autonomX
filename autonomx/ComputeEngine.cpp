@@ -139,22 +139,16 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
 
         // control message is global parameter
         if(parameter1 == "width") {
-            qDebug() << "width message received";
             generator->writeLatticeWidth(inputValue);
         } else if(parameter1 == "height") {
-            qDebug() << "height message received";
             generator->writeLatticeHeight(inputValue);
         } else if(parameter1 == "time_scale") {
-            qDebug() << "timeScale message received";
             generator->writeTimeScale(inputValue);
         } else if(parameter1 == "restart") {
-            qDebug() << "restart message received";
             generator->initialize();
         } else if(parameter1 == "reset") {
-            qDebug() << "reset message received";
             generator->resetParameters();
         } else if(parameter1 == "reset_regions") {
-            qDebug() << "reset_regions message received";
             generator->resetRegions();
         }
     }

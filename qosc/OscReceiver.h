@@ -36,7 +36,6 @@ signals:
      * @param message
      */
     void messageReceived(const QString& oscAddress, const QVariantList& message, bool controlMessage);
-//    void controlMessageReceived(const QString& oscAddress, const QVariantList& controlMessage);
 
 public slots:
     void readyReadCb();

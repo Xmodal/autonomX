@@ -47,12 +47,6 @@ void OscEngine::connectReceiver(int generatorId) {
 
     QObject::connect(oscReceiver.data(), &OscReceiver::messageReceived, this, [this, generatorId](const QString& oscAddress, const QVariantList& message, bool controlMessageBool){
         receiveOscDataHandler(generatorId, oscAddress, message, controlMessageBool);
-        if(!controlMessageBool) {
-            qDebug() << "OscEngine.cpp: regular osc data message received by generator: " << generatorId;
-        } else if (controlMessageBool) {
-//            qDebug() << "03 control message received in oscEngine connectReceiver";
-            qDebug() << "OscEngine.cpp: osc control message received by generator: " << generatorId;
-        }
     });
 
 
@@ -124,27 +118,20 @@ void OscEngine::receiveOscDataHandler(int generatorId, const QString& oscAddress
     }
 
     QString oscAddressExpected = oscReceiverAddress;
-//    qDebug() << "oscAddressExpected: " << oscAddressExpected << " vs oscAddress: " << oscAddress;
 
     if(!controlMessageBool) {
         if(oscAddress == oscAddressExpected) {
             // message received with right address
-            qDebug() << "!! regular non-control message received !!";
             emit receiveOscData(generatorId, message);
         }
     } else if(controlMessageBool) {
         if(oscAddress.contains(oscAddressExpected)) {
             QString generatorControlMessage = oscAddress;
             generatorControlMessage.remove(0, 7);
-//            qDebug() << "02 OscEngine.cpp generatorControlMessage: " << generatorControlMessage;
             emit receiveOscGeneratorControlMessage(generatorId, message, generatorControlMessage);
         } else {
             // control message received but something wrong with message address format
-            qDebug() << "controlMessage: " << message;
-            qDebug() << "oscAddress: " << oscAddress;
-            qDebug() << "oscAddressExpected: " << oscAddressExpected;
             qDebug() << "Incorrect Control Message Format!";
-            // TODO: send message via osc to external app that control message received is incorrect format
         }
     }
 }

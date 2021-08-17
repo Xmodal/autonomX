@@ -53,12 +53,8 @@ void OscReceiver::readyReadCb() {
         controlMessageBool = false;
 
 //        qDebug() << "oscReceiver class data message: " << data;
-        if(data.contains("_")) {
+        if(data.contains("parameter")) {
             controlMessageBool = true;
-//            qDebug() << "01 received control message - OscReceiver.cpp";
-//            this->byteArrayToVariantList(arguments, oscAddress, data);
-////            emit controlMessageReceived(oscAddress, arguments);
-//            return;
         }
 
         this->byteArrayToVariantList(arguments, oscAddress, data);

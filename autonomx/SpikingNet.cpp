@@ -142,6 +142,19 @@ int SpikingNet::indexExcitatoryNeuron(int i) {
     return i + inhibitorySize;
 }
 
+//void SpikingNet::writeNetworkType(QString networkType) {
+//    networkType = networkType.toLower();
+//    if(networkType == "sparsenetwork") {
+//        this->setSparseNetwork();
+//    } else if(networkType == "randomnetwork") {
+//        this->setRandomNetwork();
+//    } else if(networkType == "uniformnetwork") {
+//        this->setUniformNetwork();
+//    } else if(networkType == "gridnetwork") {
+//        this->setGridNetwork();
+//    }
+//}
+
 void SpikingNet::setSparseNetwork() {
 
     std::uniform_int_distribution<> randomNeurons(0, latticeWidth * latticeHeight - 1);
@@ -588,6 +601,37 @@ void SpikingNet::writeInhibitoryPortion(double inhibitoryPortion) {
     emit valueChanged("inhibitoryPortion", QVariant(inhibitoryPortion));
     emit inhibitoryPortionChanged(inhibitoryPortion);
 }
+
+//void SpikingNet::writeNeuronType(QString neuronMetaType, QString neuronType) {
+//    // used for osc external messages to allow control of neuron types
+//    NeuronType neuron;
+
+//    // search for neuron type
+//    if(neuronType.toLower() == "spiking") {
+//        neuron = NeuronType::SpikingNeuron;
+//    } else if(neuronType.toLower() == "spikingrand") {
+//        neuron = NeuronType::SpikingNeuronRandomized;
+//    } else if(neuronType.toLower() == "resonator") {
+//        neuron = NeuronType::ResonatorNeuron;
+//    } else if(neuronType.toLower() == "resonatorrand") {
+//        neuron = NeuronType::ResonatorNeuronRandomized;
+//    } else if(neuronType.toLower() == "chattering") {
+//        neuron = NeuronType::ChatteringNeuron;
+//    } else {
+//        qDebug() << "WARNING: invalid neuron type";
+//        return;
+//    }
+
+
+//    // search for neuron metaType
+//    if(neuronMetaType.toLower() == "inhibitoryneurontype") {
+//       this->writeInhibitoryNeuronType(neuron);
+//    } else if(neuronMetaType.toLower() == "excitatoryneurontype") {
+//        this->writeExcitatoryNeuronType(neuron);
+//    } else {
+//        qDebug() << "WARNING: invalid neuron meta type";
+//    }
+//}
 
 void SpikingNet::writeInhibitoryNeuronType(NeuronType inhibitoryNeuronType) {
     if(this->inhibitoryNeuronType == inhibitoryNeuronType)

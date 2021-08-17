@@ -82,6 +82,9 @@ AppModel::AppModel() {
     // connect osc engine data reception to compute engine
     connect(oscEngine.data(), &OscEngine::receiveOscData, computeEngine.data(), &ComputeEngine::receiveOscData, Qt::QueuedConnection);
 
+    // connect osc engine for control message reception to compute engine
+    connect(oscEngine.data(), &OscEngine::receiveOscGeneratorControlMessage, computeEngine.data(), &ComputeEngine::receiveOscGeneratorControlMessage, Qt::QueuedConnection);
+
     // connect signal for adding a generator to the data structures
     connect(this, &AppModel::addGenerator, computeEngine.data(), &ComputeEngine::addGenerator);
 
@@ -178,8 +181,7 @@ QSharedPointer<Generator> AppModel::createGenerator(QString type, bool initRegio
         generator = QSharedPointer<Generator>(new WolframCA(nextID, generatorMetaModel->at("WolframCA")));
     } else if (type.compare("GameOfLife") == 0) {
         generator = QSharedPointer<Generator>(new GameOfLife(nextID, generatorMetaModel->at("GameOfLife")));
-    }
-    else if (type.compare("GameOfLife") == 0) {
+    } else if (type.compare("GameOfLife") == 0) {
         generator = QSharedPointer<Generator>(new GameOfLife(nextID, generatorMetaModel->at("GameOfLife")));
     }
 

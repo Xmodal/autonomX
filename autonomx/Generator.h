@@ -37,9 +37,11 @@ class Generator : public QObject {
     Q_PROPERTY(QString name READ getName)
     Q_PROPERTY(QString type READ getType)
     Q_PROPERTY(QString description READ getDescription)
-    Q_PROPERTY(GeneratorMeta* meta READ getMeta);
+    Q_PROPERTY(GeneratorMeta* meta READ getMeta)
+    Q_PROPERTY(void reset RESET resetParameters)
 
     // these do change
+    // generator properties
     Q_PROPERTY(QString generatorName READ getGeneratorName WRITE writeGeneratorName NOTIFY generatorNameChanged)
     Q_PROPERTY(QString userNotes READ getUserNotes WRITE writeUserNotes NOTIFY userNotesChanged)
     Q_PROPERTY(double historyLatest READ getHistoryLatest NOTIFY historyLatestChanged)
@@ -135,6 +137,10 @@ public:
 
     double sigmoid(double intensity);
 
+    QMap<QString, QString> receivedGeneratorsParameterList;
+    QMap<QString, QString> getGeneratorsParameterList();
+    std::vector<QString> registeredGeneratorTypes;
+
     // methods to write properties
     void writeGeneratorName(QString generatorName);
     void writeUserNotes(QString userNotes);
@@ -181,9 +187,6 @@ public:
     GeneratorRegionSet* getInputRegionSet() const;
     GeneratorRegionSet* getOutputRegionSet() const;
 
-    // OSC experiments
-//    QVector<int> OSCPorts;
-//    int createOSCInputPort();
 protected:
     int latticeWidth = 50;                      // lattice width
     int latticeHeight = 50;                     // lattice height

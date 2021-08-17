@@ -49,6 +49,10 @@ QVariantMap GeneratorMeta::getEnumLabels() const
     return enumLabels;
 }
 
+QMap<QString, QString> GeneratorMeta::getGeneratorsParameterList() const {
+    return generatorsParameterList;
+}
+
 void GeneratorMeta::registerMeta() {
     // the previous way of doing it,
     // via a static reference to the generators folder
@@ -163,7 +167,6 @@ void GeneratorMeta::registerMeta() {
         QVariantList labelValues = enums[key].toArray().toVariantList();
         enumLabels.insert(key, labelValues);
     }
-
 
     // close main JSON file when done !
     loadFile.close();

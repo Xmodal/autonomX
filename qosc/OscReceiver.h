@@ -28,7 +28,6 @@ public:
     ~OscReceiver();
     void setPort(quint16 port);
     bool controlMessageBool;
-    bool singleInputRegionBool;
 
 signals:
     /**
@@ -36,7 +35,7 @@ signals:
      * @param oscAddress
      * @param message
      */
-    void messageReceived(const QString& oscAddress, const QVariantList& message, bool controlMessageBool, bool singleInputRegionBool);
+    void messageReceived(const QString& oscAddress, const QVariantList& message, bool controlMessage);
 
 public slots:
     void readyReadCb();

@@ -45,8 +45,8 @@ void OscEngine::connectReceiver(int generatorId) {
         qDebug() << "connectReceiver (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << generatorId;
     }
 
-    QObject::connect(oscReceiver.data(), &OscReceiver::messageReceived, this, [this, generatorId](const QString& oscAddress, const QVariantList& message, bool controlMessageBool, bool singleInputRegionBool){
-        receiveOscDataHandler(generatorId, oscAddress, message, controlMessageBool, singleInputRegionBool);
+    QObject::connect(oscReceiver.data(), &OscReceiver::messageReceived, this, [this, generatorId](const QString& oscAddress, const QVariantList& message, bool controlMessageBool){
+        receiveOscDataHandler(generatorId, oscAddress, message, controlMessageBool);
     });
 
 
@@ -108,7 +108,7 @@ void OscEngine::stopGeneratorOsc(QSharedPointer<Generator> generator) {
     deleteOscSender(generatorId);
 }
 
-void OscEngine::receiveOscDataHandler(int generatorId, const QString& oscAddress, const QVariantList& message, bool generatorControlMessageBool, bool singleInputRegionBool) {
+void OscEngine::receiveOscDataHandler(int generatorId, const QString& oscAddress, const QVariantList& message, bool controlMessageBool) {
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
@@ -118,26 +118,15 @@ void OscEngine::receiveOscDataHandler(int generatorId, const QString& oscAddress
     }
 
     QString oscAddressExpected = oscReceiverAddress;
-    QString controlMessage = oscAddress;
-    int inputRegion;
 
-    if(singleInputRegionBool) {
-        QStringList controlMessageList = controlMessage.split(QLatin1Char('/'), Qt::SkipEmptyParts);
-        inputRegion = controlMessageList.at(3).toInt();
-        qDebug() << "oscEngine controlMessageList at 3: " << controlMessageList.at(3);
-    }
-
-    qDebug() << "controlMessageBool check: " << generatorControlMessageBool;
-
-    if(!generatorControlMessageBool) {
-        if(oscAddress.contains(oscAddressExpected)) {
+    if(!controlMessageBool) {
+        if(oscAddress == oscAddressExpected) {
             // message received with right address
-            qDebug() << "emit";
-            emit receiveOscData(generatorId, message, singleInputRegionBool, inputRegion);
+            emit receiveOscData(generatorId, message);
         }
-    } else if(generatorControlMessageBool) {
+    } else if(controlMessageBool) {
         if(oscAddress.contains(oscAddressExpected)) {
-            QString generatorControlMessage = controlMessage;
+            QString generatorControlMessage = oscAddress;
             generatorControlMessage.remove(0, 7);
             emit receiveOscGeneratorControlMessage(generatorId, message, generatorControlMessage);
         } else {

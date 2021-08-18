@@ -46,7 +46,7 @@ ComputeEngine::~ComputeEngine() {
     }
 }
 
-void ComputeEngine::receiveOscData(int generatorId, QVariantList data, bool singleInputRegionBool, int inputRegion) {
+void ComputeEngine::receiveOscData(int generatorId, QVariantList data) {
     if(!generatorsHashMap->contains(generatorId)) {
         throw std::runtime_error("generator does not exist");
     }
@@ -56,33 +56,20 @@ void ComputeEngine::receiveOscData(int generatorId, QVariantList data, bool sing
     int argumentsTotal = data.size();
     int argumentsValid = 0;
 
-    qDebug() << "made it to computeEngine::receiveOSCDATA";
-
-    // check if input is targetting single, specific input region or all regions
-    if(singleInputRegionBool) {
-        double inputValue = 0;
-        if(dataAsList.length() == 1) {
-            inputValue = dataAsList.at(0).toDouble();
-        }
-        generator->getInputRegionSet()->at(inputRegion - 1)->writeIntensity(inputValue);
-        inputValueReceived = true;
-        return;
-    } else {
-        for(int i = 0; i < generator->getInputRegionSet()->rowCount(); i++) {
-            // set default to 0
-            double input = 0;
-            // check that the message's list is long enough
-            if(i < data.size()) {
-                // check the message's type can be cast to double
-                QMetaType::Type type = (QMetaType::Type) dataAsList.at(i).type();
-                if(type == QMetaType::Float || type == QMetaType::Double || type == QMetaType::Int || type == QMetaType::Long) {
-                    input = dataAsList.at(i).toDouble();
-                    argumentsValid++;
-                }
+    for(int i = 0; i < generator->getInputRegionSet()->rowCount(); i++) {
+        // set default to 0
+        double input = 0;
+        // check that the message's list is long enough
+        if(i < data.size()) {
+            // check the message's type can be cast to double
+            QMetaType::Type type = (QMetaType::Type) dataAsList.at(i).type();
+            if(type == QMetaType::Float || type == QMetaType::Double || type == QMetaType::Int || type == QMetaType::Long) {
+                input = dataAsList.at(i).toDouble();
+                argumentsValid++;
             }
-            // write to input
-            generator->getInputRegionSet()->at(i)->writeIntensity(input);
         }
+        // write to input
+        generator->getInputRegionSet()->at(i)->writeIntensity(input);
     }
 
     // alerts loop that new value was received via inputOSC and can be reflected in lattice
@@ -145,13 +132,6 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
             inputValue = dataAsList.at(0).toInt();
         }
     }
-
-    // write to specific region
-//    if(inputType == "region") {
-//        generator->getInputRegionSet()->at(parameter1.toInt() - 1)->writeIntensity(inputValue);
-//        inputValueReceived = true;
-//        return;
-//    }
 
     if(parameter1.contains("_") || parameter2.contains("_")) {
         parameter1.remove(QChar('_'));

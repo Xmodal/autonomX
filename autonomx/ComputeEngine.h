@@ -57,7 +57,7 @@ signals:
     void sendOscData(int generatorId, QVariantList data);
 public slots:
     // handles data received from OscEngine::receiveOscData
-    void receiveOscData(int generatorId, QVariantList data, bool singleInputRegionBool, int inputRegion);
+    void receiveOscData(int generatorId, QVariantList data);
     void receiveOscGeneratorControlMessage(int generatorId, QVariantList data, QString controlMessage);
 
     // adds a generator to the list and hash map

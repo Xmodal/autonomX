@@ -51,20 +51,14 @@ void OscReceiver::readyReadCb() {
         QVariantList arguments;
         QString oscAddress;
         controlMessageBool = false;
-        singleInputRegionBool = false;
 
 //        qDebug() << "oscReceiver class data message: " << data;
         if(data.contains("parameter")) {
             controlMessageBool = true;
         }
 
-        if(data.contains("region")) {
-            qDebug() << "data contains region";
-            singleInputRegionBool = true;
-        }
-
         this->byteArrayToVariantList(arguments, oscAddress, data);
-        emit messageReceived(oscAddress, arguments, controlMessageBool, singleInputRegionBool);
+        emit messageReceived(oscAddress, arguments, controlMessageBool);
     }
 }
 

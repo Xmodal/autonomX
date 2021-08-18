@@ -157,7 +157,7 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
             generator->writeLatticeWidth(inputValue);
         } else if(parameter1 == "height") {
             generator->writeLatticeHeight(inputValue);
-        } else if(parameter1 == "timescale") {
+        } else if(parameter1 == "speed") {
             generator->writeSpeed(inputValue);
         } else if(parameter1 == "restart") {
             generator->initialize();

@@ -168,6 +168,10 @@ void GeneratorMeta::registerMeta() {
         enumLabels.insert(key, labelValues);
     }
 
+    for(int i = 0; i < fields.length(); i++) {
+        generatorsParameterList[(fields[i])->propName] = fields[i]->enumName;
+    }
+
     // close main JSON file when done !
     loadFile.close();
 }

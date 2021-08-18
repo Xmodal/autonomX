@@ -60,10 +60,6 @@ public slots:
     void receiveOscData(int generatorId, QVariantList data);
     void receiveOscGeneratorControlMessage(int generatorId, QVariantList data, QString controlMessage);
 
-
-    // parses and directs received OSC messages that control generator parameters
-//    void receiveGeneratorControlMessage(int generatorId, QVariantList data);
-
     // adds a generator to the list and hash map
     void addGenerator(QSharedPointer<Generator> generator);
 

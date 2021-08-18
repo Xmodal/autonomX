@@ -133,6 +133,21 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
         }
     }
 
+    if(parameter1.contains("_") || parameter2.contains("_")) {
+        parameter1.remove(QChar('_'));
+        parameter2.remove(QChar('_'));
+    }
+
+    // if user-input control message better-matched our QProperty system formatting -> many types of messages could be handled here
+//    if(parameterControlList.contains(parameter1)) {
+//        if(inputValue < 1) inputValue = 1;
+
+//        QByteArray controlMessageArray = parameter1.toLocal8Bit();
+//        const char *controlMessageArrayChar = controlMessageArray.data();
+//        generator->setProperty(controlMessageArrayChar, inputValue);
+//        return;
+//    }
+
     // check if control message is global or generator-specific
     if(parameterControlList.value(parameter1) == "global") {
         if(inputValue < 1) inputValue = 1;
@@ -142,7 +157,7 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
             generator->writeLatticeWidth(inputValue);
         } else if(parameter1 == "height") {
             generator->writeLatticeHeight(inputValue);
-        } else if(parameter1 == "time_scale") {
+        } else if(parameter1 == "timescale") {
             generator->writeTimeScale(inputValue);
         } else if(parameter1 == "restart") {
             generator->initialize();
@@ -162,18 +177,18 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
         // now handles control message separately dependending on the type of generator
         if(generator->getType() == "SpikingNet") {
 
-            if(parameter1.contains("neuron_type")) {
+            if(parameter1.contains("neurontype")) {
                 QString neuronType = parameter2;
                 NeuronType neuron;
 
                 // search for / assign neuron type
                 if(neuronType == "spiking") {
                     neuron = NeuronType::SpikingNeuron;
-                } else if(neuronType == "spiking_rand") {
+                } else if(neuronType == "spikingrand") {
                     neuron = NeuronType::SpikingNeuronRandomized;
                 } else if(neuronType == "resonator") {
                     neuron = NeuronType::ResonatorNeuron;
-                } else if(neuronType == "resonator_rand") {
+                } else if(neuronType == "resonatorrand") {
                     neuron = NeuronType::ResonatorNeuronRandomized;
                 } else if(neuronType == "chattering") {
                     neuron = NeuronType::ChatteringNeuron;
@@ -182,18 +197,18 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
                     return;
                 }
 
-                if(parameter1 == "excitatory_neuron_type") {
+                if(parameter1 == "excitatoryneurontype") {
                     generator->setProperty("excitatoryNeuronType", neuron);
-                } else if(parameter1 == "inhibitory_neuron_type") {
+                } else if(parameter1 == "inhibitoryneurontype") {
                     generator->setProperty("inhibitoryNeuronType", neuron);
                 } else {
                     qDebug() << "WARNING: invalid neuron meta type";
                 }
-            } else if(parameter1 == "stp_strength") {
+            } else if(parameter1 == "stpstrength") {
                 parameter1 = "STPStrength";
-            } else if(parameter1 == "stpd_strength") {
+            } else if(parameter1 == "stpdstrength") {
                 parameter1 = "STDPStrength";
-            } else if(parameter1 == "decay_half_life") {
+            } else if(parameter1 == "decayhalflife") {
                 parameter1 = "decayHalfLife";
             }
 
@@ -211,11 +226,11 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
                 return;
             }
 
-            if(parameter1 == "inhibitory_neuron_noise") {
+            if(parameter1 == "inhibitoryneuronnoise") {
                 parameter1 = "inhibitoryNoise";
-            } else if(parameter1 == "excitatory_neuron_noise") {
+            } else if(parameter1 == "excitatoryneuronnoise") {
                 parameter1 = "excitatoryNoise";
-            } else if(parameter1 == "inhibitory_portion") {
+            } else if(parameter1 == "inhibitoryportion") {
                 parameter1 = "inhibitoryPortion";
             }
 
@@ -226,10 +241,9 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
             generator->setProperty(controlMessageArrayChar, inputValue);
 
         } else if(generator->getType() == "GameOfLife") {
-            QString enumType, enumValue;
             GOLPatternType golPattern;
 
-            if(parameter1 == "gol_pattern_type") {
+            if(parameter1 == "golpatterntype") {
                 if(parameter2 == "random") {
                     golPattern = GOLPatternType::Random;
                 } else if(parameter2 == "glider") {
@@ -259,7 +273,7 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
         } else if(generator->getType() == "WolframCA") {
 
             // check if message targets random_seed
-            if(parameter1 == "random_seed") {
+            if(parameter1 == "randomseed") {
                 parameter1 = "flag_randSeed";
 
                 if(parameter2 == "on" || parameter2 == "off") {

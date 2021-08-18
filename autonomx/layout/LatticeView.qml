@@ -27,6 +27,7 @@ Item {
     // backend read
     onGeneratorIndexChanged: {
         panManager.setFromLatticeView(generatorModel.at(generatorIndex));
+        allowSnapW = allowSnapH = false
     }
 
     property QtObject currRegion: QtObject {
@@ -49,7 +50,6 @@ Item {
     // see code in #regions element below
     property alias allowSnapW: regions.allowSnapW
     property alias allowSnapH: regions.allowSnapH
-    onGeneratorIndexChanged: allowSnapW = allowSnapH = false
 
     // manage selected region
     function switchSelectedRegion(type, index, adding = false) {

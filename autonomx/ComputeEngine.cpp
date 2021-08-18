@@ -92,7 +92,7 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
     if(!generatorsHashMap->contains(generatorId)) return;
 
     // split input osc control message into pieces
-    QStringList controlMessageList = controlMessage.split(QLatin1Char('/'), Qt::SkipEmptyParts);
+    QStringList controlMessageList = controlMessage.split(QLatin1Char('/'));
     if(controlMessageList.length() < 2) return;
 
     // assign split osc message pieces to corresponding variables

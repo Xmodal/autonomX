@@ -124,7 +124,7 @@ Here are the possible values for `type`, followed by the required properties you
 Please note that `select` fields accept an **integer value**, and not a string value; less so an actual enum identifier. This is to facilitate parsing in C++, which is very strict on the ways you can access enum values. When defining a default value for such a field, make sure that the index you input here corresponds to the index of the enum you're trying to target back in C++.
 
 ## Additional .qrc procedures
-Currently, the only way to include generators is by burning them into the application when it is built, rather than have them stand as all-in-1 external packages. As such, any new file that is added inside of `generators` should imperatively be included in the Qt resource system file (`qml.qrc`). Errors *will* otherwise occur at runtime.
+All the generators are bundled with the application at build time. Any metadata file for the generators must be added to the Qt resource file (qml.qrc).
 
 ## Tying it all back to C++
 

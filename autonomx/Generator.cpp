@@ -654,8 +654,30 @@ void Generator::applyInputRegion() {
     // iterate over input regions
     for(int i = 0; i < inputRegionSet->rowCount(); i++) {
         GeneratorRegion* region = inputRegionSet->at(i);
+
         int xMax = region->getRect().x() + region->getRect().width();
         int yMax = region->getRect().y() + region->getRect().height();
+
+   /* TODO: create a logic so that the value to input region makes a part of region activate
+    * based on the value sent by the user from an external software (MAX/MSP etc.)
+
+        // find percentage of total activation - to be sent to a region
+        double sum = 0;
+        for(int x = region->getRect().x(); x < xMax; x++) {
+        for(int y = region->getRect().y(); y < yMax; y++) {
+            // get total intensity in a region
+            sum += getLatticeValue(x, y);
+        }
+
+        // apply averaging
+        sum /= (double) (region->getRect().width() * region->getRect().height());
+
+        // WRITE A LOGIC HERE TO CONVERT THAT PERCENTAGE INTO ACTIVATE OF CERTAIN CELLS - USE SIGMOID
+
+        */
+
+
+
         // write region activation onto lattice in rect area
             for(int x = region->getRect().x(); x < xMax; x++) {
             for(int y = region->getRect().y(); y < yMax; y++) {
@@ -667,17 +689,19 @@ void Generator::applyInputRegion() {
                     inputValue = region->getIntensity();
                     if(inputValue >= 0.1) {
                         valueToWrite = 1;
-                    } else {
-                        valueToWrite = 0;
+                        writeLatticeValue(x, y, valueToWrite);
                     }
-                    qDebug() << "wolfram or GOL value: " << valueToWrite;
-                    writeLatticeValue(x, y, valueToWrite);
+
                 } else {
                     writeLatticeValue(x, y, region->getIntensity());
-                }
+                }           
+            }
             }
         }
     }
+
+double Generator::sigmoid(double intensity){
+    return intensity/(1+exp(-intensity));
 }
 
 void Generator::applyOutputRegion() {

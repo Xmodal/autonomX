@@ -163,7 +163,7 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
             generator->initialize();
         } else if(parameter1 == "reset") {
             generator->resetParameters();
-        } else if(parameter1 == "reset_regions") {
+        } else if(parameter1 == "resetregions") {
             generator->resetRegions();
         }
     }

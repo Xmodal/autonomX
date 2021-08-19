@@ -27,7 +27,8 @@ Item {
     // backend read
     onGeneratorIndexChanged: {
         panManager.setFromLatticeView(generatorModel.at(generatorIndex));
-        allowSnapW = allowSnapH = false
+        allowSnapW = false;
+        allowSnapH = false;
     }
 
     property QtObject currRegion: QtObject {

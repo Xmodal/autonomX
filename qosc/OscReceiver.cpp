@@ -50,8 +50,15 @@ void OscReceiver::readyReadCb() {
         QByteArray data = datagram.data();
         QVariantList arguments;
         QString oscAddress;
+        controlMessageBool = false;
+
+//        qDebug() << "oscReceiver class data message: " << data;
+        if(data.contains("parameter")) {
+            controlMessageBool = true;
+        }
+
         this->byteArrayToVariantList(arguments, oscAddress, data);
-        emit messageReceived(oscAddress, arguments);
+        emit messageReceived(oscAddress, arguments, controlMessageBool);
     }
 }
 

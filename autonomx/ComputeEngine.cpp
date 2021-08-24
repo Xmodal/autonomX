@@ -21,7 +21,7 @@
 #include "ComputeEngine.h"
 #include "AppModel.h"
 #include "NeuronType.h"
-#include "GOLPatternType.h"
+#include "PatternType.h"
 
 ComputeEngine::ComputeEngine(QSharedPointer<QList<QSharedPointer<Generator>>> generatorsList, QSharedPointer<QHash<int, QSharedPointer<Generator>>> generatorsHashMap) : randomUniform(0.0, 1.0) {
     if(flagDebug) {
@@ -85,68 +85,187 @@ void ComputeEngine::receiveOscData(int generatorId, QVariantList data) {
 
 void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantList data, QString controlMessage) {
     QString generatorName, inputType, parameter1, parameter2;
+    bool inputBool = false, booleanMessageCheck = false, valueMessageCheck = false, enumMessageCheck = false;
     QList<QVariant> dataAsList = data;
     int inputValue = 0;
+    QByteArray controlMessageArray, enumMetaTypeArray;
+    const char *controlMessageArrayChar, *enumMetaTypeArrayChar;
 
     // check if generator exists -> if not, ignore
     if(!generatorsHashMap->contains(generatorId)) return;
 
-    // split input osc control message into pieces
+    // split input osc control message into list, items separated by placement of '/' in original message
     QStringList controlMessageList = controlMessage.split(QLatin1Char('/'));
     if(controlMessageList.length() < 2) return;
+
+    // remove any blank or empty strings in controlMessageList
+    for(int i = 0; i < controlMessageList.length(); i++) {
+        if (controlMessageList.at(i) == "" || controlMessageList.at(i).isEmpty()) {
+            controlMessageList.removeAt(i);
+            qDebug() << "found empty item in controlMessageList at: " << i;
+        }
+    }
+
+    qDebug() << "receiveOscControlMessage! >> " << controlMessage;
 
     // assign split osc message pieces to corresponding variables
     for(int i = 0; i < controlMessageList.length(); i++) {
         switch(i) {
         case 0:
-            generatorName = controlMessageList.at(0).toLower();
+            generatorName = controlMessageList.at(0);
             break;
         case 1:
-            inputType = controlMessageList.at(1).toLower();
+            inputType = controlMessageList.at(1);
             break;
         case 2:
-            parameter1 = controlMessageList.at(2).toLower();
+            parameter1 = controlMessageList.at(2);
             break;
         case 3:
-            parameter2 = controlMessageList.at(3).toLower();
+            parameter2 = controlMessageList.at(3);
+            enumMessageCheck = true;
             break;
         }
     }
 
     // if the first parameter is empty, message was entered incorrectly
-    if(parameter1 == "") {
-        qDebug() << "empty control message entered!";
-        return;
-    }
+//    if(parameter1 == "") {
+//        qDebug() << "empty control message entered!";
+//        return;
+//    }
 
     // check if targetted generator name exists -> else, ignore
     QSharedPointer<Generator> generator = generatorsHashMap->value(generatorId);
-    if(!(generatorName == generator->getGeneratorName().toLower())) {
+    if(!(generatorName == generator->getGeneratorName())) {
         // name not found -> skip and return
         return;
     }
 
-    // verify dataList isn't empty
+    // verify dataList isn't empty and then convert and sort the input value/boolean
     if(!dataAsList.isEmpty()) {
-        if(dataAsList.length() == 1) {
-            inputValue = dataAsList.at(0).toInt();
+
+        qDebug() << "dataAsList is not empty";
+
+        for(int i = 0; i < dataAsList.length(); i++) {
+            if(dataAsList.at(i).canConvert<bool>()) {
+                qDebug() << "received a bool data at: " << i << " >> now converting to: " << dataAsList.at(0).toBool();
+                inputBool = dataAsList.at(i).toBool();
+                booleanMessageCheck = true;
+            } else if(dataAsList.at(i).canConvert<double>()) {
+                qDebug() << "received a double data at: " << i << " >> now converting to: " << dataAsList.at(0).toDouble();
+                inputValue = dataAsList.at(0).toDouble();
+                valueMessageCheck = true;
+            } else {
+                qDebug() << "received neither bool nor double at: " << i << " in dataAsList";
+            }
         }
+    } else if(enumMessageCheck) {
+
+        // get instance of meta
+        GeneratorMeta* meta = generator->getMeta();
+        QString enumMetaTypeName, enumValueName = parameter2;
+
+        qDebug() << "passed enumMessageCheck";
+
+        // if parameter1 is a valid generator param
+        if(parameterControlList.contains(parameter1)) {
+            // if the value stored at parameter1 in map is an enum MetaType
+            if(parameterControlList.value(parameter1) == "none" || parameterControlList.value(parameter1) == "global") {
+//                parameter1 = parameterControlList.value(parameter1);
+                // enum MetaType identified
+//                enumMetaTypeName = parameter1;
+//                qDebug() << "correctly located enumType from parameterControlList: " << enumMetaTypeName;
+                enumMessageCheck = false;
+            }
+        }
+
+        // iterate through enumLabels to see if the enumMetaType is present
+//        QMapIterator<QString, QVariant>enumMetaTypesIterator(meta->getEnumLabels());
+//        while(enumMetaTypesIterator.hasNext()) {
+//            enumMetaTypesIterator.next();
+//            // enumMetaType found in enumLabels
+//            if(enumMetaTypesIterator.key() == enumMetaTypeName) {
+//                qDebug() << "enumLabel found in map!";
+
+//                // create a list of the possible values in this enum MetaType
+//                QVariant enumValues = enumMetaTypesIterator.value();
+//                QList<QVariant> enumValueList = enumValues.toList();
+//                // iterate through that list to find a match for the enum value
+//                for(int i = 0; i < enumValueList.length(); i++) {
+//                    qDebug() << "enumValueList at i = " << enumValueList.at(i);
+//                    qDebug() << "enumValueList at i .toString = " << enumValueList.at(i).toString();
+//                    // if match is found -> enum value identified
+//                    if(enumValueList.at(i).toString() == enumValueName) {
+
+//                        qDebug() << "parameter2 located in enumValueList! >> " << enumValueList.at(i);
+////                        QString enumTypeString = enumMetaTypesIterator.key();
+//                        enumTypeArray = enumMetaTypeName.toLocal8Bit();
+//                        enumTypeArrayChar = enumTypeArray.data();
+//                        int id = QMetaType::type(enumTypeArrayChar);
+//                        qDebug() << "id = " << id;
+//                        void *myClassPtr = QMetaType::create(id);
+//                        qDebug() << "classPtr = " << myClassPtr;
+////                        qDebug() << "var = " << var;
+
+//                    }
+//                }
+//                qDebug() << "value = " << enumValues;
+//            }
+//            qDebug() << "enumMapKey: " << enumMetaTypesIterator.key();
+//            qDebug() << "after";
+//        }
+
+//        qDebug() << "param1 check: " << parameter1;
+
+//        if(parameter1.contains("Neuron")) {
+//            qDebug() << "neuron test!";
+//            int neuron = 1;
+//            generator->setProperty("inhibitoryNeuronType", neuron);
+//        }
+
+
+//        if(parameter2.contains("Type")) {
+//            qDebug() << "parameter2.contains(Type) == true!";
+////            int id = QMetaType::type(generator->getType());
+//        }
+
+
+    } else {
+        qDebug() << endl << "dataAsList is empty and not an enum message! something wrong with input message formatting!" << endl;
     }
 
-    if(parameter1.contains("_") || parameter2.contains("_")) {
-        parameter1.remove(QChar('_'));
-        parameter2.remove(QChar('_'));
+
+    if(enumMessageCheck) {
+        qDebug() << "enum value setting!";
+        int enumValue = parameter2.toInt();
+        enumMetaTypeArray = parameter1.toLocal8Bit();
+        enumMetaTypeArrayChar = enumMetaTypeArray.data();
+        generator->setProperty(enumMetaTypeArray, enumValue);
+        return;
+        qDebug() << "does it continue?";
     }
 
     // if user-input control message better-matched our QProperty system formatting -> many types of messages could be handled here
-//    if(parameterControlList.contains(parameter1)) {
-//        if(inputValue < 1) inputValue = 1;
+    if(parameterControlList.contains(parameter1)) {
+        if(inputValue < 1) inputValue = 1;
 
-//        QByteArray controlMessageArray = parameter1.toLocal8Bit();
-//        const char *controlMessageArrayChar = controlMessageArray.data();
-//        generator->setProperty(controlMessageArrayChar, inputValue);
-//        return;
+        controlMessageArray = parameter1.toLocal8Bit();
+        controlMessageArrayChar = controlMessageArray.data();
+    } else {
+        qDebug() << endl << "parameter not found! error!!!" << endl;
+    }
+
+    if(booleanMessageCheck)
+
+
+    ///////// SHOULD NOT REACH HERE ///////////
+    qDebug() << endl << "!! YOU HAVE REACHED HERE !! YOU SHALL NOT PASS !!" << endl;
+
+//    if(parameter1.contains("_") || parameter2.contains("_")) {
+//        parameter1.remove(QChar('_'));
+//        parameter2.remove(QChar('_'));
 //    }
+
+
 
     // check if control message is global or generator-specific
     if(parameterControlList.value(parameter1) == "global") {
@@ -185,11 +304,11 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
                 if(neuronType == "spiking") {
                     neuron = NeuronType::SpikingNeuron;
                 } else if(neuronType == "spikingrand") {
-                    neuron = NeuronType::SpikingNeuronRandomized;
+                    neuron = NeuronType::SpikingRandomizedNeuron;
                 } else if(neuronType == "resonator") {
                     neuron = NeuronType::ResonatorNeuron;
                 } else if(neuronType == "resonatorrand") {
-                    neuron = NeuronType::ResonatorNeuronRandomized;
+                    neuron = NeuronType::ResonatorRandomizedNeuron;
                 } else if(neuronType == "chattering") {
                     neuron = NeuronType::ChatteringNeuron;
                 } else {
@@ -241,19 +360,19 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
             generator->setProperty(controlMessageArrayChar, inputValue);
 
         } else if(generator->getType() == "GameOfLife") {
-            GOLPatternType golPattern;
+            PatternType golPattern;
 
             if(parameter1 == "golpatterntype") {
                 if(parameter2 == "random") {
-                    golPattern = GOLPatternType::Random;
+                    golPattern = PatternType::Random;
                 } else if(parameter2 == "glider") {
-                    golPattern = GOLPatternType::Glider;
+                    golPattern = PatternType::Glider;
                 } else if(parameter2 == "spaceship") {
-                    golPattern = GOLPatternType::SpaceShip;
+                    golPattern = PatternType::SpaceShip;
                 } else if(parameter2 == "rpentomino") {
-                    golPattern = GOLPatternType::RPentoMino;
+                    golPattern = PatternType::RPentoMino;
                 } else if(parameter2 == "pentadecathlon") {
-                    golPattern = GOLPatternType::Pentadecathlon;
+                    golPattern = PatternType::Pentadecathlon;
                 } else {
                     qDebug() << "WARNING: invalid GameOfLife pattern type";
                     return;

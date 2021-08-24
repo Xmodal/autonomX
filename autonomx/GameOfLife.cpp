@@ -34,10 +34,11 @@ void GameOfLife::initialize() {
     drawPattern(GOLPattern);
 }
 
-void GameOfLife::drawPattern(GOLPatternType type) {
+void GameOfLife::drawPattern(PatternType type) {
+
     switch (type) {
         // Random
-        case GOLPatternType::Random: {
+        case PatternType::Random: {
             // initialize cell values
             for (int i = 0; i < (latticeHeight * latticeWidth); ++i) {
                 double magic = (float)rand() / RAND_MAX;
@@ -51,7 +52,7 @@ void GameOfLife::drawPattern(GOLPatternType type) {
         }
 
         // Glider
-        case GOLPatternType::Glider: {
+        case PatternType::Glider: {
             // initialize all cell values to zero initially
             for (int i = 0; i < (latticeHeight * latticeWidth); ++i) {
                 cells[i] = 0;
@@ -70,7 +71,7 @@ void GameOfLife::drawPattern(GOLPatternType type) {
         }
 
         // SpaceShip
-        case GOLPatternType::SpaceShip: {
+        case PatternType::SpaceShip: {
             // initialize all cell values to zero initially
             for (int i = 0; i < (latticeHeight * latticeWidth); ++i) {
                 cells[i] = 0;
@@ -96,7 +97,7 @@ void GameOfLife::drawPattern(GOLPatternType type) {
         }
 
         // RPentoMino
-        case GOLPatternType::RPentoMino: {
+        case PatternType::RPentoMino: {
             // initialize all cell values to zero initially
             for (int i = 0; i < (latticeHeight * latticeWidth); ++i) {
                 cells[i] = 0;
@@ -115,7 +116,7 @@ void GameOfLife::drawPattern(GOLPatternType type) {
         }
 
         // Pentadecathlon
-        case GOLPatternType::Pentadecathlon: {
+        case PatternType::Pentadecathlon: {
             for (int i = 0; i < (latticeHeight * latticeWidth); ++i) {
                 cells[i] = 0;
             }
@@ -248,7 +249,7 @@ int GameOfLife::getRule() {
     return rule;
 }
 
-GOLPatternType GameOfLife::getGOLPattern() const {
+PatternType GameOfLife::getPatternType() const {
     return GOLPattern;
 }
 
@@ -269,7 +270,7 @@ void GameOfLife::writeRule(int rule) {
     emit valueChanged("rule", rule);
 }
 
-void GameOfLife::writeGOLPattern(GOLPatternType GOLPattern) {
+void GameOfLife::writePatternType(PatternType GOLPattern) {
     if (this->GOLPattern == GOLPattern)
         return;
 
@@ -284,6 +285,6 @@ void GameOfLife::writeGOLPattern(GOLPatternType GOLPattern) {
     //reinitialize
     initialize();
     // make sure you follow this signal structure when you write a property!
-    emit GOLPatternChanged(GOLPattern);
+    emit patternTypeChanged(GOLPattern);
     emit valueChanged("GOLPattern", QVariant(GOLPattern));
 }

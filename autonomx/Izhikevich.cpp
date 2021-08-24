@@ -22,7 +22,7 @@ Izhikevich::Izhikevich() {
     firing = false;
     
     //set param as default Ne.
-    setNeuronType(NeuronType::SpikingNeuronRandomized);
+    setNeuronType(NeuronType::SpikingRandomizedNeuron);
     u = b * v;
     I = 0.;
     potentialThreshold = 20.;
@@ -52,7 +52,7 @@ void Izhikevich::setNeuronType(NeuronType type) {
             d = 8.;
             break;
         }
-        case NeuronType::SpikingNeuronRandomized: {
+        case NeuronType::SpikingRandomizedNeuron: {
             std::mt19937 randomGenerator;
             std::uniform_real_distribution<> randomUniform(0.0, 1.0);
             double random = randomUniform(randomGenerator);
@@ -69,7 +69,7 @@ void Izhikevich::setNeuronType(NeuronType type) {
             d = 2.;
             break;
         }
-        case NeuronType::ResonatorNeuronRandomized: {
+        case NeuronType::ResonatorRandomizedNeuron: {
             std::mt19937 randomGenerator;
             std::uniform_real_distribution<> randomUniform(0.0, 1.0);
             double random = randomUniform(randomGenerator);

@@ -91,7 +91,6 @@ HEADERS += \
     ComputeEngine.h \
     CursorOverrider.h \
     Facade.h \
-    GOLPatternType.h \
     GameOfLife.h \
     Generator.h \
     GeneratorFacade.h \
@@ -109,6 +108,7 @@ HEADERS += \
     NeuronType.h \
     OscEngine.h \
     OscEngineFacade.h \
+    PatternType.h \
     Settings.h \
     SpikingNet.h \
     WolframCA.h

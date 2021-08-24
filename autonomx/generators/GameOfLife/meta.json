@@ -5,13 +5,13 @@
 
     "racks": [
         {
-            "title": "GameOfLife Properties",
+            "title": "Game Of Life Properties",
             "fields": [
                 {
                     "label": "Pattern Type",
-                    "propName": "GOLPattern",
+                    "propName": "PatternType",
                     "type": "select",
-                    "enumName": "GOLPatternType",
+                    "enumName": "PatternType",
                     "default": 4
                 }
             ]
@@ -30,7 +30,7 @@
     ],
 
     "enumLabels": {
-        "GOLPatternType": [
+        "PatternType": [
             "Random",
             "Glider",
             "SpaceShip",

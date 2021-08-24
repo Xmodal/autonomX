@@ -19,10 +19,10 @@
 #include <QQmlEngine>
 #include <QDebug>
 
-namespace GOLType {
+namespace PatternTypeNS {
     Q_NAMESPACE
     enum Enum {
-        Random,
+        Random = 0,
         Glider,
         SpaceShip,
         RPentoMino,
@@ -31,5 +31,5 @@ namespace GOLType {
     Q_ENUMS(Enum)
 }
 
-typedef GOLType::Enum GOLPatternType;
-Q_DECLARE_METATYPE(GOLPatternType);
+typedef PatternTypeNS::Enum PatternType;
+Q_DECLARE_METATYPE(PatternType);

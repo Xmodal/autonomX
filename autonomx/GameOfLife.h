@@ -16,14 +16,14 @@
 #include <vector>
 
 #include "Generator.h"
-#include "GOLPatternType.h"
+#include "PatternType.h"
 
 class GameOfLife : public Generator
 {
     Q_OBJECT
 
     Q_PROPERTY(int rule READ getRule WRITE writeRule NOTIFY ruleChanged)
-    Q_PROPERTY(GOLPatternType GOLPattern READ getGOLPattern WRITE writeGOLPattern NOTIFY GOLPatternChanged)
+    Q_PROPERTY(PatternType PatternType READ getPatternType WRITE writePatternType NOTIFY patternTypeChanged)
 
 private:
 
@@ -38,7 +38,7 @@ private:
     int rule = 102;
 
     //pattern name
-    GOLPatternType GOLPattern = GOLPatternType::Random;
+    PatternType GOLPattern = PatternType::Random;
 
     // iteration tracker
     double totalTime = 0;
@@ -55,7 +55,7 @@ public:
      GameOfLife(int id, GeneratorMeta * meta);
     ~GameOfLife();
 
-     void drawPattern(GOLPatternType type);
+     void drawPattern(PatternType type);
 
     // overrides
     void computeIteration(double deltaTime) override;
@@ -67,12 +67,12 @@ public:
     // prop hooks
     int getRule();
     void writeRule(int rule);
-    GOLPatternType getGOLPattern() const;
-    void writeGOLPattern(GOLPatternType GOLPattern);
+    PatternType getPatternType() const;
+    void writePatternType(PatternType GOLPattern);
 
 signals:
     // QML signals
     void randSeedChanged(double randSeed);
     void ruleChanged(int rule);
-    void GOLPatternChanged(GOLPatternType GOLPattern);
+    void patternTypeChanged(PatternType GOLPattern);
 };

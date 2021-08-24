@@ -142,7 +142,7 @@ public:
 
     void writeNeuronSize(int neuronSize);
     void writeInhibitoryPortion(double inhibitoryPortion);
-//    void writeNeuronType(QString neuronMetaType, QString neuronType);
+    void writeNeuronType(QString neuronMetaType, int neuronType);
     void writeInhibitoryNeuronType(NeuronType inhibitoryNeuronType);
     void writeExcitatoryNeuronType(NeuronType excitatoryNeuronType);
     void writeInhibitoryNoise(double inhibitoryNoise);

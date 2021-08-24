@@ -23,9 +23,9 @@ namespace NeuronTypeNS {
     Q_NAMESPACE
     enum Enum {
         SpikingNeuron = 0,
-        SpikingNeuronRandomized,
+        SpikingRandomizedNeuron,
         ResonatorNeuron,
-        ResonatorNeuronRandomized,
+        ResonatorRandomizedNeuron,
         ChatteringNeuron
     };
     Q_ENUMS(Enum)

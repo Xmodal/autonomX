@@ -8,35 +8,35 @@
             "title": "Neuron behavior",
             "fields": [
                 {
-                    "label": "Inh. neuron noise",
+                    "label": "Inhibitory noise",
                     "propName": "inhibitoryNoise",
                     "type": "slider",
                     "max": 50,
                     "default": 3
                 },
                 {
-                    "label": "Exc. neuron noise",
+                    "label": "Excitatory noise",
                     "propName": "excitatoryNoise",
                     "type": "slider",
                     "max": 50,
                     "default": 5
                 },
                 {
-                    "label": "Inh. portion",
+                    "label": "Inhibitory portion",
                     "propName": "inhibitoryPortion",
                     "type": "slider",
                     "default": 0.2,
                     "updateLag": 60
                 },
                 {
-                    "label": "Inh. neuron type",
+                    "label": "Inhibitory neuron type",
                     "propName": "inhibitoryNeuronType",
                     "type": "select",
                     "enumName": "NeuronType",
                     "default": 4
                 },
                 {
-                    "label": "Exc. neuron type",
+                    "label": "Excitatory neuron type",
                     "propName": "excitatoryNeuronType",
                     "type": "select",
                     "enumName": "NeuronType",
@@ -93,9 +93,9 @@
     "enumLabels": {
         "NeuronType": [
             "Spiking",
-            "Spiking (rand.)",
+            "Spiking Randomized",
             "Resonator",
-            "Resonator (rand.)",
+            "Resonator Randomized",
             "Chattering"
         ]
     }

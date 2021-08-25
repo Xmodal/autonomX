@@ -26,7 +26,7 @@ class WolframCA : public Generator
 
     Q_PROPERTY(int rule READ getRule WRITE writeRule NOTIFY ruleChanged)
     //Q_PROPERTY(double randSeed READ getRandSeed WRITE writeRandSeed NOTIFY randSeedChanged)
-    Q_PROPERTY(bool flag_randSeed READ getFlagRandSeed WRITE writeFlagRandSeed NOTIFY flagRandSeedChanged)
+    Q_PROPERTY(bool flag_randomSeed READ getFlagRandomSeed WRITE writeFlagRandomSeed NOTIFY flagRandomSeedChanged)
 
 private:
 
@@ -47,8 +47,8 @@ private:
     int rule = 90;
 
     //random seed property
-    double randSeed = false;
-    bool flag_randSeed = false;
+    double randomSeed = false;
+    bool flag_randomSeed = false;
 
     //random generator to initialize cells
     std::mt19937 randomGenerator;
@@ -87,12 +87,12 @@ public:
     //void writeRandSeed(double randSeed);
     //double getRandSeed() const;
 
-    bool getFlagRandSeed() const;
-    void writeFlagRandSeed(bool flag_randSeed);
+    bool getFlagRandomSeed() const;
+    void writeFlagRandomSeed(bool flag_randomSeed);
 
 signals:
     // QML signals
     void ruleChanged(int rule);
     //void randSeedChanged(double randSeed);
-    void flagRandSeedChanged(bool flag_randSeed);
+    void flagRandomSeedChanged(bool flag_randomSeed);
 };

@@ -536,13 +536,19 @@ void Generator::resetParameters()
 
 void Generator::resetRegions()
 {
+
+    qDebug() << "issue 1";
     // input rectangles reset
     inputRegionSet->deleteAllRegions();
+    qDebug() << "issue 1.5";
     inputRegionSet->initialize();
 
+    qDebug() << "issue 2";
     // output rectangles reset
     outputRegionSet->deleteAllRegions();
     outputRegionSet->initialize();
+
+    qDebug() << "issue 3";
 }
 
 void Generator::initializeRegionSets()

@@ -9,7 +9,7 @@
             "fields": [
                 {
                     "label": "Pattern Type",
-                    "propName": "PatternType",
+                    "propName": "patternType",
                     "type": "select",
                     "enumName": "PatternType",
                     "default": 4

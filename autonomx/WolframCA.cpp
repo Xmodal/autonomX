@@ -196,7 +196,7 @@ void WolframCA::initialize() {
     // a var to store a random number
     double magic;
 
-    if (!flag_randSeed) {
+    if (!flag_randomSeed) {
         cells[latticeWidth * latticeHeight - 1 - latticeWidth / 2] = 1;  // middle cell on last line of the lattice is the starting seed
     }
     // if random starting seed is selected by user
@@ -236,10 +236,10 @@ void WolframCA::computeIteration(double deltaTime) {
     }
 
     //check if randomness radio button is selected or not
-    if (getFlagRandSeed())
-        flag_randSeed = true;
+    if (getFlagRandomSeed())
+        flag_randomSeed = true;
     else
-        flag_randSeed = false;
+        flag_randomSeed = false;
 
     // every 1000 iterations, currentGeneration increments and iterationNumber resets
     if (totalTime >= 1.0 / 60.0) {
@@ -387,13 +387,13 @@ void WolframCA::writeRandSeed(double randSeed) {
     emit randSeedChanged(randSeed);
 }*/
 
-bool WolframCA::getFlagRandSeed() const {
-    return this->flag_randSeed;
-    qDebug() << "flag_randSeed";
+bool WolframCA::getFlagRandomSeed() const {
+    return this->flag_randomSeed;
+    qDebug() << "flag_randomSeed";
 }
 
-void WolframCA::writeFlagRandSeed(bool flag_randSeed) {
-    if (this->flag_randSeed == flag_randSeed)
+void WolframCA::writeFlagRandomSeed(bool flag_randomSeed) {
+    if (this->flag_randomSeed == flag_randomSeed)
         return;
 
     if (flagDebug) {
@@ -403,7 +403,7 @@ void WolframCA::writeFlagRandSeed(bool flag_randSeed) {
         qDebug() << "writeFlagRandSeed:\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
-    this->flag_randSeed = flag_randSeed;
-    emit valueChanged("flag_randSeed", QVariant(flag_randSeed));
-    emit flagRandSeedChanged(flag_randSeed);
+    this->flag_randomSeed = flag_randomSeed;
+    emit valueChanged("flag_randomSeed", QVariant(flag_randomSeed));
+    emit flagRandomSeedChanged(flag_randomSeed);
 }

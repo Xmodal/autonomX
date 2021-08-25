@@ -38,7 +38,6 @@ class Generator : public QObject {
     Q_PROPERTY(QString type READ getType)
     Q_PROPERTY(QString description READ getDescription)
     Q_PROPERTY(GeneratorMeta* meta READ getMeta)
-    Q_PROPERTY(void reset RESET resetParameters)
 
     // these do change
     // generator properties

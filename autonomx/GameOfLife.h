@@ -23,7 +23,7 @@ class GameOfLife : public Generator
     Q_OBJECT
 
     Q_PROPERTY(int rule READ getRule WRITE writeRule NOTIFY ruleChanged)
-    Q_PROPERTY(PatternType PatternType READ getPatternType WRITE writePatternType NOTIFY patternTypeChanged)
+    Q_PROPERTY(PatternType patternType READ getPatternType WRITE writePatternType NOTIFY patternTypeChanged)
 
 private:
 

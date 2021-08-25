@@ -286,5 +286,5 @@ void GameOfLife::writePatternType(PatternType GOLPattern) {
     initialize();
     // make sure you follow this signal structure when you write a property!
     emit patternTypeChanged(GOLPattern);
-    emit valueChanged("GOLPattern", QVariant(GOLPattern));
+    emit valueChanged("patternType", QVariant(GOLPattern));
 }

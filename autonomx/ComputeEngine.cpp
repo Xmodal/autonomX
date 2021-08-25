@@ -87,7 +87,7 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
     QString generatorName, inputType, parameter1, parameter2;
     bool inputBool = false, booleanMessageCheck = false, valueMessageCheck = false, enumMessageCheck = false;
     QList<QVariant> dataAsList = data;
-    int inputValue = 0, enumValue = 0;
+    double inputValue = 0, enumValue = 0;
     QByteArray controlMessageArray, enumMetaTypeArray;
     const char *controlMessageArrayChar, *enumMetaTypeArrayChar;
 
@@ -135,11 +135,6 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
         }
     }
 
-    // if the first parameter is empty, message was entered incorrectly
-//    if(parameter1 == "") {
-//        qDebug() << "empty control message entered!";
-//        return;
-//    }
 
     // check if targetted generator name exists -> else, ignore
     QSharedPointer<Generator> generator = generatorsHashMap->value(generatorId);
@@ -148,33 +143,37 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
         return;
     }
 
-    qDebug() << "dataAsList check: " << dataAsList.at(0);
     // verify dataList isn't empty and then convert and sort the input value/boolean
     if(!dataAsList.isEmpty()) {
 
         qDebug() << "dataAsList is not empty";
 
-        for(int i = 0; i < dataAsList.length(); i++) {
-            if(enumMessageCheck) {
-                enumValue = dataAsList.at(0).toInt();
-                qDebug() << "enumMessageCheck passed and dataAsList.at(0) = " << enumValue;
-                break;
-            }
-            else {
+//        for(int i = 0; i < dataAsList.length(); i++) {
+        if(enumMessageCheck) {
+            enumValue = dataAsList.at(0).toInt();
+            qDebug() << "enumMessageCheck passed and dataAsList.at(0) = " << enumValue;
+//                break;
+        }
+        else {
 //                if(dataAsList.at(i).canConvert<bool>()) {
 //                    qDebug() << "received a bool data at: " << i << " >> now converting to: " << dataAsList.at(0).toBool();
 //                    inputBool = dataAsList.at(i).toBool();
 //                    booleanMessageCheck = true;
 //                } else
-                    if(dataAsList.at(i).canConvert<double>()) {
-                    qDebug() << "received a double data at: " << i << " >> now converting to: " << dataAsList.at(0).toDouble();
+//            for(int i = 0; i < dataAsList.length(); i++) {
+                if(dataAsList.at(0).canConvert<double>()) {
+                    qDebug() << "received a double data at: " << 0 << " >> now converting to: " << dataAsList.at(0).toDouble();
                     inputValue = dataAsList.at(0).toDouble();
+                    qDebug() << "inputValue = " << inputValue;
                     valueMessageCheck = true;
                 } else {
-                    qDebug() << "received neither bool nor double at: " << i << " in dataAsList";
+                    qDebug() << "received neither bool nor double at: " << 0 << " in dataAsList";
                 }
-            }
+//            }
         }
+//        }
+    } else {
+        qDebug() << "dataAsList is empty! -> " << dataAsList;
     }
     if(enumMessageCheck) {
 
@@ -218,6 +217,10 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
 
     }
 
+
+    ///// OSC External Control Message Execution Section /////
+
+    // executes BOOLEAN control messages
     if(booleanMessageCheck) {
         parameter1.prepend("flag_");
         qDebug() << "parameter1 final check: " << parameter1;
@@ -236,50 +239,67 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
         qDebug() << endl << "dataAsList is empty and not an enum message! something wrong with input message formatting!" << endl;
     }
 
+    qDebug() << "parameter1: " << parameter1;
+    qDebug() << "parameterControlList.value(parameter1) = " << parameterControlList.value(parameter1);
+    // check if control message is global or generator-specific
+    if(parameterControlList.value(parameter1) == "global") {
+        qDebug() << "found global param";
+        if(inputValue < 1) inputValue = 1;
 
-    // if user-input control message better-matched our QProperty system formatting -> many types of messages could be handled here
+        // control message is global parameter
+        if(parameter1 == "width" || parameter1 == "height") {
+            parameter1[0] = parameter1[0].toUpper();
+            parameter1.prepend("lattice");
+//            generator->writeLatticeWidth(inputValue);
+//        } else if(parameter1 == "height") {
+//            generator->writeLatticeHeight(inputValue);
+//        }
+//        else if(parameter1 == "speed") {
+//            generator->writeSpeed(inputValue);
+        }
+        if(parameter1 == "restart") {
+            generator->initialize();
+        } else if(parameter1 == "reset") {
+            generator->resetParameters();
+        } else if(parameter1 == "resetRegions") {
+//            generator->resetRegions();
+
+        } else {
+            qDebug() << endl << "now executing a global param message!";
+            qDebug() << parameter1 << " : " << inputValue;
+            controlMessageArray = parameter1.toLocal8Bit();
+            controlMessageArrayChar = controlMessageArray.data();
+            generator->setProperty(controlMessageArrayChar, inputValue);
+        }
+        return;
+    }
+
+    // executes GENERATOR INPUT VALUE and ENUM control messages
     if(parameterControlList.contains(parameter1)) {
 //        if(inputValue < 1) inputValue = 1;
 
+        qDebug() << endl << "now executing an input value message or enum message!";
         controlMessageArray = parameter1.toLocal8Bit();
         controlMessageArrayChar = controlMessageArray.data();
         generator->setProperty(controlMessageArrayChar, inputValue);
+        return;
     } else {
         qDebug() << endl << "parameter not found! error!!!" << endl;
     }
 
 
+
+
     ///////// SHOULD NOT REACH HERE ///////////
     qDebug() << endl << "!! YOU HAVE REACHED HERE !! YOU SHALL NOT PASS !!" << endl;
 
-//    if(parameter1.contains("_") || parameter2.contains("_")) {
-//        parameter1.remove(QChar('_'));
-//        parameter2.remove(QChar('_'));
-//    }
+    return;
 
 
 
-    // check if control message is global or generator-specific
-    if(parameterControlList.value(parameter1) == "global") {
-        if(inputValue < 1) inputValue = 1;
 
-        // control message is global parameter
-        if(parameter1 == "width") {
-            generator->writeLatticeWidth(inputValue);
-        } else if(parameter1 == "height") {
-            generator->writeLatticeHeight(inputValue);
-        } else if(parameter1 == "speed") {
-            generator->writeSpeed(inputValue);
-        } else if(parameter1 == "restart") {
-            generator->initialize();
-        } else if(parameter1 == "reset") {
-            generator->resetParameters();
-        } else if(parameter1 == "resetregions") {
-            generator->resetRegions();
-        }
-    }
     // control message is not global param
-    else {
+//    else {
 
         // TODO: codify control messages with internal naming system
         // -> this will maximize advantage of QProperty system
@@ -423,7 +443,7 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
             generator->setProperty(controlMessageChar, inputDouble);
         }
     }
-}
+//}
 
 void ComputeEngine::addGenerator(QSharedPointer<Generator> generator) {
     if(flagDebug) {
@@ -582,10 +602,10 @@ void ComputeEngine::registerParameterControls(int generatorId) {
     if(firstPass) {
         parameterControlList["width"] = "global";
         parameterControlList["height"] = "global";
-        parameterControlList["time_scale"] = "global";
+        parameterControlList["speed"] = "global";
         parameterControlList["restart"] = "global";
         parameterControlList["reset"] = "global";
-        parameterControlList["reset_regions"] = "global";
+        parameterControlList["resetRegions"] = "global";
 
         firstPass = false;
     }

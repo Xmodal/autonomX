@@ -167,6 +167,7 @@ void GeneratorMeta::registerMeta() {
         QVariantList labelValues = enums[key].toArray().toVariantList();
         enumLabels.insert(key, labelValues);
         qDebug() << endl << "enumLabels >> key: " << key << " labelValues: " << labelValues;
+        qDebug() << enumLabels.value(key);
     }
 
     for(int i = 0; i < fields.length(); i++) {

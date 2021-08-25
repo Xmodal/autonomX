@@ -87,7 +87,7 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
     QString generatorName, inputType, parameter1, parameter2;
     bool inputBool = false, booleanMessageCheck = false, valueMessageCheck = false, enumMessageCheck = false;
     QList<QVariant> dataAsList = data;
-    int inputValue = 0;
+    int inputValue = 0, enumValue = 0;
     QByteArray controlMessageArray, enumMetaTypeArray;
     const char *controlMessageArrayChar, *enumMetaTypeArrayChar;
 
@@ -119,10 +119,18 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
             break;
         case 2:
             parameter1 = controlMessageList.at(2);
+            qDebug() << "parameter1 = " << parameter1;
+            // if parameter contains the word "Type" this indicates that the passed message is an enum value
+            if(parameter1.contains("Type")) {
+                enumMessageCheck = true;
+                qDebug() << "param1 contains Type";
+            }
             break;
         case 3:
             parameter2 = controlMessageList.at(3);
-            enumMessageCheck = true;
+            qDebug() << "parameter2 = " << parameter2;
+            // if there is a second argument message this indicates that the passed message is turning on/off a parameter
+            booleanMessageCheck = true;
             break;
         }
     }
@@ -140,121 +148,105 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
         return;
     }
 
+    qDebug() << "dataAsList check: " << dataAsList.at(0);
     // verify dataList isn't empty and then convert and sort the input value/boolean
     if(!dataAsList.isEmpty()) {
 
         qDebug() << "dataAsList is not empty";
 
         for(int i = 0; i < dataAsList.length(); i++) {
-            if(dataAsList.at(i).canConvert<bool>()) {
-                qDebug() << "received a bool data at: " << i << " >> now converting to: " << dataAsList.at(0).toBool();
-                inputBool = dataAsList.at(i).toBool();
-                booleanMessageCheck = true;
-            } else if(dataAsList.at(i).canConvert<double>()) {
-                qDebug() << "received a double data at: " << i << " >> now converting to: " << dataAsList.at(0).toDouble();
-                inputValue = dataAsList.at(0).toDouble();
-                valueMessageCheck = true;
-            } else {
-                qDebug() << "received neither bool nor double at: " << i << " in dataAsList";
+            if(enumMessageCheck) {
+                enumValue = dataAsList.at(0).toInt();
+                qDebug() << "enumMessageCheck passed and dataAsList.at(0) = " << enumValue;
+                break;
+            }
+            else {
+//                if(dataAsList.at(i).canConvert<bool>()) {
+//                    qDebug() << "received a bool data at: " << i << " >> now converting to: " << dataAsList.at(0).toBool();
+//                    inputBool = dataAsList.at(i).toBool();
+//                    booleanMessageCheck = true;
+//                } else
+                    if(dataAsList.at(i).canConvert<double>()) {
+                    qDebug() << "received a double data at: " << i << " >> now converting to: " << dataAsList.at(0).toDouble();
+                    inputValue = dataAsList.at(0).toDouble();
+                    valueMessageCheck = true;
+                } else {
+                    qDebug() << "received neither bool nor double at: " << i << " in dataAsList";
+                }
             }
         }
-    } else if(enumMessageCheck) {
-
-        // get instance of meta
-        GeneratorMeta* meta = generator->getMeta();
-        QString enumMetaTypeName, enumValueName = parameter2;
+    }
+    if(enumMessageCheck) {
 
         qDebug() << "passed enumMessageCheck";
 
         // if parameter1 is a valid generator param
         if(parameterControlList.contains(parameter1)) {
-            // if the value stored at parameter1 in map is an enum MetaType
+            // if the value stored at parameter1 in map is NOT an enum MetaType -> message invalid
             if(parameterControlList.value(parameter1) == "none" || parameterControlList.value(parameter1) == "global") {
-//                parameter1 = parameterControlList.value(parameter1);
-                // enum MetaType identified
-//                enumMetaTypeName = parameter1;
-//                qDebug() << "correctly located enumType from parameterControlList: " << enumMetaTypeName;
-                enumMessageCheck = false;
+                qDebug() << "invalid enum message entered";
+                return;
             }
         }
 
-        // iterate through enumLabels to see if the enumMetaType is present
-//        QMapIterator<QString, QVariant>enumMetaTypesIterator(meta->getEnumLabels());
-//        while(enumMetaTypesIterator.hasNext()) {
-//            enumMetaTypesIterator.next();
-//            // enumMetaType found in enumLabels
-//            if(enumMetaTypesIterator.key() == enumMetaTypeName) {
-//                qDebug() << "enumLabel found in map!";
+        qDebug() << "final enum check: enumMetaTypeArray = " << parameter1 << " and enumValue = " << enumValue;
 
-//                // create a list of the possible values in this enum MetaType
-//                QVariant enumValues = enumMetaTypesIterator.value();
-//                QList<QVariant> enumValueList = enumValues.toList();
-//                // iterate through that list to find a match for the enum value
-//                for(int i = 0; i < enumValueList.length(); i++) {
-//                    qDebug() << "enumValueList at i = " << enumValueList.at(i);
-//                    qDebug() << "enumValueList at i .toString = " << enumValueList.at(i).toString();
-//                    // if match is found -> enum value identified
-//                    if(enumValueList.at(i).toString() == enumValueName) {
+        // WORKING!!!! for enum
+//        if(valueMessageCheck) enumValue = inputValue.toInt();
+//        enumMetaTypeArray = parameter1.toLocal8Bit();
+//        enumMetaTypeArrayChar = enumMetaTypeArray.data();
+//        generator->setProperty(enumMetaTypeArray, enumValue);
+//        return;
+        controlMessage = parameter1;
+        inputValue = enumValue - 1;
 
-//                        qDebug() << "parameter2 located in enumValueList! >> " << enumValueList.at(i);
-////                        QString enumTypeString = enumMetaTypesIterator.key();
-//                        enumTypeArray = enumMetaTypeName.toLocal8Bit();
-//                        enumTypeArrayChar = enumTypeArray.data();
-//                        int id = QMetaType::type(enumTypeArrayChar);
-//                        qDebug() << "id = " << id;
-//                        void *myClassPtr = QMetaType::create(id);
-//                        qDebug() << "classPtr = " << myClassPtr;
-////                        qDebug() << "var = " << var;
+        qDebug() << endl << "enumLabels check";
+        QVariantMap enumLabels = generator->getMeta()->getEnumLabels();
+        qDebug() << "enumLabels size check: " << enumLabels.empty();
+        if(enumLabels.contains(parameterControlList.value(parameter1))) {
+            qDebug() << "enumLabels contains " << parameterControlList.value(parameter1);
+//            QVariant enumValues = enumLabels.value(parameter1);
+//            QVariantList enumValues = enumLabels.value(parameter1)
+            QList enumValues = generator->getMeta()->getEnumLabels().value(parameterControlList.value(parameter1)).toStringList();
+            qDebug() << "values at " << parameterControlList.value(parameter1) << " are: " << enumValues;
+            qDebug() << "enumValues list size: " << enumValues.length();
+            if(enumValues.length() < (inputValue + 1) || inputValue < 0) {
+                qDebug() << "enum value entered is out of range (doesn't exist)!";
+                return;
+            }
+        }
 
-//                    }
-//                }
-//                qDebug() << "value = " << enumValues;
-//            }
-//            qDebug() << "enumMapKey: " << enumMetaTypesIterator.key();
-//            qDebug() << "after";
-//        }
+    }
 
-//        qDebug() << "param1 check: " << parameter1;
+    if(booleanMessageCheck) {
+        parameter1.prepend("flag_");
+        qDebug() << "parameter1 final check: " << parameter1;
+        controlMessageArray = parameter1.toLocal8Bit();
+        controlMessageArrayChar = controlMessageArray.data();
+        if(parameter2.toLower() == "on") {
+            inputBool = true;
+            qDebug() << "inputBool = true";
+        }
+        generator->setProperty(controlMessageArrayChar, inputBool);
+        qDebug() << "boolean message executed";
+        return;
+    }
 
-//        if(parameter1.contains("Neuron")) {
-//            qDebug() << "neuron test!";
-//            int neuron = 1;
-//            generator->setProperty("inhibitoryNeuronType", neuron);
-//        }
-
-
-//        if(parameter2.contains("Type")) {
-//            qDebug() << "parameter2.contains(Type) == true!";
-////            int id = QMetaType::type(generator->getType());
-//        }
-
-
-    } else {
+    else {
         qDebug() << endl << "dataAsList is empty and not an enum message! something wrong with input message formatting!" << endl;
     }
 
 
-    if(enumMessageCheck) {
-        qDebug() << "enum value setting!";
-        int enumValue = parameter2.toInt();
-        enumMetaTypeArray = parameter1.toLocal8Bit();
-        enumMetaTypeArrayChar = enumMetaTypeArray.data();
-        generator->setProperty(enumMetaTypeArray, enumValue);
-        return;
-        qDebug() << "does it continue?";
-    }
-
     // if user-input control message better-matched our QProperty system formatting -> many types of messages could be handled here
     if(parameterControlList.contains(parameter1)) {
-        if(inputValue < 1) inputValue = 1;
+//        if(inputValue < 1) inputValue = 1;
 
         controlMessageArray = parameter1.toLocal8Bit();
         controlMessageArrayChar = controlMessageArray.data();
+        generator->setProperty(controlMessageArrayChar, inputValue);
     } else {
         qDebug() << endl << "parameter not found! error!!!" << endl;
     }
-
-    if(booleanMessageCheck)
 
 
     ///////// SHOULD NOT REACH HERE ///////////

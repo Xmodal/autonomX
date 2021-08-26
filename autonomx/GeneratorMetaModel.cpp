@@ -18,11 +18,6 @@ void GeneratorMetaModel::insertAtEnd(QString type)
     // create new GeneratorMeta instance
     // and append to meta map
     metaMap.insert(type, new GeneratorMeta(type));
-
-//    generatorTypes.append(type);
-
-//    generatorTypeCount++;
-
     endInsertAtEnd();
 }
 
@@ -30,14 +25,6 @@ void GeneratorMetaModel::endInsertAtEnd()
 {
     endInsertRows();
 }
-
-//int GeneratorMetaModel::getGeneratorTypeCount() {
-//    return generatorTypeCount;
-//}
-
-//QList<QString> GeneratorMetaModel::getGeneratorTypes() {
-//    return generatorTypes;
-//}
 
 int GeneratorMetaModel::rowCount(const QModelIndex &parent) const
 {

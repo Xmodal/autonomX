@@ -117,22 +117,11 @@ void OscEngine::receiveOscDataHandler(int generatorId, const QString& oscAddress
         qDebug() << "receiveOscDataHandler (OscEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << generatorId << "\taddress = " << oscAddress << "\tmessage = " << message;
     }
 
-    QString oscAddressExpected = oscReceiverAddress;
-
     if(!controlMessageBool) {
-        if(oscAddress == oscAddressExpected) {
-            // message received with right address
             emit receiveOscData(generatorId, message);
-        }
     } else if(controlMessageBool) {
-        if(oscAddress.contains(oscAddressExpected)) {
             QString generatorControlMessage = oscAddress;
-            generatorControlMessage.remove(0, 7);
             emit receiveOscGeneratorControlMessage(generatorId, message, generatorControlMessage);
-        } else {
-            // control message received but something wrong with message address format
-            qDebug() << "Incorrect Control Message Format!";
-        }
     }
 }
 

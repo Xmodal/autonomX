@@ -52,7 +52,6 @@ void OscReceiver::readyReadCb() {
         QString oscAddress;
         controlMessageBool = false;
 
-//        qDebug() << "oscReceiver class data message: " << data;
         if(data.contains("parameter")) {
             controlMessageBool = true;
         }

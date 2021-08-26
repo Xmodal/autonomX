@@ -85,28 +85,24 @@ void ComputeEngine::receiveOscData(int generatorId, QVariantList data) {
 
 void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantList data, QString controlMessage) {
     QString generatorName, inputType, parameter1, parameter2;
-    bool inputBool = false, booleanMessageCheck = false, valueMessageCheck = false, enumMessageCheck = false;
+    bool inputBool = false, booleanMessageCheck = false, enumMessageCheck = false;
     QList<QVariant> dataAsList = data;
-    double inputValue = 0, enumValue = 0;
-    QByteArray controlMessageArray, enumMetaTypeArray;
-    const char *controlMessageArrayChar, *enumMetaTypeArrayChar;
+    double inputValue = 0;
+    QByteArray controlMessageArray;
+    const char *controlMessageArrayChar;
 
     // check if generator exists -> if not, ignore
     if(!generatorsHashMap->contains(generatorId)) return;
 
     // split input osc control message into list, items separated by placement of '/' in original message
     QStringList controlMessageList = controlMessage.split(QLatin1Char('/'));
-    if(controlMessageList.length() < 2) return;
 
     // remove any blank or empty strings in controlMessageList
     for(int i = 0; i < controlMessageList.length(); i++) {
         if (controlMessageList.at(i) == "" || controlMessageList.at(i).isEmpty()) {
             controlMessageList.removeAt(i);
-            qDebug() << "found empty item in controlMessageList at: " << i;
         }
     }
-
-    qDebug() << "receiveOscControlMessage! >> " << controlMessage;
 
     // assign split osc message pieces to corresponding variables
     for(int i = 0; i < controlMessageList.length(); i++) {
@@ -119,331 +115,93 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
             break;
         case 2:
             parameter1 = controlMessageList.at(2);
-            qDebug() << "parameter1 = " << parameter1;
             // if parameter contains the word "Type" this indicates that the passed message is an enum value
             if(parameter1.contains("Type")) {
                 enumMessageCheck = true;
-                qDebug() << "param1 contains Type";
             }
             break;
         case 3:
             parameter2 = controlMessageList.at(3);
-            qDebug() << "parameter2 = " << parameter2;
             // if there is a second argument message this indicates that the passed message is turning on/off a parameter
             booleanMessageCheck = true;
             break;
         }
     }
 
-
     // check if targetted generator name exists -> else, ignore
     QSharedPointer<Generator> generator = generatorsHashMap->value(generatorId);
     if(!(generatorName == generator->getGeneratorName())) {
         // name not found -> skip and return
+        qDebug() << "ERROR: Invalid Generator name entered!";
         return;
     }
 
-    // verify dataList isn't empty and then convert and sort the input value/boolean
+    // verify dataList isn't empty and then convert to double and assign for input
     if(!dataAsList.isEmpty()) {
-
-        qDebug() << "dataAsList is not empty";
-
-//        for(int i = 0; i < dataAsList.length(); i++) {
-        if(enumMessageCheck) {
-            enumValue = dataAsList.at(0).toInt();
-            qDebug() << "enumMessageCheck passed and dataAsList.at(0) = " << enumValue;
-//                break;
+        if(dataAsList.at(0).canConvert<double>()) {
+            inputValue = dataAsList.at(0).toDouble();
         }
-        else {
-//                if(dataAsList.at(i).canConvert<bool>()) {
-//                    qDebug() << "received a bool data at: " << i << " >> now converting to: " << dataAsList.at(0).toBool();
-//                    inputBool = dataAsList.at(i).toBool();
-//                    booleanMessageCheck = true;
-//                } else
-//            for(int i = 0; i < dataAsList.length(); i++) {
-                if(dataAsList.at(0).canConvert<double>()) {
-                    qDebug() << "received a double data at: " << 0 << " >> now converting to: " << dataAsList.at(0).toDouble();
-                    inputValue = dataAsList.at(0).toDouble();
-                    qDebug() << "inputValue = " << inputValue;
-                    valueMessageCheck = true;
-                } else {
-                    qDebug() << "received neither bool nor double at: " << 0 << " in dataAsList";
-                }
-//            }
-        }
-//        }
-    } else {
-        qDebug() << "dataAsList is empty! -> " << dataAsList;
     }
+
+    // verify that enum value entered is not out of range
     if(enumMessageCheck) {
-
-        qDebug() << "passed enumMessageCheck";
-
-        // if parameter1 is a valid generator param
-        if(parameterControlList.contains(parameter1)) {
-            // if the value stored at parameter1 in map is NOT an enum MetaType -> message invalid
-            if(parameterControlList.value(parameter1) == "none" || parameterControlList.value(parameter1) == "global") {
-                qDebug() << "invalid enum message entered";
-                return;
-            }
-        }
-
-        qDebug() << "final enum check: enumMetaTypeArray = " << parameter1 << " and enumValue = " << enumValue;
-
-        // WORKING!!!! for enum
-//        if(valueMessageCheck) enumValue = inputValue.toInt();
-//        enumMetaTypeArray = parameter1.toLocal8Bit();
-//        enumMetaTypeArrayChar = enumMetaTypeArray.data();
-//        generator->setProperty(enumMetaTypeArray, enumValue);
-//        return;
-        controlMessage = parameter1;
-        inputValue = enumValue - 1;
-
-        qDebug() << endl << "enumLabels check";
-        QVariantMap enumLabels = generator->getMeta()->getEnumLabels();
-        qDebug() << "enumLabels size check: " << enumLabels.empty();
-        if(enumLabels.contains(parameterControlList.value(parameter1))) {
-            qDebug() << "enumLabels contains " << parameterControlList.value(parameter1);
-//            QVariant enumValues = enumLabels.value(parameter1);
-//            QVariantList enumValues = enumLabels.value(parameter1)
+        inputValue = inputValue - 1;
+        // check GeneratorMeta::enumLabels Map for an enum type that corresponds to the osc message parameter
+        if(generator->getMeta()->getEnumLabels().contains(parameterControlList.value(parameter1))) {
+            // create a list of all the enum values are associated that that enum
             QList enumValues = generator->getMeta()->getEnumLabels().value(parameterControlList.value(parameter1)).toStringList();
-            qDebug() << "values at " << parameterControlList.value(parameter1) << " are: " << enumValues;
-            qDebug() << "enumValues list size: " << enumValues.length();
             if(enumValues.length() < (inputValue + 1) || inputValue < 0) {
-                qDebug() << "enum value entered is out of range (doesn't exist)!";
+                // if value entered is out of range for this enum type -> error
+                qDebug() << "ERROR: value entered is out of range (doesn't exist) for this parameter!";
                 return;
             }
         }
-
     }
-
 
     ///// OSC External Control Message Execution Section /////
 
     // executes BOOLEAN control messages
     if(booleanMessageCheck) {
         parameter1.prepend("flag_");
-        qDebug() << "parameter1 final check: " << parameter1;
         controlMessageArray = parameter1.toLocal8Bit();
         controlMessageArrayChar = controlMessageArray.data();
         if(parameter2.toLower() == "on") {
             inputBool = true;
-            qDebug() << "inputBool = true";
         }
         generator->setProperty(controlMessageArrayChar, inputBool);
-        qDebug() << "boolean message executed";
         return;
     }
 
-    else {
-        qDebug() << endl << "dataAsList is empty and not an enum message! something wrong with input message formatting!" << endl;
-    }
-
-    qDebug() << "parameter1: " << parameter1;
-    qDebug() << "parameterControlList.value(parameter1) = " << parameterControlList.value(parameter1);
-    // check if control message is global or generator-specific
-    if(parameterControlList.value(parameter1) == "global") {
-        qDebug() << "found global param";
-        if(inputValue < 1) inputValue = 1;
+    qDebug() << "parameter1: " << parameter1 << " parameterControlList.value(parameter1) = " << parameterControlList.value(parameter1);
 
         // control message is global parameter
         if(parameter1 == "width" || parameter1 == "height") {
+            if(inputValue < 1) inputValue = 1;
             parameter1[0] = parameter1[0].toUpper();
             parameter1.prepend("lattice");
-//            generator->writeLatticeWidth(inputValue);
-//        } else if(parameter1 == "height") {
-//            generator->writeLatticeHeight(inputValue);
-//        }
-//        else if(parameter1 == "speed") {
-//            generator->writeSpeed(inputValue);
         }
+
         if(parameter1 == "restart") {
             generator->initialize();
         } else if(parameter1 == "reset") {
             generator->resetParameters();
         } else if(parameter1 == "resetRegions") {
 //            generator->resetRegions();
-
-        } else {
-            qDebug() << endl << "now executing a global param message!";
-            qDebug() << parameter1 << " : " << inputValue;
-            controlMessageArray = parameter1.toLocal8Bit();
-            controlMessageArrayChar = controlMessageArray.data();
-            generator->setProperty(controlMessageArrayChar, inputValue);
         }
-        return;
-    }
 
     // executes GENERATOR INPUT VALUE and ENUM control messages
     if(parameterControlList.contains(parameter1)) {
-//        if(inputValue < 1) inputValue = 1;
-
-        qDebug() << endl << "now executing an input value message or enum message!";
+        qDebug() << "executes in catch-all";
         controlMessageArray = parameter1.toLocal8Bit();
         controlMessageArrayChar = controlMessageArray.data();
         generator->setProperty(controlMessageArrayChar, inputValue);
         return;
-    } else {
-        qDebug() << endl << "parameter not found! error!!!" << endl;
     }
 
-
-
-
-    ///////// SHOULD NOT REACH HERE ///////////
-    qDebug() << endl << "!! YOU HAVE REACHED HERE !! YOU SHALL NOT PASS !!" << endl;
-
+    ///////// Only Reaches here if message did not fit any acceptable OSC Input Message format ///////////
+    qDebug() << "ERROR: Invalid OSC Input Message!";
     return;
-
-
-
-
-    // control message is not global param
-//    else {
-
-        // TODO: codify control messages with internal naming system
-        // -> this will maximize advantage of QProperty system
-        // -> can condense code below to a fraction of the size
-
-        // now handles control message separately dependending on the type of generator
-        if(generator->getType() == "SpikingNet") {
-
-            if(parameter1.contains("neurontype")) {
-                QString neuronType = parameter2;
-                NeuronType neuron;
-
-                // search for / assign neuron type
-                if(neuronType == "spiking") {
-                    neuron = NeuronType::SpikingNeuron;
-                } else if(neuronType == "spikingrand") {
-                    neuron = NeuronType::SpikingRandomizedNeuron;
-                } else if(neuronType == "resonator") {
-                    neuron = NeuronType::ResonatorNeuron;
-                } else if(neuronType == "resonatorrand") {
-                    neuron = NeuronType::ResonatorRandomizedNeuron;
-                } else if(neuronType == "chattering") {
-                    neuron = NeuronType::ChatteringNeuron;
-                } else {
-                    qDebug() << "WARNING: invalid neuron type";
-                    return;
-                }
-
-                if(parameter1 == "excitatoryneurontype") {
-                    generator->setProperty("excitatoryNeuronType", neuron);
-                } else if(parameter1 == "inhibitoryneurontype") {
-                    generator->setProperty("inhibitoryNeuronType", neuron);
-                } else {
-                    qDebug() << "WARNING: invalid neuron meta type";
-                }
-            } else if(parameter1 == "stpstrength") {
-                parameter1 = "STPStrength";
-            } else if(parameter1 == "stpdstrength") {
-                parameter1 = "STDPStrength";
-            } else if(parameter1 == "decayhalflife") {
-                parameter1 = "decayHalfLife";
-            }
-
-            // indicates a learning control message
-            if(parameter2 == "on" || parameter2 == "off") {
-                bool toggleDirection = false;
-                parameter1.prepend("flag_");
-                if(parameter2 == "on") toggleDirection = true;
-
-                QByteArray neuronMessageArray = parameter1.toLocal8Bit();
-                const char *neuronMessageChar = neuronMessageArray.data();
-
-                // execute learning control message
-                generator->setProperty(neuronMessageChar, toggleDirection);
-                return;
-            }
-
-            if(parameter1 == "inhibitoryneuronnoise") {
-                parameter1 = "inhibitoryNoise";
-            } else if(parameter1 == "excitatoryneuronnoise") {
-                parameter1 = "excitatoryNoise";
-            } else if(parameter1 == "inhibitoryportion") {
-                parameter1 = "inhibitoryPortion";
-            }
-
-            // message has now been sorted and formatted
-            // make changes uses QProperty system
-            QByteArray controlMessageArray = parameter1.toLocal8Bit();
-            const char *controlMessageArrayChar = controlMessageArray.data();
-            generator->setProperty(controlMessageArrayChar, inputValue);
-
-        } else if(generator->getType() == "GameOfLife") {
-            PatternType golPattern;
-
-            if(parameter1 == "golpatterntype") {
-                if(parameter2 == "random") {
-                    golPattern = PatternType::Random;
-                } else if(parameter2 == "glider") {
-                    golPattern = PatternType::Glider;
-                } else if(parameter2 == "spaceship") {
-                    golPattern = PatternType::SpaceShip;
-                } else if(parameter2 == "rpentomino") {
-                    golPattern = PatternType::RPentoMino;
-                } else if(parameter2 == "pentadecathlon") {
-                    golPattern = PatternType::Pentadecathlon;
-                } else {
-                    qDebug() << "WARNING: invalid GameOfLife pattern type";
-                    return;
-                }
-            }
-
-            // TODO: FIX GOLPattern QProperty
-            // -> only accepts QString "GOLPattern"
-            // -> should generically accept char array as commented out below ->
-//                QByteArray patternTypeArray = parameter1.toLocal8Bit();
-//                const char *patternTypeArrayChar = patternTypeArray.data();
-//                generator->setProperty(patternTypeArrayChar, golPattern);
-
-            // set GOL pattern type
-            generator->setProperty("GOLPattern", golPattern);
-
-        } else if(generator->getType() == "WolframCA") {
-
-            // check if message targets random_seed
-            if(parameter1 == "randomseed") {
-                parameter1 = "flag_randSeed";
-
-                if(parameter2 == "on" || parameter2 == "off") {
-                    bool toggleDirection = false;
-                    if(parameter2 == "on") toggleDirection = true;
-
-                    QByteArray randSeedArray = parameter1.toLocal8Bit();
-                    const char *randSeedArrayChar = randSeedArray.data();
-                    // execute randomSeed toggle
-                    generator->setProperty(randSeedArrayChar, toggleDirection);
-                }
-            }
-
-            // otherwise must be targetting rule number
-            else {
-                // TODO: FIX WolframCA rule QProperty
-                // -> only accepts QString "rule"
-                // but should generically accept char array as commented out below ->
-//                QByteArray ruleArray = parameter1.toLocal8Bit();
-//                const char *ruleArrayChar = ruleArray.data();
-//                generator->setProperty(ruleArrayChar, inputValue);
-                generator->setProperty("rule", inputValue);
-            }
-        }
-        // if not any pre-built generator type or global parameter
-        // param change will only execute if osc control message matches the associated QProperty *exactly*
-        // -> see documentation for more details
-        else {
-            int input = dataAsList.at(0).toInt();
-            double inputDouble = input;
-
-            QByteArray controlMessageArray = controlMessage.toLocal8Bit();
-            const char *controlMessageChar = controlMessageArray.data();
-
-            // execute control message of any generic format that was not for pre-built generators
-            generator->setProperty(controlMessageChar, inputDouble);
-        }
-    }
-//}
+}
 
 void ComputeEngine::addGenerator(QSharedPointer<Generator> generator) {
     if(flagDebug) {
@@ -602,6 +360,8 @@ void ComputeEngine::registerParameterControls(int generatorId) {
     if(firstPass) {
         parameterControlList["width"] = "global";
         parameterControlList["height"] = "global";
+        parameterControlList["latticeWidth"] = "global";
+        parameterControlList["latticeHeight"] = "global";
         parameterControlList["speed"] = "global";
         parameterControlList["restart"] = "global";
         parameterControlList["reset"] = "global";

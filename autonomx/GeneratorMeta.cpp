@@ -166,14 +166,10 @@ void GeneratorMeta::registerMeta() {
     for (QString key : enums.keys()) {
         QVariantList labelValues = enums[key].toArray().toVariantList();
         enumLabels.insert(key, labelValues);
-        qDebug() << endl << "enumLabels >> key: " << key << " labelValues: " << labelValues;
-        qDebug() << enumLabels.value(key);
     }
 
     for(int i = 0; i < fields.length(); i++) {
         generatorsParameterList[(fields[i])->propName] = fields[i]->enumName;
-        qDebug() << "input param: " << fields[i]->propName;
-        qDebug() << "enum name: " << fields[i]->enumName;
     }
 
     // close main JSON file when done !

@@ -51,9 +51,6 @@ void ComputeEngine::receiveOscData(int generatorId, QVariantList data, QString g
         throw std::runtime_error("generator does not exist");
     }
 
-    qDebug() << "ComputeEngine::receiveOscData arrive!";
-    qDebug() << "generatorAddress: " << generatorAddress;
-
     QSharedPointer<Generator> generator = generatorsHashMap->value(generatorId);
     QList<QVariant> dataAsList = data;
     int argumentsTotal = data.size();
@@ -68,9 +65,6 @@ void ComputeEngine::receiveOscData(int generatorId, QVariantList data, QString g
         return;
     }
 
-//    qDebug() << "generatorAddressList.length = " << generatorAddressList.length();
-//    qDebug() << "contents = " << generatorAddressList;
-
     // check to see if input message is for specific generator region or all regions
     if(generatorAddressList.length() > 3) {
         generatorRegion = generatorAddressList.at(3).toInt();
@@ -79,7 +73,7 @@ void ComputeEngine::receiveOscData(int generatorId, QVariantList data, QString g
             input = dataAsList.at(0).toDouble();
 
             // ensure generator region isn't out of range
-            if(generator->getInputRegionSet()->rowCount() >= generatorRegion) {
+            if(generator->getInputRegionSet()->rowCount() >= generatorRegion && generatorRegion > 0) {
 
                 // if generator region is valid -> execute input message on specified input region
                 generator->getInputRegionSet()->at(generatorRegion - 1)->writeIntensity(input);
@@ -90,6 +84,7 @@ void ComputeEngine::receiveOscData(int generatorId, QVariantList data, QString g
             }
         }
     } else {
+
         // execute input message on all regions of this generator
         for(int i = 0; i < generator->getInputRegionSet()->rowCount(); i++) {
             // set default to 0
@@ -300,44 +295,27 @@ void ComputeEngine::loop() {
     elapsedTimer.restart();
     elapsedTimer.start();
 
-    // check if input value received via OSC this loop
+    // check if input value received via OSC this loop or last loop
     if(inputValueReceived) {
         // apply input values
         for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
             (*it)->applyInputRegion();
-            qDebug() << "applying a region";
         }
 
-        qDebug() << "inputValueReceived check: " << inputValueReceived;
         // reset check to prevent values being erased on every loop
         inputValueReceived = false;
+        // reset check to prevent values being rewritten on every loop
         generatorWrittenLastLoop = true;
 
     } else if(generatorWrittenLastLoop){
-
-        qDebug() << "input regions being reset";
-
-//        for(int j = 0; j < generatorsList->length(); j++) {
-//            qDebug() << "generator at " << j << " = " << generatorsList[j]
-//        }
-
         QSharedPointer<Generator> generator = generatorsHashMap->value(generatorIdWritten);
 
-
+        // reset all previously altered input regions back to 0
         for(int i = 0; i < generator->getInputRegionSet()->rowCount(); i++) {
-            // set default to 0
-
             // write to input
             generator->getInputRegionSet()->at(i)->writeIntensity(0);
         }
-
-
-
-//        for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
-//            (*it)->applyInputRegion();
-//        }
         generator->applyInputRegion();
-
         generatorWrittenLastLoop = false;
     }
 

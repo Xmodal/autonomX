@@ -192,6 +192,8 @@ protected:
     double speed = 100;
 private:
     int id;                                     // generator id, generated automatically by ComputeEngine in constructor
+    static const char *GameOfLife;              // used for comparing generator types
+    static const char *WolframCa;               // used for comparing generator types
 
     GeneratorMeta * meta;                       // contains name, type, description and all the rest
     QString generatorName;                      // user-defined generator name, must be unique, modifiable

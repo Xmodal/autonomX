@@ -232,7 +232,7 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
     }
 
     ///////// Only Reaches here if message did not fit any acceptable OSC Input Message format ///////////
-    qDebug() << "ERROR: Invalid OSC Input Message!";
+    qDebug() << "ERROR! -> " << parameter1 << "is not a valid OSC Control Message!";
     return;
 }
 

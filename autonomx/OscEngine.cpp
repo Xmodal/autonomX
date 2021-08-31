@@ -118,7 +118,7 @@ void OscEngine::receiveOscDataHandler(int generatorId, const QString& oscAddress
     }
 
     if(!controlMessageBool) {
-            emit receiveOscData(generatorId, message);
+            emit receiveOscData(generatorId, message, oscAddress);
     } else if(controlMessageBool) {
             QString generatorControlMessage = oscAddress;
             emit receiveOscGeneratorControlMessage(generatorId, message, generatorControlMessage);

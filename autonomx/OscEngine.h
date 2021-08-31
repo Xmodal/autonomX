@@ -71,7 +71,7 @@ signals:
     void valueChanged(const QString &key, const QVariant &value);
 
     // relays updates to ComputeEngine::rec
-    void receiveOscData(int generatorId, QVariantList data);
+    void receiveOscData(int generatorId, QVariantList data, QString generatorAddress);
     // relays generator control messages to ComputeEngine::rec
     void receiveOscGeneratorControlMessage(int generatorId, QVariantList data, QString controlMessage);
 

@@ -686,16 +686,18 @@ void Generator::applyInputRegion() {
 
 
         // write region activation onto lattice in rect area
-            for(int x = region->getRect().x(); x < xMax; x++) {
+        for(int x = region->getRect().x(); x < xMax; x++) {
             for(int y = region->getRect().y(); y < yMax; y++) {
-                QString wolframCA = "WolframCA";
-                QString gameOfLife = "GameOfLife";
                 double valueToWrite;
                 double inputValue;
-                if(this->getType() == wolframCA || this->getType() == gameOfLife) {
+                // rounds values to integers if generator type is WolframCA or GameOfLife
+                if(this->getType() == "WolframCA" || this->getType() == "GameOfLife") {
+//                    qDebug() << "rounding will occur";
                     inputValue = region->getIntensity();
-                    if(inputValue >= 0.1) {
+//                    qDebug() << "inputValue: " << inputValue;
+                    if(inputValue > 0) {
                         valueToWrite = 1;
+//                        qDebug() << "writing value: " << valueToWrite;
                         writeLatticeValue(x, y, valueToWrite);
                     }
 
@@ -703,9 +705,9 @@ void Generator::applyInputRegion() {
                     writeLatticeValue(x, y, region->getIntensity());
                 }           
             }
-            }
         }
     }
+}
 
 double Generator::sigmoid(double intensity){
     return intensity/(1+exp(-intensity));

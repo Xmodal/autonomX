@@ -171,9 +171,6 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
         generator->setProperty(controlMessageArrayChar, inputBool);
         return;
     }
-
-    qDebug() << "parameter1: " << parameter1 << " parameterControlList.value(parameter1) = " << parameterControlList.value(parameter1);
-
         // control message is global parameter
         if(parameter1 == "width" || parameter1 == "height") {
             if(inputValue < 1) inputValue = 1;
@@ -185,13 +182,14 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
             generator->initialize();
         } else if(parameter1 == "reset") {
             generator->resetParameters();
-        } else if(parameter1 == "resetRegions") {
-//            generator->resetRegions();
         }
+        // TODO: this casuses a crash and can only be done once Ticket 375 has been resolved
+//        else if(parameter1 == "resetRegions") {
+//            generator->resetRegions();
+//        }
 
     // executes GENERATOR INPUT VALUE and ENUM control messages
     if(parameterControlList.contains(parameter1)) {
-        qDebug() << "executes in catch-all";
         controlMessageArray = parameter1.toLocal8Bit();
         controlMessageArrayChar = controlMessageArray.data();
         generator->setProperty(controlMessageArrayChar, inputValue);
@@ -199,7 +197,7 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
     }
 
     ///////// Only Reaches here if message did not fit any acceptable OSC Input Message format ///////////
-    qDebug() << "ERROR: Invalid OSC Input Message!";
+    qDebug() << "ERROR! -> " << parameter1 << "is not a valid OSC Control Message!";
     return;
 }
 
@@ -365,7 +363,7 @@ void ComputeEngine::registerParameterControls(int generatorId) {
         parameterControlList["speed"] = "global";
         parameterControlList["restart"] = "global";
         parameterControlList["reset"] = "global";
-        parameterControlList["resetRegions"] = "global";
+//        parameterControlList["resetRegions"] = "global";
 
         firstPass = false;
     }

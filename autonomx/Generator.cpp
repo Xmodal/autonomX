@@ -536,19 +536,13 @@ void Generator::resetParameters()
 
 void Generator::resetRegions()
 {
-
-    qDebug() << "issue 1";
     // input rectangles reset
     inputRegionSet->deleteAllRegions();
-    qDebug() << "issue 1.5";
     inputRegionSet->initialize();
 
-    qDebug() << "issue 2";
     // output rectangles reset
     outputRegionSet->deleteAllRegions();
     outputRegionSet->initialize();
-
-    qDebug() << "issue 3";
 }
 
 void Generator::initializeRegionSets()
@@ -682,7 +676,6 @@ void Generator::applyInputRegion() {
         // WRITE A LOGIC HERE TO CONVERT THAT PERCENTAGE INTO ACTIVATE OF CERTAIN CELLS - USE SIGMOID
 
         */
-
 
 
         // write region activation onto lattice in rect area

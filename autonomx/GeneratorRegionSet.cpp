@@ -37,37 +37,23 @@ GeneratorRegionSet::~GeneratorRegionSet() {
 
 void GeneratorRegionSet::initialize()
 {
-    qDebug() << "GeneratorRegionSet::initialize 1";
     // first, empty the list
     deleteAllRegions();
 
-    qDebug() << "GeneratorRegionSet::initialize 2";
-
     // initialize as input or output
     if(type == 0) {
-        qDebug() << "GeneratorRegionSet::initialize 2.1";
         initializeAsInput();
     } else {
-        qDebug() << "GeneratorRegionSet::initialize 2.2";
         initializeAsOutput();
     }
-
-    qDebug() << "GeneratorRegionSet::initialize 3";
 }
 
 void GeneratorRegionSet::initializeAsInput() {
-
-    qDebug() << "GeneratorRegionSet::initializeAsInput 1";
     // optimized for 20x20 lattice size
     this->addRegion(3, 7, 8, 8);
-    qDebug() << "GeneratorRegionSet::initializeAsInput 1.1";
     this->addRegion(15, 7, 8, 8);
-    qDebug() << "GeneratorRegionSet::initializeAsInput 1.2";
     this->addRegion(27, 7, 8, 8);
-    qDebug() << "GeneratorRegionSet::initializeAsInput 1.3";
     this->addRegion(39, 7, 8, 8);
-
-    qDebug() << "GeneratorRegionSet::initializeAsInput 2";
 }
 
 void GeneratorRegionSet::initializeAsOutput() {
@@ -150,26 +136,18 @@ void GeneratorRegionSet::addRegion(int x, int y, int width, int height) {
         qDebug() << "addRegion (GeneratorRegionSet)";
     }
 
-    qDebug() << "GeneratorRegionSet::addRegion 1";
-
     // tell the model we are about to add a row at the end of the list
     int index = regionList.size();
-    qDebug() << "GeneratorRegionSet::addRegion 1.1";
     beginInsertRows(QModelIndex(), index, index);
-    qDebug() << "GeneratorRegionSet::addRegion 1.2";
     // create copy of the region as a shared pointer and add to list
     QSharedPointer<GeneratorRegion> region = QSharedPointer<GeneratorRegion>(new GeneratorRegion(QRect(x, y, width, height), 0.0, type));
-    qDebug() << "GeneratorRegionSet::addRegion 1.3";
     regionList.append(region);
-    qDebug() << "GeneratorRegionSet::addRegion 1.4";
     // tell the model we are done adding rows
     endInsertRows();
-    qDebug() << "GeneratorRegionSet::addRegion 1.5";
 
     // relink connections
     relinkConnections();
 
-    qDebug() << "GeneratorRegionSet::addRegion 2";
     // emit signal so that backend updates
     emit rowCountChanged(regionList.size());
     // emit addRegionFromSet(x, y, width, height);

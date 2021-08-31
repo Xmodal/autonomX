@@ -34,9 +34,11 @@ private:
     QMap<QString, QString> parameterControlList;
     QElapsedTimer elapsedTimer;
     double frequency = 60;
+    int generatorIdWritten = 0;
     bool firstFrame = true;
     bool firstPass = true;
     bool inputValueReceived = false;
+    bool generatorWrittenLastLoop = false;
     bool flagDebug = false;
     bool flagDummyOutputMonitor = false;
     bool flagDummyOscOutput = false;
@@ -57,7 +59,7 @@ signals:
     void sendOscData(int generatorId, QVariantList data);
 public slots:
     // handles data received from OscEngine::receiveOscData
-    void receiveOscData(int generatorId, QVariantList data);
+    void receiveOscData(int generatorId, QVariantList data, QString generatorAddress);
     void receiveOscGeneratorControlMessage(int generatorId, QVariantList data, QString controlMessage);
 
     // adds a generator to the list and hash map

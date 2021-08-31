@@ -46,34 +46,75 @@ ComputeEngine::~ComputeEngine() {
     }
 }
 
-void ComputeEngine::receiveOscData(int generatorId, QVariantList data) {
+void ComputeEngine::receiveOscData(int generatorId, QVariantList data, QString generatorAddress) {
     if(!generatorsHashMap->contains(generatorId)) {
         throw std::runtime_error("generator does not exist");
     }
-    QSharedPointer<Generator> generator = generatorsHashMap->value(generatorId);
 
+    qDebug() << "ComputeEngine::receiveOscData arrive!";
+    qDebug() << "generatorAddress: " << generatorAddress;
+
+    QSharedPointer<Generator> generator = generatorsHashMap->value(generatorId);
     QList<QVariant> dataAsList = data;
     int argumentsTotal = data.size();
     int argumentsValid = 0;
+    int generatorRegion;
+    double input = 0;
 
-    for(int i = 0; i < generator->getInputRegionSet()->rowCount(); i++) {
-        // set default to 0
-        double input = 0;
-        // check that the message's list is long enough
-        if(i < data.size()) {
-            // check the message's type can be cast to double
-            QMetaType::Type type = (QMetaType::Type) dataAsList.at(i).type();
-            if(type == QMetaType::Float || type == QMetaType::Double || type == QMetaType::Int || type == QMetaType::Long) {
-                input = dataAsList.at(i).toDouble();
-                argumentsValid++;
+    // check if message is intended for this generator -> if not, skip
+    QStringList generatorAddressList = generatorAddress.split(QLatin1Char('/'));
+    QString generatorName = generatorAddressList.at(1);
+    if(generator->getGeneratorName() != generatorName) {
+        return;
+    }
+
+//    qDebug() << "generatorAddressList.length = " << generatorAddressList.length();
+//    qDebug() << "contents = " << generatorAddressList;
+
+    // check to see if input message is for specific generator region or all regions
+    if(generatorAddressList.length() > 3) {
+        generatorRegion = generatorAddressList.at(3).toInt();
+
+        if(argumentsTotal > 0) {
+            input = dataAsList.at(0).toDouble();
+
+            // ensure generator region isn't out of range
+            if(generator->getInputRegionSet()->rowCount() >= generatorRegion) {
+
+                // if generator region is valid -> execute input message on specified input region
+                generator->getInputRegionSet()->at(generatorRegion - 1)->writeIntensity(input);
+            } else {
+                // if generator region is invalid -> ignore input and print error message
+                qDebug() << "ERROR: targeted Generator Region " << generatorRegion << " is out of range or doesn't exist!";
+                return;
             }
         }
-        // write to input
-        generator->getInputRegionSet()->at(i)->writeIntensity(input);
+    } else {
+        // execute input message on all regions of this generator
+        for(int i = 0; i < generator->getInputRegionSet()->rowCount(); i++) {
+            // set default to 0
+            input = 0;
+
+            // check that the message's list is long enough
+            if(data.size() > i) {
+                // check the message's type can be cast to double
+                QMetaType::Type type = (QMetaType::Type) dataAsList.at(i).type();
+                if(type == QMetaType::Float || type == QMetaType::Double || type == QMetaType::Int || type == QMetaType::Long) {
+                    input = dataAsList.at(i).toDouble();
+                    argumentsValid++;
+                }
+            }
+            // write to input
+            generator->getInputRegionSet()->at(i)->writeIntensity(input);
+
+        }
     }
 
     // alerts loop that new value was received via inputOSC and can be reflected in lattice
     inputValueReceived = true;
+
+    // used to reset the input values of this generator once this input has taken effect
+    generatorIdWritten = generatorId;
 
     if(flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
@@ -171,9 +212,6 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
         generator->setProperty(controlMessageArrayChar, inputBool);
         return;
     }
-
-    qDebug() << "parameter1: " << parameter1 << " parameterControlList.value(parameter1) = " << parameterControlList.value(parameter1);
-
         // control message is global parameter
         if(parameter1 == "width" || parameter1 == "height") {
             if(inputValue < 1) inputValue = 1;
@@ -267,10 +305,40 @@ void ComputeEngine::loop() {
         // apply input values
         for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
             (*it)->applyInputRegion();
+            qDebug() << "applying a region";
         }
 
+        qDebug() << "inputValueReceived check: " << inputValueReceived;
         // reset check to prevent values being erased on every loop
         inputValueReceived = false;
+        generatorWrittenLastLoop = true;
+
+    } else if(generatorWrittenLastLoop){
+
+        qDebug() << "input regions being reset";
+
+//        for(int j = 0; j < generatorsList->length(); j++) {
+//            qDebug() << "generator at " << j << " = " << generatorsList[j]
+//        }
+
+        QSharedPointer<Generator> generator = generatorsHashMap->value(generatorIdWritten);
+
+
+        for(int i = 0; i < generator->getInputRegionSet()->rowCount(); i++) {
+            // set default to 0
+
+            // write to input
+            generator->getInputRegionSet()->at(i)->writeIntensity(0);
+        }
+
+
+
+//        for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
+//            (*it)->applyInputRegion();
+//        }
+        generator->applyInputRegion();
+
+        generatorWrittenLastLoop = false;
     }
 
     // do the computation

@@ -39,7 +39,7 @@ public:
      * @param oscAddress OSC path /like/this
      * @param arguments List of QVariant arguments of any type
      */
-    Q_INVOKABLE void send(const QString& oscAddress, const QVariantList& arguments);
+    Q_INVOKABLE void send(const QVariantList& arguments);
 
 signals:
     // TODO: Add messageSent signal
@@ -52,7 +52,7 @@ private:
     QHostAddress m_hostAddress;
     quint16 m_port;
 
-    void variantListToByteArray(QByteArray& outputResult, const QString& oscAddress, const QVariantList& arguments);
+    void variantListToByteArray(QByteArray& outputResult, const QVariantList& arguments);
 
     bool flagDebug = false;
 };

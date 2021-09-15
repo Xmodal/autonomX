@@ -149,7 +149,7 @@ void OscEngine::sendOscData(int generatorId, QVariantList data) {
     }
 
     QSharedPointer<OscSender> sender = oscSenders.value(generatorId);
-    sender->send(oscReceiverAddress, data);
+    sender->send(data);
 }
 
 void OscEngine::createOscReceiver(int generatorId, QString address, int port) {

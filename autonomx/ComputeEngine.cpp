@@ -120,7 +120,7 @@ void ComputeEngine::receiveOscData(int generatorId, QVariantList data, QString g
 }
 
 void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantList data, QString controlMessage) {
-    QString generatorName, inputType, parameter1, parameter2;
+    QString generatorName, inputType, inputParameter1, inputParameter2;
     bool inputBool = false, booleanMessageCheck = false, enumMessageCheck = false;
     QList<QVariant> dataAsList = data;
     double inputValue = 0;
@@ -140,7 +140,7 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
         }
     }
 
-    // assign split osc message pieces to corresponding variables
+    // assign input osc message components to corresponding variables
     for(int i = 0; i < controlMessageList.length(); i++) {
         switch(i) {
         case 0:
@@ -150,26 +150,29 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
             inputType = controlMessageList.at(1);
             break;
         case 2:
-            parameter1 = controlMessageList.at(2);
+            inputParameter1 = controlMessageList.at(2);
             // if parameter contains the word "Type" this indicates that the passed message is an enum value
-            if(parameter1.contains("Type")) {
+            if(inputParameter1.contains("Type")) {
                 enumMessageCheck = true;
             }
             break;
         case 3:
-            parameter2 = controlMessageList.at(3);
+            inputParameter2 = controlMessageList.at(3);
             // if there is a second argument message this indicates that the passed message is turning on/off a parameter
             booleanMessageCheck = true;
             break;
         }
     }
 
-    // check if targetted generator name exists -> else, ignore
+    // check if targetted generator name exists -> else, will be ignored
     QSharedPointer<Generator> generator = generatorsHashMap->value(generatorId);
-    if(!(generatorName == generator->getGeneratorName())) {
-        // name not found -> skip and return
-        qDebug() << "ERROR: Invalid Generator name entered!";
-        return;
+    QString inputGeneratorIdString = generatorName.right(2);
+    QString generatorTypeCheck = generatorName;
+    int inputID = inputGeneratorIdString.toInt();
+    generatorTypeCheck.chop(3);
+
+    if(generator->getID() != inputID) {
+        if(generatorName != generator->getGeneratorName()) return;
     }
 
     // verify dataList isn't empty and then convert to double and assign for input
@@ -183,9 +186,9 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
     if(enumMessageCheck) {
         inputValue = inputValue - 1;
         // check GeneratorMeta::enumLabels Map for an enum type that corresponds to the osc message parameter
-        if(generator->getMeta()->getEnumLabels().contains(parameterControlList.value(parameter1))) {
+        if(generator->getMeta()->getEnumLabels().contains(parameterControlList.value(inputParameter1))) {
             // create a list of all the enum values are associated that that enum
-            QList enumValues = generator->getMeta()->getEnumLabels().value(parameterControlList.value(parameter1)).toStringList();
+            QList enumValues = generator->getMeta()->getEnumLabels().value(parameterControlList.value(inputParameter1)).toStringList();
             if(enumValues.length() < (inputValue + 1) || inputValue < 0) {
                 // if value entered is out of range for this enum type -> error
                 qDebug() << "ERROR: value entered is out of range (doesn't exist) for this parameter!";
@@ -198,41 +201,40 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
 
     // executes BOOLEAN control messages
     if(booleanMessageCheck) {
-        parameter1.prepend("flag_");
-        controlMessageArray = parameter1.toLocal8Bit();
+        inputParameter1.prepend("flag_");
+        controlMessageArray = inputParameter1.toLocal8Bit();
         controlMessageArrayChar = controlMessageArray.data();
-        if(parameter2.toLower() == "on") {
+        if(inputParameter2.toLower() == "on") {
             inputBool = true;
         }
         generator->setProperty(controlMessageArrayChar, inputBool);
         return;
     }
         // control message is global parameter
-        if(parameter1 == "width" || parameter1 == "height") {
+        if(inputParameter1 == "width" || inputParameter1 == "height") {
             if(inputValue < 1) inputValue = 1;
-            parameter1[0] = parameter1[0].toUpper();
-            parameter1.prepend("lattice");
-        }
-
-        if(parameter1 == "restart") {
+            inputParameter1[0] = inputParameter1[0].toUpper();
+            inputParameter1.prepend("lattice");
+        } else if(inputParameter1 == "restart") {
             generator->initialize();
-        } else if(parameter1 == "reset") {
+        } else if(inputParameter1 == "reset") {
             generator->resetParameters();
-        } else if(parameter1 == "resetRegions") {
-//            generator->resetRegions();
         }
+        // TODO: this casuses a crash and can only be done once Ticket 375 (or related threading issue) has been resolved
+        //        else if(parameter1 == "resetRegions") {
+        //            generator->resetRegions();
+        //        }
 
     // executes GENERATOR INPUT VALUE and ENUM control messages
-    if(parameterControlList.contains(parameter1)) {
-        qDebug() << "executes in catch-all";
-        controlMessageArray = parameter1.toLocal8Bit();
+    if(parameterControlList.contains(inputParameter1)) {
+        controlMessageArray = inputParameter1.toLocal8Bit();
         controlMessageArrayChar = controlMessageArray.data();
         generator->setProperty(controlMessageArrayChar, inputValue);
         return;
     }
 
     ///////// Only Reaches here if message did not fit any acceptable OSC Input Message format ///////////
-    qDebug() << "ERROR! -> " << parameter1 << "is not a valid OSC Control Message!";
+    qDebug() << "ERROR! -> Input Message was received as: " << controlMessage << " is not a valid OSC Control Message!";
     return;
 }
 

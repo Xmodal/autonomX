@@ -46,10 +46,21 @@ We follow Semantic Versioning 2.0.0 - See https://semver.org/
 
 # Documentation
 
-For documentation, we use [Doxygen](https://www.doxygen.nl) with [GraphViz](https://graphviz.org)
-.
+## Software Architecture
+
+Comprehensive documentation about the software architecture can be found [here](doc/ARCHITECTURE.md).
+
+## Generator Implementation
+Comprehensive documentation about the steps necessary for implementing a new custom generator can be found [here](doc/GENERATOR.md).
+
+## OSC Messaging System
+
+Comprehensive documentation related to the OSC Messaging System can be found 
+[here](doc/osc.md).
 
 ## Doxygen Configuration
+
+For full class documentation, we use [Doxygen](https://www.doxygen.nl) with [GraphViz](https://graphviz.org)
 
 ### Complete explanation
 

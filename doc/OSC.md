@@ -95,10 +95,9 @@ where:
 
 * `<v1> <v2> <v3>...<vn>` 
     * corresponds to an input value, using *one value per* **Input Region**, with the values being assigned in the order they are entered.
-    * NOTE: **Input Regions** can be used or ignored in this way.
 
-Example: `/SpikingNet_01/input 0 1 1 0`
-* would result in the second and third **Input Regions** being sent a value of 1.0 each, while regions one and four would be ignored.
+Example: `/SpikingNet_01/input 0.5 1 1 0.5`
+* in the case of a `SpikingNet` `Generator`, this message would result in the first and fourth **Input Regions** being sent a value of 0.5 each and the second and third **Input Regions** being sent a value of 1.0 each.
         
 ---
 #### Single Region Value Messages

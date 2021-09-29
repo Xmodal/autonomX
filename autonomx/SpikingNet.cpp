@@ -589,14 +589,6 @@ void SpikingNet::writeInhibitoryPortion(double inhibitoryPortion) {
     emit inhibitoryPortionChanged(inhibitoryPortion);
 }
 
-//void writeNeuronType(QString neuronMetaType, int neuronType) {
-
-//    NeuronType neuron;
-//    switch(neuronType)
-
-//    if(neuronMetaType.contains("excitatory"));
-//}
-
 void SpikingNet::writeInhibitoryNeuronType(NeuronType inhibitoryNeuronType) {
     if(this->inhibitoryNeuronType == inhibitoryNeuronType)
         return;

@@ -25,7 +25,6 @@ class WolframCA : public Generator
     Q_OBJECT
 
     Q_PROPERTY(int rule READ getRule WRITE writeRule NOTIFY ruleChanged)
-    //Q_PROPERTY(double randSeed READ getRandSeed WRITE writeRandSeed NOTIFY randSeedChanged)
     Q_PROPERTY(bool flag_randomSeed READ getFlagRandomSeed WRITE writeFlagRandomSeed NOTIFY flagRandomSeedChanged)
 
 private:
@@ -93,6 +92,5 @@ public:
 signals:
     // QML signals
     void ruleChanged(int rule);
-    //void randSeedChanged(double randSeed);
     void flagRandomSeedChanged(bool flag_randomSeed);
 };

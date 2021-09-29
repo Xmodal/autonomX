@@ -217,19 +217,6 @@ void GameOfLife::computeIteration(double deltaTime) {
     //TO DO: write a logic to reinitialize if all the cells are zero or may be if there is no change in pattern
     //check if all the cells are zero to re-iterate
 
-    /* int check = 0;
-    for (int i = 0; i < latticeWidth * latticeHeight; i++) {
-        if (temp_cells[i] > 0) {
-            check = 1;
-            qDebug()<<"cell no"<<i;
-        }
-    }
-
-    //check if all the cells are zero
-    if (check == 0)
-        initialize();
-    */
-
     cells = temp_cells;
 }
 
@@ -280,9 +267,9 @@ void GameOfLife::writePatternType(PatternType GOLPattern) {
 
         qDebug() << "Game of Life Pattern:\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
-    //do the change
+    // do the change
     this->GOLPattern = GOLPattern;
-    //reinitialize
+    // reinitialize
     initialize();
     // make sure you follow this signal structure when you write a property!
     emit patternTypeChanged(GOLPattern);

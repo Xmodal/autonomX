@@ -84,7 +84,6 @@ void ComputeEngine::receiveOscData(int generatorId, QVariantList data, QString g
             }
         }
     } else {
-
         // execute input message on all regions of this generator
         for(int i = 0; i < generator->getInputRegionSet()->rowCount(); i++) {
             // set default to 0
@@ -101,7 +100,6 @@ void ComputeEngine::receiveOscData(int generatorId, QVariantList data, QString g
             }
             // write to input
             generator->getInputRegionSet()->at(i)->writeIntensity(input);
-
         }
     }
 
@@ -246,12 +244,9 @@ void ComputeEngine::addGenerator(QSharedPointer<Generator> generator) {
 
         qDebug() << "addGenerator (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
-
     generatorsList->append(generator);
     generatorsHashMap->insert(generator->getID(), generator);
-
     registerParameterControls(generator->getID());
-
 }
 
 void ComputeEngine::removeGenerator(QSharedPointer<Generator> generator) {
@@ -262,7 +257,6 @@ void ComputeEngine::removeGenerator(QSharedPointer<Generator> generator) {
 
         qDebug() << "removeGenerator (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
-
     generatorsList->removeOne(generator);
     generatorsHashMap->remove(generator->getID());
 }
@@ -418,27 +412,15 @@ void ComputeEngine::registerParameterControls(int generatorId) {
         firstPass = false;
     }
 
-     if(!registeredGeneratorTypes.contains(generator->getType())) {
-
-//         addGeneratorType(generator->getType());
-
+    if(!registeredGeneratorTypes.contains(generator->getType())) {
         QMapIterator<QString, QString> iter(meta->getGeneratorsParameterList());
         while(iter.hasNext()) {
             iter.next();
             parameterControlList[iter.key()] = iter.value();
         }
-
         QMapIterator<QString, QString> iterCheck(parameterControlList);
         while(iterCheck.hasNext()) {
             iterCheck.next();
         }
-     }
+    }
 }
-
-//void ComputeEngine::addGeneratorType(QString generatorType) {
-//    registeredGeneratorTypes.append(generatorType);
-//    qDebug() << "ComputeEngine::addGeneratorTypes > registeredGeneratorTypes List: ";
-//    for(int i = 0; i < registeredGeneratorTypes.size(); i++) {
-//        qDebug() << registeredGeneratorTypes[i];
-//    }
-//}

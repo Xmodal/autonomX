@@ -536,19 +536,12 @@ void Generator::resetParameters()
 
 void Generator::resetRegions()
 {
-
-    qDebug() << "issue 1";
     // input rectangles reset
     inputRegionSet->deleteAllRegions();
-    qDebug() << "issue 1.5";
     inputRegionSet->initialize();
-
-    qDebug() << "issue 2";
     // output rectangles reset
     outputRegionSet->deleteAllRegions();
     outputRegionSet->initialize();
-
-    qDebug() << "issue 3";
 }
 
 void Generator::initializeRegionSets()
@@ -558,8 +551,6 @@ void Generator::initializeRegionSets()
 }
 
 void Generator::updateValue(const QString &key, const QVariant &value) {
-    // qDebug() << "Generator::updateValue";
-
     QByteArray keyArray = key.toLocal8Bit();
     char* keyBuffer = keyArray.data();
 
@@ -567,10 +558,8 @@ void Generator::updateValue(const QString &key, const QVariant &value) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
             std::chrono::system_clock::now().time_since_epoch()
         );
-
         qDebug() << "updateValue (GeneratorFacade):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tkey: " << key << "\tvalue: " << value;
     }
-
     setProperty(keyBuffer, value);
 }
 
@@ -683,8 +672,6 @@ void Generator::applyInputRegion() {
 
         */
 
-
-
         // write region activation onto lattice in rect area
         for(int x = region->getRect().x(); x < xMax; x++) {
             for(int y = region->getRect().y(); y < yMax; y++) {
@@ -692,15 +679,11 @@ void Generator::applyInputRegion() {
                 double inputValue;
                 // rounds values to integers if generator type is WolframCA or GameOfLife
                 if(this->getType() == "WolframCA" || this->getType() == "GameOfLife") {
-//                    qDebug() << "rounding will occur";
                     inputValue = region->getIntensity();
-//                    qDebug() << "inputValue: " << inputValue;
                     if(inputValue > 0) {
                         valueToWrite = 1;
-//                        qDebug() << "writing value: " << valueToWrite;
                         writeLatticeValue(x, y, valueToWrite);
                     }
-
                 } else {
                     writeLatticeValue(x, y, region->getIntensity());
                 }           

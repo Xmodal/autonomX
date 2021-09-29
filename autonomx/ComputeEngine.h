@@ -53,7 +53,7 @@ public:
 
     QList<QString> registeredGeneratorTypes;
     void registerParameterControls(int generatorId);
-//    void addGeneratorType(QString generatorType);
+
 signals:
     // sends data through OscEngine::sendOscData
     void sendOscData(int generatorId, QVariantList data);

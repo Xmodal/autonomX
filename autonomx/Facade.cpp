@@ -31,7 +31,6 @@ Facade::Facade(QObject *alias) : QQmlPropertyMap(this, nullptr) {
         );
 
         qDebug() << "constructor (Facade)\t\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
-
     }
 
     const QMetaObject *metaObject = alias->metaObject();

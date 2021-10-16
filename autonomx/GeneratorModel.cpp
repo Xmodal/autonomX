@@ -25,7 +25,6 @@ GeneratorModel::GeneratorModel(QSharedPointer<QList<QSharedPointer<GeneratorFaca
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
             std::chrono::system_clock::now().time_since_epoch()
         );
-
         qDebug() << "constructor (GeneratorModel)\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
 
@@ -132,13 +131,13 @@ void GeneratorModel::endInsertAtEnd() {
 }
 
 void GeneratorModel::beginRemoveAtID(int id) {
-    if(flagDebug) {
+    if (flagDebug) {
         qDebug() << "beginRemoveAtID (GeneratorModel): " << id;
     }
     int indexRemoved = 0;
-    for(int i = 0; i < generatorFacadesList->count(); i++) {
+    for (int i = 0; i < generatorFacadesList->count(); i++) {
         GeneratorFacade* generatorFacade = generatorFacadesList->at(i).data();
-        if(id == generatorFacade->value("id").toInt()) {
+        if (id == generatorFacade->value("id").toInt()) {
             indexRemoved = i;
             break;
         }
@@ -147,29 +146,32 @@ void GeneratorModel::beginRemoveAtID(int id) {
 }
 
 void GeneratorModel::endRemoveAtID() {
-    if(flagDebug) {
+    if (flagDebug) {
         qDebug() << "endRemoveAtID (GeneratorModel)";
     }
     endRemoveRows();
 }
 
 int GeneratorModel::rowCount(const QModelIndex& parent) const {
+    Q_UNUSED(parent);
     return generatorFacadesList->size();
 }
 
 int GeneratorModel::columnCount(const QModelIndex& parent) const {
+    Q_UNUSED(parent);
     return 1;
 }
 
 QVariant GeneratorModel::data(const QModelIndex &index, int role) const {
-    if(!index.isValid())
+    if (! index.isValid())
         return QVariant();
 
     // check if the index is valid
-    if(index.column() == 0 && index.row() >= 0 && index.row() < generatorFacadesList->size()) {
+    if (index.column() == 0 && index.row() >= 0 && index.row() < generatorFacadesList->size()) {
         // check if the key exists in the hash map
-        if(Generator::roleMap.contains(role))
+        if (Generator::roleMap.contains(role)) {
             return generatorFacadesList->at(index.row())->value(Generator::roleMap.value(role));
+        }
     }
 
     return QVariant();
@@ -180,6 +182,9 @@ QHash<int, QByteArray> GeneratorModel::roleNames() const {
 }
 
 GeneratorFacade * GeneratorModel::at(int index) {
-    if (index < 0) return nullptr;
+    if (index < 0) {
+        return nullptr;
+    }
     return generatorFacadesList->at(index).data();
 }
+

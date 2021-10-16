@@ -34,8 +34,6 @@ public:
 private:
     QHash<int, QSharedPointer<OscSender>> oscSenders;
     QSharedPointer<OscReceiver> oscReceiver;
-    QString oscSenderAddress = "/output";
-    QString oscReceiverAddress = "/input";
     int oscSenderPort = 6669;
     int oscReceiverPort = 6668;
     QString oscSenderHost = "127.0.0.1";
@@ -91,7 +89,7 @@ public slots:
     void stopGeneratorOsc(QSharedPointer<Generator> generator);
 
     // bridges ComputeEngine::sendOscData to OscSender::send
-    void sendOscData(int id, QVariantList data);
+    void sendOscData(int generatorId, const QString& generatorName, const QString& attributeName, const QVariantList& arguments);
 
     // updates receiver parameters
     void updateOscReceiverPort(int port);

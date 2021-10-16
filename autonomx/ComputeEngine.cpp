@@ -46,14 +46,14 @@ ComputeEngine::~ComputeEngine() {
     }
 }
 
-void ComputeEngine::receiveOscData(int generatorId, QVariantList data, QString generatorAddress) {
-    if(!generatorsHashMap->contains(generatorId)) {
+void ComputeEngine::receiveOscData(int generatorId, const QVariantList& arguments, const QString& generatorAddress) {
+    if (!generatorsHashMap->contains(generatorId)) {
         throw std::runtime_error("generator does not exist");
     }
 
     QSharedPointer<Generator> generator = generatorsHashMap->value(generatorId);
-    QList<QVariant> dataAsList = data;
-    int argumentsTotal = data.size();
+    QList<QVariant> dataAsList = arguments;
+    int argumentsTotal = arguments.size();
     int argumentsValid = 0;
     int generatorRegion;
     double input = 0;
@@ -61,20 +61,18 @@ void ComputeEngine::receiveOscData(int generatorId, QVariantList data, QString g
     // check if message is intended for this generator -> if not, skip
     QStringList generatorAddressList = generatorAddress.split(QLatin1Char('/'));
     QString generatorName = generatorAddressList.at(1);
-    if(generator->getGeneratorName() != generatorName) {
+    if (generator->getGeneratorName() != generatorName) {
         return;
     }
 
     // check to see if input message is for specific generator region or all regions
-    if(generatorAddressList.length() > 3) {
+    if (generatorAddressList.length() > 3) {
         generatorRegion = generatorAddressList.at(3).toInt();
 
-        if(argumentsTotal > 0) {
+        if (argumentsTotal > 0) {
             input = dataAsList.at(0).toDouble();
-
             // ensure generator region isn't out of range
-            if(generator->getInputRegionSet()->rowCount() >= generatorRegion && generatorRegion > 0) {
-
+            if (generator->getInputRegionSet()->rowCount() >= generatorRegion && generatorRegion > 0) {
                 // if generator region is valid -> execute input message on specified input region
                 generator->getInputRegionSet()->at(generatorRegion - 1)->writeIntensity(input);
             } else {
@@ -85,15 +83,14 @@ void ComputeEngine::receiveOscData(int generatorId, QVariantList data, QString g
         }
     } else {
         // execute input message on all regions of this generator
-        for(int i = 0; i < generator->getInputRegionSet()->rowCount(); i++) {
+        for (int i = 0; i < generator->getInputRegionSet()->rowCount(); i++) {
             // set default to 0
             input = 0;
-
             // check that the message's list is long enough
-            if(data.size() > i) {
+            if (arguments.size() > i) {
                 // check the message's type can be cast to double
                 QMetaType::Type type = (QMetaType::Type) dataAsList.at(i).type();
-                if(type == QMetaType::Float || type == QMetaType::Double || type == QMetaType::Int || type == QMetaType::Long) {
+                if (type == QMetaType::Float || type == QMetaType::Double || type == QMetaType::Int || type == QMetaType::Long) {
                     input = dataAsList.at(i).toDouble();
                     argumentsValid++;
                 }
@@ -102,44 +99,45 @@ void ComputeEngine::receiveOscData(int generatorId, QVariantList data, QString g
             generator->getInputRegionSet()->at(i)->writeIntensity(input);
         }
     }
-
     // alerts loop that new value was received via inputOSC and can be reflected in lattice
     inputValueReceived = true;
 
     // used to reset the input values of this generator once this input has taken effect
     generatorIdWritten = generatorId;
 
-    if(flagDebug) {
+    if (flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );
-        qDebug() << "receiveOscData (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << generatorId << "\tdata = " << data << "\t(" << argumentsValid << " of " << argumentsTotal << " valid)";
+        qDebug() << "receiveOscData (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId() << "\tgenid = " << generatorId << "\tdata = " << arguments << "\t(" << argumentsValid << " of " << argumentsTotal << " valid)";
     }
 }
 
-void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantList data, QString controlMessage) {
+void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, const QVariantList& arguments, const QString& controlMessage) {
     QString generatorName, inputType, inputParameter1, inputParameter2;
     bool inputBool = false, booleanMessageCheck = false, enumMessageCheck = false;
-    QList<QVariant> dataAsList = data;
+    QList<QVariant> dataAsList = arguments;
     double inputValue = 0;
     QByteArray controlMessageArray;
     const char *controlMessageArrayChar;
 
     // check if generator exists -> if not, ignore
-    if(!generatorsHashMap->contains(generatorId)) return;
+    if (! generatorsHashMap->contains(generatorId)) {
+        return;
+    }
 
     // split input osc control message into list, items separated by placement of '/' in original message
     QStringList controlMessageList = controlMessage.split(QLatin1Char('/'));
 
     // remove any blank or empty strings in controlMessageList
-    for(int i = 0; i < controlMessageList.length(); i++) {
+    for (int i = 0; i < controlMessageList.length(); i++) {
         if (controlMessageList.at(i) == "" || controlMessageList.at(i).isEmpty()) {
             controlMessageList.removeAt(i);
         }
     }
 
     // assign input osc message components to corresponding variables
-    for(int i = 0; i < controlMessageList.length(); i++) {
+    for (int i = 0; i < controlMessageList.length(); i++) {
         switch(i) {
         case 0:
             generatorName = controlMessageList.at(0);
@@ -150,7 +148,7 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
         case 2:
             inputParameter1 = controlMessageList.at(2);
             // if parameter contains the word "Type" this indicates that the passed message is an enum value
-            if(inputParameter1.contains("Type")) {
+            if (inputParameter1.contains("Type")) {
                 enumMessageCheck = true;
             }
             break;
@@ -169,25 +167,27 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
     int inputID = inputGeneratorIdString.toInt();
     generatorTypeCheck.chop(3);
 
-    if(generator->getID() != inputID) {
-        if(generatorName != generator->getGeneratorName()) return;
+    if (generator->getID() != inputID) {
+        if(generatorName != generator->getGeneratorName()) {
+            return;
+        }
     }
 
     // verify dataList isn't empty and then convert to double and assign for input
-    if(!dataAsList.isEmpty()) {
-        if(dataAsList.at(0).canConvert<double>()) {
+    if (! dataAsList.isEmpty()) {
+        if (dataAsList.at(0).canConvert<double>()) {
             inputValue = dataAsList.at(0).toDouble();
         }
     }
 
     // verify that enum value entered is not out of range
-    if(enumMessageCheck) {
+    if (enumMessageCheck) {
         inputValue = inputValue - 1;
         // check GeneratorMeta::enumLabels Map for an enum type that corresponds to the osc message parameter
-        if(generator->getMeta()->getEnumLabels().contains(parameterControlList.value(inputParameter1))) {
+        if (generator->getMeta()->getEnumLabels().contains(parameterControlList.value(inputParameter1))) {
             // create a list of all the enum values are associated that that enum
             QList enumValues = generator->getMeta()->getEnumLabels().value(parameterControlList.value(inputParameter1)).toStringList();
-            if(enumValues.length() < (inputValue + 1) || inputValue < 0) {
+            if (enumValues.length() < (inputValue + 1) || inputValue < 0) {
                 // if value entered is out of range for this enum type -> error
                 qDebug() << "ERROR: value entered is out of range (doesn't exist) for this parameter!";
                 return;
@@ -198,33 +198,34 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
     ///// OSC External Control Message Execution Section /////
 
     // executes BOOLEAN control messages
-    if(booleanMessageCheck) {
+    if (booleanMessageCheck) {
         inputParameter1.prepend("flag_");
         controlMessageArray = inputParameter1.toLocal8Bit();
         controlMessageArrayChar = controlMessageArray.data();
-        if(inputParameter2.toLower() == "on") {
+        if (inputParameter2.toLower() == "on") {
             inputBool = true;
         }
         generator->setProperty(controlMessageArrayChar, inputBool);
         return;
     }
-        // control message is global parameter
-        if(inputParameter1 == "width" || inputParameter1 == "height") {
-            if(inputValue < 1) inputValue = 1;
-            inputParameter1[0] = inputParameter1[0].toUpper();
-            inputParameter1.prepend("lattice");
-        } else if(inputParameter1 == "restart") {
-            generator->initialize();
-        } else if(inputParameter1 == "reset") {
-            generator->resetParameters();
-        }
-        // TODO: this casuses a crash and can only be done once Ticket 375 (or related threading issue) has been resolved
-        //        else if(parameter1 == "resetRegions") {
-        //            generator->resetRegions();
-        //        }
+
+    // control message is global parameter
+    if (inputParameter1 == "width" || inputParameter1 == "height") {
+        if(inputValue < 1) inputValue = 1;
+        inputParameter1[0] = inputParameter1[0].toUpper();
+        inputParameter1.prepend("lattice");
+    } else if (inputParameter1 == "restart") {
+        generator->initialize();
+    } else if (inputParameter1 == "reset") {
+        generator->resetParameters();
+    }
+    // TODO: this casuses a crash and can only be done once Ticket 375 (or related threading issue) has been resolved
+    //        else if(parameter1 == "resetRegions") {
+    //            generator->resetRegions();
+    //        }
 
     // executes GENERATOR INPUT VALUE and ENUM control messages
-    if(parameterControlList.contains(inputParameter1)) {
+    if (parameterControlList.contains(inputParameter1)) {
         controlMessageArray = inputParameter1.toLocal8Bit();
         controlMessageArrayChar = controlMessageArray.data();
         generator->setProperty(controlMessageArrayChar, inputValue);
@@ -237,7 +238,7 @@ void ComputeEngine::receiveOscGeneratorControlMessage(int generatorId, QVariantL
 }
 
 void ComputeEngine::addGenerator(QSharedPointer<Generator> generator) {
-    if(flagDebug) {
+    if (flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );// get generator
@@ -250,11 +251,10 @@ void ComputeEngine::addGenerator(QSharedPointer<Generator> generator) {
 }
 
 void ComputeEngine::removeGenerator(QSharedPointer<Generator> generator) {
-    if(flagDebug) {
+    if (flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );// get generator
-
         qDebug() << "removeGenerator (ComputeEngine):\tt = " << now.count() << "\tid = " << QThread::currentThreadId();
     }
     generatorsList->removeOne(generator);
@@ -270,19 +270,16 @@ void ComputeEngine::start() {
 }
 
 void ComputeEngine::loop() {
-
-    if(flagDisableProcessing) {
+    if (flagDisableProcessing) {
         return;
     }
-
     double millisCompute;   // time in nanoseconds taken by computation
     double millisLastFrame; // time in nanoseconds since last frame
 
     // compute time since last frame, with exception if this is the first frame
-    if(firstFrame) {
+    if (firstFrame) {
         firstFrame = false;
         millisLastFrame = 1.0 / frequency * 1000.0;
-
     } else {
         millisLastFrame = elapsedTimer.nsecsElapsed() / 1000000.0;
     }
@@ -292,22 +289,20 @@ void ComputeEngine::loop() {
     elapsedTimer.start();
 
     // check if input value received via OSC this loop or last loop
-    if(inputValueReceived) {
+    if (inputValueReceived) {
         // apply input values
-        for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
+        for (QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
             (*it)->applyInputRegion();
         }
-
         // reset check to prevent values being erased on every loop
         inputValueReceived = false;
         // reset check to prevent values being rewritten on every loop
         generatorWrittenLastLoop = true;
 
-    } else if(generatorWrittenLastLoop){
+    } else if (generatorWrittenLastLoop) {
         QSharedPointer<Generator> generator = generatorsHashMap->value(generatorIdWritten);
-
         // reset all previously altered input regions back to 0
-        for(int i = 0; i < generator->getInputRegionSet()->rowCount(); i++) {
+        for (int i = 0; i < generator->getInputRegionSet()->rowCount(); i++) {
             // write to input
             generator->getInputRegionSet()->at(i)->writeIntensity(0);
         }
@@ -316,22 +311,22 @@ void ComputeEngine::loop() {
     }
 
     // do the computation
-    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
+    for (QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
         (*it)->computeIteration(1.0 / frequency);
     }
 
     // apply output values
-    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
+    for (QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
         (*it)->applyOutputRegion();
     }
 
     // write to history
-    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
+    for (QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
         double historyLatest = 0;
-        for(int i = 0; i < (*it)->getOutputRegionSet()->rowCount(); i++) {
+        for (int i = 0; i < (*it)->getOutputRegionSet()->rowCount(); i++) {
             historyLatest += (*it)->getOutputRegionSet()->at(i)->getIntensity();
         }
-        if(flagDummyOutputMonitor) {
+        if (flagDummyOutputMonitor) {
             // random output
             historyLatest = randomUniform(randomGenerator);
         } else {
@@ -347,34 +342,41 @@ void ComputeEngine::loop() {
     }
 
     // send output messages to osc engine
-    for(QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
-        QList<QVariant> oscOutputsList;
-        QList<QVariant> oscOutputRegion;
-
-        for(int i = 0; i < (*it)->getOutputRegionSet()->rowCount(); i++) {
+    for (QList<QSharedPointer<Generator>>::iterator it = generatorsList->begin(); it != generatorsList->end(); it++) {
+        QList<QVariant> allRegionsArgs;
+        int generatorId = (*it)->getID();
+        QString generatorName = (*it)->getGeneratorName();
+        // For each region:
+        for (int i = 0; i < (*it)->getOutputRegionSet()->rowCount(); i++) {
+            QList<QVariant> singleRegionArgs;
             double value = flagDummyOutputMonitor ? randomUniform(randomGenerator) : (*it)->getOutputRegionSet()->at(i)->getIntensity();
-            if(flagCastOutputToFloat) {
-                oscOutputsList.append((float)value);
-                oscOutputRegion.append((float)value);
-            } else {
-                oscOutputsList.append(value);
-                oscOutputRegion.append(value);
-            }
 
-            // write and send individual output region osc messages
-            // format is: "/[generator_name]/output/[output_region_number]/float"
-            QString outputRegionNumber = QString::number(i+1);
-            oscOutputRegion.prepend("/" + (*it)->getGeneratorName() + "/output/" + outputRegionNumber);
-            emit sendOscData((*it)->getID(), oscOutputRegion);
-            oscOutputRegion.clear();
+            // The region index:
+            int regionIndex = i + 1; // The index of each region, starting at 1
+            // allRegionsArgs.append(outputRegionNumber);
+
+            // The value of the region:
+            if (flagCastOutputToFloat) {
+                allRegionsArgs.append((float) value);
+                singleRegionArgs.append((float) value);
+            } else {
+                allRegionsArgs.append(value);
+                singleRegionArgs.append(value);
+            }
+            // send individual output region osc messages
+            // format is: "[generator_name] region [region_index] [float_value]"
+            // singleRegionArgs.prepend(regionIndex);
+            // singleRegionArgs.prepend((*it)->getGeneratorName());
+            QString paramName = QString("region/%1").arg(regionIndex);
+            emit sendOscData(generatorId, generatorName, paramName, singleRegionArgs);
         }
 
         // write generator info to osc output list message
-        // format is: "/[generator_name]/output/float float float float" (or however many floats are needed to express every output region)
-        oscOutputsList.prepend("/" + (*it)->getGeneratorName() + "/output");
-
+        // format is: "[generator_name] regions float float float float" (or however many floats are needed to express every output region)
+        // QString generatorName = (*it)->getGeneratorName();
+        // allRegionsArgs.prepend((*it)->getGeneratorName());
         // send osc output list message
-        emit sendOscData((*it)->getID(), oscOutputsList);
+        emit sendOscData(generatorId, generatorName, "regions", allRegionsArgs);
     }
 
     // measure the time used to do the computation
@@ -384,7 +386,7 @@ void ComputeEngine::loop() {
     timer.setTimerType(Qt::PreciseTimer);
     timer.singleShot((int) std::min<double>(1.0 / frequency * 1000.0, std::max<double>(1.0 / frequency * 1000.0 - millisCompute, 0)), this, &ComputeEngine::loop);
 
-    if(flagDebug) {
+    if (flagDebug) {
         std::chrono::nanoseconds now = std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::system_clock::now().time_since_epoch()
         );
@@ -399,7 +401,7 @@ void ComputeEngine::registerParameterControls(int generatorId) {
     GeneratorMeta* meta = generator->getMeta();
 
     // register global parameters if first pass
-    if(firstPass) {
+    if (firstPass) {
         parameterControlList["width"] = "global";
         parameterControlList["height"] = "global";
         parameterControlList["latticeWidth"] = "global";
@@ -412,15 +414,16 @@ void ComputeEngine::registerParameterControls(int generatorId) {
         firstPass = false;
     }
 
-    if(!registeredGeneratorTypes.contains(generator->getType())) {
+    if (!registeredGeneratorTypes.contains(generator->getType())) {
         QMapIterator<QString, QString> iter(meta->getGeneratorsParameterList());
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             iter.next();
             parameterControlList[iter.key()] = iter.value();
         }
         QMapIterator<QString, QString> iterCheck(parameterControlList);
-        while(iterCheck.hasNext()) {
+        while (iterCheck.hasNext()) {
             iterCheck.next();
         }
     }
 }
+

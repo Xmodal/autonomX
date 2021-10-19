@@ -56,7 +56,7 @@ Comprehensive documentation about the steps necessary for implementing a new cus
 ## OSC Messaging System
 
 Comprehensive documentation related to the OSC Messaging System can be found 
-[here](doc/osc.md).
+[here](doc/OSC.md).
 
 ## Doxygen Configuration
 

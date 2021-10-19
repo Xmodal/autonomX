@@ -350,11 +350,8 @@ void ComputeEngine::loop() {
         for (int i = 0; i < (*it)->getOutputRegionSet()->rowCount(); i++) {
             QList<QVariant> singleRegionArgs;
             double value = flagDummyOutputMonitor ? randomUniform(randomGenerator) : (*it)->getOutputRegionSet()->at(i)->getIntensity();
-
             // The region index:
             int regionIndex = i + 1; // The index of each region, starting at 1
-            // allRegionsArgs.append(outputRegionNumber);
-
             // The value of the region:
             if (flagCastOutputToFloat) {
                 allRegionsArgs.append((float) value);
@@ -364,19 +361,14 @@ void ComputeEngine::loop() {
                 singleRegionArgs.append(value);
             }
             // send individual output region osc messages
-            // format is: "[generator_name] region [region_index] [float_value]"
-            // singleRegionArgs.prepend(regionIndex);
-            // singleRegionArgs.prepend((*it)->getGeneratorName());
-            QString paramName = QString("region/%1").arg(regionIndex);
+            // format is: "/[generator_name]/output/[region_index] [float_value]"
+            QString paramName = QString("output/%1").arg(regionIndex);
             emit sendOscData(generatorId, generatorName, paramName, singleRegionArgs);
         }
 
-        // write generator info to osc output list message
-        // format is: "[generator_name] regions float float float float" (or however many floats are needed to express every output region)
-        // QString generatorName = (*it)->getGeneratorName();
-        // allRegionsArgs.prepend((*it)->getGeneratorName());
-        // send osc output list message
-        emit sendOscData(generatorId, generatorName, "regions", allRegionsArgs);
+        // send generator info to osc output list message
+        // format is: "/[generator_name]/outputs float float float float" (or however many floats are needed to express every output region)
+        emit sendOscData(generatorId, generatorName, "outputs", allRegionsArgs);
     }
 
     // measure the time used to do the computation

@@ -4,13 +4,13 @@
 		"appversion" : 		{
 			"major" : 8,
 			"minor" : 0,
-			"revision" : 6,
+			"revision" : 8,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 120.0, 79.0, 469.0, 569.0 ],
+		"rect" : [ 201.0, 56.0, 1016.0, 772.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 1,
 		"default_fontsize" : 12.0,
@@ -39,6 +39,84 @@
 		"subpatcher_template" : "",
 		"boxes" : [ 			{
 				"box" : 				{
+					"id" : "obj-51",
+					"linecount" : 2,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 154.0, 497.0, 150.0, 33.0 ],
+					"presentation" : 1,
+					"presentation_rect" : [ 104.0, 455.0, 258.0, 20.0 ],
+					"text" : "Exit the presentation mode to view the objects."
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-35",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 165.0, 540.0, 111.0, 22.0 ],
+					"presentation_linecount" : 2,
+					"text" : "host 192.168.0.101"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-34",
+					"maxclass" : "message",
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 178.0, 491.0, 85.0, 22.0 ],
+					"presentation_linecount" : 3,
+					"text" : "host 127.0.0.1"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"bubble" : 1,
+					"id" : "obj-30",
+					"linecount" : 2,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 440.0, 112.0, 274.0, 37.0 ],
+					"presentation_linecount" : 4,
+					"text" : "Use the menu File > Show Package Manager to install the CNMAT Externals."
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-5",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 2,
+					"outlettype" : [ "", "" ],
+					"patching_rect" : [ 277.0, 167.0, 151.0, 22.0 ],
+					"text" : "OSC-route /SpikingNet_01"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-4",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 2,
+					"outlettype" : [ "", "" ],
+					"patching_rect" : [ 277.0, 232.0, 106.0, 22.0 ],
+					"text" : "OSC-route /output"
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"bubble" : 1,
 					"id" : "obj-2",
 					"linecount" : 2,
@@ -54,11 +132,12 @@
 				"box" : 				{
 					"bubble" : 1,
 					"id" : "obj-74",
+					"linecount" : 2,
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 356.0, 221.0, 150.0, 24.0 ],
-					"text" : " output OSC address"
+					"patching_rect" : [ 440.0, 166.0, 150.0, 37.0 ],
+					"text" : " The generator we want to hear from"
 				}
 
 			}
@@ -69,7 +148,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 110.0, 365.0, 150.0, 24.0 ],
+					"patching_rect" : [ 110.0, 389.0, 150.0, 24.0 ],
 					"text" : " input OSC address"
 				}
 
@@ -146,7 +225,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 277.0, 144.0, 50.0, 22.0 ],
+					"patching_rect" : [ 277.0, 70.0, 50.0, 22.0 ],
 					"presentation" : 1,
 					"presentation_rect" : [ 106.25, 135.0, 85.0, 22.0 ]
 				}
@@ -362,18 +441,6 @@
 			}
 , 			{
 				"box" : 				{
-					"id" : "obj-15",
-					"maxclass" : "newobj",
-					"numinlets" : 2,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "" ],
-					"patching_rect" : [ 277.0, 221.0, 76.0, 22.0 ],
-					"text" : "route /output"
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"id" : "obj-13",
 					"maxclass" : "newobj",
 					"numinlets" : 2,
@@ -476,7 +543,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 277.0, 118.0, 90.0, 22.0 ],
+					"patching_rect" : [ 277.0, 44.0, 90.0, 22.0 ],
 					"text" : "loadmess 6669"
 				}
 
@@ -512,7 +579,7 @@
 					"maxclass" : "comment",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 332.0, 144.0, 89.0, 20.0 ],
+					"patching_rect" : [ 332.0, 70.0, 89.0, 20.0 ],
 					"presentation" : 1,
 					"presentation_rect" : [ 106.25, 113.0, 85.0, 20.0 ],
 					"text" : "OUTPUT port",
@@ -560,7 +627,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 0,
-							"revision" : 6,
+							"revision" : 8,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -736,7 +803,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 0,
-							"revision" : 6,
+							"revision" : 8,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -912,7 +979,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 0,
-							"revision" : 6,
+							"revision" : 8,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1100,7 +1167,7 @@
 						"appversion" : 						{
 							"major" : 8,
 							"minor" : 0,
-							"revision" : 6,
+							"revision" : 8,
 							"architecture" : "x64",
 							"modernui" : 1
 						}
@@ -1295,8 +1362,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 20.0, 365.0, 85.0, 22.0 ],
-					"text" : "prepend /input"
+					"patching_rect" : [ 20.0, 365.0, 173.0, 22.0 ],
+					"text" : "prepend /SpikingNet_01/inputs"
 				}
 
 			}
@@ -1318,7 +1385,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 277.0, 167.0, 46.0, 22.0 ],
+					"patching_rect" : [ 277.0, 93.0, 46.0, 22.0 ],
 					"text" : "port $1"
 				}
 
@@ -1330,7 +1397,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 277.0, 193.0, 97.0, 22.0 ],
+					"patching_rect" : [ 277.0, 119.0, 97.0, 22.0 ],
 					"text" : "udpreceive 6669"
 				}
 
@@ -1413,13 +1480,6 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-16", 0 ],
-					"source" : [ "obj-15", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
 					"destination" : [ "obj-17", 0 ],
 					"source" : [ "obj-16", 0 ]
 				}
@@ -1442,7 +1502,7 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-15", 0 ],
+					"destination" : [ "obj-5", 0 ],
 					"order" : 0,
 					"source" : [ "obj-18", 0 ]
 				}
@@ -1531,6 +1591,20 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-31", 0 ],
+					"source" : [ "obj-34", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-31", 0 ],
+					"source" : [ "obj-35", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-38", 0 ],
 					"source" : [ "obj-36", 0 ]
 				}
@@ -1584,6 +1658,13 @@
 					"destination" : [ "obj-33", 0 ],
 					"order" : 0,
 					"source" : [ "obj-39", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-16", 0 ],
+					"source" : [ "obj-4", 0 ]
 				}
 
 			}
@@ -1656,6 +1737,13 @@
 				"patchline" : 				{
 					"destination" : [ "obj-39", 3 ],
 					"source" : [ "obj-49", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-4", 0 ],
+					"source" : [ "obj-5", 0 ]
 				}
 
 			}
@@ -1765,7 +1853,11 @@
 
 			}
  ],
-		"dependency_cache" : [  ],
+		"dependency_cache" : [ 			{
+				"name" : "OSC-route.mxo",
+				"type" : "iLaX"
+			}
+ ],
 		"autosave" : 0
 	}
 

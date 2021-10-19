@@ -56,11 +56,11 @@ public:
 
 signals:
     // sends data through OscEngine::sendOscData
-    void sendOscData(int generatorId, QVariantList data);
+    void sendOscData(int generatorId, const QString& generatorName, const QString& paramName, const QVariantList& data);
 public slots:
     // handles data received from OscEngine::receiveOscData
-    void receiveOscData(int generatorId, QVariantList data, QString generatorAddress);
-    void receiveOscGeneratorControlMessage(int generatorId, QVariantList data, QString controlMessage);
+    void receiveOscData(int generatorId, const QVariantList& arguments, const QString& generatorAddress);
+    void receiveOscGeneratorControlMessage(int generatorId, const QVariantList& arguments, const QString& controlMessage);
 
     // adds a generator to the list and hash map
     void addGenerator(QSharedPointer<Generator> generator);
@@ -74,3 +74,4 @@ public slots:
     // does the computation and schedules itself for the next iteration
     void loop();
 };
+

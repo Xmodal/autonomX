@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 
     // constant settings
     const char* applicationName = "autonomX";
-    const char* applicationVersion = "0.1.1";
+    const char* applicationVersion = "1.0.0";
     const char* organizationName = "Xmodal";
     const char* extensionName = "atnx";
     const char* repoUrl = "https://github.com/Xmodal/autonomX";

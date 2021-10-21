@@ -1,5 +1,10 @@
 # Release Notes for autonomX
 
+## Version 1.0.1 - 20??-??-??
+
+(TODO)
+
+
 ## Version 1.0.0 - 2021-10-21
 
 This is a major release of AutonomX!

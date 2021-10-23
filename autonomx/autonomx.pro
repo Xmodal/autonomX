@@ -14,7 +14,8 @@ QML_IMPORT_MAJOR_VERSION = 1
 # Disable macOS version check (it prints a WARNING)
 CONFIG += sdk_no_version_check
 
-ICON = autonomx.icns
+ICON = icons/favicon.icns
+RC_FILE = icons/favicon.rc
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings

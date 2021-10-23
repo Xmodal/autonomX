@@ -78,5 +78,8 @@
         <file>generators/GameOfLife/meta.json</file>
         <file>components/ui/OscSettings.qml</file>
         <file>components/util/PanManager.qml</file>
+        <file>icons/favicon.icns</file>
+        <file>icons/favicon.ico</file>
+        <file>icons/favicon.rc</file>
     </qresource>
 </RCC>

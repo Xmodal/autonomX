@@ -14,6 +14,8 @@ QML_IMPORT_MAJOR_VERSION = 1
 # Disable macOS version check (it prints a WARNING)
 CONFIG += sdk_no_version_check
 
+ICON = autonomx.icns
+
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -144,3 +146,6 @@ CONFIG(release, debug|release): DEFINES += NDEBUG
 # else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../qosc/release/qosc_release_binary.lib
 # else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../qosc/debug/qosc_debug_binary.lib
 # else:unix: PRE_TARGETDEPS += $$OUT_PWD/../qosc/libqosc_release_binary.a
+
+DISTFILES += \
+    autonomx.icns

@@ -2,6 +2,7 @@ QT += quick
 QT += core
 QT += qml
 QT += gui
+QT += svg
 # QT += serialport
 CONFIG += c++17
 
